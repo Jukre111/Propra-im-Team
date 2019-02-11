@@ -1,0 +1,21 @@
+*Hier werden aktuelle Aufgaben aufgeschrieben, und wer an ihnen arbeitet*
+
+# aktuelle Aufgaben:
+
+## Aufgaben:
+* Login
+* Travis
+* Docker & Dockercompose
+* Web
+* Datenbank (Postgres)
+* Benutzerkonto
+* Suche (optional)
+* Person anlegen
+* Person bearbeiten
+* Person löschen
+* Artikel anlegen
+* Artikel bearbeiten
+* Artikel löschen
+* Schnittstelle zu ProPay
+
+# erledigte Aufgaben:
