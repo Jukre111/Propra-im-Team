@@ -1,0 +1,34 @@
+# Abschlussprojekt
+
+## Grundsätzliches
+
+* Pair-programming.
+* Morgens Gruppenmeeting.
+* Retrospektiv-Meeting am Ende der Woche.
+* Kein TDD, aber Test möglichst zeitnah schreiben.
+* In jeden Commit schreiben, welche zwei Leute das gemacht haben(Vorname).
+* Aufgaben die aktuell bearbeitet werden, bitte in der Datei aufgabenverteilung.adoc
+schreiben (mit Namen)
+
+
+## Codeformatierung & Richtlinien
+
+* commits im imperativ und auf englisch.
+* Code auf englisch, CamelCase verwenden.
+* Tabs werden verwendet.
+* ĉheckstyle verwenden.
+
+## Aufgaben:
+* Login
+* Travis
+* Docker & Dockercompose
+* Datenbank (Postgres)
+* Benutzerkonto
+* Suche (optional)
+* Person anlegen
+* Person bearbeiten
+* Person löschen
+* Artikel anlegen
+* Artikel bearbeiten
+* Artikel löschen
+* Schnittstelle zu ProPay
