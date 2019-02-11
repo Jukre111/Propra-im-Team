@@ -32,3 +32,20 @@ schreiben (mit Namen)
 * Artikel bearbeiten
 * Artikel löschen
 * Schnittstelle zu ProPay
+
+## Datenstruktur
+* User
+. id : long
+. mail : String
+. username : String
+. itemList : List<Item>
+* Item
+. id : long
+. titel : String
+. description : String
+. caution : int
+. rent : int
+. returnDate : Date
+. ownerId : long
+. renterId : long
+. (ownerId != renterId) 
