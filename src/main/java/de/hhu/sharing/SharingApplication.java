@@ -1,13 +1,13 @@
-package de.hhu.abschlussprojekt;
+package de.hhu.sharing;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AbschlussprojektApplication {
+public class SharingApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AbschlussprojektApplication.class, args);
+		SpringApplication.run(SharingApplication.class, args);
 	}
 
 }
