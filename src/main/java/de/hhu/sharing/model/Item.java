@@ -9,7 +9,7 @@ import javax.persistence.Id;
 @Data
 @Entity
 
-public class Loan {
+public class Item {
 
     @Id
     @GeneratedValue

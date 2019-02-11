@@ -18,6 +18,6 @@ public class User {
     private Address address;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Loan> loans;
+    private List<Item> items;
 
 }
