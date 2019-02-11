@@ -38,7 +38,8 @@ schreiben (mit Namen)
 . id : long
 . mail : String
 . username : String
-. itemList : List<Item>
+. borrowedItems : List<Item>
+. loanedItems : List<Item>
 * Item
 . id : long
 . titel : String
