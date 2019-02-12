@@ -2,7 +2,7 @@
 <html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-<title>Index</title>
+<title>Sharing</title>
 <style>
     #indexbtn {
         border: 2px solid #999;
@@ -37,9 +37,8 @@
         </tr>
         <tr th:each="eachOffer : ${offers}">
             <td th:text="${eachOffer.name}"></td>
-
             <td>
-                <input type="button" id="indexbtn" th:href="@{'./details?id=' + ${eachOffer.offerID}}" value="Anzeigen"></a>
+                <input type="button" id="indexbtn" th:href="@{'./details?id=' + ${eachOffer.offerID}}" value="Anzeigen" />
             </td>
         </tr>
 
