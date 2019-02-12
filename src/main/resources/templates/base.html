@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+          crossorigin="anonymous">
+    <title>Sharing</title>
+
+    <style>
+        #search {
+            width: 30em;
+            border: 2px solid #999;
+            border-radius: 0.5em;
+            font-size: 1.2em;
+            transition: width 0.5s ease-in-out;
+        }
+
+        #search:focus {
+            font-size: 1.5em;
+            width: 50%;
+        }
+
+        #indexbtn {
+            border: 2px solid #999;
+            border-radius: 0.5em;
+            font-size: 1.2em;
+            color: #fff;
+            background-color: #31C7DB;
+        }
+
+        #indexbtn:hover {background-color: #319ADB}
+
+        .bgimg {
+            background-image: url('https://png.pngtree.com/thumb_back/fh260/back_pic/04/24/51/235836866b71f0b.jpg');
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {background-color: #f2f2f2;}
+
+    </style>
+</head>
+<body>
+<div style="padding: 20px; padding-left: 250px" class="bgimg">
+    <h1><span style="font-size: 18pt">Welcome to</span> <span style="font-size: 30pt; color: blue; font-weight: bold">SHARING</span></h1>
+</div>
+<div style="padding: 20px; background-color: #fef8fd">
+    <input type="search" id="search" placeholder="Suche..." />
+    <input type="button" id="indexbtn" value="Los!" />
+    <input type="button" id="indexbtn" style="float: right" value="Account" />
+    <input type="button" id="indexbtn" style="margin-right: 10px; float: right" value="Nachrichten" />
+</div>
+<div>
+    <table>
+        <tr>
+            <th width="90%">Angebote</th>
+            <th width="10%">Details</th>
+        </tr>
+        <tr th:each="eachOffer : ${offers}">
+            <td th:text="${eachOffer.name}"></td>
+
+            <td>
+                <input type="button" id="indexbtn" th:href="@{'./Details?id=' + ${project.project_id}}" value="Anzeigen"></a>
+            </td>
+        </tr>
+
+    </table>
+</div>
+</body>
