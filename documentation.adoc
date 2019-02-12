@@ -37,20 +37,37 @@ schreiben (mit Namen)
 * User
 . id : long
 . mail : String
-. username : String
+. password : String
+. name : String
+. birthdate : Date
+. address : Address
 . borrowedItems : List<Item>
-. loanedItems : List<Item>
+. lendItems : List<Item>
 * Item
 . id : long
-. titel : String
+. name : String
 . description : String
-. caution : int
-. rent : int
-. returnDate : Date
-. ownerId : long
-. renterId : long
-. (ownerId != renterId) 
+. deposit : int
+. rental : int
+. enddate : Date
+. startdate : Date
+. lender : User
+. borrower : User
+. (ownerId != renterId)
+* Address
+. street : String
+. city : String
+. postcode : int
 
-
-## Webseiten
-. Wir haben uns entschieden, dass die Webseiten auf deutsch verfasst werden.
+## Struktur der Website
+* Index-Site
+. Nachrichten (Button)
+. Account (Button)
+. Liste Angebote (Details anfordern -> Button)
+. Suche in Angebote (Suchfeld -> Button los)
+. Angebotliste (Anfrage auf Details -> Button)
+* Account-Site
+. Artikel einstellen (Button)
+. Liste verliehener Items (bearbeiten, loeschen -> Buttons)
+. Liste geliehener Items (abgeben -> Button)
+. Clearing Stelle (Button)
