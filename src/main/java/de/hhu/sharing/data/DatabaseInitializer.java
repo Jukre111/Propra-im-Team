@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -17,10 +16,10 @@ import java.util.Date;
 public class DatabaseInitializer implements ServletContextInitializer {
 
     @Autowired
-    UserRepository users;
+    private UserRepository users;
 
     @Autowired
-    ItemRepository items;
+    private ItemRepository items;
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
@@ -33,6 +32,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
                 new Date(2019, 1, 1),
                 new Date(2019, 2, 12),
                 hans);
+
 
         User peter = mkUser("Peter", "password", "test2@test.de",
                 new Date(1991, 12, 1),
@@ -51,6 +51,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
                 mkAddress("Dorfstrasse 50","Feusisberg, Schweiz",  8834));
 
         users.saveAll(Arrays.asList(hans,peter,guenther));
+        //items.saveAll(Arrays.asList(mixer,fahrrad,motorrad));
     }
 
     private Address mkAddress(String street, String city, int pc) {

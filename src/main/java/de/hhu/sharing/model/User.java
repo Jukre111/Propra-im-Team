@@ -9,10 +9,13 @@ import java.util.List;
 
 @Data
 @Entity
+@Table(name="\"User\"")
 public class User {
+
     @Id
     @GeneratedValue
     private Long id;
+
     private String name;
     private String password;
     private String mail;
