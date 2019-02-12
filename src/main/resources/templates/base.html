@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -62,20 +62,9 @@
     <input type="button" id="indexbtn" style="float: right" value="Account" />
     <input type="button" id="indexbtn" style="margin-right: 10px; float: right" value="Nachrichten" />
 </div>
-<div>
-    <table>
-        <tr>
-            <th width="90%">Angebote</th>
-            <th width="10%">Details</th>
-        </tr>
-        <tr th:each="eachOffer : ${offers}">
-            <td th:text="${eachOffer.name}"></td>
-
-            <td>
-                <input type="button" id="indexbtn" th:href="@{'./Details?id=' + ${project.project_id}}" value="Anzeigen"></a>
-            </td>
-        </tr>
-
-    </table>
+<div class="container">
+    <h1 layout:fragment="body">
+        Body goes here
+    </h1>
 </div>
 </body>
