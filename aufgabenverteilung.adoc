@@ -4,8 +4,6 @@
 
 ## Aufgaben:
 * Login
-* Travis
-* Docker & Dockercompose
 * Web
 * Datenbank (Postgres)
 * Benutzerkonto
@@ -20,3 +18,4 @@
 
 # erledigte Aufgaben:
 * Travis
+* Docker & Dockercompose (siehe Branch docker/docker-compose)
