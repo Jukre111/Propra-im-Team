@@ -5,7 +5,6 @@
 ## Aufgaben:
 * Login
 * Web
-* Datenbank (Postgres)
 * Benutzerkonto
 * Suche (optional)
 * Person anlegen
@@ -19,3 +18,4 @@
 # erledigte Aufgaben:
 * Travis
 * Docker & Dockercompose (siehe Branch docker/docker-compose)
+* Datenbank (Postgres)
