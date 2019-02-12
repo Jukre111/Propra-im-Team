@@ -19,3 +19,4 @@
 * Schnittstelle zu ProPay
 
 # erledigte Aufgaben:
+* Travis
