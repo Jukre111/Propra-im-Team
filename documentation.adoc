@@ -50,3 +50,7 @@ schreiben (mit Namen)
 . ownerId : long
 . renterId : long
 . (ownerId != renterId) 
+
+
+## Webseiten
+. Wir haben uns entschieden, dass die Webseiten auf deutsch verfasst werden.
