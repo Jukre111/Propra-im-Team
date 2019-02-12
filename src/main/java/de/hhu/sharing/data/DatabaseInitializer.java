@@ -27,16 +27,15 @@ public class DatabaseInitializer implements ServletContextInitializer {
 
         User hans = mkUser("Hans", "password", "test1@test.de",
                 new Date(1990, 12, 12),
-                mkAddress("Kaiser-Wilhelm-Allee 3","Leverkusen", 51373));
+                mkAddress("Kaiser-Wilhelm-Allee 3","Leverkusen", 51373), "ROLE_USER");
         Item mixer = mkItem("Mixer", "mixt Sachen", 5, 20,
                 new Date(2019, 1, 1),
                 new Date(2019, 2, 12),
                 hans);
 
-
         User peter = mkUser("Peter", "password", "test2@test.de",
                 new Date(1991, 12, 1),
-                mkAddress("Berliner Ring 3","Wolfsburg",  38440));
+                mkAddress("Berliner Ring 3","Wolfsburg",  38440), "ROLE_USER");
         Item fahrrad = mkItem("Fahrrad", "Räder die fahren", 20, 200,
                 new Date(2019, 1, 1),
                 new Date(2019, 2, 12),
@@ -45,13 +44,14 @@ public class DatabaseInitializer implements ServletContextInitializer {
                 new Date(2019, 1, 1),
                 new Date(2019, 2, 12),
                 peter);
+        peter.addToBorrowedItem(mixer);
 
         User guenther = mkUser("Guenther", "password", "test3@test.de",
                 new Date(1995, 8, 21),
-                mkAddress("Dorfstrasse 50","Feusisberg, Schweiz",  8834));
+                mkAddress("Dorfstrasse 50","Feusisberg, Schweiz",  8834), "ROLE_ADMIN");
 
         users.saveAll(Arrays.asList(hans,peter,guenther));
-        //items.saveAll(Arrays.asList(mixer,fahrrad,motorrad));
+        items.saveAll(Arrays.asList(mixer,fahrrad,motorrad));
     }
 
     private Address mkAddress(String street, String city, int pc) {
@@ -62,13 +62,14 @@ public class DatabaseInitializer implements ServletContextInitializer {
         return address;
     }
 
-    private User mkUser(String name, String password, String mail, Date birthdate, Address address) {
+    private User mkUser(String name, String password, String mail, Date birthdate, Address address, String role) {
         User user = new User();
         user.setName(name);
         user.setPassword(password);
         user.setMail(mail);
         user.setBirthdate(birthdate);
         user.setAddress(address);
+        user.setRole(role);
         return user;
     }
 

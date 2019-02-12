@@ -21,13 +21,19 @@ public class User {
     private String mail;
     private Date birthdate;
 
+    private String role;
+
     @Embedded
     private Address address;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Item> borrowedItems = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Item> lendItems = new ArrayList<>();
+    public void addToBorrowedItem(Item item) {
+        borrowedItems.add(item);
+    }
+
+    //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    //private List<Item> lendItems = new ArrayList<>();
 
 }

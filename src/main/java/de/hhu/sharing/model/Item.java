@@ -20,11 +20,11 @@ public class Item {
     private Date startdate;
     private Date enddate;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User lender;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private User borrower;
+    //@ManyToOne(fetch = FetchType.EAGER)
+    //private User borrower;
 
 
 }
