@@ -16,12 +16,14 @@ public class User {
     @GeneratedValue
     private Long id;
 
-    private String name;
+    private String username;
     private String password;
+    private String role;
+
+    private String lastname;
+    private String forename;
     private String mail;
     private Date birthdate;
-
-    private String role;
 
     @Embedded
     private Address address;
