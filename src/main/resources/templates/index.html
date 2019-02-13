@@ -35,10 +35,10 @@
             <th width="90%">Angebote</th>
             <th width="10%">Details</th>
         </tr>
-        <tr th:each="eachOffer : ${items}">
-            <td th:text="${eachOffer.name}"></td>
+        <tr th:each="item : ${items}">
+            <td th:text="${item.name}"></td>
             <td>
-                <input type="button" id="indexbtn" th:href="@{'./details?id=' + ${eachOffer.id}}" value="Anzeigen" />
+                <a type="button" th:href="@{'/details?id=' + ${item.Id}}" id="indexbtn" style="margin-right: 20px; float: right">Details</a>
             </td>
         </tr>
 
