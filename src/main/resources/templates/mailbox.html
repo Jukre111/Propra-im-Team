@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en"layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Mailbox</title>
+    <style>
+        #mailboxbtn {
+        border: 2px solid #999;
+        border-radius: 0.5em;
+        font-size: 1.2em;
+        color: #fff;
+        background-color: #E74498;
+    }
+
+    #mailboxbtn:hover {background-color: #BD1D6F}
+
+    table {
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    th, td {
+    text-align: left;
+    padding: 8px;
+    }
+
+    tr:nth-child(even) {background-color: #f2f2f2;}
+    </style>
+</head>
+<body>
+<div layout:fragment="body">
+    <table>
+        <tr>
+            <th width="70%">Nachrichten</th>
+            <th width="20%">Absender</th>
+            <th width="10%"></th>
+        </tr>
+        <tr th:each="eachMessage : ${messages}">
+            <td th:text="${eachMessage.subject}"></td>
+            <td th:text="${eachMessage.sender}"></td>
+            <td>
+                <input type="button" id="mailboxbtn" th:href="@{'./open?id=' + ${eachMessage.messageID}}" value="Anzeigen" />
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
