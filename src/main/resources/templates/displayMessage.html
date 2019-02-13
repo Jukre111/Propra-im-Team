@@ -24,11 +24,19 @@
     padding: 8px;
     }
 
+    textarea {
+        width: 60em;
+        height: 15em;
+        border: 50px solid white;
+        padding: 0.5em;
+        background: white;
+    }
+
     tr:nth-child(even) {background-color: #f2f2f2;}
 </style>
 </head>
 <body>
-    <div layout:fragment="body">
+    <div layout:fragment="body" style="text-indent: 50px;">
         <div class="form-group">
                 <h2>Empfaenger</h2>
                 <br>
@@ -41,8 +49,7 @@
         </div>
         <div class="form-group">
             <h2>Inhalt</h2>
-            <br>
-            <label th:text="${message.message}"></label>
+            <textarea class="form-group" th:text="${message.message}" disabled></textarea>
         </div>
     </div>
 </body>
