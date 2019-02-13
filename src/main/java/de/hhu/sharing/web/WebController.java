@@ -20,13 +20,13 @@ public class WebController {
         model.addAttribute("username", p.getName());
         return "index";
     }
-    @GetMapping("/user")
-    public String user(Model model, Principal p) {
+    @GetMapping("/account")
+    public String account(Model model, Principal p) {
         final User user = this.users.findByUsername(p.getName())
                 .orElseThrow(
                         () -> new RuntimeException("User not found!"));
         model.addAttribute("user",user);
-        return "user";
+        return "account";
     }
 
 }
