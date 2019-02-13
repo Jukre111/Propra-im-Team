@@ -1,6 +1,7 @@
 package de.hhu.sharing.web;
 
 import de.hhu.sharing.data.UserRepository;
+import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,13 +13,20 @@ import java.security.Principal;
 public class WebController {
 
     @Autowired
-    private UserRepository persons;
+    private UserRepository users;
 
     @GetMapping("/")
-    public String user(Model m, Principal p) {
-        m.addAttribute("username", p.getName());
-        System.out.println(p.getName());
+    public String index(Model model, Principal p) {
+        model.addAttribute("username", p.getName());
         return "index";
+    }
+    @GetMapping("/user")
+    public String user(Model model, Principal p) {
+        final User user = this.users.findByUsername(p.getName())
+                .orElseThrow(
+                        () -> new RuntimeException("User not found!"));
+        model.addAttribute("user",user);
+        return "user";
     }
 
 }
