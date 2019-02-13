@@ -13,7 +13,12 @@ public class SharingController {
 
     @GetMapping("/")
     public String startpage() {
-        return "startpage";
+        return "index";
+    }
+
+    @GetMapping("/login")
+    public String login(){
+        return "login";
     }
 
 }
