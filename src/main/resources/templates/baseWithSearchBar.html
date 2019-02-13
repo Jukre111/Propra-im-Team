@@ -47,8 +47,9 @@
 <div style="padding: 20px; background-color: #fef8fd">
     <input type="search" id="search" placeholder="Suche..." />
     <input type="button" id="indexbtn" value="Los!" />
-    <input type="button" id="indexbtn" style="float: right" value="Account" />
-    <input type="button" id="indexbtn" style="margin-right: 10px; float: right" value="Nachrichten" />
+    <a type="button" th:href="@{'/logout'}" id="indexbtn" style="margin-right: 20px; float: right">Logout</a>
+    <a type="button" th:href="@{'/account'}" id="indexbtn" style="margin-right: 20px; float: right">Account</a>
+    <a type="button" th:href="@{'/messages'}" id="indexbtn" style="margin-right: 20px; float: right">Nachrichten</a>
 </div>
 <div>
     <label layout:fragment="body">
