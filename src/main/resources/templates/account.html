@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset = "utf-8"/>
+<title>Account</title>
+
+<style>
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2;}
+
+#circular--landscape {
+  display: inline-block;
+  position: relative;
+  width: 250px;
+  height: 250px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+#circular--landscape img {
+  width: auto;
+  height: 100%;
+  margin-left: -50px;
+}
+
+</style>
+</head>
+<body>
+	<div layout:fragment="body" style="padding: 20px; padding-left: 250px">
+	<form style="padding: 20px" class="form-horizontal">
+		<div class="media">
+			<div class="media-left media-middle">
+				<img class="media-object" id="circular--landscape" src="bendi.png">
+				<!--<img class="media-object" id="circular--landscape" th:src="{user.image}">-->
+			</div>
+			<div class="media-body">
+				<div class="form-group">
+					<label for="username" class="col-sm-2 control-label">Nutzername</label>
+					<div class="col-xs-6">
+					<type="text" class="form-control" id="name" name="name" th:text="${user.username}" readonly/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="forename" class="col-sm-2 control-label">Vorname</label>
+					<div class="col-xs-6">
+					<type="text" class="form-control" id="forename" name="forename" th:text="${user.forename}" readonly/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="lastname" class="col-sm-2 control-label">Nachname</label>
+					<div class="col-xs-6">
+					<type="text" class="form-control" id="lastname" name="lastname" th:text="${user.lastname}" readonly/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="mail" class="col-sm-2 control-label">E-Mail</label>
+					<div class="col-xs-6">
+					<input type="text" class="form-control" id="mail" name="mail" th:value="${user.mail}" readonly/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="birthdate" class="col-sm-2 control-label">Geburtstag</label>
+					<div class="col-xs-3">
+					<input type="text" class="form-control" id="birthdate" name="birthdate" th:value="${birthdate}" readonly/>
+					</div>
+				</div>
+				<!--<div class="form-group">
+					<label for="budget" class="col-sm-2 control-label">ProPay Guthaben</label>
+					<div class="col-xs-3">	
+						<div class="input-group">
+							<div class="input-group-addon">€</div>
+							<input type="text" class="form-control" th:value="${user.budget}" placeholder="Budget">
+							<div class="input-group-addon">,00</div>
+						</div>
+					</div>
+				</div>-->
+			</div>
+		</div>
+	</form>
+
+	<div style="padding: 20px">	
+		<table>
+			<tr>
+				<th width="80%"><font size="4">Ausgeliehene Objekte</font></th>
+				<th width="10%">Ausleihfrist</th>
+				<th width="10%">Rückgabe</th>
+			</tr>
+			<tr th:each="eachBorrow : ${borrows}">
+				<td th:text="${eachBorrow.name}"></td>
+				<td th:text="{#dates.format(eachBorrow.deadline, 'yyyy-MM-dd')}"></td>
+				<td>
+					<a type="button" id="indexbtn" th:href="@{'./returnObject?id=' + ${eachBorrow.offerID}}" value="Rückgabe"></a>
+				</td>
+			</tr>	
+		</table>
+	</div>
+	<div style="padding: 20px">	
+		<table>
+			<tr>
+				<th width="80%"><font size="4">Verliehene Objekte</font></th>
+				<th width="10%">Bearbeiten</th>
+				<th width="10%">Erhalten</th>
+			</tr>
+			<tr th:each="eachLend : ${lend}">
+				<td th:text="${eachLend.name}"></td>
+				<td>
+					<a type="button" id="indexbtn" th:href="@{'./editObject?id=' + ${eachLend.offerID}}" value="Bearbeiten"></a>
+				</td>
+				<td>
+					<input class="checkbox" type="checkbox" value=""/>
+				</td>
+			</tr>	
+		</table>
+	</div>
+	</div>
+</body>
+</html>
