@@ -3,6 +3,7 @@ package de.hhu.sharing.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,15 +14,15 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue
-    private Long id;
-
-    private String name;
+    private String username;
+    
     private String password;
-    private String mail;
-    private Date birthdate;
-
     private String role;
+
+    private String lastname;
+    private String forename;
+    private String mail;
+    private LocalDate birthdate;
 
     @Embedded
     private Address address;
@@ -34,6 +35,6 @@ public class User {
     }
 
     //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    //private List<Item> lendItems = new ArrayList<>();
+    //private List<ItemNotFound> lendItems = new ArrayList<>();
 
 }

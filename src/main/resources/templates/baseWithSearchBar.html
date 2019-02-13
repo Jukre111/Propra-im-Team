@@ -25,6 +25,8 @@
         }
 
         #indexbtn {
+            padding-left: 5px;
+            padding-right: 5px;
             border: 2px solid #999;
             border-radius: 0.5em;
             font-size: 1.2em;
@@ -42,13 +44,15 @@
 </head>
 <body>
 <div style="padding: 20px; padding-left: 250px" class="bgimg">
-    <h1><span style="font-size: 18pt">Welcome to</span> <span style="font-size: 30pt; color: #BD1D6F; font-weight: bold">SHARING</span></h1>
+    <h1><span style="font-size: 18pt">Willkommen auf</span> <span style="font-size: 30pt; color: #BD1D6F; font-weight: bold">SHARING</span></h1>
 </div>
 <div style="padding: 20px; background-color: #fef8fd">
-    <input type="search" id="search" placeholder="Suche..." />
-    <input type="button" id="indexbtn" value="Los!" />
-    <input type="button" id="indexbtn" style="float: right" value="Account" />
-    <input type="button" id="indexbtn" style="margin-right: 10px; float: right" value="Nachrichten" />
+    <input type="search" id="search" placeholder="Suche..." style="margin-right: 20px; float: left"/>
+    <input type="button" id="indexbtn" value="Los!" style="margin-right: 20px; float: left"/>
+    <a th:href="@{'/newitem'}" id="indexbtn" style="margin-right: 20px; float: left">Angebot aufgeben</a>
+    <a th:href="@{'/logout'}" id="indexbtn" style="margin-right: 20px; float: right">Logout</a>
+    <a th:href="@{'/account'}" id="indexbtn" style="margin-right: 20px; float: right">Account</a>
+    <a th:href="@{'/messages'}" id="indexbtn" style="margin-right: 20px; float: right">Nachrichten</a>
 </div>
 <div>
     <label layout:fragment="body">
