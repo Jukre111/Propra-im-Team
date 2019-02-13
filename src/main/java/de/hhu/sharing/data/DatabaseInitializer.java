@@ -45,14 +45,17 @@ DatabaseInitializer implements ServletContextInitializer {
                 new Date(2019, 1, 1),
                 new Date(2019, 2, 12),
                 peter);
-        peter.addToBorrowedItem(mixer);
 
         User guenther = mkUser("Guenther", "$2a$07$MIpz7Ns1kzEq66wpMQPAIuySvXaQrkkFgwkyetdJiKpFZUDy3I0hC", "ROLE_ADMIN","Gurke","Guenther", "test3@test.de",
                 new Date(1995, 8, 21),
                 mkAddress("Dorfstrasse 50","Feusisberg, Schweiz",  8834));
 
+
         users.saveAll(Arrays.asList(hans,peter,guenther));
         items.saveAll(Arrays.asList(mixer,fahrrad,motorrad));
+        peter.addToBorrowedItem(mixer);
+        users.saveAll(Arrays.asList(hans,peter,guenther));
+
     }
 
     private Address mkAddress(String street, String city, int pc) {
