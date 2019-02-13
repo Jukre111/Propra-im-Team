@@ -3,6 +3,7 @@ package de.hhu.sharing.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -17,8 +18,8 @@ public class Item {
     private String description;
     private int rental;     //per Day
     private int deposit;
-    private Date startdate;
-    private Date enddate;
+    private LocalDate startdate;
+    private LocalDate enddate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private User lender;

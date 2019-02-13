@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +39,9 @@ public class WebController {
                 .orElseThrow(
                         () -> new RuntimeException("User not found!"));
         model.addAttribute("user",user);
+        LocalDate birthdate = user.getBirthdate();
+        String thisBirthdate = birthdate.toString();
+        model.addAttribute("birthdate", thisBirthdate);
         return "account";
     }
     @GetMapping("/detail")
