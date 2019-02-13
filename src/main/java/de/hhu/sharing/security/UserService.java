@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class PersonService implements UserDetailsService {
+public class UserService implements UserDetailsService {
 
     @Autowired
-    private PersonProvider users;
+    private UserProvider provider;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
-        Optional<User> user = users.findByUsername(username);
+        Optional<User> user = provider.findByUsername(username);
         if(user.isPresent()){
             User u = user.get();
             UserDetails userdetails = org.springframework.security.core.userdetails.User.builder()
