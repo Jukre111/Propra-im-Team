@@ -58,6 +58,13 @@ schreiben (mit Namen)
 . street : String
 . city : String
 . postcode : int
+* Message
+. id : long
+. sender : User
+. receiver : User
+. item : Item
+. subject : String
+. message : String
 
 ## Struktur der Website
 * Index-Site
