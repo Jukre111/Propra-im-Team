@@ -25,7 +25,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
     public void onStartup(ServletContext servletContext) throws ServletException {
         System.out.println("Populating the database");
 
-        User hans = mkUser("Hans", "password", "test1@test.de",
+        User hans = mkUser("Hansi", "1234", "Hans",  "test1@test.de",
                 new Date(1990, 12, 12),
                 mkAddress("Kaiser-Wilhelm-Allee 3","Leverkusen", 51373), "ROLE_USER");
         Item mixer = mkItem("Mixer", "mixt Sachen", 5, 20,
@@ -33,7 +33,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
                 new Date(2019, 2, 12),
                 hans);
 
-        User peter = mkUser("Peter", "password", "test2@test.de",
+        User peter = mkUser("Nashorn",  "1234", "Peter","test2@test.de",
                 new Date(1991, 12, 1),
                 mkAddress("Berliner Ring 3","Wolfsburg",  38440), "ROLE_USER");
         Item fahrrad = mkItem("Fahrrad", "Räder die fahren", 20, 200,
@@ -46,7 +46,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
                 peter);
         peter.addToBorrowedItem(mixer);
 
-        User guenther = mkUser("Guenther", "password", "test3@test.de",
+        User guenther = mkUser("Guenther", "1234", "Guenther", "test3@test.de",
                 new Date(1995, 8, 21),
                 mkAddress("Dorfstrasse 50","Feusisberg, Schweiz",  8834), "ROLE_ADMIN");
 
@@ -62,8 +62,9 @@ public class DatabaseInitializer implements ServletContextInitializer {
         return address;
     }
 
-    private User mkUser(String name, String password, String mail, Date birthdate, Address address, String role) {
+    private User mkUser(String username, String password, String name, String mail, Date birthdate, Address address, String role) {
         User user = new User();
+        user.setUsername(username);
         user.setName(name);
         user.setPassword(password);
         user.setMail(mail);
