@@ -34,6 +34,6 @@ public class User {
     }
 
     //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    //private List<Item> lendItems = new ArrayList<>();
+    //private List<ItemNotFound> lendItems = new ArrayList<>();
 
 }
