@@ -16,17 +16,7 @@ public class SharingController {
 
     @GetMapping("/")
     public String startpage(Model model) {
-        Message msg = new Message();
-        User sender = new User();
-        sender.setMail("test@test.test");
-
-        msg.setSubject("Hello,");
-        msg.setMessage("World!");
-        msg.setSender(sender);
-
-        model.addAttribute("message", msg);
-
-        return "displayMessage";
+        return "index";
     }
 
     @GetMapping("/login")

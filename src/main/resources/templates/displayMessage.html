@@ -26,8 +26,8 @@
 
     textarea {
         width: 60em;
-        height: 15em;
-        border: 50px solid white;
+        height: 60em;
+        border: 0px solid white;
         padding: 0.5em;
         background: white;
     }
@@ -36,20 +36,18 @@
 </style>
 </head>
 <body>
-    <div layout:fragment="body" style="text-indent: 50px;">
+    <div layout:fragment="body" style="text-align: center;">
         <div class="form-group">
-                <h2>Empfaenger</h2>
-                <br>
-                <label th:text="${message.sender.getMail()}"></label>
+            <h2>Empfaenger</h2>
+            <label th:text="${message.sender.getMail()}"></label>
         </div>
         <div class="form-group">
             <h2>Betreff</h2>
-            <br>
             <label th:text="${message.subject}"></label>
         </div>
         <div class="form-group">
             <h2>Inhalt</h2>
-            <textarea class="form-group" th:text="${message.message}" disabled></textarea>
+            <textarea class="form-group" style="font-weight: bold" th:text="${message.message}" disabled></textarea>
         </div>
     </div>
 </body>
