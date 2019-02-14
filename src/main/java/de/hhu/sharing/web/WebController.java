@@ -38,9 +38,6 @@ public class WebController {
                 .orElseThrow(
                         () -> new RuntimeException("User not found!"));
         model.addAttribute("user",user);
-        LocalDate birthdate = user.getBirthdate();
-        String thisBirthdate = birthdate.toString();
-        model.addAttribute("birthdate", thisBirthdate);
         return "account";
     }
 
