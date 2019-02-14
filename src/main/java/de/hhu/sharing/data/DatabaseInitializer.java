@@ -52,7 +52,7 @@ DatabaseInitializer implements ServletContextInitializer {
                 LocalDate.of(2019, 2, 12),
                 peter);
 
-        User guenther = mkUser("Guenther", "$2a$07$MIpz7Ns1kzEq66wpMQPAIuySvXaQrkkFgwkyetdJiKpFZUDy3I0hC", "ROLE_ADMIN","Gurke","Guenther", "test3@test.de",
+        User guenther = mkUser("Guenther", "password", "ROLE_ADMIN","Gurke","Guenther", "test3@test.de",
                 LocalDate.of(1995, 8, 21),
                 mkAddress("Dorfstrasse 50","Feusisberg, Schweiz",  8834));
 
