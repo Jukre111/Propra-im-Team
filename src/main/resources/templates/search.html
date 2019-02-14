@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Suchergebnisse</title>
+    <style>
+        #indexbtn {
+            border: 2px solid #999;
+            border-radius: 0.5em;
+            font-size: 1.2em;
+            color: #fff;
+            background-color: #E74498;
+        }
+
+        #indexbtn:hover {background-color: #BD1D6F}
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {background-color: #f2f2f2;}
+    </style>
+</head>
+<body>
+
+<div layout:fragment="body">
+    <h1>
+        Suchergebnisse für <span th:text="|'${query}'|"></span>
+    </h1>
+    <table>
+        <tr>
+            <th width="90%">Angebote</th>
+            <th width="10%">Details</th>
+        </tr>
+        <tr th:each="item : ${items}">
+            <td th:text="${item.name}"></td>
+            <td>
+                <a type="button" th:href="@{'/details?id=' + ${item.Id}}" id="indexbtn" style="margin-right: 20px; float: right">Details</a>
+            </td>
+        </tr>
+
+    </table>
+</div>
+
+</body>
+</html>
