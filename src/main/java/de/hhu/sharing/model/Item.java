@@ -1,6 +1,7 @@
 package de.hhu.sharing.model;
 
 import lombok.Data;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ public class Item {
     private Long id;
 
     private String name;
+    @Column(columnDefinition = "TEXT")
     private String description;
     private int rental;     //per Day
     private int deposit;
@@ -24,8 +26,17 @@ public class Item {
     @ManyToOne(fetch = FetchType.EAGER)
     private User lender;
 
-    //@ManyToOne(fetch = FetchType.EAGER)
-    //private User borrower;
+    public Item(){
+    }
 
+    public Item(String name, String description, int rental, int deposit, LocalDate startdate, LocalDate enddate, User lender){
+        this.name = name;
+        this.description = description;
+        this.rental = rental;
+        this.deposit = deposit;
+        this.startdate = startdate;
+        this.enddate = enddate;
+        this.lender = lender;
+    }
 
 }
