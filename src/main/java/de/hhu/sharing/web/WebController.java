@@ -37,9 +37,8 @@ public class WebController {
         final User user = this.users.findByUsername(p.getName())
                 .orElseThrow(
                         () -> new RuntimeException("User not found!"));
-        final List<Item> lendItems = this.items.findAllByLender(user);
         model.addAttribute("user",user);
-        model.addAttribute("lendItems",lendItems);
+        model.addAttribute("lendItems",this.items.findAllByLender(user));
         return "account";
     }
 
@@ -57,5 +56,10 @@ public class WebController {
         return "newitem";
     }
 
-
+    @GetMapping("/search")
+    public String search(@RequestParam final String query, Model model) {
+        model.addAttribute("items", this.items.findAllByNameContainingOrDescriptionContaining(query,query));
+        model.addAttribute("query", query);
+        return "search";
+    }
 }
