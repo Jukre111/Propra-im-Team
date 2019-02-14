@@ -13,14 +13,16 @@ schreiben (mit Namen)
 
 ## Codeformatierung & Richtlinien
 
-* commits im imperativ und auf englisch.
-* Code auf englisch, CamelCase verwenden.
+* Commits im imperativ und auf Englisch.
+* Code auf Englisch, CamelCase verwenden.
 * Tabs werden verwendet.
 * Checkstyle verwenden.
+* FindBugs wird benutzt und Fehler zeitnah korrigiert.
 
 ## Aufgaben:
 * Login
 * Travis
+* FindBugs
 * Docker & Dockercompose
 * Datenbank (Postgres)
 * Benutzerkonto
@@ -73,18 +75,18 @@ vermerkt.
 
 ## Erläuterung der Model Datenstruktur
 * User:
-. Jeder Benutzer der Website wird als Objekt von User gespeichert.
+. Jeder Benutzer der Website wird als User Objekt gespeichert.
 . Die ID der User-Klasse ist der username, d.h. er kann nur von einem Account verwendet werden.
 * Address:
 . Jede Adresse eines Benutzers wird als Objekt der Klasse Address im User gespeichert.
-. Adress ist embeddable, damit Benutzer mit derselben Adresse diese speichern können.
+. Address ist embeddable, damit Benutzer mit derselben Adresse diese speichern können.
 * Item:
 . Jeder zur Vermietung eingestellte Artikel wird als Objekt der Klasse Item gespeichert.
 . Die ID wird automatisch generiert, um die Artikel eindeutig voneinannder unterscheiden zu können.
 * Message:
 . Jede Nachricht (User -> User oder System -> User) wird als Objekt der Klasse Message gespeichert.
 . Die ID wird automatisch generiert und ist eindeutig.
-. Jede Nachricht ist dem Artikel zugeordnet um den es geht.
+. Jede Nachricht ist dem Artikel zugeordnet, um den es geht.
 
 ## Datenbank fuellen
 Da die Registrierung optional ist, speichern wir beim Starten des Programms ueber
@@ -148,3 +150,7 @@ Zeit ist, implementieren wir die Registrierung und aendern dies.
 . Sonst wird eine RuntimeException geworfen.
 * localhost:8080/newItem
 . Öffnet newItem.html
+
+## Architektur
+GUI <-> Controller <-> Logik <-> Model <-> Datenbank <- DatabaseInitializer
+
