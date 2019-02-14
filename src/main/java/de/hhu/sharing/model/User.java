@@ -34,7 +34,20 @@ public class User {
         borrowedItems.add(item);
     }
 
-    //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    //private List<ItemNotFound> lendItems = new ArrayList<>();
+    public User(){
+    }
+
+    public User(String username, String password, String role,
+                String lastname, String forename, String email,
+                LocalDate birthdate, Address address){
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.lastname = lastname;
+        this.forename = forename;
+        this.email = email;
+        this.birthdate = birthdate;
+        this.address = address;
+    }
 
 }

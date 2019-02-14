@@ -38,9 +38,7 @@ public class WebController {
                 .orElseThrow(
                         () -> new RuntimeException("User not found!"));
         model.addAttribute("user",user);
-        LocalDate birthdate = user.getBirthdate();
-        String thisBirthdate = birthdate.toString();
-        model.addAttribute("birthdate", thisBirthdate);
+        model.addAttribute("lendItems",this.items.findAllByLender(user));
         return "account";
     }
 
@@ -93,5 +91,10 @@ public class WebController {
 
     }
 
-
+    @GetMapping("/search")
+    public String search(@RequestParam final String query, Model model) {
+        model.addAttribute("items", this.items.findAllByNameContainingOrDescriptionContaining(query,query));
+        model.addAttribute("query", query);
+        return "search";
+    }
 }
