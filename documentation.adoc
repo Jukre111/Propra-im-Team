@@ -33,18 +33,19 @@ schreiben (mit Namen)
 * Artikel löschen
 * Schnittstelle zu ProPay
 
-## Datenstruktur
+## Model Datenstrukturen
 * User
-. id : long
-. mail : String
+. username : String (ID)
+. email : String
 . password : String
-. name : String
-. birthdate : Date
+. birthdate : LocalDate
 . address : Address
+. role : String
+. lastname : String
+. forename : String
 . borrowedItems : List<Item>
-. lendItems : List<Item>
 * Item
-. id : long
+. id : long (ID)
 . name : String
 . description : String
 . deposit : int
@@ -52,29 +53,86 @@ schreiben (mit Namen)
 . enddate : Date
 . startdate : Date
 . lender : User
-. borrower : User
-. (ownerId != renterId)
-* Address
+* Address (Embeddable)
 . street : String
 . city : String
 . postcode : int
 * Message
-. id : long
+. id : long (ID)
 . sender : User
 . receiver : User
 . item : Item
 . subject : String
 . message : String
 
+## Erläuterung der Model Datenstruktur
+* User:
+. Jeder Benutzer der Website wird als Objekt von User gespeichert.
+. Die ID der User-Klasse ist der username, d.h. er kann nur von einem Account verwendet werden.
+* Address:
+. Jede Adresse eines Benutzers wird als Objekt der Klasse Address im User gespeichert.
+. Adress ist embeddable, damit Benutzer mit derselben Adresse diese speichern können.
+* Item:
+. Jeder zur Vermietung eingestellte Artikel wird als Objekt der Klasse Item gespeichert.
+. Die ID wird automatisch generiert, um die Artikel eindeutig voneinannder unterscheiden zu können.
+* Message:
+. Jede Nachricht (User -> User oder System -> User) wird als Objekt der Klasse Message gespeichert.
+. Die ID wird automatisch generiert und ist eindeutig.
+. Jede Nachricht ist dem Artikel zugeordnet um den es geht.
+
 ## Struktur der Website
-* Index-Site
+* Base-Site
+. Banner
+* BaseWithSearchBar-Site
+. Banner
 . Nachrichten (Button)
 . Account (Button)
-. Liste Angebote (Details anfordern -> Button)
 . Suche in Angebote (Suchfeld -> Button los)
+* Login-Site
+. Benutzername (Input)
+. Passwort (Input)
+. Einloggen (Button)
+. Registrieren (Link)
+* Index-Site
+. BaseWithSearchBar
+. Liste Angebote (Details anfordern -> Button)
 . Angebotliste (Anfrage auf Details -> Button)
 * Account-Site
+. BaseWithSearchBar
 . Artikel einstellen (Button)
 . Liste verliehener Items (bearbeiten, loeschen -> Buttons)
 . Liste geliehener Items (abgeben -> Button)
 . Clearing Stelle (Button)
+* Mailbox-Site
+. BaseWithSearchBar
+. Liste an erhaltenen Nachrichten
+. Nachricht anzeigen (Button pro Nachricht)
+. E-mail schreiben (Button)
+* DisplayMessage-Site
+. BaseWithSearchBar
+. Sender (Text)
+. Betreff (Text)
+. Inhalt (Text)
+* WriteMessage-Site
+. BaseWithSearchBar
+. Empfängerfeld (Input)
+. Itemauswahl (DropList)
+. Betreff (Input)
+. Inhalt (Input)
+. Abbrechen (Button)
+. Senden (Button)
+
+
+## Erläuterung der Website Struktur
+* Login:
+. Wird aufgerufen, wenn man noch nicht eingeloggt ist.
+. Man wird auch hierherweitergeleitet, solang man nicht eingeloggt ist.
+* localhost:8080/
+. öffnet index.html
+* localhost:8080/account
+. Öffnet account.html mit Daten des Nutzers.
+* localhost:8080/details
+. Wenn Item existiert/gefunden wird, wird details.html mit den Daten des Items geöffnet.
+. Sonst wird eine RuntimeException geworfen.
+* localhost:8080/newItem
+. Öffnet newItem.html
