@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.hhu.sharing.data.ItemRepository;
+import de.hhu.sharing.model.Account;
 import de.hhu.sharing.model.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
@@ -16,13 +17,12 @@ import java.net.URL;
 
 public class ProPayService {
 
-    public void showAccount(String username) throws Exception{
+    public String showAccount(String username) throws Exception{
         String URL = "http://localhost:8888/account/" + username + "/";
         String jsonReservation = rt.getForObject(URL, String.class);
-        JsonObject reservation = new Gson().fromJson(jsonReservation, JsonObject.class);
-        JsonArray reservationArray = reservation.getAsJsonArray("reservations");
-        for(JsonElement value : reservationArray)
-            System.out.println(value.getAsString());
+        Account account = new Gson().fromJson(jsonReservation, Account.class);
+        System.out.println(account.getReservationStrings());
+        return account.getReservationStrings();
     }
 
     public void createAccount(String username) {

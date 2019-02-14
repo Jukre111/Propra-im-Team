@@ -31,6 +31,7 @@ public class WebController {
         model.addAttribute("items", this.items.findAll());
         ProPayService service = new ProPayService();
         service.showAccount("user1");
+        model.addAttribute("json", service.showAccount("user1"));
         return "index";
     }
 
