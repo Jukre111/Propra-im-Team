@@ -21,7 +21,7 @@ public class User {
 
     private String lastname;
     private String forename;
-    private String mail;
+    private String email;
     private LocalDate birthdate;
 
     @Embedded

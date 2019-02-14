@@ -5,6 +5,7 @@ import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletContext;
@@ -23,11 +24,14 @@ DatabaseInitializer implements ServletContextInitializer {
     @Autowired
     private ItemRepository items;
 
+    @Autowired
+    private PasswordEncoder encoder;
+
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         System.out.println("Populating the database");
 
-        User hans = mkUser("Hansi", "$2a$07$MIpz7Ns1kzEq66wpMQPAIuySvXaQrkkFgwkyetdJiKpFZUDy3I0hC","ROLE_USER", "Hans", "Hans", "test1@test.de",
+        User hans = mkUser("Hansi", "1234","ROLE_USER", "Hans", "Hans", "test1@test.de",
                 LocalDate.of(1990, 12, 12),
                 mkAddress("Kaiser-Wilhelm-Allee 3","Leverkusen", 51373));
         Item mixer = mkItem("Mixer", "mixt Sachen", 5, 20,
@@ -35,7 +39,7 @@ DatabaseInitializer implements ServletContextInitializer {
                 LocalDate.of(2019, 2, 12),
                 hans);
 
-        User peter = mkUser("Nashorn",  "$2a$07$MIpz7Ns1kzEq66wpMQPAIuySvXaQrkkFgwkyetdJiKpFZUDy3I0hC","ROLE_USER", "Peti", "Peter","test2@test.de",
+        User peter = mkUser("Nashorn",  "2345","ROLE_USER", "Peti", "Peter","test2@test.de",
                 LocalDate.of(1991, 12, 1),
                 mkAddress("Berliner Ring 3","Wolfsburg",  38440));
 
@@ -71,11 +75,11 @@ DatabaseInitializer implements ServletContextInitializer {
     private User mkUser(String username, String password, String role, String lastname, String forename, String mail, LocalDate birthdate, Address address) {
         User user = new User();
         user.setUsername(username);
-        user.setPassword(password);
+        user.setPassword(encoder.encode(password));
         user.setRole(role);
         user.setLastname(lastname);
         user.setForename(forename);
-        user.setMail(mail);
+        user.setEmail(mail);
         user.setBirthdate(birthdate);
         user.setAddress(address);
         return user;

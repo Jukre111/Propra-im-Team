@@ -29,12 +29,12 @@ public class UserRepositoryTest {
         add1.setStreet("Universitaetsstrasse 1");
 
         user1.setName("Nutzer1");
-        user1.setMail("Person1@test.de");
+        user1.setEmail("Person1@test.de");
         user1.setPassword("pswd");
         user1.setAddress(add1);
 
         user2.setName("Nutzer2");
-        user2.setMail("Person2@test.de");
+        user2.setEmail("Person2@test.de");
         user2.setPassword("pswd");
         user2.setAddress(add1);
 
