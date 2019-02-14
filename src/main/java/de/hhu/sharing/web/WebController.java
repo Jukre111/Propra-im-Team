@@ -54,11 +54,42 @@ public class WebController {
     }
 
     @GetMapping("/item")
-    public String item(@RequestParam(name  = "id") Long id, Model model ){
-
-        Item item = new Item();
-        
+    public String item(Model model, @RequestParam("id") Long id){
+        Item newItem = new Item();
+        newItem.setId(new Long(-1));
+        if(id == -1){
+            model.addAttribute("item", newItem);
+        }
+        else{
+            Optional<Item> it = items.findById(id);
+            if(it.isPresent()){
+                model.addAttribute("item", it.get());
+            }
+            else{
+                model.addAttribute("item", newItem);
+            }
+        }
         return "item";
+    }
+
+    @PostMapping("/saveItem")
+    public String saveItem(Model model, Long id, String name, String description, int rental, int deposit, Principal p){
+        Item newItem = new Item();
+        final User user = this.users.findByUsername(p.getName())
+                .orElseThrow(
+                        () -> new RuntimeException("User not found!"));
+        if(id!=-1){
+            newItem.setId(id);
+        }
+        newItem.setName(name);
+        newItem.setDescription(description);
+        newItem.setRental(rental);
+        newItem.setDeposit(deposit);
+        newItem.setLender(user);
+
+        items.save(newItem);
+        return "item";
+
     }
 
 
