@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>E-Mail anzeigen</title>
+    <style>
+    #indexbtn {
+        border: 2px solid #999;
+        border-radius: 0.5em;
+        font-size: 1.2em;
+        color: #fff;
+        background-color: #E74498;
+    }
+
+    #indexbtn:hover {background-color: #BD1D6F}
+
+    table {
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    th, td {
+    text-align: left;
+    padding: 8px;
+    }
+
+    textarea {
+        width: 60em;
+        height: 60em;
+        border: 0px solid white;
+        padding: 0.5em;
+        background: white;
+    }
+
+    tr:nth-child(even) {background-color: #f2f2f2;}
+</style>
+</head>
+<body>
+    <div layout:fragment="body" style="text-align: center;">
+        <div class="form-group">
+            <h2>Empfaenger</h2>
+            <label th:text="${message.sender.getMail()}"></label>
+        </div>
+        <div class="form-group">
+            <h2>Betreff</h2>
+            <label th:text="${message.subject}"></label>
+        </div>
+        <div class="form-group">
+            <h2>Inhalt</h2>
+            <textarea class="form-group" style="font-weight: bold" th:text="${message.message}" disabled></textarea>
+        </div>
+    </div>
+</body>
+</html>
