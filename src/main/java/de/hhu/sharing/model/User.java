@@ -3,6 +3,7 @@ package de.hhu.sharing.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,7 +22,7 @@ public class User {
     private String lastname;
     private String forename;
     private String mail;
-    private Date birthdate;
+    private LocalDate birthdate;
 
     @Embedded
     private Address address;
