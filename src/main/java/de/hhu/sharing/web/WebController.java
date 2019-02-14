@@ -27,8 +27,10 @@ public class WebController {
     private ItemRepository items;
 
     @GetMapping("/")
-    public String index(Model model, Principal p) {
+    public String index(Model model, Principal p) throws Exception {
         model.addAttribute("items", this.items.findAll());
+        ProPayService service = new ProPayService();
+        service.showAccount("user1");
         return "index";
     }
 

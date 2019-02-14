@@ -20,6 +20,7 @@ public class Item {
     private int deposit;
     private LocalDate startdate;
     private LocalDate enddate;
+    private int reservationId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private User lender;
