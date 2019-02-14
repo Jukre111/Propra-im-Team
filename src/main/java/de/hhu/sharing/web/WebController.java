@@ -53,9 +53,44 @@ public class WebController {
         return "details";
     }
 
-    @GetMapping("/newitem")
-    public String newitemPage(){
-        return "newitem";
+    @GetMapping("/item")
+    public String item(Model model, @RequestParam("id") Optional<Long> id){
+        Item newItem = new Item();
+        //newItem.setId(new Long(-1));
+        if(!id.isPresent()){
+            model.addAttribute("item", newItem);
+        }
+        else{
+            Optional<Item> it = items.findById(id.get());
+            if(it.isPresent()){
+                model.addAttribute("item", it.get());
+            }
+            else{
+                model.addAttribute("item", newItem);
+            }
+        }
+        return "item";
+    }
+
+    @PostMapping("/saveItem")
+    public String saveItem(Model model, Long id, String name, String description, Integer rental, Integer deposit, Principal p){
+        Item newItem = new Item();
+        final User user = this.users.findByUsername(p.getName())
+                .orElseThrow(
+                        () -> new RuntimeException("User not found!"));
+        if (id != null){
+            newItem.setId(id);
+        }
+        newItem.setName(name);
+        newItem.setDescription(description);
+        newItem.setRental(rental);
+        newItem.setDeposit(deposit);
+        newItem.setLender(user);
+
+        items.save(newItem);
+
+        return "redirect:/";
+
     }
 
 
