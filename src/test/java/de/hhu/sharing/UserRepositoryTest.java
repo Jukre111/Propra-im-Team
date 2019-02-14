@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDate;
+
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class UserRepositoryTest {
@@ -28,15 +30,28 @@ public class UserRepositoryTest {
         add1.setPostcode(40233);
         add1.setStreet("Universitaetsstrasse 1");
 
-        user1.setName("Nutzer1");
-        user1.setMail("Person1@test.de");
+        user1.setUsername("Nutzer1");
+        user1.setForename("Joe");
+        user1.setLastname("Karl");
+        user1.setRole("ROLE_ADMIN");
+        user1.setEmail("Person1@test.de");
         user1.setPassword("pswd");
         user1.setAddress(add1);
 
-        user2.setName("Nutzer2");
-        user2.setMail("Person2@test.de");
+        LocalDate date1 = LocalDate.of(2019, 5, 13);
+        user1.setBirthdate(date1);
+
+        user2.setUsername("Nutzer2");
+        user2.setForename("Joey");
+        user2.setLastname("Karlus");
+        user2.setRole("ROLE_ADMIN");
+        user2.setEmail("Person2@test.de");
         user2.setPassword("pswd");
         user2.setAddress(add1);
+
+
+        LocalDate date2 = LocalDate.of(2014, 5, 13);
+        user2.setBirthdate(date2);
 
         userRepo.save(user1);
         userRepo.save(user2);

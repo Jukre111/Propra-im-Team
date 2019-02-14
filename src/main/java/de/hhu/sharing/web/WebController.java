@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
@@ -45,11 +46,16 @@ public class WebController {
 
     @GetMapping("/details")
     public String details(@RequestParam(name = "id") final String id, Model model){
-        final Item item = this.items.findById(new Long(id))
+        final Item item = this.items.findById(Long.valueOf(id))
                 .orElseThrow(
                         () -> new RuntimeException("Item not found!"));
         model.addAttribute("item", item);
         return "details";
+    }
+
+    @GetMapping("/newitem")
+    public String newitemPage(){
+        return "newitem";
     }
 
 
