@@ -24,7 +24,7 @@
             width: 50%;
         }
 
-        #indexbtn {
+        .indexbtn {
             padding-left: 5px;
             padding-right: 5px;
             border: 2px solid #999;
@@ -34,7 +34,7 @@
             background-color: #E74498;
         }
 
-        #indexbtn:hover {background-color: #BD1D6F}
+        .indexbtn:hover {background-color: #BD1D6F}
 
         .bgimg {
             background-image: url('https://png.pngtree.com/thumb_back/fh260/back_pic/04/24/51/235836866b71f0b.jpg');
@@ -47,17 +47,19 @@
     <h1><span style="font-size: 18pt">Willkommen auf</span> <span style="font-size: 30pt; color: #BD1D6F; font-weight: bold">SHARING</span></h1>
 </div>
 <div style="padding: 20px; background-color: #fef8fd">
-    <input type="search" id="search" placeholder="Suche..." style="margin-right: 20px; float: left"/>
-    <input type="button" id="indexbtn" value="Los!" style="margin-right: 20px; float: left"/>
-    <a th:href="@{'/newitem'}" id="indexbtn" style="margin-right: 20px; float: left">Angebot aufgeben</a>
-    <a th:href="@{'/logout'}" id="indexbtn" style="margin-right: 20px; float: right">Logout</a>
-    <a th:href="@{'/account'}" id="indexbtn" style="margin-right: 20px; float: right">Account</a>
-    <a th:href="@{'/messages'}" id="indexbtn" style="margin-right: 20px; float: right">Nachrichten</a>
+    <form method="get" action="/search">
+        <input type="search" name="query" id="search" placeholder="Suche..." style="margin-right: 20px; float: left"/>
+        <button type="submit" class="indexbtn" value="Los!" style="margin-right: 20px; float: left">Search</button>
+    </form>
+    <a th:href="@{'/item'}" class="indexbtn" style="margin-right: 20px; float: left">Angebot aufgeben</a>
+    <a th:href="@{'/logout'}" class="indexbtn" style="float: right">Logout</a>
+    <a th:href="@{'/account'}" class="indexbtn" style="margin-right: 20px; float: right">Account</a>
+    <a th:href="@{'/messages'}" class="indexbtn" style="margin-right: 20px; float: right">Nachrichten</a>
 </div>
-<div>
-    <label layout:fragment="body">
+<div class="container">
+    <div layout:fragment="body" style="padding: 20px">
         Body goes here
-    </label>
+    </div>
 </div>
 </body>
 </html>

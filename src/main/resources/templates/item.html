@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Sharing</title>
+    <style>
+        #indexbtn {
+            border: 2px solid #999;
+            border-radius: 0.5em;
+            font-size: 1.2em;
+            color: #fff;
+            background-color: #E74498;
+        }
+
+        #indexbtn:hover {background-color: #BD1D6F}
+
+        .style {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            margin-top: 2%;
+            margin-left: 25%;
+            margin-right: 25%;
+        }
+
+        .textPosition {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="body">
+    <div class="style textPosition" style="padding: 20px">
+        <h1><span style="font-size: 20pt">Danke für Ihren Beitrag zu</span></h1>
+        <h2><span style="font-size: 30pt; color: #BD1D6F">SHARING</span></h2>
+        <div class="form-horizontal" style="padding-top: 60px">
+            <form th:action="@{/saveItem}" method="post">
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">Objektname</label>
+                    <div class="col-xs-6">
+                        <input type="text" class="form-control" id="name" name="name" th:value="${item.name}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="rental" class="col-sm-2 control-label">Preis / Tag</label>
+                    <div class="col-xs-4">
+                        <div class="input-group">
+                            <div class="input-group-addon">€</div>
+                            <input type="number" name="rental" min="0" class="form-control" th:value="${item.rental}" step="1" pattern="\d+"/>
+                            <div class="input-group-addon">,00</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="deposit" class="col-sm-2 control-label">Kaution</label>
+                    <div class="col-xs-4">
+                        <div class="input-group">
+                            <div class="input-group-addon">€</div>
+                            <input name="deposit" type="number" min="0" class="form-control" th:value="${item.deposit}"/>
+                            <div class="input-group-addon">,00</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="description" class="col-sm-2 control-label">Beschreibung</label>
+                    <div class="col-xs-6">
+                        <textarea class="form-control" id="description" name="description" th:inline="text">[[${item.description}]]</textarea>
+                    </div>
+                </div>
+
+                </div>
+            <div class="modal-footer">
+                <a class="indexbtn" href="/" style="padding: 5px">Abbrechen</a>
+                <button type="submit" class="indexbtn" style="padding: 5px" name="button">Speichern</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
