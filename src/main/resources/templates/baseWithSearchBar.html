@@ -56,10 +56,13 @@
     <a th:href="@{'/account'}" id="indexbtn" style="margin-right: 20px; float: right">Account</a>
     <a th:href="@{'/messages'}" id="indexbtn" style="margin-right: 20px; float: right">Nachrichten</a>
 </div>
-<div>
-    <label layout:fragment="body">
-        Body goes here
-    </label>
+<div class="container">
+    <h1 layout:fragment="title">
+        Title goes here
+    </h1>
+    <div layout:fragment="content">
+        Content goes here
+    </div>
 </div>
 </body>
 </html>
