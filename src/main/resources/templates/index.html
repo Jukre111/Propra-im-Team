@@ -28,10 +28,7 @@
 </style>
 </head>
 <body>
-<h1 layout:fragment="title">
-    Angebote
-</h1>
-<div layout:fragment="content">
+<div layout:fragment="body">
     <table>
         <tr>
             <th width="20%">Angebote</th>
@@ -42,7 +39,7 @@
             <td th:text="${item.name}"></td>
             <td th:text="${#strings.abbreviate(item.description,20)} "></td>
             <td>
-                <a type="button" th:href="@{'/details?id=' + ${item.Id}}" id="indexbtn" style="margin-right: 20px; float: right">Details</a>
+                <a type="button" th:href="@{'/details?id=' + ${item.Id}}" class="indexbtn" style="margin-right: 20px; float: right">Details</a>
             </td>
         </tr>
 

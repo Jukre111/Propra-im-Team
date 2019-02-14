@@ -36,10 +36,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 </style>
 </head>
 <body>
-	<h1 layout:fragment="title">
-		Accountdetails
-	</h1>
-	<div layout:fragment="content" style="padding: 20px; padding-left: 250px">
+	<div layout:fragment="body" style="padding: 20px; padding-left: 250px">
 	<form style="padding: 20px" class="form-horizontal">
 		<div class="media">
 			<div class="media-left media-middle">
@@ -122,7 +119,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					<td th:text="${lend.startdate}"></td>
 					<td th:text="${lend.enddate}"></td>
 					<td>
-						<a th:href="@{'/'}" id="indexbtn">entfernen</a>
+						<a th:href="@{'/'}" id="indexbtn">Entfernen</a>
 					</td>
 				</tr>
 			</table>
