@@ -16,7 +16,7 @@ schreiben (mit Namen)
 * commits im imperativ und auf englisch.
 * Code auf englisch, CamelCase verwenden.
 * Tabs werden verwendet.
-* ĉheckstyle verwenden.
+* Checkstyle verwenden.
 
 ## Aufgaben:
 * Login
@@ -35,30 +35,36 @@ schreiben (mit Namen)
 
 ## Model Datenstrukturen
 * User
-. username : String (ID)
-. email : String
+. username : String (id)
 . password : String
-. birthdate : LocalDate
-. address : Address
 . role : String
 . lastname : String
 . forename : String
+. email : String
+. birthdate : LocalDate
+. address : Address
 . borrowedItems : List<Item>
+
+Wir haben uns entschieden den username als Id zu benutzen, da wir sowieso verlangen
+wollen, dass jeder Nutzer einen anderen Username hat. Die Items, die dem User
+gehoeren werden hier nicht gespeichert, stattdessen wird in jedem Item der Besitzer
+vermerkt.
+
 * Item
-. id : long (ID)
+. id : Long
 . name : String
 . description : String
-. deposit : int
 . rental : int
-. enddate : Date
-. startdate : Date
+. deposit : int
+. startdate : LocalDate
+. enddate : LocalDate
 . lender : User
 * Address (Embeddable)
 . street : String
 . city : String
 . postcode : int
 * Message
-. id : long (ID)
+. id : Long (ID)
 . sender : User
 . receiver : User
 . item : Item
@@ -79,6 +85,12 @@ schreiben (mit Namen)
 . Jede Nachricht (User -> User oder System -> User) wird als Objekt der Klasse Message gespeichert.
 . Die ID wird automatisch generiert und ist eindeutig.
 . Jede Nachricht ist dem Artikel zugeordnet um den es geht.
+
+## Datenbank fuellen
+Da die Registrierung optional ist, speichern wir beim Starten des Programms ueber
+den DatabaseInitializer mehrere User und Items in der Datenbank. Falls spaeter noch
+Zeit ist, implementieren wir die Registrierung und aendern dies.
+
 
 ## Struktur der Website
 * Base-Site
