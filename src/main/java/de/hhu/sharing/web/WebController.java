@@ -53,9 +53,12 @@ public class WebController {
         return "details";
     }
 
-    @GetMapping("/newitem")
-    public String newitemPage(){
-        return "newitem";
+    @GetMapping("/item")
+    public String item(@RequestParam(name  = "id") Long id, Model model ){
+
+        Item item = new Item();
+        
+        return "item";
     }
 
 
