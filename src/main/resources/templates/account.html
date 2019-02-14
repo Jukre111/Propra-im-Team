@@ -36,7 +36,10 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 </style>
 </head>
 <body>
-	<div layout:fragment="body" style="padding: 20px; padding-left: 250px">
+	<h1 layout:fragment="title">
+		Accountdetails
+	</h1>
+	<div layout:fragment="content" style="padding: 20px; padding-left: 250px">
 	<form style="padding: 20px" class="form-horizontal">
 		<div class="media">
 			<div class="media-left media-middle">
@@ -45,33 +48,33 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 			</div>
 			<div class="media-body">
 				<div class="form-group">
-					<label for="username" class="col-sm-2 control-label">Nutzername</label>
+					<label for="username" class="col-sm-2 control-label">Benutzername</label>
 					<div class="col-xs-6">
-					<type="text" class="form-control" id="name" name="name" th:text="${user.username}" readonly/>
+					<input type="text" class="form-control" id="name" name="name" th:value="${user.username}" readonly/>
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="forename" class="col-sm-2 control-label">Vorname</label>
 					<div class="col-xs-6">
-					<type="text" class="form-control" id="forename" name="forename" th:text="${user.forename}" readonly/>
+					<input type="text" class="form-control" id="forename" name="forename" th:value="${user.forename}" readonly/>
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="lastname" class="col-sm-2 control-label">Nachname</label>
 					<div class="col-xs-6">
-					<type="text" class="form-control" id="lastname" name="lastname" th:text="${user.lastname}" readonly/>
+					<input type="text" class="form-control" id="lastname" name="lastname" th:value="${user.lastname}" readonly/>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="mail" class="col-sm-2 control-label">E-Mail</label>
+					<label for="email" class="col-sm-2 control-label">E-Mail</label>
 					<div class="col-xs-6">
-					<input type="text" class="form-control" id="mail" name="mail" th:value="${user.mail}" readonly/>
+					<input type="text" class="form-control" id="email" name="email" th:value="${user.email}" readonly/>
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="birthdate" class="col-sm-2 control-label">Geburtstag</label>
 					<div class="col-xs-3">
-					<input type="text" class="form-control" id="birthdate" name="birthdate" th:value="${birthdate}" readonly/>
+					<input type="text" class="form-control" id="birthdate" name="birthdate" th:value="${user.birthdate}" readonly/>
 					</div>
 				</div>
 				<!--<div class="form-group">
@@ -88,40 +91,42 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 		</div>
 	</form>
 
-	<div style="padding: 20px">	
-		<table>
-			<tr>
-				<th width="80%"><font size="4">Ausgeliehene Objekte</font></th>
-				<th width="10%">Ausleihfrist</th>
-				<th width="10%">Rückgabe</th>
-			</tr>
-			<tr th:each="eachBorrow : ${borrows}">
-				<td th:text="${eachBorrow.name}"></td>
-				<td th:text="{#dates.format(eachBorrow.deadline, 'yyyy-MM-dd')}"></td>
-				<td>
-					<a type="button" id="indexbtn" th:href="@{'./returnObject?id=' + ${eachBorrow.offerID}}" value="Rückgabe"></a>
-				</td>
-			</tr>	
-		</table>
-	</div>
-	<div style="padding: 20px">	
-		<table>
-			<tr>
-				<th width="80%"><font size="4">Verliehene Objekte</font></th>
-				<th width="10%">Bearbeiten</th>
-				<th width="10%">Erhalten</th>
-			</tr>
-			<tr th:each="eachLend : ${lend}">
-				<td th:text="${eachLend.name}"></td>
-				<td>
-					<a type="button" id="indexbtn" th:href="@{'./editObject?id=' + ${eachLend.offerID}}" value="Bearbeiten"></a>
-				</td>
-				<td>
-					<input class="checkbox" type="checkbox" value=""/>
-				</td>
-			</tr>	
-		</table>
-	</div>
+		<div style="padding: 20px">
+			<table>
+				<tr>
+					<th width="80%"><font size="4">Ausgeliehene Objekte</font></th>
+					<th width="10%">Von</th>
+					<th width="10%">Bis</th>
+					<th width="10%">Rückgabe</th>
+				</tr>
+				<tr th:each="borrow : ${user.borrowedItems}">
+					<td th:text="${borrow.name}"></td>
+					<td th:text="${borrow.startdate}"></td>
+					<td th:text="${borrow.enddate}"></td>
+					<td>
+						<a th:href="@{'/'}" id="indexbtn">Rückgabe</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="padding: 20px">
+			<table>
+				<tr>
+					<th width="80%"><font size="4">Aufgegebene Objekte</font></th>
+					<th width="10%">Von</th>
+					<th width="10%">Bis</th>
+					<th width="10%"></th>
+				</tr>
+				<tr th:each="lend : ${lendItems}">
+					<td th:text="${lend.name}"></td>
+					<td th:text="${lend.startdate}"></td>
+					<td th:text="${lend.enddate}"></td>
+					<td>
+						<a th:href="@{'/'}" id="indexbtn">entfernen</a>
+					</td>
+				</tr>
+			</table>
+		</div>
 	</div>
 </body>
 </html>
