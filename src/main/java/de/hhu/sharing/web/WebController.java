@@ -46,7 +46,7 @@ public class WebController {
 
     @GetMapping("/details")
     public String details(@RequestParam(name = "id") final String id, Model model){
-        final Item item = this.items.findById(new Long(id))
+        final Item item = this.items.findById(Long.valueOf(id))
                 .orElseThrow(
                         () -> new RuntimeException("Item not found!"));
         model.addAttribute("item", item);
