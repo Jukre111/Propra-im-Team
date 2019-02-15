@@ -87,6 +87,16 @@ public class WebController {
 
     }
 
+    @GetMapping("/delete")
+    public String delete(Model model, @RequestParam("id") Long id ){
+        Item item;
+        item = this.items.findById(id).orElseThrow(
+                () -> new RuntimeException("Item not found!"));
+
+        items.delete(item);
+        return "redirect:/account";
+    }
+
     @GetMapping("/search")
     public String search(@RequestParam final String query, Model model) {
         model.addAttribute("items", this.items.findAllByNameContainingOrDescriptionContaining(query,query));

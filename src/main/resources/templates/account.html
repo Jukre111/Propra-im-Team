@@ -119,7 +119,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 						<a class="indexbtn" th:href="@{'/item?id=' + ${lend.id}}">Bearbeiten</a>
 					</td>
 					<td>
-						<a th:href="@{'/'}" class="indexbtn">Entfernen</a>
+						<a class="indexbtn" th:href="@{'/delete?id=' + ${lend.id}}" >Entfernen</a>
 					</td>
 				</tr>
 			</table>
