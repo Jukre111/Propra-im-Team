@@ -2,6 +2,7 @@ package de.hhu.sharing.web;
 
 import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.UserRepository;
+import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,10 @@ public class ItemController {
                 .orElseThrow(
                         () -> new RuntimeException("Item not found!"));
         model.addAttribute("item", item);
+        User user = item.getLender();
+        model.addAttribute("user", user);
+        Address address = user.getAddress();
+        model.addAttribute("address", address);
         return "details";
     }
 
