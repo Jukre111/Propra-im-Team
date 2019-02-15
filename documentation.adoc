@@ -72,6 +72,13 @@ vermerkt.
 . item : Item
 . subject : String
 . message : String
+* Reservation
+. id : int
+. amount : int
+* Account
+. account : String
+. amount : int
+. reservations : Reservation[]
 
 ## Erläuterung der Model Datenstruktur
 * User:
@@ -87,6 +94,10 @@ vermerkt.
 . Jede Nachricht (User -> User oder System -> User) wird als Objekt der Klasse Message gespeichert.
 . Die ID wird automatisch generiert und ist eindeutig.
 . Jede Nachricht ist dem Artikel zugeordnet, um den es geht.
+* Reservation:
+. Klasse/Modell wird verwendet um die Json Dateien zu verarbeiten.
+* Account:
+. Klasse/Modell wird verwendet um die Json Dateien zu verarbeiten.
 
 ## Datenbank fuellen
 Da die Registrierung optional ist, speichern wir beim Starten des Programms ueber

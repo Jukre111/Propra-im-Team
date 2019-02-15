@@ -1,17 +1,14 @@
 package de.hhu.sharing.model;
 
+import lombok.Data;
+
+@Data
 public class Account {
     String account;
     int ammount;
     Reservation[] reservations;
 
-    public String getReservationStrings() {
-        String string = "";
-
-        for(int i = 0; i < reservations.length; i++) {
-            string += reservations[i].id + " ";
-        }
-
-        return string;
+    public int getLatestReservationId() {
+        return reservations[reservations.length - 1].getId();
     }
 }

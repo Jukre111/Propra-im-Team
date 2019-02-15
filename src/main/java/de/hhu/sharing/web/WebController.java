@@ -27,11 +27,8 @@ public class WebController {
     private ItemRepository items;
 
     @GetMapping("/")
-    public String index(Model model, Principal p) throws Exception {
+    public String index(Model model, Principal p) {
         model.addAttribute("items", this.items.findAll());
-        ProPayService service = new ProPayService();
-        service.showAccount("user1");
-        model.addAttribute("json", service.showAccount("user1"));
         return "index";
     }
 
