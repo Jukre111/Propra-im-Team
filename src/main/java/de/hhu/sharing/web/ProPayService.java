@@ -63,8 +63,8 @@ public class ProPayService {
     }
 
     public void cancelDeposit(String usernameSource, Item item) {
-        int reserverationId = item.getReservationId();
-        String URL = "http://localhost:8888/reservation/release/" + usernameSource + "?reservationId=" + Integer.toString(reserverationId);
+        int reservationId = item.getReservationId();
+        String URL = "http://localhost:8888/reservation/release/" + usernameSource + "?reservationId=" + Integer.toString(reservationId);
         this.callURL(URL, "POST");
         item.setReservationId(-1);
         itemRepo.save(item);
@@ -72,15 +72,15 @@ public class ProPayService {
     }
 
     public void collectDeposit(String usernameSource, Item item) {
-        int reserverationId = item.getReservationId();
-        String URL = "http://localhost:8888/reservation/punish/" + usernameSource + "?reservationId=" + Integer.toString(reserverationId);
+        int reservationId = item.getReservationId();
+        String URL = "http://localhost:8888/reservation/punish/" + usernameSource + "?reservationId=" + Integer.toString(reservationId);
         this.callURL(URL, "POST");
         item.setReservationId(-1);
         itemRepo.save(item);
     }
 
     //returns a http response or in case of an Exception an -1
-    private int callURL(String Url, String method) {
+    public int callURL(String Url, String method) {
         URL url = null;
         try {
             url = new URL(Url);
@@ -94,6 +94,11 @@ public class ProPayService {
         }
         return -1;
     }
+
+    public RestTemplate changeTemplateTo(RestTemplate rt) {
+		return this.rt=rt;
+    }
+
     /* Possible responses:
     private void checkForLegalRequest (int response) {
         switch (response){

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 @Data
 public class Account {
     String account;
-    int ammount;
+    int amount;
     ArrayList<Reservation> reservations;
 
     public int getLatestReservationId() {
