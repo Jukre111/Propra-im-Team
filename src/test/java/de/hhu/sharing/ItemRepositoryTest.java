@@ -106,4 +106,32 @@ public class ItemRepositoryTest {
         Assertions.assertThat(itemList.size()).isEqualTo(2);
 
     }
+
+    @Test
+    public void  testFindAllByNameContainingOrDescriptionContaining(){
+        Item item1 = new Item();
+        Item item2 = new Item();
+        Item item3 = new Item();
+
+        item1.setName("apfel");
+        item1.setDescription("Kerne");
+
+        item2.setName("granatapfel");
+        item2.setDescription("lecker");
+
+        item3.setName("banane");
+        item3.setDescription("lecker");
+
+        itemRepo.save(item1);
+        itemRepo.save(item2);
+        itemRepo.save(item3);
+
+        List<Item> itemList1 = itemRepo.findAllByNameContainingOrDescriptionContaining("apf", "Kern");
+        List<Item> itemList2 = itemRepo.findAllByNameContainingOrDescriptionContaining("banane", "leck");
+        
+        Assertions.assertThat(itemList1.size()).isEqualTo(2);
+        Assertions.assertThat(itemList2.size()).isEqualTo(2);
+
+
+    }
 }
