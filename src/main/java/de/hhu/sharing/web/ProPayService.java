@@ -35,12 +35,12 @@ public class ProPayService {
     }
 
     public void createAccount(String username) {
-        Account createAccount = this.showAccount(username);
+        this.showAccount(username);
     }
 
     public void raiseBalance(String username, int amount) {
         String URL = "http://localhost:8888/account/" + username + "?amount=" + Integer.toString(amount);
-        int response = this.callURL(URL, "POST");
+        this.callURL(URL, "POST");
     }
 
     //returns a http response or in case of an Exception an -1
@@ -65,7 +65,7 @@ public class ProPayService {
     public void cancelDeposit(String usernameSource, Item item) {
         int reserverationId = item.getReservationId();
         String URL = "http://localhost:8888/reservation/release/" + usernameSource + "?reservationId=" + Integer.toString(reserverationId);
-        int response = callURL(URL, "POST");
+        this.callURL(URL, "POST");
         item.setReservationId(-1);
         itemRepo.save(item);
 
@@ -74,7 +74,7 @@ public class ProPayService {
     public void collectDeposit(String usernameSource, Item item) {
         int reserverationId = item.getReservationId();
         String URL = "http://localhost:8888/reservation/punish/" + usernameSource + "?reservationId=" + Integer.toString(reserverationId);
-        int response = callURL(URL, "POST");
+        this.callURL(URL, "POST");
         item.setReservationId(-1);
         itemRepo.save(item);
     }
