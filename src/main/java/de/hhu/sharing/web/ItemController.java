@@ -24,8 +24,8 @@ public class ItemController {
     private ItemRepository items;
 
     @GetMapping("/details")
-    public String details(@RequestParam(name = "id") final String id, Model model){
-        final Item item = this.items.findById(Long.valueOf(id))
+    public String details(@RequestParam(name = "id") Long id, Model model){
+        final Item item = this.items.findById(id)
                 .orElseThrow(
                         () -> new RuntimeException("Item not found!"));
         model.addAttribute("item", item);
@@ -43,7 +43,7 @@ public class ItemController {
     }
 
     @PostMapping("/saveItem")
-    public String saveItem(Model model, Long id, String name, String description, Integer rental, Integer deposit, Principal p){
+    public String saveItem(Long id, String name, String description, Integer rental, Integer deposit, Principal p){
         Item item;
         if(id != null){
             item = this.items.findById(id).orElseThrow(
@@ -69,12 +69,12 @@ public class ItemController {
     }
 
     @GetMapping("/delete")
-    public String delete(Model model, @RequestParam("id") Long id ){
-        Item item;
-        item = this.items.findById(id).orElseThrow(
+    public String delete(@RequestParam("id") Long id ){
+        Item item = this.items.findById(id).orElseThrow(
                 () -> new RuntimeException("Item not found!"));
 
         items.delete(item);
         return "redirect:/account";
     }
+
 }

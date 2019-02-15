@@ -1,12 +1,9 @@
 package de.hhu.sharing.model;
 
 import lombok.Data;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -28,7 +25,7 @@ public class Item {
 
     private boolean available = true;
     @OneToMany(cascade = CascadeType.ALL)
-    private List<BorrowRequest> requests = new ArrayList<>();
+    private List<Request> requests = new ArrayList<>();
 
     public Item(){
     }
@@ -39,6 +36,10 @@ public class Item {
         this.rental = rental;
         this.deposit = deposit;
         this.lender = lender;
+    }
+
+    public void addToRequests(Request request) {
+        requests.add(request);
     }
 
 }
