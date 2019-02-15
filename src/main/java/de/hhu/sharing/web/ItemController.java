@@ -49,25 +49,22 @@ public class ItemController {
 
     @PostMapping("/saveItem")
     public String saveItem(Long id, String name, String description, Integer rental, Integer deposit, Principal p){
-        Item item;
+        Item item = new Item();
         if(id != null){
             item = this.items.findById(id).orElseThrow(
                     () -> new RuntimeException("Item not found!"));
         }
-        else{
-            item = new Item();
-        }
         final User user = this.users.findByUsername(p.getName())
                 .orElseThrow(
                         () -> new RuntimeException("User not found!"));
-
-        item.setName(name);
-        item.setDescription(description);
-        item.setRental(rental);
-        item.setDeposit(deposit);
-        item.setLender(user);
-
-        items.save(item);
+        if(item.isAvailable()){
+            item.setName(name);
+            item.setDescription(description);
+            item.setRental(rental);
+            item.setDeposit(deposit);
+            item.setLender(user);
+            items.save(item);
+        }
 
         return "redirect:/";
 
@@ -78,8 +75,9 @@ public class ItemController {
         Item item = this.items.findById(id)
                 .orElseThrow(
                         () -> new RuntimeException("Item not found!"));
-
-        items.delete(item);
+        if(item.isAvailable()){
+            items.delete(item);
+        }
         return "redirect:/account";
     }
 
