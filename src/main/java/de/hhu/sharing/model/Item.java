@@ -20,22 +20,22 @@ public class Item {
     private String description;
     private int rental;     //per Day
     private int deposit;
-    private LocalDate startdate;
-    private LocalDate enddate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private User lender;
 
+    private boolean borrowed = false;
+    private LocalDate startdate;
+    private LocalDate enddate;
+
     public Item(){
     }
 
-    public Item(String name, String description, int rental, int deposit, LocalDate startdate, LocalDate enddate, User lender){
+    public Item(String name, String description, int rental, int deposit, User lender){
         this.name = name;
         this.description = description;
         this.rental = rental;
         this.deposit = deposit;
-        this.startdate = startdate;
-        this.enddate = enddate;
         this.lender = lender;
     }
 

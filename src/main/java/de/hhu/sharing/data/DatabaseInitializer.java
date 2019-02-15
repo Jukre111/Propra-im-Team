@@ -53,8 +53,6 @@ DatabaseInitializer implements ServletContextInitializer {
                         String.join("\n", faker.lorem().paragraphs(5)),
                         faker.number().numberBetween(1,1000),
                         faker.number().numberBetween(1,1000),
-                        faker.date().past(100, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                        faker.date().future(100, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                         user);
                 items.save(item);
             }
