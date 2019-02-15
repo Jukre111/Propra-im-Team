@@ -84,26 +84,25 @@ public class ItemRepositoryTest {
         user.setBirthdate(date1);
 
         userRepo.save(user);
+        User userEntity = userRepo.findByUsername("Nutzer8").get();
 
         Item item1 = new Item();
         Item item2 = new Item();
 
         item1.setName("item1");
         item1.setDescription("descr1");
-        item1.setLender(user);
+        item1.setLender(userEntity);
 
         item2.setName("item2");
         item2.setDescription("descr2");
-        item2.setLender(user);
-        System.out.println(user);
+        item2.setLender(userEntity);
 
-        userRepo.save(user);
 
         itemRepo.save(item1);
         itemRepo.save(item2);
 
 
-        List<Item> itemList = itemRepo.findAllByLender(user);
+        List<Item> itemList = itemRepo.findAllByLender(userEntity);
         Assertions.assertThat(itemList.size()).isEqualTo(2);
 
     }
