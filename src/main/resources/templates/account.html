@@ -101,7 +101,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					<td th:text="${borrow.startdate}"></td>
 					<td th:text="${borrow.enddate}"></td>
 					<td>
-						<a th:href="@{'/'}" id="indexbtn">Rückgabe</a>
+						<a th:href="@{'/'}" class="indexbtn">Rückgabe</a>
 					</td>
 				</tr>
 			</table>
@@ -110,16 +110,16 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 			<table>
 				<tr>
 					<th width="80%"><font size="4">Aufgegebene Objekte</font></th>
-					<th width="10%">Von</th>
-					<th width="10%">Bis</th>
-					<th width="10%"></th>
+					<th width="10%">Bearbeiten</th>
+					<th width="10%">Entfernen</th>
 				</tr>
 				<tr th:each="lend : ${lendItems}">
 					<td th:text="${lend.name}"></td>
-					<td th:text="${lend.startdate}"></td>
-					<td th:text="${lend.enddate}"></td>
 					<td>
-						<a th:href="@{'/'}" id="indexbtn">Entfernen</a>
+						<a class="indexbtn" th:href="@{'/item?id=' + ${lend.id}}">Bearbeiten</a>
+					</td>
+					<td>
+						<a th:href="@{'/'}" class="indexbtn">Entfernen</a>
 					</td>
 				</tr>
 			</table>
