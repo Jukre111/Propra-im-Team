@@ -71,7 +71,7 @@
         </div>
         <div class="modal-footer">
             <a class="indexbtn" href="/" style="padding: 5px">Zurück</a>
-            <button type="submit" class="indexbtn" style="padding: 5px" name="button">Anfragen</button>
+            <a type="submit" class="indexbtn" style="padding: 5px" th:href="@{'/request?id=' + ${item.id}}" name="button">Anfragen</a>
         </div>
     </div>
 </div>

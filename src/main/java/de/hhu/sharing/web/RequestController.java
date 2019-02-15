@@ -40,7 +40,7 @@ public class RequestController {
         return "request";
     }
 
-    @PostMapping("/request")
+    @PostMapping("/saveRequest")
     public String saveRequest(Long id, String startdate, String enddate, Principal p){
         final User user = this.users.findByUsername(p.getName())
                 .orElseThrow(
