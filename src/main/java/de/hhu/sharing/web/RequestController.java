@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.time.LocalDate;
@@ -29,13 +30,17 @@ public class RequestController {
     private RequestRepository requests;
 
     @GetMapping("/request")
-    public String request(@RequestParam(name = "id") Long id, Model model, Principal p){
+    public String request(@RequestParam(name = "id") Long id, Model model, Principal p, RedirectAttributes redirectAttributes){
         final User user = this.users.findByUsername(p.getName())
                 .orElseThrow(
                         () -> new RuntimeException("User not found!"));
-        final Item item = this.items.findByIdAndLenderNot(id,user)
+        final Item item = this.items.findById(id)
                 .orElseThrow(
                         () -> new RuntimeException("Item not found!"));
+        if(item.getLender() == user){
+            redirectAttributes.addFlashAttribute("ownItem",true);
+            return "redirect:/";
+        }
         model.addAttribute("item", item);
         return "request";
     }
