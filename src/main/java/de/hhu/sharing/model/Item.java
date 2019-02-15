@@ -5,7 +5,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -21,12 +23,12 @@ public class Item {
     private int rental;     //per Day
     private int deposit;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private User lender;
 
-    private boolean borrowed = false;
-    private LocalDate startdate;
-    private LocalDate enddate;
+    private boolean available = true;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<BorrowRequest> requests = new ArrayList<>();
 
     public Item(){
     }
