@@ -53,20 +53,11 @@ public class WebController {
 
     @GetMapping("/item")
     public String item(Model model, @RequestParam("id") Optional<Long> id){
-        Item newItem = new Item();
-        //newItem.setId(new Long(-1));
-        if(!id.isPresent()){
-            model.addAttribute("item", newItem);
-        }
-        else{
-            Optional<Item> it = items.findById(id.get());
-            if(it.isPresent()){
-                model.addAttribute("item", it.get());
-            }
-            else{
-                model.addAttribute("item", newItem);
-            }
-        }
+        Item item;
+        item = id.map(aLong -> this.items.findById(aLong)
+                .orElseThrow(
+                        () -> new RuntimeException("Item not found!"))).orElseGet(Item::new);
+        model.addAttribute("item",item);
         return "item";
     }
 
