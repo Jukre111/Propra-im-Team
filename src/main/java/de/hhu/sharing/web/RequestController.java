@@ -29,8 +29,11 @@ public class RequestController {
     private RequestRepository requests;
 
     @GetMapping("/request")
-    public String request(@RequestParam(name = "id") Long id, Model model){
-        final Item item = this.items.findById(id)
+    public String request(@RequestParam(name = "id") Long id, Model model, Principal p){
+        final User user = this.users.findByUsername(p.getName())
+                .orElseThrow(
+                        () -> new RuntimeException("User not found!"));
+        final Item item = this.items.findByIdAndLenderNot(id,user)
                 .orElseThrow(
                         () -> new RuntimeException("Item not found!"));
         model.addAttribute("item", item);
