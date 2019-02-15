@@ -73,8 +73,8 @@ public class ItemController {
 
     }
 
-    @GetMapping("/delete")
-    public String delete(@RequestParam("id") Long id ){
+    @GetMapping("/deleteItem")
+    public String deleteItem(@RequestParam("id") Long id ){
         Item item = this.items.findById(id)
                 .orElseThrow(
                         () -> new RuntimeException("Item not found!"));
