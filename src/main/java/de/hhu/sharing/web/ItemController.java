@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.Optional;
@@ -48,34 +49,45 @@ public class ItemController {
     }
 
     @PostMapping("/saveItem")
-    public String saveItem(Long id, String name, String description, Integer rental, Integer deposit, Principal p){
-        Item item = new Item();
-        if(id != null){
-            item = this.items.findById(id).orElseThrow(
-                    () -> new RuntimeException("Item not found!"));
-        }
+    public String saveItem(Long id, String name, String description, Integer rental, Integer deposit, Principal p, RedirectAttributes redirectAttributes){
         final User user = this.users.findByUsername(p.getName())
                 .orElseThrow(
                         () -> new RuntimeException("User not found!"));
-        if(item.isAvailable()){
-            item.setName(name);
-            item.setDescription(description);
-            item.setRental(rental);
-            item.setDeposit(deposit);
-            item.setLender(user);
+        Item item;
+        if(id == null){
+            item = new Item(name, description, rental, deposit, user);
+            redirectAttributes.addFlashAttribute("saved",true);
             items.save(item);
+            return "redirect:/account";
         }
+        item = this.items.findById(id).orElseThrow(
+                () -> new RuntimeException("Item not found!"));
+        if(!item.isAvailable()){
+            redirectAttributes.addFlashAttribute("notAvailable",true);
+            return "redirect:/account";
+        }
+        item.setName(name);
+        item.setDescription(description);
+        item.setRental(rental);
+        item.setDeposit(deposit);
+        item.setLender(user);
+        redirectAttributes.addFlashAttribute("edited",true);
+        items.save(item);
         return "redirect:/account";
 
     }
 
     @GetMapping("/deleteItem")
-    public String deleteItem(@RequestParam("id") Long id, Model model, Principal p){
+    public String deleteItem(@RequestParam("id") Long id, RedirectAttributes redirectAttributes){
         Item item = this.items.findById(id)
                 .orElseThrow(
                         () -> new RuntimeException("Item not found!"));
         if(item.isAvailable()){
             items.delete(item);
+            redirectAttributes.addFlashAttribute("deleted",true);
+        }
+        else{
+            redirectAttributes.addFlashAttribute("notAvailable",true);
         }
         return "redirect:/account";
     }
