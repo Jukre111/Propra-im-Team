@@ -19,6 +19,7 @@ public class Item {
     private String description;
     private int rental;     //per Day
     private int deposit;
+    private int reservationId;
 
     @ManyToOne
     private User lender;
