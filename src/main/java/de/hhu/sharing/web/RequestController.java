@@ -16,6 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class RequestController {
@@ -66,6 +68,22 @@ public class RequestController {
                         () -> new RuntimeException("Request not found!"));
         requests.delete(request);
         return "redirect:/account";
+    }
+
+    @GetMapping("messages")
+    public String messages(Model model, Principal p){
+        final User user = this.users.findByUsername(p.getName())
+                .orElseThrow(
+                        () -> new RuntimeException("User not found!"));
+        List<Item> allMyItems = this.items.findAllByLender(user);
+        List<Request> allMyRequests = new ArrayList<Request>();
+        for (Item item : allMyItems) {
+            for ( Request newRequest : item.getRequests()){
+                    allMyRequests.add(newRequest) ;
+            }
+        }
+        model.addAttribute("allMyItems", allMyItems);
+        return "messages";
     }
 
 }
