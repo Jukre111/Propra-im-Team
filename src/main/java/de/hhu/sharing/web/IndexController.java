@@ -2,6 +2,7 @@ package de.hhu.sharing.web;
 
 import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.UserRepository;
+import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,8 @@ public class IndexController {
                         () -> new RuntimeException("User not found!"));
         model.addAttribute("user",user);
         model.addAttribute("lendItems",this.items.findAllByLender(user));
+        Address address = user.getAddress();
+        model.addAttribute("address", address);
         return "account";
     }
 

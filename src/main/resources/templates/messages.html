@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Detailansicht</title>
+    <style>
+        .style {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            margin-top: 2%;
+            margin-left: 20%;
+            margin-right: 20%;
+        }
+
+        .textPosition {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="body">
+    <div style="padding: 20px">
+        <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name">Anfragen</span></h1>
+        <div class="form-horizontal" style="padding-top: 60px">
+            <div class="form-group" th:each="item : ${allMyItems}">
+                <div class="form-group style textPosition" th:each="request : ${item.requests}">
+                    <input type="text"  class="form-control" id="requester" name="requester" th:value="${request.requester.username}" readonly/>
+                    <span></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>

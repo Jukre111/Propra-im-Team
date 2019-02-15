@@ -40,7 +40,7 @@ DatabaseInitializer implements ServletContextInitializer {
             Address address = new Address(
                     faker.address().streetAddress(),
                     faker.gameOfThrones().city(),
-                    faker.number().numberBetween(1,100000));
+                    Integer.parseInt(faker.address().zipCode()));
             User user = new User("user" + i, encoder.encode("password" + i), "ROLE_USER",
                     faker.gameOfThrones().house(),
                     faker.gameOfThrones().character(),
