@@ -65,13 +65,12 @@ public class ItemController {
             item.setLender(user);
             items.save(item);
         }
-
-        return "redirect:/";
+        return "redirect:/account";
 
     }
 
     @GetMapping("/deleteItem")
-    public String deleteItem(@RequestParam("id") Long id ){
+    public String deleteItem(@RequestParam("id") Long id, Model model, Principal p){
         Item item = this.items.findById(id)
                 .orElseThrow(
                         () -> new RuntimeException("Item not found!"));
