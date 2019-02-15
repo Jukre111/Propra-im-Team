@@ -27,7 +27,7 @@ public class User {
     @Embedded
     private Address address;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Item> borrowedItems = new ArrayList<>();
 
     public void addToBorrowedItem(Item item) {

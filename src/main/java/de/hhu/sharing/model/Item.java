@@ -21,7 +21,7 @@ public class Item {
     private LocalDate startdate;
     private LocalDate enddate;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private User lender;
 
     //@ManyToOne(fetch = FetchType.EAGER)
