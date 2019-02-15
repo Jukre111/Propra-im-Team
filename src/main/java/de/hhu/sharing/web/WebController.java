@@ -51,9 +51,50 @@ public class WebController {
         return "details";
     }
 
-    @GetMapping("/newitem")
-    public String newitemPage(){
-        return "newitem";
+    @GetMapping("/item")
+    public String item(Model model, @RequestParam("id") Optional<Long> id){
+        Item item;
+        item = id.map(aLong -> this.items.findById(aLong)
+                .orElseThrow(
+                        () -> new RuntimeException("Item not found!"))).orElseGet(Item::new);
+        model.addAttribute("item",item);
+        return "item";
+    }
+
+    @PostMapping("/saveItem")
+    public String saveItem(Model model, Long id, String name, String description, Integer rental, Integer deposit, Principal p){
+        Item item;
+        if(id != null){
+            item = this.items.findById(id).orElseThrow(
+                    () -> new RuntimeException("Item not found!"));
+        }
+        else{
+            item = new Item();
+        }
+        final User user = this.users.findByUsername(p.getName())
+                .orElseThrow(
+                        () -> new RuntimeException("User not found!"));
+
+        item.setName(name);
+        item.setDescription(description);
+        item.setRental(rental);
+        item.setDeposit(deposit);
+        item.setLender(user);
+
+        items.save(item);
+
+        return "redirect:/";
+
+    }
+
+    @GetMapping("/delete")
+    public String delete(Model model, @RequestParam("id") Long id ){
+        Item item;
+        item = this.items.findById(id).orElseThrow(
+                () -> new RuntimeException("Item not found!"));
+
+        items.delete(item);
+        return "redirect:/account";
     }
 
     @GetMapping("/search")
