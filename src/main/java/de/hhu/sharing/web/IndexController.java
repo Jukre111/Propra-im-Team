@@ -48,7 +48,7 @@ public class IndexController {
 
     @GetMapping("/search")
     public String search(@RequestParam final String query, Model model) {
-        model.addAttribute("items", this.items.findAllByNameContainingOrDescriptionContaining(query,query));
+        model.addAttribute("items", this.items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query,query));
         model.addAttribute("query", query);
         return "search";
     }
