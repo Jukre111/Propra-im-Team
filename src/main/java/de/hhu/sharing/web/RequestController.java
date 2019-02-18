@@ -68,21 +68,9 @@ public class RequestController {
     @GetMapping("/messages")
     public String messages(Model model, Principal p){
         User user = userService.get(p.getName());
-        List<Item> allMyItems = this.items.findAllByLender(user);
-        List<Request> allMyRequests = new ArrayList<Request>();
-        for (Item item : allMyItems) {
-            for ( Request newRequest : item.getRequests()){
-                    allMyRequests.add(newRequest) ;
-            }
-        }
-        List<Request> allIRequested = requests.findAllByRequester(user);
-        List<Item> myRequestedItems = new ArrayList<>();
-        for(Request re : allIRequested){
-            myRequestedItems.add(items.findByRequests_id(re.getId()).get());
-        }
-        model.addAttribute("allMyItems", allMyItems);
-        model.addAttribute("myRequestedItems", myRequestedItems);
-        model.addAttribute("allIRequested", allIRequested);
+        model.addAttribute("allMyItems", itemService.getAllIPosted(user));
+        model.addAttribute("allIRequested", itemService.getAllIRequested(user));
+        model.addAttribute("myRequestedItems", itemService.getAllMyRequested(user));
         return "messages";
     }
 
