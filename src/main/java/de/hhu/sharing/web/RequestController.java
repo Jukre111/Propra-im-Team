@@ -81,16 +81,7 @@ public class RequestController {
 
     @GetMapping("/declineRequest")
     public String declineRequest(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId ){
-        final Item item = this.items.findById(itemId)
-                .orElseThrow(
-                        () -> new RuntimeException("Item not found!"));
-        Request request = this.requests.findById(requestId)
-                .orElseThrow(
-                        () -> new RuntimeException("Request not found!"));
-        List<Request> requestlist = item.getRequests();
-        requestlist.remove(request);
-        item.setRequests(requestlist);
-        requests.delete(request);
+        requestService.delete(requestId);
         return "redirect:/messages";
     }
 }
