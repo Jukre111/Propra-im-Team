@@ -15,4 +15,6 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
     List<Item> findAllByNameContainingOrDescriptionContaining(String nameQuery, String descriptionQuery);
 
     Optional<Item> findByIdAndLenderNot(Long id, User user);
+
+    List<Item> findFirst2ByLenderNot(User user);
 }
