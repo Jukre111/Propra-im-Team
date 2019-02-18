@@ -1,13 +1,12 @@
 package de.hhu.sharing.web;
 
-import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.RequestRepository;
-import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.Request;
 import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 
@@ -19,6 +18,9 @@ public class RequestService {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private UserService userService;
 
     public Request get(Long id){
         Request request = this.requests.findById(id)
@@ -40,8 +42,19 @@ public class RequestService {
 
     }
 
-    public void accept(Long requestId) {
-        //Item item =
+    public void accept(Long requestId, RedirectAttributes redirectAttributes) {
+        Item item = itemService.getFromRequestId(requestId);
+        if(item.isAvailable()) {
+            item.setAvailable(false);
+            Request request = this.get(requestId);
+            itemService.removeFromRequests(request);
+            userService.addToBorrowedItems(request.getRequester(), item);
+            requests.delete(request);
+        }
+        else{
+            redirectAttributes.addFlashAttribute("notAvailable",true);
+        }
+
     }
 
 

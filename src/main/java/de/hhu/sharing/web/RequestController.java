@@ -16,7 +16,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -75,25 +74,8 @@ public class RequestController {
     }
 
     @GetMapping("/accept")
-    public String accept(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId){
-        final Request request = this.requests.findById(requestId)
-                .orElseThrow(
-                        () -> new RuntimeException("Request not found!"));
-        Item item = itemService.get(itemId);
-        if(item.isAvailable()) {
-            //requestService.accept(requestId);
-            item.setAvailable(false);
-            User requester = request.getRequester();
-            requester.addToBorrowedItem(item);
-            List<Request> requestlist = item.getRequests();
-            requestlist.remove(request);
-            item.setRequests(requestlist);
-            requests.delete(request);
-        }
-        else{
-            // Fehlermeldung, falls Objekt schon verliehen
-        }
-
+    public String accept(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId, RedirectAttributes redirectAttributes){
+        requestService.accept(requestId, redirectAttributes);
         return "redirect:/messages";
     }
 

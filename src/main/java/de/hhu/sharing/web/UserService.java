@@ -1,6 +1,7 @@
 package de.hhu.sharing.web;
 
 import de.hhu.sharing.data.UserRepository;
+import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,5 +17,10 @@ public class UserService {
                 .orElseThrow(
                         () -> new RuntimeException("User not found!"));
         return user;
+    }
+
+    public void addToBorrowedItems(User user, Item item) {
+        user.addToBorrowedItems(item);
+        users.save(user);
     }
 }
