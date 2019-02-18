@@ -22,19 +22,10 @@ import java.util.List;
 public class RequestController {
 
     @Autowired
-    private UserRepository users;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
-    private ItemRepository items;
-
-    @Autowired
     private ItemService itemService;
-
-    @Autowired
-    private RequestRepository requests;
 
     @Autowired
     private RequestService requestService;
