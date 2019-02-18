@@ -86,4 +86,33 @@ public class RequestController {
         return "messages";
     }
 
+    @GetMapping("accept")
+    public String accept(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId){
+        final Request request = this.requests.findById(requestId)
+                .orElseThrow(
+                        () -> new RuntimeException("Request not found!"));
+        final Item item = this.items.findById(itemId)
+                .orElseThrow(
+                        () -> new RuntimeException("Item not found!"));
+        if(item.isAvailable()) {
+            item.setAvailable(false);
+            User requester = request.getRequester();
+            requester.addToBorrowedItem(item);
+            requests.delete(request);
+        }
+        else{
+            // Fehlermeldung, falls Objekt schon verliehen
+        }
+
+        return "redirect:/messages";
+    }
+
+    @GetMapping("/declineRequest")
+    public String declineRequest(@RequestParam("id") Long id ){
+        Request request = this.requests.findById(id)
+                .orElseThrow(
+                        () -> new RuntimeException("Request not found!"));
+        requests.delete(request);
+        return "redirect:/account";
+    }
 }
