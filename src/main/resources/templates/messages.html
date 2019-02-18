@@ -40,10 +40,10 @@
                             <td th:text="${request.startdate}"></td>
                             <td th:text="${request.enddate}"></td>
                             <td>
-                                <a type="button" class="indexbtn" th:href="@{'/accept?requestId=' + ${request.id} + '?itemId=' + ${item.id}}">Akzeptieren</a>
+                                <a type="button" class="indexbtn" th:href="@{'/accept?requestId=' + ${request.id} + '&itemId=' + ${item.id}}">Akzeptieren</a>
                             </td>
                             <td>
-                                <a class="indexbtn" th:href="@{'/declineRequest?id=' + ${request.id}}" >Ablehnen</a>
+                                <a class="indexbtn" th:href="@{'/declineRequest?requestId=' + ${request.id} + '&itemId=' + ${item.id}}">Ablehnen</a>
                             </td>
                         </tr>
                     </table>

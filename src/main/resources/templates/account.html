@@ -106,15 +106,11 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 		<div style="padding: 20px">
 			<table>
 				<tr>
-					<th width="80%"><font size="4">Ausgeliehene Objekte</font></th>
-					<th width="10%">Von</th>
-					<th width="10%">Bis</th>
+					<th width="90%"><font size="4">Ausgeliehene Objekte</font></th>
 					<th width="10%">Rückgabe</th>
 				</tr>
 				<tr th:each="borrow : ${user.borrowedItems}">
 					<td th:text="${borrow.name}"></td>
-					<td th:text="${borrow.startdate}"></td>
-					<td th:text="${borrow.enddate}"></td>
 					<td>
 						<a th:href="@{'/'}" class="indexbtn">Rückgabe</a>
 					</td>
