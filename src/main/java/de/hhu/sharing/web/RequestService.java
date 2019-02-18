@@ -15,18 +15,34 @@ import java.time.LocalDate;
 public class RequestService {
 
     @Autowired
-    private UserRepository users;
-
-    @Autowired
-    private ItemRepository items;
-
-    @Autowired
     private RequestRepository requests;
 
-    public void createRequest(Item item, LocalDate startdate, LocalDate enddate, User user) {
+    @Autowired
+    private ItemService itemService;
+
+    public Request get(Long id){
+        Request request = this.requests.findById(id)
+                .orElseThrow(
+                        () -> new RuntimeException("Request not found!"));
+        return request;
+    }
+
+    public void create(Long itemId, LocalDate startdate, LocalDate enddate, User user) {
         Request request = new Request(startdate, enddate, user);
         requests.save(request);
-        item.addToRequests(request);
-        items.save(item);
+        itemService.addToRequests(itemId, request);
     }
+
+    public void delete(Long requestId) {
+        Request request = this.get(requestId);
+        itemService.removeFromRequests(request);
+        requests.delete(request);
+
+    }
+
+    public void accept(Long requestId) {
+        //Item item =
+    }
+
+
 }

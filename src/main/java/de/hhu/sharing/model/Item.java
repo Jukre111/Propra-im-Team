@@ -43,4 +43,7 @@ public class Item {
         requests.add(request);
     }
 
+    public void removeFromRequests(Request request) {
+        requests.remove(request);
+    }
 }

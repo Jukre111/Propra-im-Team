@@ -55,25 +55,17 @@ public class RequestController {
     @PostMapping("/saveRequest")
     public String saveRequest(Long id, String startdate, String enddate, Principal p){
         User user = userService.get(p.getName());
-        Item item = itemService.get(id);
-        requestService.createRequest(item, LocalDate.parse(startdate), LocalDate.parse(enddate), user);
+        requestService.create(id, LocalDate.parse(startdate), LocalDate.parse(enddate), user);
         return "redirect:/";
     }
 
     @GetMapping("/deleteRequest")
     public String deleteRequest(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId){
-        final Request request = this.requests.findById(requestId)
-                .orElseThrow(
-                        () -> new RuntimeException("Request not found!"));
-        Item item = itemService.get(itemId);
-        List<Request> requestlist = item.getRequests();
-        requestlist.remove(request);
-        item.setRequests(requestlist);
-        requests.delete(request);
+        requestService.delete(requestId);
         return "redirect:/account";
     }
 
-    @GetMapping("messages")
+    @GetMapping("/messages")
     public String messages(Model model, Principal p){
         User user = userService.get(p.getName());
         List<Item> allMyItems = this.items.findAllByLender(user);
@@ -86,7 +78,7 @@ public class RequestController {
         List<Request> allIRequested = requests.findAllByRequester(user);
         List<Item> myRequestedItems = new ArrayList<>();
         for(Request re : allIRequested){
-            myRequestedItems.add(items.findByRequests_id(re.getId()));
+            myRequestedItems.add(items.findByRequests_id(re.getId()).get());
         }
         model.addAttribute("allMyItems", allMyItems);
         model.addAttribute("myRequestedItems", myRequestedItems);
@@ -94,13 +86,14 @@ public class RequestController {
         return "messages";
     }
 
-    @GetMapping("accept")
+    @GetMapping("/accept")
     public String accept(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId){
         final Request request = this.requests.findById(requestId)
                 .orElseThrow(
                         () -> new RuntimeException("Request not found!"));
         Item item = itemService.get(itemId);
         if(item.isAvailable()) {
+            //requestService.accept(requestId);
             item.setAvailable(false);
             User requester = request.getRequester();
             requester.addToBorrowedItem(item);
