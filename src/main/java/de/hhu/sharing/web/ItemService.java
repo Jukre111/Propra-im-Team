@@ -23,6 +23,10 @@ public class ItemService{
         return item;
     }
 
+    public List<Item> getAll() {
+        return this.items.findAll();
+    }
+
     public Item getFromRequestId(Long requestId) {
         Item item = this.items.findByRequests_id(requestId)
                 .orElseThrow(
@@ -61,5 +65,9 @@ public class ItemService{
         Item item = this.getFromRequestId(request.getId());
         item.removeFromRequests(request);
         items.save(item);
+    }
+
+    public List<Item> searchFor(String query) {
+        return this.items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query,query);
     }
 }
