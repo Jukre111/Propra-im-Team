@@ -34,13 +34,19 @@ public class ProPayService {
         return account;
     }
 
-    public void createAccount(String username) {
-        this.showAccount(username);
+    //returns a http response or in case of an Exception an -1
+    public int createAccount(String username) {
+        if (this.showAccount(username) == null)
+            return -1;
+        else
+            return 200;
     }
 
-    public void raiseBalance(String username, int amount) {
+    //returns a http response or in case of an Exception an -1
+    public int raiseBalance(String username, int amount) {
         String URL = "http://localhost:8888/account/" + username + "?amount=" + Integer.toString(amount);
-        this.callURL(URL, "POST");
+        int response = this.callURL(URL, "POST");
+        return response;
     }
 
     //returns a http response or in case of an Exception an -1
@@ -56,27 +62,33 @@ public class ProPayService {
         String URL = "http://localhost:8888/reservation/reserve/" + usernameSource + "/" + usernameTarget + "?amount=" + Integer.toString(amount);
         int response = this.callURL(URL, "POST");
         Account account = this.showAccount(usernameSource);
-        item.setReservationId(account.getLatestReservationId());
-        itemRepo.save(item);
+        if (account == null)
+            return -1;
+        else {
+            item.setReservationId(account.getLatestReservationId());
+            itemRepo.save(item);
+        }
         return response;
-
     }
 
-    public void cancelDeposit(String usernameSource, Item item) {
+    //returns a http response or in case of an Exception an -1
+    public int cancelDeposit(String usernameSource, Item item) {
         int reservationId = item.getReservationId();
         String URL = "http://localhost:8888/reservation/release/" + usernameSource + "?reservationId=" + Integer.toString(reservationId);
-        this.callURL(URL, "POST");
+        int response = this.callURL(URL, "POST");
         item.setReservationId(-1);
         itemRepo.save(item);
-
+        return response;
     }
 
-    public void collectDeposit(String usernameSource, Item item) {
+    //returns a http response or in case of an Exception an -1
+    public int collectDeposit(String usernameSource, Item item) {
         int reservationId = item.getReservationId();
         String URL = "http://localhost:8888/reservation/punish/" + usernameSource + "?reservationId=" + Integer.toString(reservationId);
-        this.callURL(URL, "POST");
+        int response = this.callURL(URL, "POST");
         item.setReservationId(-1);
         itemRepo.save(item);
+        return response;
     }
 
     //returns a http response or in case of an Exception an -1
@@ -96,7 +108,7 @@ public class ProPayService {
     }
 
     public RestTemplate changeTemplateTo(RestTemplate rt) {
-		return this.rt=rt;
+        return this.rt = rt;
     }
 
     /* Possible responses:
