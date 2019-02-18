@@ -27,12 +27,8 @@ public class User {
     @Embedded
     private Address address;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Item> borrowedItems = new ArrayList<>();
-
-    public void addToBorrowedItem(Item item) {
-        borrowedItems.add(item);
-    }
 
     public User(){
     }
@@ -48,6 +44,10 @@ public class User {
         this.email = email;
         this.birthdate = birthdate;
         this.address = address;
+    }
+
+    public void addToBorrowedItem(Item item) {
+        borrowedItems.add(item);
     }
 
 }
