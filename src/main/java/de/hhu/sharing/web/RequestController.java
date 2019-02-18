@@ -73,7 +73,7 @@ public class RequestController {
         requestlist.remove(request);
         item.setRequests(requestlist);
         requests.delete(request);
-        return "redirect:/account";
+        return "redirect:/messages";
     }
 
     @GetMapping("messages")

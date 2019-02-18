@@ -69,7 +69,7 @@
                                 <td th:text="${request.startdate}"></td>
                                 <td th:text="${request.enddate}"></td>
                                 <td>
-                                    <a class="indexbtn" th:href="@{'/delete' + ${request.id} + '&itemId=' + ${item.id}}">Löschen</a>
+                                    <a class="indexbtn" th:href="@{'/deleteRequest?requestId=' + ${request.id} + '&itemId=' + ${item.id}}">Löschen</a>
                                 </td>
                             </tr>
                         </table>
