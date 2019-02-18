@@ -62,10 +62,17 @@ public class RequestController {
     }
 
     @GetMapping("/deleteRequest")
-    public String deleteRequest(@RequestParam("id") Long id ){
-        Request request = this.requests.findById(id)
+    public String deleteRequest(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId){
+        final Request request = this.requests.findById(requestId)
                 .orElseThrow(
                         () -> new RuntimeException("Request not found!"));
+        final Item item = this.items.findById(itemId)
+                .orElseThrow(
+                        () -> new RuntimeException("Item not found!"));
+        List<Request> requestlist = item.getRequests();
+        requestlist.remove(request);
+        item.setRequests(requestlist);
+        requests.delete(request);
         return "redirect:/account";
     }
 
@@ -81,7 +88,14 @@ public class RequestController {
                     allMyRequests.add(newRequest) ;
             }
         }
+        List<Request> allIRequested = requests.findAllByRequester(user);
+        List<Item> myRequestedItems = new ArrayList<>();
+        for(Request re : allIRequested){
+            myRequestedItems.add(items.findByRequests_id(re.getId()));
+        }
         model.addAttribute("allMyItems", allMyItems);
+        model.addAttribute("myRequestedItems", myRequestedItems);
+        model.addAttribute("allIRequested", allIRequested);
         return "messages";
     }
 
