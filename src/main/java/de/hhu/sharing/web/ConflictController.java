@@ -57,7 +57,7 @@ public class ConflictController {
         conflicts.save(conflict);
 
 
-        return "redirect:/";
+        return "redirect:/account";
     }
 
     @GetMapping("/conflictView")
@@ -65,5 +65,13 @@ public class ConflictController {
         List<Conflict> allConflicts = conflicts.findAll();
         model.addAttribute("allConflicts", allConflicts);
         return "conflictView";
+    }
+
+    @GetMapping("/conflictDetails")
+    public String conflictDetails (Model model, @RequestParam("id") Long id){
+        final Conflict conflict = this.conflicts.findById(id).orElseThrow(()-> new RuntimeException("Conflict not found"));
+        model.addAttribute("conflict", conflict);
+
+        return "conflictDetails";
     }
 }
