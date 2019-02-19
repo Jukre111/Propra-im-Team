@@ -44,19 +44,19 @@
 </head>
 <body>
 <div style="padding: 20px; padding-left: 250px" class="bgimg">
-    <h1><span style="font-size: 18pt">Willkommen auf</span> <span style="font-size: 30pt; color: #BD1D6F; font-weight: bold">SHARING</span></h1>
+    <h1><span style="font-size: 18pt">Willkommen auf</span> <a th:href="@{'/'}" style="font-size: 30pt; color: #BD1D6F; font-weight: bold">SHARING</a></h1>
 </div>
 <div style="padding: 20px; background-color: #fef8fd">
     <form method="get" action="/search">
         <input type="search" name="query" id="search" placeholder="Suche..." style="margin-right: 20px; float: left"/>
-        <button type="submit" class="indexbtn" value="Los!" style="margin-right: 20px; float: left">Search</button>
+        <button type="submit" class="indexbtn" value="Los!" style="margin-right: 20px; float: left">Los!</button>
     </form>
-    <a th:href="@{'/item'}" class="indexbtn" style="margin-right: 20px; float: left">Angebot aufgeben</a>
+    <a th:href="@{'/newItem'}" class="indexbtn" style="margin-right: 20px; float: left">Angebot aufgeben</a>
     <a th:href="@{'/logout'}" class="indexbtn" style="float: right">Logout</a>
     <a th:href="@{'/account'}" class="indexbtn" style="margin-right: 20px; float: right">Account</a>
     <a th:href="@{'/messages'}" class="indexbtn" style="margin-right: 20px; float: right">Nachrichten</a>
 </div>
-<div class="container">
+<div>
     <div layout:fragment="body" style="padding: 20px">
         Body goes here
     </div>

@@ -4,6 +4,7 @@ import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.User;
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -57,5 +59,38 @@ public class UserRepositoryTest {
         userRepo.save(user2);
 
         Assertions.assertThat(userRepo.findAll().size()).isEqualTo(2);
+    }
+
+    @Test
+    public void testFindByUsername(){
+
+        User user = new User();
+
+        Address add = new Address();
+
+        add.setCity("Duesseldorf");
+        add.setPostcode(40233);
+        add.setStreet("Universitaetsstrasse 1");
+
+        user.setUsername("Nutzer1");
+        user.setForename("Joe");
+        user.setLastname("Karl");
+        user.setRole("ROLE_ADMIN");
+        user.setEmail("Person1@test.de");
+        user.setPassword("pswd");
+        user.setAddress(add);
+
+        LocalDate date1 = LocalDate.of(2019, 5, 13);
+        user.setBirthdate(date1);
+
+        userRepo.save(user);
+
+        Optional<User> optionalUser = userRepo.findByUsername("Nutzer1");
+
+        Assert.assertTrue(optionalUser.isPresent());
+        if(optionalUser.isPresent()){
+            Assertions.assertThat(optionalUser.get().getUsername()).isEqualTo("Nutzer1");
+        }
+
     }
 }
