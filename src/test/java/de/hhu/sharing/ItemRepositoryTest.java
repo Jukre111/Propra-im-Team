@@ -126,8 +126,8 @@ public class ItemRepositoryTest {
         itemRepo.save(item2);
         itemRepo.save(item3);
 
-        List<Item> itemList1 = itemRepo.findAllByNameContainingOrDescriptionContaining("apf", "Kern");
-        List<Item> itemList2 = itemRepo.findAllByNameContainingOrDescriptionContaining("banane", "leck");
+        List<Item> itemList1 = itemRepo.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("apf", "Kern");
+        List<Item> itemList2 = itemRepo.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("banane", "leck");
         
         Assertions.assertThat(itemList1.size()).isEqualTo(2);
         Assertions.assertThat(itemList2.size()).isEqualTo(2);
