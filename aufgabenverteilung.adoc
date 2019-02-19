@@ -13,6 +13,9 @@
 
 * Schnittstelle zu ProPay
 
+## Aufgaben geringere Prioritaet
+* Aendern von Preis nicht nur zulassen, falls keinen Request zum Item existieren
+
 # erledigte Aufgaben:
 * Travis
 * Docker & Dockercompose (siehe Branch docker/docker-compose)
