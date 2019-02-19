@@ -3,7 +3,14 @@ package de.hhu.sharing;
 import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.data.UserRepository;
+import de.hhu.sharing.model.Address;
+import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.User;
 import de.hhu.sharing.security.SecurityConfig;
+import de.hhu.sharing.services.ItemService;
+import de.hhu.sharing.services.RequestService;
+import de.hhu.sharing.services.UserService;
+import de.hhu.sharing.web.RequestController;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,41 +34,41 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
 
 import java.security.Principal;
+import java.time.LocalDate;
 
-//@RunWith(SpringRunner.class)
-//@WebMvcTest
+@RunWith(SpringRunner.class)
+@WebMvcTest(RequestController.class)
 public class RequestControllerTest{
-
-    @Test
-    public void nestedException(){
-
-    }
-    /*
 
     @Autowired
     MockMvc mvc;
 
-    @Autowired
-    WebApplicationContext webContext;
+    @MockBean
+    UserService userService;
 
     @MockBean
-    ItemRepository itemRepository;
+    ItemService itemService;
 
     @MockBean
-    UserRepository userRepository;
-
-    @MockBean
-    RequestRepository requestRepository;
+    RequestService requestService;
 
     @WithMockUser
-    @Test(expected = NestedServletException.class)
+    @Test
     public void retrieveStatusRequest()throws Exception{
+        LocalDate date = LocalDate.of(2000,1,1);
+        Address address = new Address("unistrase","duesseldorf", 40233);
+        User user = new User("user","password", "role", "lastnmae", "forname", "email",date,address);
+
+        Item item = new Item("name", "description", 42,42, user);
+
+        Mockito.when(userService.get("user")).thenReturn(user);
+        Mockito.when(itemService.get(1L)).thenReturn(item);
         mvc.perform(MockMvcRequestBuilders.get("/request?id=1"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
     }
 
 
-    @WithMockUser(username = "test")
+ /*   @WithMockUser(username = "test")
     @Test
     public void retrieveStatusPostRequest()throws Exception{
         Principal mockPrincipal = Mockito.mock(Principal.class);
@@ -84,8 +91,8 @@ public class RequestControllerTest{
         map.add("p","test");
         mvc.perform(MockMvcRequestBuilders.post("/request?id=1").params(map))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-    */
-    //}
+
+    }
 
     /*@WithMockUser
     @Test(expected = NestedServletException.class)

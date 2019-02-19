@@ -32,18 +32,6 @@ public class IndexControllerTest {
     @Autowired
     MockMvc mvc;
 
-   /* @Autowired
-    WebApplicationContext webContext;
-
-    @MockBean
-    ItemRepository itemRepository;
-
-    @MockBean
-    UserRepository userRepository;
-
-    @MockBean
-    RequestRepository requestRepository;*/
-
     @MockBean
     ItemService itemService;
     @MockBean
