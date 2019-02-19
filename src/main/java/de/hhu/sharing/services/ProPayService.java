@@ -1,9 +1,10 @@
 package de.hhu.sharing.services;
 
 import com.google.gson.Gson;
-import de.hhu.sharing.data.ItemRepository;
+import de.hhu.sharing.data.TransactionRepository;
 import de.hhu.sharing.model.Account;
 import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -16,7 +17,7 @@ import java.net.URL;
 public class ProPayService {
 
     @Autowired
-    ItemRepository itemRepo;
+    TransactionRepository transRepo;
 
     RestTemplate rt = new RestTemplate();
 
@@ -59,37 +60,38 @@ public class ProPayService {
     }
 
     //returns a http response or in case of an Exception an -1
-    public int createDeposit(String usernameSource, String usernameTarget, Item item) {
-        int amount = item.getDeposit();
+    public int createDeposit(String usernameSource, String usernameTarget, Transaction trans) {
+        int amount = trans.getDeposit();
         String URL = "http://localhost:8888/reservation/reserve/" + usernameSource + "/" + usernameTarget + "?amount=" + Integer.toString(amount);
         int response = this.callURL(URL, "POST");
         Account account = this.showAccount(usernameSource);
         if (account == null)
             return -1;
         else {
-            item.setReservationId(account.getLatestReservationId());
-            itemRepo.save(item);
+            trans.setReservationId(account.getLatestReservationId());
+            transRepo.save(trans);
         }
         return response;
     }
 
     //returns a http response or in case of an Exception an -1
-    public int cancelDeposit(String usernameSource, Item item) {
-        int reservationId = item.getReservationId();
+    public int cancelDeposit(String usernameSource, Transaction trans) {
+        int reservationId = trans.getReservationId();
         String URL = "http://localhost:8888/reservation/release/" + usernameSource + "?reservationId=" + Integer.toString(reservationId);
         int response = this.callURL(URL, "POST");
-        item.setReservationId(-1);
-        itemRepo.save(item);
+        trans.setReservationId(-1);
+        transRepo.save(trans);
         return response;
     }
 
     //returns a http response or in case of an Exception an -1
-    public int collectDeposit(String usernameSource, Item item) {
-        int reservationId = item.getReservationId();
+    public int collectDeposit(String usernameSource, Transaction trans) {
+        int reservationId = trans.getReservationId();
         String URL = "http://localhost:8888/reservation/punish/" + usernameSource + "?reservationId=" + Integer.toString(reservationId);
         int response = this.callURL(URL, "POST");
-        item.setReservationId(-1);
-        itemRepo.save(item);
+        trans.setReservationId(-1);
+        trans.setDepositRevoked(true);
+        transRepo.save(trans);
         return response;
     }
 

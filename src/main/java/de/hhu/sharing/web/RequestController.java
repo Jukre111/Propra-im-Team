@@ -4,6 +4,7 @@ import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.RequestService;
+import de.hhu.sharing.services.TransactionService;
 import de.hhu.sharing.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,9 @@ public class RequestController {
 
     @Autowired
     private RequestService requestService;
+
+    @Autowired
+    TransactionService tranService;
 
     @GetMapping("/request")
     public String request(@RequestParam(name = "id") Long id, Model model, Principal p, RedirectAttributes redirectAttributes){
@@ -68,7 +72,12 @@ public class RequestController {
 //            redirectAttributes.addFlashAttribute("notAvailable",true);
 //        return "redirect:/messages";
 //        }
-        requestService.accept(requestId);
+        int transProPayResponse = tranService.createTransaction(requestId, itemId);
+        if(transProPayResponse != 200) {
+            return "redirect:/messages";
+        } else {
+            requestService.accept(requestId);
+        }
         return "redirect:/messages";
     }
 
