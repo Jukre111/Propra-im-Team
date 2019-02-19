@@ -46,6 +46,8 @@ public class RequestRepositoryTest {
         User userEntity = userRepo.findByUsername("user1").get();
         User userEntity2 = userRepo.findByUsername("user2").get();
 
+        userRepo.save(userEntity);
+        userRepo.save(userEntity2);
         requests.add(request1);
         requests.add(request2);
         requests.add(request3);

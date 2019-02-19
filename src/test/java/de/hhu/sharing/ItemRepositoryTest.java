@@ -35,6 +35,7 @@ public class ItemRepositoryTest {
         User user = new User("user","password", "role", "lastnmae", "forname", "email",date,address);
         userRepo.save(user);
         User userEntity = userRepo.findByUsername("user").get();
+        userRepo.save(userEntity);
         Item item1 = new Item("apfel", "lecker",1,1 ,user );
         Item item2 = new Item("granatapfel", "grosse Kerne",2,2 ,user );
         Item item3 = new Item("banane", "kleine Kerne",3,3 ,user );
