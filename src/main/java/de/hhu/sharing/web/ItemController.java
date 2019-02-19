@@ -26,6 +26,9 @@ public class ItemController {
     private ItemRepository items;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private ItemService itemService;
 
     @GetMapping("/detailsItem")
@@ -53,30 +56,20 @@ public class ItemController {
 
     @PostMapping("/saveItem")
     public String saveItem(Long id, String name, String description, Integer rental, Integer deposit, Principal p, RedirectAttributes redirectAttributes){
-        final User user = this.users.findByUsername(p.getName())
-                .orElseThrow(
-                        () -> new RuntimeException("User not found!"));
-        Item item;
+        User user = userService.get(p.getName());
         if(id == null){
-            item = new Item(name, description, rental, deposit, user);
+            itemService.create(name, description, rental, deposit, user);
             redirectAttributes.addFlashAttribute("saved",true);
-            items.save(item);
-            return "redirect:/account";
         }
-        item = this.items.findById(id).orElseThrow(
-                () -> new RuntimeException("Item not found!"));
-        if(!item.isAvailable()){
-            redirectAttributes.addFlashAttribute("notAvailable",true);
-            return "redirect:/account";
+        else {
+            itemService.edit(id,name, description, rental, deposit, user);
+            redirectAttributes.addFlashAttribute("edited",true);
         }
-        item.setName(name);
-        item.setDescription(description);
-        item.setRental(rental);
-        item.setDeposit(deposit);
-        item.setLender(user);
-        redirectAttributes.addFlashAttribute("edited",true);
-        items.save(item);
         return "redirect:/account";
+//        if(!item.isAvailable()){
+//            redirectAttributes.addFlashAttribute("notAvailable",true);
+//            return "redirect:/account";
+//        }
 
     }
 

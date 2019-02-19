@@ -16,6 +16,22 @@ public class ItemService{
     @Autowired
     private ItemRepository items;
 
+
+    public void create(String name, String description, Integer rental, Integer deposit, User user) {
+        Item item = new Item(name, description, rental, deposit, user);
+        items.save(item);
+    }
+
+    public void edit(Long id, String name, String description, Integer rental, Integer deposit, User user) {
+        Item item = this.get(id);
+        item.setName(name);
+        item.setDescription(description);
+        item.setRental(rental);
+        item.setDeposit(deposit);
+        item.setLender(user);
+        items.save(item);
+    }
+
     public Item get(Long id) {
         Item item = this.items.findById(id)
                 .orElseThrow(
