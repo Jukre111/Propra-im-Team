@@ -1,6 +1,7 @@
 package de.hhu.sharing.model;
 
 import lombok.Data;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -24,9 +25,11 @@ public class Item {
     @ManyToOne
     private User lender;
 
-    private boolean available = true;
+    @ElementCollection
+    private List<RentPeriod> periods = new ArrayList<>();
+
     @OneToMany(fetch = FetchType.EAGER)
-    private List<Request> requests = new ArrayList<>();
+    private final List<Request> requests = new ArrayList<>();
 
     public Item(){
     }
@@ -37,6 +40,7 @@ public class Item {
         this.rental = rental;
         this.deposit = deposit;
         this.lender = lender;
+        this.periods = new ArrayList<>();
     }
 
     public void addToRequests(Request request) {
@@ -45,5 +49,9 @@ public class Item {
 
     public void removeFromRequests(Request request) {
         requests.remove(request);
+    }
+
+    public void addToPeriods(RentPeriod period) {
+        periods.add(period);
     }
 }

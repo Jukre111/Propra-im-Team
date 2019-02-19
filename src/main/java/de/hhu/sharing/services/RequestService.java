@@ -45,7 +45,7 @@ public class RequestService {
 
     public void accept(Long requestId) {
         Item item = itemService.getFromRequestId(requestId);
-        item.setAvailable(false);
+        //item.setAvailable(false);
         Request request = this.get(requestId);
         itemService.removeFromRequests(request);
         userService.addToBorrowedItems(request.getRequester(), item);

@@ -1,11 +1,9 @@
 package de.hhu.sharing.data;
 
 import com.github.javafaker.Faker;
-import de.hhu.sharing.model.Address;
-import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.Request;
-import de.hhu.sharing.model.User;
+import de.hhu.sharing.model.*;
 import org.apache.tomcat.jni.Time;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,10 +13,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
@@ -78,7 +73,23 @@ public class DatabaseInitializer implements ServletContextInitializer {
             requests.save(request2);
             itemList.get(1).addToRequests(request2);
             items.saveAll(itemList);
-
         }
+
+        Item item = items.findById(Long.valueOf(1)).get();
+        List<RentPeriod> periods = new ArrayList<>();
+        periods.add(new RentPeriod(
+                faker.date().past(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
+        periods.add(new RentPeriod(
+                faker.date().past(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
+        item.setPeriods(periods);
+
+//        item.addToPeriods(new RentPeriod(
+//                faker.date().past(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+//                faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
+
+        items.save(item);
+
     }
 }
