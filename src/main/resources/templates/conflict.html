@@ -1,10 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Konfliktmeldung</title>
+    <style>
+        .style {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            margin-top: 2%;
+            margin-left: 20%;
+            margin-right: 20%;
+        }
+
+        .textPosition {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 
+<div layout:fragment="body">
+    <div class="style textPosition" style="padding: 20px">
+        <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name" th:text="${item.name}"></span></h1>
+        <div class="form-horizontal" style="padding-top: 60px">
+            <input type="hidden" class="form-control" id="id" name="id" th:value="${item.id}" readonly/>
+            <div class="form-group">
+                <label for="name" class="col-sm-2 control-label">Objektname</label>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" id="name" name="name" th:value="${item.name}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="username" class="col-sm-2 control-label">Username</label>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" id="username" name="username" th:value="${user.username}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email" class="col-sm-2 control-label">E-Mail</label>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" id="email" name="email" th:value="${user.email}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="accused" class="col-sm-2 control-label">Konfliktpartner</label>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" id="accused" name="accused" th:value="${accused.username}"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="problem" class="col-sm-2 control-label">Problembeschreibung</label>
+                <div class="col-xs-7">
+                    <textarea class="form-control" id="problem" name="problem" th:inline="text" readonly>[[${conflict.problem}]]</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="indexbtn" href="/" style="padding: 5px">Zurück</a>
+            <a type="submit" class="indexbtn" style="padding: 5px" th:href="@{'/request?id=' + ${item.id}}" name="button">Anfragen</a>
+        </div>
+    </div>
+</div>
 </body>
-</html>
