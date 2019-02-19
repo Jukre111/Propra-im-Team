@@ -16,7 +16,7 @@ import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.model.Account;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.Reservation;
-import de.hhu.sharing.web.ProPayService;
+import de.hhu.sharing.services.ProPayService;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest

@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
@@ -20,8 +21,7 @@ public class UserRepositoryTest {
     @Autowired
     UserRepository userRepo;
 
-    @Test
-    public void testFindAll() {
+    public ArrayList<User> createUsers(){
         User user1 = new User();
         User user2 = new User();
 
@@ -57,33 +57,30 @@ public class UserRepositoryTest {
 
         userRepo.save(user1);
         userRepo.save(user2);
+        ArrayList<User> users = new ArrayList<>();
+        users.add(user1);
+        users.add(user2);
 
+        return users;
+    }
+
+
+    @Test
+    public void testFindAll() {
+        ArrayList<User> users = createUsers();
+
+        userRepo.save(users.get(0));
+        userRepo.save(users.get(1));
         Assertions.assertThat(userRepo.findAll().size()).isEqualTo(2);
     }
 
     @Test
     public void testFindByUsername(){
 
-        User user = new User();
+        ArrayList<User> users = createUsers();
 
-        Address add = new Address();
-
-        add.setCity("Duesseldorf");
-        add.setPostcode(40233);
-        add.setStreet("Universitaetsstrasse 1");
-
-        user.setUsername("Nutzer1");
-        user.setForename("Joe");
-        user.setLastname("Karl");
-        user.setRole("ROLE_ADMIN");
-        user.setEmail("Person1@test.de");
-        user.setPassword("pswd");
-        user.setAddress(add);
-
-        LocalDate date1 = LocalDate.of(2019, 5, 13);
-        user.setBirthdate(date1);
-
-        userRepo.save(user);
+        userRepo.save(users.get(0));
+        userRepo.save(users.get(1));
 
         Optional<User> optionalUser = userRepo.findByUsername("Nutzer1");
 
