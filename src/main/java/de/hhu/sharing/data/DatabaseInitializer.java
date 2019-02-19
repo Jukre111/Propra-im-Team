@@ -44,7 +44,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
         for(int i = 1; i < 21; i++){
             Address address = new Address(
                     faker.address().streetAddress(),
-                    faker.gameOfThrones().city(),
+                    faker.lordOfTheRings().location(),
                     Integer.parseInt(faker.address().zipCode()));
             User user = new User("user" + i, encoder.encode("password" + i), "ROLE_USER",
                     faker.gameOfThrones().house(),
@@ -62,6 +62,10 @@ public class DatabaseInitializer implements ServletContextInitializer {
                 items.save(item);
             }
         }
+
+        Address adminAddress = new Address(faker.address().streetAddress(),faker.pokemon().location(), Integer.parseInt(faker.address().zipCode()));
+        User admin = new User("admin", encoder.encode("admin") ,"ROLE_ADMIN", faker.gameOfThrones().house(),
+                faker.lordOfTheRings().character(), faker.internet().emailAddress(), faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), adminAddress);
 
         for(User user : users.findAll()){
             List<Item> itemList = items.findFirst2ByLenderNot(user);
