@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset = "utf-8"/>
+    <title>Account</title>
+
+    <style>
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2;}
+
+#circular--landscape {
+  display: inline-block;
+  position: relative;
+  width: 250px;
+  height: 250px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+#circular--landscape img {
+  width: auto;
+  height: 100%;
+  margin-left: -50px;
+}
+
+</style>
+</head>
+<body>
+<div layout:fragment="body">
+    <div style="padding: 20px"  class="form-horizontal">
+        <form th:action="@{/savePayIn}" method="post">
+            <div class="media">
+                <div class="media-body">
+                    <div class="form-group">
+                        <label for="username" class="col-sm-2 control-label">Benutzername</label>
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control" id="username" name="username" th:value="${user.username}" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount" class="col-sm-2 control-label">Kontostand</label>
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control" id="amount" name="amount" th:value="${amount}" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sum" class="col-sm-2 control-label">Aufladebetrag</label>
+                        <div class="col-xs-6">
+                            <input type="number" min="0" class="form-control" id="sum" name="sum" />
+                            <br>
+                            <button type="submit" class="indexbtn" name="button">Aufladen</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="padding: 20px">
+                <table>
+                    <tr>
+                        <th width="20%"><font size="4">Miete</font></th>
+                        <th width="20%">Kaution</th>
+                        <th width="30%">Artikel</th>
+                        <th width="30%">Empfaenger</th>
+                    </tr>
+                    <tr th:each="sendelement : ${send}">
+                        <td th:text="${sendelement.wholeRent}"></td>
+                        <td th:text="${sendelement.deposit}"></td>
+                        <td th:text="${sendelement.getName()}"></td>
+                        <td th:text="${sendelement.target.getUsername()}"></td>
+                    </tr>
+                </table>
+            </div>
+            <div style="padding: 20px">
+                <table>
+                    <tr>
+                        <th width="20%"><font size="4">Miete</font></th>
+                        <th width="20%">Kaution</th>
+                        <th width="30%">Artikel</th>
+                        <th width="30%">Sender</th>
+                    </tr>
+                    <tr th:each="receiveelement : ${receive}">
+                        <td th:text="${reveiveelement.wholeRent}"></td>
+                        <td th:text="${receiveelement.deposit}"></td>
+                        <td th:text="${receiveelement.item.getName()}"></td>
+                        <td th:text="${receiveelement.target.getUsername()}"></td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
