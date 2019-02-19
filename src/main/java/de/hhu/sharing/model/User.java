@@ -30,10 +30,6 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Item> borrowedItems = new ArrayList<>();
 
-    public void addToBorrowedItem(Item item) {
-        borrowedItems.add(item);
-    }
-
     public User(){
     }
 
@@ -48,6 +44,10 @@ public class User {
         this.email = email;
         this.birthdate = birthdate;
         this.address = address;
+    }
+
+    public void addToBorrowedItems(Item item) {
+        borrowedItems.add(item);
     }
 
 }

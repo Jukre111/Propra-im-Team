@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-public class BorrowRequest {
+public class Request {
 
     @Id
     @GeneratedValue
@@ -19,10 +19,11 @@ public class BorrowRequest {
     @ManyToOne
     private User requester;
 
-    public BorrowRequest(){
+
+    public Request(){
     }
 
-    public BorrowRequest(LocalDate startdate, LocalDate enddate, User requester){
+    public Request(LocalDate startdate, LocalDate enddate, User requester){
         this.startdate = startdate;
         this.enddate = enddate;
         this.requester = requester;

@@ -3,19 +3,27 @@
 # aktuelle Aufgaben:
 
 ## Aufgaben:
-* Login
+
 * Web
-* Benutzerkonto
-* Suche (optional)
-* Person anlegen
+*Konfliktstelle
+
+(* Person anlegen
 * Person bearbeiten
-* Person löschen
-* Artikel anlegen
-* Artikel bearbeiten
-* Artikel löschen
+* Person löschen)
+
 * Schnittstelle zu ProPay
+
+## Aufgaben geringere Prioritaet
+* Aendern von Preis nicht nur zulassen, falls keinen Request zum Item existieren
 
 # erledigte Aufgaben:
 * Travis
 * Docker & Dockercompose (siehe Branch docker/docker-compose)
 * Datenbank (Postgres)
+* Artikel anlegen
+* Artikel bearbeiten
+* Artikel löschen
+* Benutzerkonto
+* Login
+* Suche (optional)
+* Requests

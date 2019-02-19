@@ -12,5 +12,13 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
     Optional<Item> findById(Long Id);
     List<Item> findAllByLender(User user);
 
-    List<Item> findAllByNameContainingOrDescriptionContaining(String nameQuery, String descriptionQuery);
+    List<Item> findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String nameQuery, String descriptionQuery);
+
+    Optional<Item> findByIdAndLenderNot(Long id, User user);
+
+    List<Item> findFirst2ByLenderNot(User user);
+
+    Optional<Item> findByRequests_id(Long id);
+
+    List<Item> findAllByRequests_requester(User user);
 }

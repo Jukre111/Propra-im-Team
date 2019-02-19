@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Nachrichten</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {background-color: #f2f2f2;}
+    </style>
+</head>
+<body>
+
+<div layout:fragment="body">
+    <div class="row" style="padding: 20px">
+        <div class="col-sm-5" style="padding: 20px; margin-left: 30px">
+            <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name">Anfragen</span></h1>
+            <div class="form-horizontal" style="padding-top: 30px">
+                <div class="form-group" th:each="item : ${allMyItems}">
+                    <div class="form-group" th:each="request : ${item.requests}">
+                        <table>
+                            <tr>
+                                <th width="30%">Anfrage von</th>
+                                <th width="30%">Angefragter Gegenstand</th>
+                                <th width="10%">Von</th>
+                                <th width="10%">Bis</th>
+                                <th width="10%"></th>
+                                <th width="10%"></th>
+                            </tr>
+                            <tr>
+                                <td th:text="${request.requester.username}"></td>
+                                <td th:text="${item.name}"></td>
+                                <td th:text="${request.startdate}"></td>
+                                <td th:text="${request.enddate}"></td>
+                                <td>
+                                    <a type="button" class="indexbtn" th:href="@{'/accept?requestId=' + ${request.id} + '&itemId=' + ${item.id}}">Akzeptieren</a>
+                                </td>
+                                <td>
+                                    <a class="indexbtn" th:href="@{'/declineRequest?requestId=' + ${request.id} + '&itemId=' + ${item.id}}">Ablehnen</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-5" style="padding: 20px; margin-right: 30px">
+            <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name">Angefragt</span></h1>
+            <div class="form-horizontal" style="padding-top: 30px">
+                <div class="form-group" th:each="myReqItem : ${myRequestedItems}">
+                    <div class="form-group" th:each="myRequest : ${myReqItem.requests}">
+                        <div th:if="${myRequest.requester == user}" >
+                            <table>
+                                <tr>
+                                    <th width="70%">Angefragter Gegenstand</th>
+                                    <th width="10%">Von</th>
+                                    <th width="10%">Bis</th>
+                                    <th width="10%"></th>
+                                </tr>
+                                <tr>
+                                    <td th:text="${myReqItem.name}"></td>
+                                    <td th:text="${myRequest.startdate}"></td>
+                                    <td th:text="${myRequest.enddate}"></td>
+                                    <td>
+                                        <a class="indexbtn" th:href="@{'/deleteRequest?requestId=' + ${myRequest.id} + '&itemId=' + ${myReqItem.id}}">Löschen</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+
+<!--
+<input type="text"  class="form-control" id="requester" name="requester" th:value="${request.requester.username}" readonly/>
+<span> möchte folgenden Gegenstand ausleihen: </span>
+<input type="text" class="form-control" id ="item" name="item" th:value="${item.name}" readonly/>
+<span> Zeitraum: </span>
+<input type="date" class="form-control" id ="startdate" name="startdate" th:value="${request.startdate}" readonly/>
+<input type="date" class="form-control" id ="enddate" name="enddate" th:value="${request.enddate}" readonly/>
+-->
