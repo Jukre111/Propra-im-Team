@@ -93,6 +93,7 @@ public class RequestController {
         for(Request re : allIRequested){
             myRequestedItems.add(items.findByRequests_id(re.getId()));
         }
+        model.addAttribute("user", user);
         model.addAttribute("allMyItems", allMyItems);
         model.addAttribute("myRequestedItems", myRequestedItems);
         model.addAttribute("allIRequested", allIRequested);
