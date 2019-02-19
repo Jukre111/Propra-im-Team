@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import de.hhu.sharing.data.ItemRepository;
 import java.security.Principal;
+import java.util.List;
 
 
 @Controller
@@ -57,5 +58,12 @@ public class ConflictController {
 
 
         return "redirect:/";
+    }
+
+    @GetMapping("/conflictView")
+    public String conflictView(Model model){
+        List<Conflict> allConflicts = conflicts.findAll();
+        model.addAttribute("allConflicts", allConflicts);
+        return "conflictView";
     }
 }

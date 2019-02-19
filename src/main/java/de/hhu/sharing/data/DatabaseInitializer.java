@@ -66,6 +66,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
         Address adminAddress = new Address(faker.address().streetAddress(),faker.pokemon().location(), Integer.parseInt(faker.address().zipCode()));
         User admin = new User("admin", encoder.encode("admin") ,"ROLE_ADMIN", faker.gameOfThrones().house(),
                 faker.lordOfTheRings().character(), faker.internet().emailAddress(), faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), adminAddress);
+        users.save(admin);
 
         for(User user : users.findAll()){
             List<Item> itemList = items.findFirst2ByLenderNot(user);
