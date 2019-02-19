@@ -18,6 +18,9 @@ public class Conflict {
     private String problem;
 
     @ManyToOne
+    private Item item;
+
+    @ManyToOne
     private User prosecuter;
 
     @ManyToOne

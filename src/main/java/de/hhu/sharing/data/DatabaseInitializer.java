@@ -54,7 +54,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
                     address);
             users.save(user);
             for(int j = 0; j < faker.number().numberBetween(1,5); j++){
-                Item item = new Item(faker.gameOfThrones().dragon(),
+                Item item = new Item(faker.pokemon().name(),
                         String.join("\n", faker.lorem().paragraphs(5)),
                         faker.number().numberBetween(1,1000),
                         faker.number().numberBetween(1,1000),
