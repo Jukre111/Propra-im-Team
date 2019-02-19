@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,108 +27,65 @@ public class ItemRepositoryTest {
     @Autowired
     UserRepository userRepo;
 
+
+
+    public ArrayList<Item> createItems(){
+        LocalDate date = LocalDate.of(2000,1,1);
+        Address address = new Address("unistrase","duesseldorf", 40233);
+        User user = new User("user","password", "role", "lastnmae", "forname", "email",date,address);
+        userRepo.save(user);
+        User userEntity = userRepo.findByUsername("user").get();
+        Item item1 = new Item("apfel", "lecker",1,1 ,user );
+        Item item2 = new Item("granatapfel", "grosse Kerne",2,2 ,user );
+        Item item3 = new Item("banane", "kleine Kerne",3,3 ,user );
+        ArrayList<Item> items = new ArrayList<>();
+        items.add(item1);
+        items.add(item2);
+        items.add(item3);
+        return items;
+    }
+
+
     @Test
     public void testFindAll() {
-        Item item1 = new Item();
-        Item item2 = new Item();
-
-        item1.setName("item1");
-        item1.setDescription("descr1");
-
-        item2.setName("item2");
-        item2.setDescription("descr2");
-
-        itemRepo.save(item1);
-        itemRepo.save(item2);
-
+        ArrayList<Item> items = createItems();
+        itemRepo.save(items.get(0));
+        itemRepo.save(items.get(1));
         Assertions.assertThat(itemRepo.findAll().size()).isEqualTo(2);
     }
 
     @Test
     public void testFindById(){
-
-        Item item = new Item();
-
-        item.setName("item");
-        item.setDescription("description");
-
-        itemRepo.save(item);
-
-        Optional<Item> optionalItem = itemRepo.findById(item.getId());
+        ArrayList<Item> items = createItems();
+        itemRepo.save(items.get(0));
+        Optional<Item> optionalItem = itemRepo.findById(items.get(0).getId());
 
         Assert.assertTrue(optionalItem.isPresent());
         if(optionalItem.isPresent()){
-            Assertions.assertThat(optionalItem.get().getId()).isEqualTo(item.getId());
+            Assertions.assertThat(optionalItem.get().getId()).isEqualTo(items.get(0).getId());
         }
     }
 
     @Test
     public void testFindAllByLender(){
+        ArrayList<Item> items = createItems();
+        itemRepo.save(items.get(0));
+        itemRepo.save(items.get(1));
 
-        Address add = new Address();
-
-        add.setCity("Duesseldorf");
-        add.setPostcode(40233);
-        add.setStreet("Universitaetsstrasse 1");
-
-        User user = new User();
-
-        user.setUsername("Nutzer8");
-        user.setForename("Joe");
-        user.setLastname("Karl");
-        user.setRole("ROLE_ADMIN");
-        user.setEmail("Person1@test.de");
-        user.setPassword("pswd");
-        user.setAddress(add);
-
-        LocalDate date1 = LocalDate.of(2019, 5, 13);
-        user.setBirthdate(date1);
-
-        userRepo.save(user);
-        User userEntity = userRepo.findByUsername("Nutzer8").get();
-
-        Item item1 = new Item();
-        Item item2 = new Item();
-
-        item1.setName("item1");
-        item1.setDescription("descr1");
-        item1.setLender(userEntity);
-
-        item2.setName("item2");
-        item2.setDescription("descr2");
-        item2.setLender(userEntity);
-
-
-        itemRepo.save(item1);
-        itemRepo.save(item2);
-
-
-        List<Item> itemList = itemRepo.findAllByLender(userEntity);
+        List<Item> itemList = itemRepo.findAllByLender(items.get(0).getLender());
         Assertions.assertThat(itemList.size()).isEqualTo(2);
 
     }
 
     @Test
     public void  testFindAllByNameContainingOrDescriptionContaining(){
-        Item item1 = new Item();
-        Item item2 = new Item();
-        Item item3 = new Item();
+        ArrayList<Item> items = createItems();
+        itemRepo.save(items.get(0));
+        itemRepo.save(items.get(1));
+        itemRepo.save(items.get(2));
 
-        item1.setName("apfel");
-        item1.setDescription("Kerne");
-
-        item2.setName("granatapfel");
-        item2.setDescription("lecker");
-
-        item3.setName("banane");
-        item3.setDescription("lecker");
-
-        itemRepo.save(item1);
-        itemRepo.save(item2);
-        itemRepo.save(item3);
-
-        List<Item> itemList1 = itemRepo.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("apf", "Kern");
-        List<Item> itemList2 = itemRepo.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("banane", "leck");
+        List<Item> itemList1 = itemRepo.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("apf", "egal");
+        List<Item> itemList2 = itemRepo.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("banane", "Kern");
         
         Assertions.assertThat(itemList1.size()).isEqualTo(2);
         Assertions.assertThat(itemList2.size()).isEqualTo(2);
