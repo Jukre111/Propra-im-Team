@@ -1,4 +1,4 @@
-package de.hhu.sharing.web;
+package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Item;

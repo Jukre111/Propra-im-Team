@@ -1,12 +1,13 @@
-package de.hhu.sharing.web;
+package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.Request;
 import de.hhu.sharing.model.User;
+import de.hhu.sharing.services.ItemService;
+import de.hhu.sharing.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 

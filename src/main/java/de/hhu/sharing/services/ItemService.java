@@ -1,4 +1,4 @@
-package de.hhu.sharing.web;
+package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.model.Item;
@@ -65,16 +65,6 @@ public class ItemService{
 
     }
 
-    public List<Item> getAllMyRequested(User user) {
-        List<Item> myRequestedItems = new ArrayList<>();
-        List<Item> allMyItems = this.getAllIPosted(user);
-        for(Item item : allMyItems){
-            if(!item.getRequests().isEmpty()){
-                myRequestedItems.add(item);
-            }
-        }
-        return myRequestedItems;
-    }
 
     public void addToRequests(Long itemId, Request request) {
         Item item = this.get(itemId);
