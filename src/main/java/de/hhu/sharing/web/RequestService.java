@@ -42,20 +42,12 @@ public class RequestService {
 
     }
 
-    public void accept(Long requestId, RedirectAttributes redirectAttributes) {
+    public void accept(Long requestId) {
         Item item = itemService.getFromRequestId(requestId);
-        if(item.isAvailable()) {
-            item.setAvailable(false);
-            Request request = this.get(requestId);
-            itemService.removeFromRequests(request);
-            userService.addToBorrowedItems(request.getRequester(), item);
-            requests.delete(request);
-        }
-        else{
-            redirectAttributes.addFlashAttribute("notAvailable",true);
-        }
-
+        item.setAvailable(false);
+        Request request = this.get(requestId);
+        itemService.removeFromRequests(request);
+        userService.addToBorrowedItems(request.getRequester(), item);
+        requests.delete(request);
     }
-
-
 }

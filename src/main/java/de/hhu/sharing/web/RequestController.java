@@ -66,7 +66,11 @@ public class RequestController {
 
     @GetMapping("/accept")
     public String accept(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId, RedirectAttributes redirectAttributes){
-        requestService.accept(requestId, redirectAttributes);
+//        if(!item.isAvailable()) {
+//            redirectAttributes.addFlashAttribute("notAvailable",true);
+//        return "redirect:/messages";
+//        }
+        requestService.accept(requestId);
         return "redirect:/messages";
     }
 
