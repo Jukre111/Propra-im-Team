@@ -30,7 +30,7 @@
             <td th:text="${item.name}"></td>
             <td th:text="${#strings.abbreviate(item.description,100)} "></td>
             <td>
-                <a type="button" th:href="@{'/details?id=' + ${item.Id}}" class="indexbtn">Details</a>
+                <a type="button" th:href="@{'/detailsItem?id=' + ${item.Id}}" class="indexbtn">Details</a>
             </td>
         </tr>
     </table>

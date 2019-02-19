@@ -25,15 +25,16 @@ public class ItemController {
     @Autowired
     private ItemRepository items;
 
-    @GetMapping("/details")
+    @Autowired
+    private ItemService itemService;
+
+    @GetMapping("/detailsItem")
     public String details(@RequestParam(name = "id") Long id, Model model){
-        final Item item = this.items.findById(id)
-                .orElseThrow(
-                        () -> new RuntimeException("Item not found!"));
-        model.addAttribute("item", item);
+        Item item = itemService.get(id);
         User user = item.getLender();
-        model.addAttribute("user", user);
         Address address = user.getAddress();
+        model.addAttribute("item", item);
+        model.addAttribute("user", user);
         model.addAttribute("address", address);
         return "details";
     }
