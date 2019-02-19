@@ -46,7 +46,7 @@ public class User {
         this.address = address;
     }
 
-    public void addToBorrowedItem(Item item) {
+    public void addToBorrowedItems(Item item) {
         borrowedItems.add(item);
     }
 

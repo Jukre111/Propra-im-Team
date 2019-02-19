@@ -132,7 +132,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 						<span th:unless="${lend.available}" style="padding-left: 25px">&#10007;</span>
 					</td>
 					<td>
-						<a class="indexbtn" th:href="@{'/item?id=' + ${lend.id}}">Bearbeiten</a>
+						<a class="indexbtn" th:href="@{'/editItem?id=' + ${lend.id}}">Bearbeiten</a>
 					</td>
 					<td>
 						<a class="indexbtn" th:href="@{'/deleteItem?id=' + ${lend.id}}" >Entfernen</a>

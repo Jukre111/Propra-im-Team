@@ -1,4 +1,4 @@
-package de.hhu.sharing.web;
+package de.hhu.sharing.services;
 
 import com.google.gson.Gson;
 import de.hhu.sharing.data.ItemRepository;
