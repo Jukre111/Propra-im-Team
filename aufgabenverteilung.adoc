@@ -11,6 +11,11 @@
 * Person bearbeiten
 * Person löschen)
 
+To-Do Morgen:
+* Kaution an A oder B überweisen
+* Rückgabe Item
+*
+
 * Schnittstelle zu ProPay
 
 # erledigte Aufgaben:
