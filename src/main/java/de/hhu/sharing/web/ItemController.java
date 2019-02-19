@@ -39,13 +39,15 @@ public class ItemController {
         return "details";
     }
 
-    @GetMapping("/item")
-    public String item(Model model, @RequestParam("id") Optional<Long> id){
-        Item item;
-        item = id.map(aLong -> this.items.findById(aLong)
-                .orElseThrow(
-                        () -> new RuntimeException("Item not found!"))).orElseGet(Item::new);
-        model.addAttribute("item",item);
+    @GetMapping("/newItem")
+    public String newItem(Model model){
+        model.addAttribute("item", new Item());
+        return "item";
+    }
+
+    @GetMapping("/editItem")
+    public String editItem(Model model, @RequestParam("id") Long id){
+        model.addAttribute("item", itemService.get(id));
         return "item";
     }
 
