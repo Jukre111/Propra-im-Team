@@ -1,10 +1,7 @@
 package de.hhu.sharing.data;
 
 import com.github.javafaker.Faker;
-import de.hhu.sharing.model.Address;
-import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.Request;
-import de.hhu.sharing.model.User;
+import de.hhu.sharing.model.*;
 import org.apache.tomcat.jni.Time;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
@@ -37,6 +34,9 @@ public class DatabaseInitializer implements ServletContextInitializer {
     @Autowired
     private PasswordEncoder encoder;
 
+    @Autowired
+    private ConflictRepository conflicts;
+
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         final Faker faker = new Faker(Locale.GERMAN);
@@ -67,6 +67,18 @@ public class DatabaseInitializer implements ServletContextInitializer {
         User admin = new User("admin", encoder.encode("admin") ,"ROLE_ADMIN", faker.gameOfThrones().house(),
                 faker.lordOfTheRings().character(), faker.internet().emailAddress(), faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), adminAddress);
         users.save(admin);
+
+        User user1 = users.findByUsername("user1").orElseThrow(()-> new RuntimeException("Users not there."));
+        User user2 = users.findByUsername("user2").orElseThrow(()-> new RuntimeException("Users not there."));
+        Item item1 = items.findOneByLender(user1);
+
+        Conflict conflict = new Conflict();
+        conflict.setItem(item1);
+        conflict.setProblem("Problem");
+        conflict.setAccused(user2);
+        conflict.setProsecuter(user1);
+        conflicts.save(conflict);
+
 
         for(User user : users.findAll()){
             List<Item> itemList = items.findFirst2ByLenderNot(user);

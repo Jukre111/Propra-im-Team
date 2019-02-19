@@ -26,4 +26,5 @@ public class Conflict {
     @ManyToOne
     private User accused;
 
+
 }

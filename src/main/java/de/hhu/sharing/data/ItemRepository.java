@@ -19,4 +19,6 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
     List<Item> findFirst2ByLenderNot(User user);
 
     Item findByRequests_id(Long id);
+
+    Item findOneByLender(User user);
 }
