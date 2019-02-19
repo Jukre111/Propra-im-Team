@@ -1,9 +1,8 @@
 package de.hhu.sharing.model;
 
 import lombok.Data;
-import org.apache.tomcat.jni.Local;
 
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Data

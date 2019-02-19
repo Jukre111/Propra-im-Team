@@ -1,6 +1,7 @@
 package de.hhu.sharing.model;
 
 import lombok.Data;
+import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,8 +14,8 @@ public class Request {
     @GeneratedValue
     private Long id;
 
-    @Embedded
-    private RentPeriod period;
+    private LocalDate startdate;
+    private LocalDate enddate;
 
     @ManyToOne
     private User requester;
@@ -24,7 +25,8 @@ public class Request {
     }
 
     public Request(LocalDate startdate, LocalDate enddate, User requester){
-        this.period = new RentPeriod(startdate, enddate);
+        this.startdate = startdate;
+        this.enddate = enddate;
         this.requester = requester;
     }
 

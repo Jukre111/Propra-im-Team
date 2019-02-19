@@ -28,7 +28,7 @@ public class User {
     private Address address;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Item> borrowedItems = new ArrayList<>();
+    private final List<Item> borrowedItems = new ArrayList<>();
 
     public User(){
     }

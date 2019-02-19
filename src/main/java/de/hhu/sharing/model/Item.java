@@ -2,10 +2,13 @@ package de.hhu.sharing.model;
 
 import lombok.Data;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.IndexColumn;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -40,7 +43,6 @@ public class Item {
         this.rental = rental;
         this.deposit = deposit;
         this.lender = lender;
-        this.periods = new ArrayList<>();
     }
 
     public void addToRequests(Request request) {
@@ -51,7 +53,12 @@ public class Item {
         requests.remove(request);
     }
 
-    public void addToPeriods(RentPeriod period) {
-        periods.add(period);
+    public void addToPeriods(RentPeriod period){
+        this.periods.add(period);
     }
+
+    public String toString(){
+        return name;
+    }
+
 }
