@@ -56,6 +56,10 @@ public class ItemController {
 
     @PostMapping("/saveItem")
     public String saveItem(Long id, String name, String description, Integer rental, Integer deposit, Principal p, RedirectAttributes redirectAttributes){
+//        if(!item.isAvailable()){
+//            redirectAttributes.addFlashAttribute("notAvailable",true);
+//            return "redirect:/account";
+//        }
         User user = userService.get(p.getName());
         if(id == null){
             itemService.create(name, description, rental, deposit, user);
@@ -66,25 +70,16 @@ public class ItemController {
             redirectAttributes.addFlashAttribute("edited",true);
         }
         return "redirect:/account";
-//        if(!item.isAvailable()){
-//            redirectAttributes.addFlashAttribute("notAvailable",true);
-//            return "redirect:/account";
-//        }
-
     }
 
     @GetMapping("/deleteItem")
     public String deleteItem(@RequestParam("id") Long id, RedirectAttributes redirectAttributes){
-        Item item = this.items.findById(id)
-                .orElseThrow(
-                        () -> new RuntimeException("Item not found!"));
-        if(item.isAvailable()){
-            items.delete(item);
-            redirectAttributes.addFlashAttribute("deleted",true);
-        }
-        else{
-            redirectAttributes.addFlashAttribute("notAvailable",true);
-        }
+//        if(!item.isAvailable()){
+//            redirectAttributes.addFlashAttribute("notAvailable",true);
+//            return "redirect:/account";
+//        }
+        itemService.delete(id);
+        redirectAttributes.addFlashAttribute("deleted",true);
         return "redirect:/account";
     }
 

@@ -32,6 +32,11 @@ public class ItemService{
         items.save(item);
     }
 
+    public void delete(Long id) {
+        Item item = this.get(id);
+        items.delete(item);
+    }
+
     public Item get(Long id) {
         Item item = this.items.findById(id)
                 .orElseThrow(
