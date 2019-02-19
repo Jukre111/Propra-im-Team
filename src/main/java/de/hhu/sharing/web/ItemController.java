@@ -48,7 +48,7 @@ public class ItemController {
     }
 
     @PostMapping("/saveItem")
-    public String saveItem(Long id, String name, String description, Integer rental, Integer deposit, Principal p, RedirectAttributes redirectAttributes){
+    public String saveItem(Long id, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("rental") Integer rental, @RequestParam("deposit") Integer deposit, Principal p, RedirectAttributes redirectAttributes){
 //        if(!item.isAvailable()){
 //            redirectAttributes.addFlashAttribute("notAvailable",true);
 //            return "redirect:/account";
