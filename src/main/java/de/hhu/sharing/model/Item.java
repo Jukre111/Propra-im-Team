@@ -25,7 +25,7 @@ public class Item {
     private User lender;
 
     private boolean available = true;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Request> requests = new ArrayList<>();
 
     public Item(){
@@ -43,4 +43,7 @@ public class Item {
         requests.add(request);
     }
 
+    public void removeFromRequests(Request request) {
+        requests.remove(request);
+    }
 }
