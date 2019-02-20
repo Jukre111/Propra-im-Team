@@ -9,6 +9,7 @@ import de.hhu.sharing.model.User;
 import de.hhu.sharing.security.SecurityConfig;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.RequestService;
+import de.hhu.sharing.services.TransactionService;
 import de.hhu.sharing.services.UserService;
 import de.hhu.sharing.web.RequestController;
 import org.junit.Assert;
@@ -54,6 +55,9 @@ public class RequestControllerTest{
     @MockBean
     RequestService requestService;
 
+    @MockBean
+    TransactionService transService;
+
     public User createUser(){
         LocalDate date = LocalDate.of(2000,1,1);
         Address address = new Address("unistrase","duesseldorf", 40233);
@@ -96,7 +100,7 @@ public class RequestControllerTest{
         map.add("requestId","1");
         map.add("itemId","2");
         mvc.perform(MockMvcRequestBuilders.get("/deleteRequest").params(map))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
     }
 
     @WithMockUser

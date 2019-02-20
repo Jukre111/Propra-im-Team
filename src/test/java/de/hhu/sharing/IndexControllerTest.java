@@ -37,6 +37,10 @@ public class IndexControllerTest {
     @MockBean
     UserService userService;
 
+    @MockBean
+    UserRepository users;
+
+
     @WithMockUser
     @Test
     public void retrieveStatusIndex()throws Exception{
