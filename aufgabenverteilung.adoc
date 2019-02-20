@@ -20,6 +20,7 @@ To-Do Morgen:
 
 ## Aufgaben geringere Prioritaet
 * Aendern von Preis nicht nur zulassen, falls keinen Request zum Item existieren
+* Requests mit abgelaufenen Zeitraeumen loeschen
 
 # erledigte Aufgaben:
 * Travis
