@@ -58,7 +58,15 @@ public class User {
         this.borrowed.add(process);
     }
 
+    public void removeFromBorrowed(BorrowingProcess process) {
+        this.borrowed.remove(process);
+    }
+
     public void addToLend(BorrowingProcess process) {
         this.lend.add(process);
+    }
+
+    public void removeFromLend(BorrowingProcess process) {
+        this.lend.remove(process);
     }
 }

@@ -54,4 +54,9 @@ public class Item {
         this.periods.add(period);
     }
 
+    @Transactional
+    public void removeFromPeriods(Period period){
+        this.periods.remove(period);
+    }
+
 }
