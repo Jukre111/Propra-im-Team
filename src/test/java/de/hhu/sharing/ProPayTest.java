@@ -29,7 +29,7 @@ public class ProPayTest {
     @Autowired
     ItemRepository itemRepo;
 
-    public Account prepareProPayUseForGet(String json) throws Exception {
+ /*   public Account prepareProPayUseForGet(String json) throws Exception {
         String username = "user";
         RestTemplate rt = Mockito.mock(RestTemplate.class);
         Mockito.when(rt.getForObject("http://localhost:8888/account/" + username + "/", String.class))
@@ -107,6 +107,6 @@ public class ProPayTest {
         prepareProPayUseForGet(json);
         int response = pps.createAccount("user4");
         Assertions.assertThat(response).isEqualTo(-1);
-    }
+    }*/
 
 }
