@@ -50,7 +50,7 @@ public class RequestController {
     @GetMapping("/deleteRequest")
     public String deleteRequest(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId){
         requestService.delete(requestId);
-        return "redirect:/account";
+        return "redirect:/messages";
     }
 
     @GetMapping("/messages")
@@ -64,11 +64,8 @@ public class RequestController {
 
     @GetMapping("/accept")
     public String accept(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId, RedirectAttributes redirectAttributes){
-//        if(!item.isAvailable()) {
-//            redirectAttributes.addFlashAttribute("notAvailable",true);
-//        return "redirect:/messages";
-//        }
         requestService.accept(requestId);
+        redirectAttributes.addFlashAttribute("itemAccepted",true);
         return "redirect:/messages";
     }
 

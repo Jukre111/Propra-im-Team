@@ -1,5 +1,8 @@
 package de.hhu.sharing.web;
 
+import de.hhu.sharing.data.ItemRepository;
+import de.hhu.sharing.data.UserRepository;
+import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.UserService;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class IndexController {
@@ -19,6 +23,11 @@ public class IndexController {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private UserRepository users;
+
+
 
     @GetMapping("/")
     public String index(Model model) {
@@ -33,6 +42,20 @@ public class IndexController {
         model.addAttribute("lendItems", itemService.getAllIPosted(user));
         model.addAttribute("address", user.getAddress());
         return "account";
+    }
+
+    @GetMapping("/returnItem")
+    public String returnItem( @RequestParam("id") Long id, Principal p){
+        Item item = itemService.get(id);
+        User user = userService.get(p.getName());
+        List<Item> allMyItems = user.getBorrowedItems();
+        allMyItems.remove(item);
+        //user.setBorrowedItems(allMyItems);
+        users.save(user);
+
+        // Verfügbarkeit muss noch verändert werden.
+
+        return "redirect:/account";
     }
 
 

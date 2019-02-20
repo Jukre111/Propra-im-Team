@@ -1,6 +1,7 @@
 package de.hhu.sharing.model;
 
 import lombok.Data;
+import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -27,6 +28,16 @@ public class Request {
         this.startdate = startdate;
         this.enddate = enddate;
         this.requester = requester;
+    }
+
+    public boolean overlapesWith(Request request) {
+        return startdate.isEqual(request.getStartdate())
+                || startdate.isEqual(request.getEnddate())
+                || enddate.isEqual(request.getStartdate())
+                || enddate.isEqual(request.getEnddate())
+                || startdate.isBefore(request.getStartdate()) && enddate.isAfter(request.getStartdate())
+                || startdate.isBefore(request.getEnddate()) && enddate.isAfter(request.getEnddate())
+                || startdate.isAfter(request.getStartdate()) && enddate.isBefore(request.getEnddate());
     }
 
 }

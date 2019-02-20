@@ -5,12 +5,14 @@ import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.model.Account;
 import de.hhu.sharing.model.Item;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+@Service
 public class ProPayService {
 
     @Autowired
