@@ -1,8 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.w3.org/1999/xhtml">
+      xmlns:th="http://www.w3.org/1999/xhtml" xmlns:min="http://www.w3.org/1999/xhtml">
 <head>
     <title>Anfrage</title>
+    <script>
+        function compare()
+        {
+            var startDt = document.getElementById("startdate").value;
+            var endDt = document.getElementById("enddate").value;
+            var button = document.getElementById("button");
+
+            if( (new Date(startDt).getTime() > new Date(endDt).getTime()))
+            {
+                console.log("failure");
+                button.disabled = true;
+                alert("Das Enddatum darf nicht vor dem Startdatum liegen!");
+            }
+            else
+            {
+                console.log("work work work");
+                button.disabled = false;
+            }
+        }
+    </script>
     <style>
         .style {
             border-radius: 5px;
@@ -34,12 +54,12 @@
                 <div class="form-group">
                     <label for="enddate" class="col-sm-2 control-label">Enddatum</label>
                     <div class="col-xs-6">
-                        <input type="date" class="form-control" id="enddate" name="enddate" required="" />
+                        <input type="date" class="form-control" id="enddate" name="enddate" oninput="compare()" required="" />
                     </div>
                 </div>
                 <div class="modal-footer">
                     <a class="indexbtn" href="/" style="padding: 5px">Abbrechen</a>
-                    <button type="submit" class="indexbtn" style="padding: 5px" name="button">Anfragen</button>
+                    <button type="submit" class="indexbtn" style="padding: 5px" id="button" name="button">Anfragen</button>
                 </div>
             </form>
         </div>
