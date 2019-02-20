@@ -6,6 +6,27 @@
 <title>Account</title>
 
 <style>
+	#conflictbtn {
+		display:block;
+		width:200px;
+		height:200px;
+		line-height:200px;
+		padding-left: 5px;
+		padding-right: 5px;
+		border: 2px solid #f5f5f5;
+		border-radius: 50%;
+		color: #fff;
+		text-align:center;
+		text-decoration:none;
+		box-shadow: 0 0 3px gray;
+		font-size:20px;
+		font-weight:bold;
+		background-color: #E74498;
+	}
+
+	#conflictbtn:hover {background-color: #BD1D6F}
+
+
 table {
   border-collapse: collapse;
   width: 100%;
@@ -102,6 +123,9 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					</div>
 				</div>-->
 			</div>
+			<div class="media-right media-middle" th:if="${user.role == 'ROLE_ADMIN'}">
+				<a id="conflictbtn" th:href="@{/conflictView}" style="margin-right: 150px">Konfliktlösestelle</a>
+			</div>
 		</div>
 	</form>
 		<div style="padding: 20px">
@@ -121,10 +145,11 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 		<div style="padding: 20px">
 			<table>
 				<tr>
-					<th width="80%"><font size="4">Aufgegebene Objekte</font></th>
+					<th width="70%"><font size="4">Aufgegebene Objekte</font></th>
 					<th width="10%">verfügbar</th>
 					<th width="10%">Bearbeiten</th>
 					<th width="10%">Entfernen</th>
+					<th width="10%">Konflikt</th>
 				</tr>
 				<tr th:each="lend : ${lendItems}">
 					<td th:text="${lend.name}"></td>
@@ -137,6 +162,9 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					</td>
 					<td>
 						<a class="indexbtn" th:href="@{'/deleteItem?id=' + ${lend.id}}" >Entfernen</a>
+					</td>
+					<td>
+						<a class="indexbtn" th:href="@{'/conflict?id=' + ${lend.id}}" >Konflikt</a>
 					</td>
 				</tr>
 			</table>
