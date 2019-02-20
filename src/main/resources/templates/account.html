@@ -137,7 +137,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 				<tr th:each="borrow : ${user.borrowedItems}">
 					<td th:text="${borrow.name}"></td>
 					<td>
-						<a th:href="@{'/'}" class="indexbtn">Rückgabe</a>
+						<a th:href="@{'/returnItem?id=' + ${borrow.id}}" class="indexbtn">Rückgabe</a>
 					</td>
 				</tr>
 			</table>
