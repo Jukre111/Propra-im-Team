@@ -24,9 +24,6 @@ public class RequestService {
     @Autowired
     private ItemService itemService;
 
-    @Autowired
-    private UserService userService;
-
     public Request get(Long id){
         Request request = this.requests.findById(id)
                 .orElseThrow(
@@ -51,17 +48,9 @@ public class RequestService {
         Request request = this.get(requestId);
         Item item = itemService.getFromRequestId(requestId);
         itemService.addToPeriods(item, request);
-
-
-
-        BorrowingProcess process = new BorrowingProcess(item, request.getPeriod());
-        processes.save(process);
-        request.getRequester().addToBorrowed(process);
-        item.getLender().addToLend(process);
-
+        this.createProcessForUsers(item, request);
         this.removeOverlapping(request, item);
 
-        //userService.addToBorrowedItems(request.getRequester(), item);
     }
 
     public void removeOverlapping(Request request, Item item) {
@@ -71,5 +60,12 @@ public class RequestService {
                 this.delete(req.getId());
             }
         }
+    }
+
+    private void createProcessForUsers(Item item, Request request) {
+        BorrowingProcess process = new BorrowingProcess(item, request.getPeriod());
+        processes.save(process);
+        request.getRequester().addToBorrowed(process);
+        item.getLender().addToLend(process);
     }
 }
