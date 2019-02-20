@@ -1,5 +1,7 @@
-package de.hhu.sharing.model;
+package de.hhu.sharing.propay;
 
+import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.User;
 import lombok.Data;
 
 import javax.persistence.Entity;

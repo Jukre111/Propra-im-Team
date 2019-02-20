@@ -1,22 +1,14 @@
 package de.hhu.sharing;
 
-import java.util.ArrayList;
-
-import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestTemplate;
 
 import de.hhu.sharing.data.ItemRepository;
-import de.hhu.sharing.model.Account;
-import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.Reservation;
 import de.hhu.sharing.services.ProPayService;
 
 @RunWith(SpringRunner.class)

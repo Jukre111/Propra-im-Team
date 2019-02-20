@@ -3,7 +3,7 @@ package de.hhu.sharing;
 import de.hhu.sharing.data.TransactionRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
-import de.hhu.sharing.model.Transaction;
+import de.hhu.sharing.propay.Transaction;
 import de.hhu.sharing.model.User;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
