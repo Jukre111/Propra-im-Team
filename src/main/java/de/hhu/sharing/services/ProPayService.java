@@ -2,9 +2,8 @@ package de.hhu.sharing.services;
 
 import com.google.gson.Gson;
 import de.hhu.sharing.data.TransactionRepository;
-import de.hhu.sharing.model.Account;
-import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.Transaction;
+import de.hhu.sharing.propay.Account;
+import de.hhu.sharing.propay.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

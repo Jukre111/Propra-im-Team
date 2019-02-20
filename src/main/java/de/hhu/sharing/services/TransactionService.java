@@ -2,10 +2,9 @@ package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.RequestRepository;
-import de.hhu.sharing.data.TransactionRepository;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.Request;
-import de.hhu.sharing.model.Transaction;
+import de.hhu.sharing.propay.Transaction;
 import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

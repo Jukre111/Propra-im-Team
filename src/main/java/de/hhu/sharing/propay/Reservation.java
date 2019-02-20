@@ -1,4 +1,4 @@
-package de.hhu.sharing.model;
+package de.hhu.sharing.propay;
 
 import lombok.Data;
 

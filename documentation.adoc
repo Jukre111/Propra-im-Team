@@ -36,49 +36,51 @@ schreiben (mit Namen)
 * Schnittstelle zu ProPay
 
 ## Model Datenstrukturen
-* User
+* User bestehen aus:
 . username : String (id)
+** user haben eindeutige Usernamen, die in der Datenbank als Id verwendet werden.
 . password : String
 . role : String
+** Es gibt die Rollen Admin und User.
+*** Admins können die Konfliktlösestelle in ihrem Account aufrufen, für User wird der entsprechende
+Button nicht dargestellt.
 . lastname : String
 . forename : String
 . email : String
 . birthdate : LocalDate
 . address : Address
-. borrowedItems : List<Item>
+. borrowedItems :
 
-Wir haben uns entschieden den username als Id zu benutzen, da wir sowieso verlangen
-wollen, dass jeder Nutzer einen anderen Username hat. Die Items, die dem User
-gehoeren werden hier nicht gespeichert, stattdessen wird in jedem Item der Besitzer
+
+ Die Items, die dem User gehoeren werden hier nicht gespeichert, stattdessen wird in jedem Item der Besitzer
 vermerkt.
 
 * Item
 . id : Long
+** ids werden von der Datenbank generiert.
 . name : String
 . description : String
 . rental : int
 . deposit : int
-. startdate : LocalDate
-. enddate : LocalDate
+. Availability : List periods
+** Hier werden alle Zeiträume gespeichert, in denen das Item verliehen ist.
 . lender : User
-* Address (Embeddable)
-. street : String
-. city : String
-. postcode : int
-* Message
-. id : Long (ID)
-. sender : User
-. receiver : User
+
+
+* Request
+. id : Long
+** ids werden von Datenbank generiert.
+. Zeitraum : period
+. requester : User
+** User der ausleihen möchte.
+
+* BorrowedItems
+. id : Long
 . item : Item
-. subject : String
-. message : String
-* Reservation
-. id : int
-. amount : int
-* Account
-. account : String
-. amount : int
-. reservations : Reservation[]
+** Item das ausgeliehen wird.
+. request : Request
+** request der akzeptiert wurde, sodass das Item jetzt ausgeliehen ist.
+
 
 ## Erläuterung der Model Datenstruktur
 * User:
