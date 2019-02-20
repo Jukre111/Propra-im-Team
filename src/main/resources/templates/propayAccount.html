@@ -74,7 +74,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                     <tr th:each="sendelement : ${send}">
                         <td th:text="${sendelement.wholeRent}"></td>
                         <td th:text="${sendelement.deposit}"></td>
-                        <td th:text="${sendelement.getName()}"></td>
+                        <td th:text="${sendelement.item.getName()}"></td>
                         <td th:text="${sendelement.target.getUsername()}"></td>
                     </tr>
                 </table>
