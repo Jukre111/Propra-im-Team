@@ -5,10 +5,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.annotations.IndexColumn;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Entity
@@ -57,8 +54,7 @@ public class Item {
         this.periods.add(period);
     }
 
-    public String toString(){
-        return name;
+    public void removeOverlappingRequests(RentPeriod period) {
+        requests.removeIf(request -> period.overlapesWith(request.getPeriod()));
     }
-
 }

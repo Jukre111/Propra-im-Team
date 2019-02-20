@@ -14,8 +14,8 @@ public class Request {
     @GeneratedValue
     private Long id;
 
-    private LocalDate startdate;
-    private LocalDate enddate;
+    @Embedded
+    private RentPeriod period;
 
     @ManyToOne
     private User requester;
@@ -25,8 +25,7 @@ public class Request {
     }
 
     public Request(LocalDate startdate, LocalDate enddate, User requester){
-        this.startdate = startdate;
-        this.enddate = enddate;
+        this.period = new RentPeriod(startdate, enddate);
         this.requester = requester;
     }
 

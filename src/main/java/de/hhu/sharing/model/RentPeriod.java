@@ -19,4 +19,14 @@ public class RentPeriod {
         this.startdate = startdate;
         this.enddate = enddate;
     }
+
+    public boolean overlapesWith(RentPeriod period) {
+        return startdate.isEqual(period.getStartdate())
+                || startdate.isEqual(period.getEnddate())
+                || enddate.isEqual(period.getStartdate())
+                || enddate.isEqual(period.getEnddate())
+                || startdate.isBefore(period.getStartdate()) && enddate.isAfter(period.getStartdate())
+                || startdate.isBefore(period.getEnddate()) && enddate.isAfter(period.getEnddate())
+                || startdate.isAfter(period.getStartdate()) && enddate.isBefore(period.getEnddate());
+    }
 }

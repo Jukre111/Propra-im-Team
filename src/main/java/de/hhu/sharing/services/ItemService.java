@@ -2,11 +2,13 @@ package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.RentPeriod;
 import de.hhu.sharing.model.Request;
 import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +80,27 @@ public class ItemService{
         items.save(item);
     }
 
+
+
     public List<Item> searchFor(String query) {
         return this.items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query,query);
     }
+
+    public void accept(Item item, Request request) {
+        this.addToPeriods(item, request.getPeriod());
+        this.removeFromRequests(request);
+        this.removeOverlappingRequests(item, request.getPeriod());
+    }
+
+    private void removeOverlappingRequests(Item item, RentPeriod period) {
+        item.removeOverlappingRequests(period);
+        items.save(item);
+    }
+
+    @Transactional
+    private void addToPeriods(Item item, RentPeriod period) {
+        item.addToPeriods(period);
+        items.save(item);
+    }
+
 }
