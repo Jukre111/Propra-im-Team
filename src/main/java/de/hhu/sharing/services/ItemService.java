@@ -16,9 +16,6 @@ public class ItemService{
     @Autowired
     private ItemRepository items;
 
-    @Autowired
-    private RequestService requestService;
-
     public void create(String name, String description, Integer rental, Integer deposit, User user) {
         Item item = new Item(name, description, rental, deposit, user);
         items.save(item);
@@ -67,6 +64,10 @@ public class ItemService{
 
     }
 
+    public void addToPeriods(Item item, Request request) {
+        item.addToPeriods(request.getPeriod());
+        items.save(item);
+    }
 
     public void addToRequests(Long itemId, Request request) {
         Item item = this.get(itemId);
@@ -80,20 +81,7 @@ public class ItemService{
         items.save(item);
     }
 
-
-
     public List<Item> searchFor(String query) {
         return this.items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query,query);
-    }
-
-    public void accept(Item item, Request request) {
-        this.addToPeriods(item, request);
-        this.removeFromRequests(request);
-        items.save(item);
-    }
-
-    private void addToPeriods(Item item, Request request) {
-        item.addToPeriods(request.getPeriod());
-        items.save(item);
     }
 }

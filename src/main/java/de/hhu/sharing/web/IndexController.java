@@ -48,8 +48,8 @@ public class IndexController {
     public String returnItem( @RequestParam("id") Long id, Principal p){
         Item item = itemService.get(id);
         User user = userService.get(p.getName());
-        List<Item> allMyItems = user.getBorrowedItems();
-        allMyItems.remove(item);
+        //List<Item> allMyItems = user.getBorrowedItems();
+        //allMyItems.remove(item);
         //user.setBorrowedItems(allMyItems);
         users.save(user);
 

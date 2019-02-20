@@ -1,10 +1,8 @@
 package de.hhu.sharing.services;
 
+import de.hhu.sharing.data.BorrowingProcessRepository;
 import de.hhu.sharing.data.RequestRepository;
-import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.Period;
-import de.hhu.sharing.model.Request;
-import de.hhu.sharing.model.User;
+import de.hhu.sharing.model.*;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +17,9 @@ public class RequestService {
 
     @Autowired
     private RequestRepository requests;
+
+    @Autowired
+    private BorrowingProcessRepository processes;
 
     @Autowired
     private ItemService itemService;
@@ -49,15 +50,24 @@ public class RequestService {
     public void accept(Long requestId) {
         Request request = this.get(requestId);
         Item item = itemService.getFromRequestId(requestId);
-        itemService.accept(item, request);
+        itemService.addToPeriods(item, request);
+
+
+
+        BorrowingProcess process = new BorrowingProcess(item, request.getPeriod());
+        processes.save(process);
+        request.getRequester().addToBorrowed(process);
+        item.getLender().addToLend(process);
+
         this.removeOverlapping(request, item);
+
         //userService.addToBorrowedItems(request.getRequester(), item);
     }
 
     public void removeOverlapping(Request request, Item item) {
         List<Request> requests = new ArrayList<>(item.getRequests());
         for(Request req : requests){
-            if(req.getPeriod().overlapsWith(request.getPeriod()) && !req.equals(request)){
+            if(req.getPeriod().overlapsWith(request.getPeriod())){
                 this.delete(req.getId());
             }
         }
