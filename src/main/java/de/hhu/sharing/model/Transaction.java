@@ -11,10 +11,23 @@ import javax.persistence.ManyToOne;
 @Data
 public class Transaction {
     @Id
-    @GeneratedValue
     int reservationId;
     int wholeRent;
     int deposit;
+    boolean depositRevoked;
+
+    public Transaction() {
+        depositRevoked = false;
+    }
+
+    public Transaction(int wholeRent, int deposit, Item item, User source, User target) {
+        this.wholeRent = wholeRent;
+        this.deposit = deposit;
+        this.depositRevoked = false;
+        this.item = item;
+        this.source = source;
+        this.target = target;
+    }
 
     @ManyToOne
     Item item;
