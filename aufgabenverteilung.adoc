@@ -10,10 +10,12 @@
 (* Person anlegen
 * Person bearbeiten
 * Person löschen)
+* Bilder zu Items hochladen
+* Rückgabe muss akzeptiert werden!! 
 
 To-Do Morgen:
 * Kaution an A oder B überweisen
-* Rückgabe Item
+
 *
 
 * Schnittstelle zu ProPay
@@ -33,3 +35,4 @@ To-Do Morgen:
 * Login
 * Suche (optional)
 * Requests
+* Rückgabe Item
