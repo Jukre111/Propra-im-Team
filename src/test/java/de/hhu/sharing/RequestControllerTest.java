@@ -3,7 +3,14 @@ package de.hhu.sharing;
 import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.data.UserRepository;
+import de.hhu.sharing.model.Address;
+import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.User;
 import de.hhu.sharing.security.SecurityConfig;
+import de.hhu.sharing.services.ItemService;
+import de.hhu.sharing.services.RequestService;
+import de.hhu.sharing.services.UserService;
+import de.hhu.sharing.web.RequestController;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,71 +34,102 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
 
 import java.security.Principal;
+import java.time.LocalDate;
 
-//@RunWith(SpringRunner.class)
-//@WebMvcTest
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
+@RunWith(SpringRunner.class)
+@WebMvcTest(RequestController.class)
 public class RequestControllerTest{
-
-    @Test
-    public void nestedException(){
-
-    }
-    /*
 
     @Autowired
     MockMvc mvc;
 
-    @Autowired
-    WebApplicationContext webContext;
+    @MockBean
+    UserService userService;
 
     @MockBean
-    ItemRepository itemRepository;
+    ItemService itemService;
 
     @MockBean
-    UserRepository userRepository;
+    RequestService requestService;
 
-    @MockBean
-    RequestRepository requestRepository;
+    public User createUser(){
+        LocalDate date = LocalDate.of(2000,1,1);
+        Address address = new Address("unistrase","duesseldorf", 40233);
+        User user = new User("user","password", "role", "lastnmae", "forname", "email",date,address);
+        return user;
+    }
 
     @WithMockUser
-    @Test(expected = NestedServletException.class)
+    @Test
     public void retrieveStatusRequest()throws Exception{
+        User user = createUser();
+        Item item = new Item("name", "description", 42,42, user);
+
+        Mockito.when(userService.get("user")).thenReturn(user);
+        Mockito.when(itemService.get(1L)).thenReturn(item);
         mvc.perform(MockMvcRequestBuilders.get("/request?id=1"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
     }
 
 
-    @WithMockUser(username = "test")
+    @WithMockUser
     @Test
     public void retrieveStatusPostRequest()throws Exception{
-        Principal mockPrincipal = Mockito.mock(Principal.class);
-        Mockito.when(mockPrincipal.getName()).thenReturn("test");
+        User user = createUser();
+        Mockito.when(userService.get("user")).thenReturn(user);
+        MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
+        map.add("startdate","2000-01-01");
+        map.add("enddate","2000-02-02");
 
+        mvc.perform(MockMvcRequestBuilders.post("/saveRequest").with(csrf()).params(map))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .post("/request")
-                .principal(mockPrincipal)
-                .accept(MediaType.APPLICATION_JSON);
+    }
 
-        MvcResult result = mvc.perform(requestBuilder).andReturn();
-
-        MockHttpServletResponse response = result.getResponse();
-        int status = response.getStatus();
-        Assert.assertEquals("response status is wrong", 302, status);
-        /*MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
-        map.add("startdate","2007-12-03");
-        map.add("enddate","2007-12-04");
-        map.add("p","test");
-        mvc.perform(MockMvcRequestBuilders.post("/request?id=1").params(map))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    */
-    //}
-
-    /*@WithMockUser
-    @Test(expected = NestedServletException.class)
+    @WithMockUser
+    @Test
     public void retrieveStatusDeleteRequest()throws Exception{
 
-        mvc.perform(MockMvcRequestBuilders.get("/deleteRequest?id=1"))
+        MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
+        map.add("requestId","1");
+        map.add("itemId","2");
+        mvc.perform(MockMvcRequestBuilders.get("/deleteRequest").params(map))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/account"));
-    }*/
+    }
+
+    @WithMockUser
+    @Test
+    public void retrieveStatusMessage()throws Exception{
+        User user = createUser();
+        Mockito.when(userService.get("user")).thenReturn(user);
+        mvc.perform(MockMvcRequestBuilders.get("/messages"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
+
+
+    @WithMockUser
+    @Test
+    public void retrieveStatusAccept()throws Exception{
+        MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
+        map.add("requestId","1");
+        map.add("itemId","2");
+        mvc.perform(MockMvcRequestBuilders.get("/accept").params(map))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
+    }
+
+
+    @WithMockUser
+    @Test
+    public void retrieveStatusDeclineRequest()throws Exception{
+        MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
+        map.add("requestId","1");
+        map.add("itemId","2");
+        mvc.perform(MockMvcRequestBuilders.get("/declineRequest").params(map))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
+    }
+
+
 }

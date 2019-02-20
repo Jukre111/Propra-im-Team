@@ -3,8 +3,14 @@ package de.hhu.sharing;
 import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.data.UserRepository;
+import de.hhu.sharing.model.Address;
+import de.hhu.sharing.model.User;
+import de.hhu.sharing.services.ItemService;
+import de.hhu.sharing.services.UserService;
+import de.hhu.sharing.web.IndexController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,28 +22,20 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
 
+import java.time.LocalDate;
 
-//@RunWith(SpringRunner.class)
-//@WebMvcTest
+
+@RunWith(SpringRunner.class)
+@WebMvcTest(IndexController.class)
 public class IndexControllerTest {
-    @Test
-    public void nestedException(){
-
-    }
-/*   @Autowired
-    MockMvc mvc;
 
     @Autowired
-    WebApplicationContext webContext;
+    MockMvc mvc;
 
     @MockBean
-    ItemRepository itemRepository;
-
+    ItemService itemService;
     @MockBean
-    UserRepository userRepository;
-
-    @MockBean
-    RequestRepository requestRepository;
+    UserService userService;
 
     @WithMockUser
     @Test
@@ -47,8 +45,14 @@ public class IndexControllerTest {
     }
 
     @WithMockUser
-    @Test(expected = NestedServletException.class)
+    @Test
     public void retrieveStatusAccount()throws Exception{
+        LocalDate date = LocalDate.of(2000,1,1);
+        Address address = new Address("unistrase","duesseldorf", 40233);
+        User user = new User("user","password", "role", "lastnmae", "forname", "email",date,address);
+
+        Mockito.when(userService.get("user")).thenReturn(user);
+
         mvc.perform(MockMvcRequestBuilders.get("/account"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -58,9 +62,8 @@ public class IndexControllerTest {
     @WithMockUser
     @Test
     public void retrieveStatusSearch()throws Exception{
-
         mvc.perform(MockMvcRequestBuilders.get("/search?query=item"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
-*/
+
 }
