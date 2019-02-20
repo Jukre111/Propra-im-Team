@@ -24,7 +24,8 @@ public class TransactionRepositoryTest {
     public void testFindAll() {
         Transaction trans1 = new Transaction();
         Transaction trans2 = new Transaction();
-
+        trans1.setReservationId(1);
+        trans2.setReservationId(2);
         transRepo.save(trans1);
         transRepo.save(trans2);
 
@@ -50,6 +51,10 @@ public class TransactionRepositoryTest {
         Transaction trans3 = new Transaction();
         Transaction trans4 = new Transaction();
         Transaction trans5 = new Transaction();
+
+        trans3.setReservationId(3);
+        trans4.setReservationId(4);
+        trans5.setReservationId(5);
 
         trans3.setSource(source);
         trans3.setTarget(target);
@@ -86,6 +91,10 @@ public class TransactionRepositoryTest {
         Transaction trans3 = new Transaction();
         Transaction trans4 = new Transaction();
         Transaction trans5 = new Transaction();
+
+        trans3.setReservationId(3);
+        trans4.setReservationId(4);
+        trans5.setReservationId(5);
 
         trans3.setSource(source);
         trans3.setTarget(target);
