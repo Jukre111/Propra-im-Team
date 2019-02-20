@@ -36,6 +36,8 @@ import org.springframework.web.util.NestedServletException;
 import java.security.Principal;
 import java.time.LocalDate;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
 @RunWith(SpringRunner.class)
 @WebMvcTest(RequestController.class)
 public class RequestControllerTest{
@@ -52,13 +54,17 @@ public class RequestControllerTest{
     @MockBean
     RequestService requestService;
 
-    @WithMockUser
-    @Test
-    public void retrieveStatusRequest()throws Exception{
+    public User createUser(){
         LocalDate date = LocalDate.of(2000,1,1);
         Address address = new Address("unistrase","duesseldorf", 40233);
         User user = new User("user","password", "role", "lastnmae", "forname", "email",date,address);
+        return user;
+    }
 
+    @WithMockUser
+    @Test
+    public void retrieveStatusRequest()throws Exception{
+        User user = createUser();
         Item item = new Item("name", "description", 42,42, user);
 
         Mockito.when(userService.get("user")).thenReturn(user);
@@ -68,37 +74,62 @@ public class RequestControllerTest{
     }
 
 
- /*   @WithMockUser(username = "test")
+    @WithMockUser
     @Test
     public void retrieveStatusPostRequest()throws Exception{
-        Principal mockPrincipal = Mockito.mock(Principal.class);
-        Mockito.when(mockPrincipal.getName()).thenReturn("test");
+        User user = createUser();
+        Mockito.when(userService.get("user")).thenReturn(user);
+        MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
+        map.add("startdate","2000-01-01");
+        map.add("enddate","2000-02-02");
 
+        mvc.perform(MockMvcRequestBuilders.post("/saveRequest").with(csrf()).params(map))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .post("/request")
-                .principal(mockPrincipal)
-                .accept(MediaType.APPLICATION_JSON);
+    }
 
-        MvcResult result = mvc.perform(requestBuilder).andReturn();
+    @WithMockUser
+    @Test
+    public void retrieveStatusDeleteRequest()throws Exception{
 
-        MockHttpServletResponse response = result.getResponse();
-        int status = response.getStatus();
-        Assert.assertEquals("response status is wrong", 302, status);
-        /*MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
-        map.add("startdate","2007-12-03");
-        map.add("enddate","2007-12-04");
-        map.add("p","test");
-        mvc.perform(MockMvcRequestBuilders.post("/request?id=1").params(map))
+        MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
+        map.add("requestId","1");
+        map.add("itemId","2");
+        mvc.perform(MockMvcRequestBuilders.get("/deleteRequest").params(map))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"));
+    }
+
+    @WithMockUser
+    @Test
+    public void retrieveStatusMessage()throws Exception{
+        User user = createUser();
+        Mockito.when(userService.get("user")).thenReturn(user);
+        mvc.perform(MockMvcRequestBuilders.get("/messages"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
     }
 
-    /*@WithMockUser
-    @Test(expected = NestedServletException.class)
-    public void retrieveStatusDeleteRequest()throws Exception{
 
-        mvc.perform(MockMvcRequestBuilders.get("/deleteRequest?id=1"))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"));
-    }*/
+    @WithMockUser
+    @Test
+    public void retrieveStatusAccept()throws Exception{
+        MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
+        map.add("requestId","1");
+        map.add("itemId","2");
+        mvc.perform(MockMvcRequestBuilders.get("/accept").params(map))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
+    }
+
+
+    @WithMockUser
+    @Test
+    public void retrieveStatusDeclineRequest()throws Exception{
+        MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
+        map.add("requestId","1");
+        map.add("itemId","2");
+        mvc.perform(MockMvcRequestBuilders.get("/declineRequest").params(map))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
+    }
+
+
 }
