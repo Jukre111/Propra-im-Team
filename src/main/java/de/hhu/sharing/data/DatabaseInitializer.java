@@ -63,21 +63,6 @@ public class DatabaseInitializer implements ServletContextInitializer {
             }
         }
 
-        Address adminAddress = new Address(faker.address().streetAddress(),faker.pokemon().location(), Integer.parseInt(faker.address().zipCode()));
-        User admin = new User("admin", encoder.encode("admin") ,"ROLE_ADMIN", faker.gameOfThrones().house(),
-                faker.lordOfTheRings().character(), faker.internet().emailAddress(), faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), adminAddress);
-        users.save(admin);
-
-        User user1 = users.findByUsername("user1").orElseThrow(()-> new RuntimeException("Users not there."));
-        User user2 = users.findByUsername("user2").orElseThrow(()-> new RuntimeException("Users not there."));
-        Item item1 = items.findFirstByLender(user1);
-
-        Conflict conflict = new Conflict();
-        conflict.setItem(item1);
-        conflict.setProblem("Problem");
-        conflict.setAccused(user2);
-        conflict.setProsecuter(user1);
-        conflicts.save(conflict);
 
 
         for(User user : users.findAll()){
@@ -97,5 +82,23 @@ public class DatabaseInitializer implements ServletContextInitializer {
             items.saveAll(itemList);
 
         }
+
+        Address adminAddress = new Address(faker.address().streetAddress(),faker.pokemon().location(), Integer.parseInt(faker.address().zipCode()));
+        User admin = new User("admin", encoder.encode("admin") ,"ROLE_ADMIN", faker.gameOfThrones().house(),
+                faker.lordOfTheRings().character(), faker.internet().emailAddress(), faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), adminAddress);
+        users.save(admin);
+
+
+        User user1 = users.findByUsername("user1").orElseThrow(()-> new RuntimeException("Users not there."));
+        User user2 = users.findByUsername("user2").orElseThrow(()-> new RuntimeException("Users not there."));
+        Item item1 = items.findFirstByLender(user1).orElseThrow(()-> new RuntimeException("Item not found."));
+
+        Conflict conflict = new Conflict();
+        conflict.setItem(item1);
+        conflict.setProblem("Problem");
+        conflict.setAccused(user2);
+        conflict.setProsecuter(user1);
+        conflicts.save(conflict);
+
     }
 }

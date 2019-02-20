@@ -18,12 +18,13 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
 
     List<Item> findFirst2ByLenderNot(User user);
 
-    Item findByRequests_id(Long id);
+    Optional <Item> findByRequests_id(Long id);
 
     Item findOneByLender(User user);
 
-    Item findFirstByLender(User user);
-    Optional<Item> findByRequests_id(Long id);
+    Optional <Item> findFirstByLender(User user);
+
+
 
     List<Item> findAllByRequests_requester(User user);
 }
