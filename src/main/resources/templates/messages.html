@@ -57,8 +57,8 @@
             <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name">Angefragt</span></h1>
             <div class="form-horizontal" style="padding-top: 30px">
                 <div class="form-group" th:each="myReqItem : ${myRequestedItems}">
-                    <div class="form-group" th:each="myRequest : ${myReqItem.requests}">
-                        <div th:if="${myRequest.requester == user}" >
+                    <div class="form-group" th:each="myRequest : ${myReqItem.requests}" th:if="${myRequest.requester == user}">
+                        <div>
                             <table>
                                 <tr>
                                     <th width="70%">Angefragter Gegenstand</th>

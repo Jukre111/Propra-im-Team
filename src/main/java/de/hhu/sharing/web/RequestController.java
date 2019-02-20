@@ -54,7 +54,7 @@ public class RequestController {
     @GetMapping("/deleteRequest")
     public String deleteRequest(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId){
         requestService.delete(requestId);
-        return "redirect:/account";
+        return "redirect:/messages";
     }
 
     @GetMapping("/messages")
