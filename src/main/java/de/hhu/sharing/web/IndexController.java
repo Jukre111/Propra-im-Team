@@ -50,7 +50,7 @@ public class IndexController {
         User user = userService.get(p.getName());
         List<Item> allMyItems = user.getBorrowedItems();
         allMyItems.remove(item);
-        user.setBorrowedItems(allMyItems);
+        //user.setBorrowedItems(allMyItems);
         users.save(user);
 
         // Verfügbarkeit muss noch verändert werden.
