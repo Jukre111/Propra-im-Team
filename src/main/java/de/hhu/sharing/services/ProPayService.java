@@ -79,8 +79,6 @@ public class ProPayService {
         int reservationId = trans.getReservationId();
         String URL = "http://localhost:8888/reservation/release/" + usernameSource + "?reservationId=" + Integer.toString(reservationId);
         int response = this.callURL(URL, "POST");
-        trans.setReservationId(-1);
-        transRepo.save(trans);
         return response;
     }
 
@@ -89,9 +87,7 @@ public class ProPayService {
         int reservationId = trans.getReservationId();
         String URL = "http://localhost:8888/reservation/punish/" + usernameSource + "?reservationId=" + Integer.toString(reservationId);
         int response = this.callURL(URL, "POST");
-        trans.setReservationId(-1);
         trans.setDepositRevoked(true);
-        transRepo.save(trans);
         return response;
     }
 
@@ -105,8 +101,8 @@ public class ProPayService {
             connection.connect();
             return connection.getResponseCode();
         } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("URL bugged/not reachable");
+            //e.printStackTrace();
+            //System.err.println("URL bugged/not reachable");
         }
         return -1;
     }
