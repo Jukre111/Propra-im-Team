@@ -2,8 +2,6 @@ package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.Period;
-import de.hhu.sharing.model.Request;
 import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -62,23 +60,6 @@ public class ItemService{
     public List<Item> getAllIRequested(User user) {
         return this.items.findAllByRequests_requester(user);
 
-    }
-
-    public void addToPeriods(Item item, Request request) {
-        item.addToPeriods(request.getPeriod());
-        items.save(item);
-    }
-
-    public void addToRequests(Long itemId, Request request) {
-        Item item = this.get(itemId);
-        item.addToRequests(request);
-        items.save(item);
-    }
-
-    public void removeFromRequests(Request request) {
-        Item item = this.getFromRequestId(request.getId());
-        item.removeFromRequests(request);
-        items.save(item);
     }
 
     public List<Item> searchFor(String query) {
