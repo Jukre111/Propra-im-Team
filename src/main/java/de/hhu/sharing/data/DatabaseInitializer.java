@@ -70,7 +70,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
 
         User user1 = users.findByUsername("user1").orElseThrow(()-> new RuntimeException("Users not there."));
         User user2 = users.findByUsername("user2").orElseThrow(()-> new RuntimeException("Users not there."));
-        Item item1 = items.findOneByLender(user1);
+        Item item1 = items.findFirstByLender(user1);
 
         Conflict conflict = new Conflict();
         conflict.setItem(item1);

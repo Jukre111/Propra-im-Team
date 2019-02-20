@@ -21,4 +21,6 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
     Item findByRequests_id(Long id);
 
     Item findOneByLender(User user);
+
+    Item findFirstByLender(User user);
 }
