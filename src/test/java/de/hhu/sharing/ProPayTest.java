@@ -1,27 +1,20 @@
 package de.hhu.sharing;
 
-import java.util.ArrayList;
-
 import de.hhu.sharing.data.TransactionRepository;
-import de.hhu.sharing.model.Transaction;
+import de.hhu.sharing.propay.Account;
+import de.hhu.sharing.propay.Transaction;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.services.ProPayService;
+import org.springframework.web.client.RestTemplate;
 
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
-//@RunWith(SpringRunner.class)
-//@DataJpaTest
 @ContextConfiguration(classes = ProPayServiceTestConfiguration.class)
 public class ProPayTest {
 
