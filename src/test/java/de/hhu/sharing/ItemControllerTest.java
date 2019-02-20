@@ -82,13 +82,10 @@ public class ItemControllerTest {
     @Test
     @WithMockUser
     public void retrieveStatusSaveItem() throws Exception{
-        Item item = itemCreator();
         LocalDate date = LocalDate.of(2000,1,1);
         Address address = new Address("unistrase","duesseldorf", 40233);
         User user = new User("user","password", "role", "lastnmae", "forname", "email",date,address);
         Mockito.when(userService.get("user")).thenReturn(user);
-
-        //Mockito.when(itemService.create("apfel", "lecker",1,1 ,user )).thenReturn(item);
         MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
         map.add("name","name");
         map.add("description","desc");
