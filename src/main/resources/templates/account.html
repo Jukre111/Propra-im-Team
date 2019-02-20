@@ -74,6 +74,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					<div class="col-xs-6">
 					<input type="text" class="form-control" id="name" name="name" th:value="${user.username}" readonly/>
 					</div>
+					<a class="indexbtn" href="/propayAccount">ProPay Account</a>
 				</div>
 				<div class="form-group">
 					<label for="forename" class="col-sm-2 control-label">Vorname</label>
@@ -157,7 +158,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 						<span th:unless="${lend.available}" style="padding-left: 25px">&#10007;</span>
 					</td>
 					<td>
-						<a class="indexbtn" th:href="@{'/item?id=' + ${lend.id}}">Bearbeiten</a>
+						<a class="indexbtn" th:href="@{'/editItem?id=' + ${lend.id}}">Bearbeiten</a>
 					</td>
 					<td>
 						<a class="indexbtn" th:href="@{'/deleteItem?id=' + ${lend.id}}" >Entfernen</a>
