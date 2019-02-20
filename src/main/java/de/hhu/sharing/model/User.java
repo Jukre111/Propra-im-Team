@@ -47,7 +47,7 @@ public class User {
     }
 
     public void addToBorrowedItems(Item item) {
-        borrowedItems.add(item);
+        //borrowedItems.add(item);
     }
 
 }

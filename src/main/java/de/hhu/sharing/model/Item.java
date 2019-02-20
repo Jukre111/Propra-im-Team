@@ -25,8 +25,8 @@ public class Item {
     @ManyToOne
     private User lender;
 
-    @ElementCollection
-    private List<RentPeriod> periods = new ArrayList<>();
+    @OneToMany
+    private final List<RentPeriod> periods = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER)
     private final List<Request> requests = new ArrayList<>();
@@ -54,7 +54,7 @@ public class Item {
         this.periods.add(period);
     }
 
-    public void removeOverlappingRequests(RentPeriod period) {
-        requests.removeIf(request -> period.overlapesWith(request.getPeriod()));
+    public void removeOverlappingRequests(Request req) {
+        requests.removeIf(request -> request.overlapesWith(req));
     }
 }

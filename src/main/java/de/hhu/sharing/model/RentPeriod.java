@@ -6,27 +6,25 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Data
-@Embeddable
+@Entity
 public class RentPeriod {
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
     private LocalDate startdate;
     private LocalDate enddate;
 
+    @ManyToOne
+    private User borrower;
+
     public RentPeriod(){
     }
 
-    public RentPeriod(LocalDate startdate, LocalDate enddate){
+    public RentPeriod(LocalDate startdate, LocalDate enddate, User borrower){
         this.startdate = startdate;
         this.enddate = enddate;
-    }
-
-    public boolean overlapesWith(RentPeriod period) {
-        return startdate.isEqual(period.getStartdate())
-                || startdate.isEqual(period.getEnddate())
-                || enddate.isEqual(period.getStartdate())
-                || enddate.isEqual(period.getEnddate())
-                || startdate.isBefore(period.getStartdate()) && enddate.isAfter(period.getStartdate())
-                || startdate.isBefore(period.getEnddate()) && enddate.isAfter(period.getEnddate())
-                || startdate.isAfter(period.getStartdate()) && enddate.isBefore(period.getEnddate());
+        this.borrower = borrower;
     }
 }

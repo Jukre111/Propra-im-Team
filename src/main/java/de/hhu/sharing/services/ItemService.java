@@ -1,6 +1,7 @@
 package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.ItemRepository;
+import de.hhu.sharing.data.RentPeriodRepository;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.RentPeriod;
 import de.hhu.sharing.model.Request;
@@ -18,6 +19,8 @@ public class ItemService{
     @Autowired
     private ItemRepository items;
 
+    @Autowired
+    private RentPeriodRepository rentPeriods;
 
     public void create(String name, String description, Integer rental, Integer deposit, User user) {
         Item item = new Item(name, description, rental, deposit, user);
@@ -87,18 +90,19 @@ public class ItemService{
     }
 
     public void accept(Item item, Request request) {
-        this.addToPeriods(item, request.getPeriod());
+        this.addToPeriods(item, request);
         this.removeFromRequests(request);
-        this.removeOverlappingRequests(item, request.getPeriod());
+        this.removeOverlappingRequests(item, request);
     }
 
-    private void removeOverlappingRequests(Item item, RentPeriod period) {
-        item.removeOverlappingRequests(period);
+    private void removeOverlappingRequests(Item item, Request request) {
+        item.removeOverlappingRequests(request);
         items.save(item);
     }
 
-    @Transactional
-    private void addToPeriods(Item item, RentPeriod period) {
+    private void addToPeriods(Item item, Request request) {
+        RentPeriod period = new RentPeriod(request.getStartdate(), request.getEnddate(), request.getRequester());
+        rentPeriods.save(period);
         item.addToPeriods(period);
         items.save(item);
     }

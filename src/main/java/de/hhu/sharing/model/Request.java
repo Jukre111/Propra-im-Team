@@ -14,8 +14,8 @@ public class Request {
     @GeneratedValue
     private Long id;
 
-    @Embedded
-    private RentPeriod period;
+    private LocalDate startdate;
+    private LocalDate enddate;
 
     @ManyToOne
     private User requester;
@@ -25,8 +25,19 @@ public class Request {
     }
 
     public Request(LocalDate startdate, LocalDate enddate, User requester){
-        this.period = new RentPeriod(startdate, enddate);
+        this.startdate = startdate;
+        this.enddate = enddate;
         this.requester = requester;
+    }
+
+    public boolean overlapesWith(Request request) {
+        return startdate.isEqual(request.getStartdate())
+                || startdate.isEqual(request.getEnddate())
+                || enddate.isEqual(request.getStartdate())
+                || enddate.isEqual(request.getEnddate())
+                || startdate.isBefore(request.getStartdate()) && enddate.isAfter(request.getStartdate())
+                || startdate.isBefore(request.getEnddate()) && enddate.isAfter(request.getEnddate())
+                || startdate.isAfter(request.getStartdate()) && enddate.isBefore(request.getEnddate());
     }
 
 }

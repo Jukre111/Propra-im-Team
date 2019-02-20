@@ -28,16 +28,12 @@ public class DatabaseInitializer implements ServletContextInitializer {
     @Autowired
     private PasswordEncoder encoder;
 
-    @Autowired
-    private DatabaseInitializerService service;
-
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException{
         final Faker faker = new Faker(Locale.GERMAN);
         initUsers(faker);
         initItems(faker);
         initRequests(faker);
-        service.test();
     }
 
     private void initUsers(Faker faker){

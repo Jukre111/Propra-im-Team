@@ -39,8 +39,8 @@
                             <tr>
                                 <td th:text="${request.requester.username}"></td>
                                 <td th:text="${item.name}"></td>
-                                <td th:text="${request.period.startdate}"></td>
-                                <td th:text="${request.period.enddate}"></td>
+                                <td th:text="${request.startdate}"></td>
+                                <td th:text="${request.enddate}"></td>
                                 <td>
                                     <a type="button" class="indexbtn" th:href="@{'/accept?requestId=' + ${request.id} + '&itemId=' + ${item.id}}">Akzeptieren</a>
                                 </td>
@@ -69,8 +69,8 @@
                                 </tr>
                                 <tr>
                                     <td th:text="${myReqItem.name}"></td>
-                                    <td th:text="${myRequest.period.startdate}"></td>
-                                    <td th:text="${myRequest.period.enddate}"></td>
+                                    <td th:text="${myRequest.startdate}"></td>
+                                    <td th:text="${myRequest.enddate}"></td>
                                     <td>
                                         <a class="indexbtn" th:href="@{'/deleteRequest?requestId=' + ${myRequest.id} + '&itemId=' + ${myReqItem.id}}">Löschen</a>
                                     </td>
