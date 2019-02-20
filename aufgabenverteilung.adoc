@@ -11,7 +11,15 @@
 * Person bearbeiten
 * Person löschen)
 
+To-Do Morgen:
+* Kaution an A oder B überweisen
+* Rückgabe Item
+*
+
 * Schnittstelle zu ProPay
+
+## Aufgaben geringere Prioritaet
+* Aendern von Preis nicht nur zulassen, falls keinen Request zum Item existieren
 
 # erledigte Aufgaben:
 * Travis
