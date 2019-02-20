@@ -1,16 +1,13 @@
 package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.ItemRepository;
-import de.hhu.sharing.data.RentPeriodRepository;
 import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.RentPeriod;
+import de.hhu.sharing.model.Period;
 import de.hhu.sharing.model.Request;
 import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -20,7 +17,7 @@ public class ItemService{
     private ItemRepository items;
 
     @Autowired
-    private RentPeriodRepository rentPeriods;
+    private RequestService requestService;
 
     public void create(String name, String description, Integer rental, Integer deposit, User user) {
         Item item = new Item(name, description, rental, deposit, user);
@@ -91,20 +88,11 @@ public class ItemService{
 
     public void accept(Item item, Request request) {
         this.addToPeriods(item, request);
-        this.removeFromRequests(request);
-        this.removeOverlappingRequests(item, request);
-    }
-
-    private void removeOverlappingRequests(Item item, Request request) {
-        item.removeOverlappingRequests(request);
-        items.save(item);
+        requestService.removeOverlapping(request, item);
     }
 
     private void addToPeriods(Item item, Request request) {
-        RentPeriod period = new RentPeriod(request.getStartdate(), request.getEnddate(), request.getRequester());
-        rentPeriods.save(period);
-        item.addToPeriods(period);
+        item.addToPeriods(request.getPeriod());
         items.save(item);
     }
-
 }

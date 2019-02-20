@@ -2,6 +2,7 @@ package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.Period;
 import de.hhu.sharing.model.Request;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.ItemService;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class RequestService {
@@ -31,7 +34,7 @@ public class RequestService {
     }
 
     public void create(Long itemId, LocalDate startdate, LocalDate enddate, User user) {
-        Request request = new Request(startdate, enddate, user);
+        Request request = new Request(new Period(startdate, enddate), user);
         requests.save(request);
         itemService.addToRequests(itemId, request);
     }
@@ -49,5 +52,14 @@ public class RequestService {
         itemService.accept(item, request);
         userService.addToBorrowedItems(request.getRequester(), item);
         requests.delete(request);
+    }
+
+    public void removeOverlapping(Request request, Item item) {
+        List<Request> requests = new ArrayList<>(item.getRequests());
+        for(Request req : requests){
+            if(req.getPeriod().overlapsWith(request.getPeriod())){
+                this.delete(req.getId());
+            }
+        }
     }
 }

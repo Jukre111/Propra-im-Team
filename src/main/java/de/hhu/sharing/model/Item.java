@@ -1,10 +1,9 @@
 package de.hhu.sharing.model;
 
 import lombok.Data;
-import org.hibernate.Hibernate;
-import org.hibernate.annotations.IndexColumn;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Data
@@ -25,8 +24,8 @@ public class Item {
     @ManyToOne
     private User lender;
 
-    @OneToMany
-    private final List<RentPeriod> periods = new ArrayList<>();
+    @ElementCollection
+    private final List<Period> periods = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER)
     private final List<Request> requests = new ArrayList<>();
@@ -50,11 +49,9 @@ public class Item {
         requests.remove(request);
     }
 
-    public void addToPeriods(RentPeriod period){
+    @Transactional
+    public void addToPeriods(Period period){
         this.periods.add(period);
     }
 
-    public void removeOverlappingRequests(Request req) {
-        requests.removeIf(request -> request.overlapesWith(req));
-    }
 }

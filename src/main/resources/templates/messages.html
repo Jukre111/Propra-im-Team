@@ -39,10 +39,11 @@
                             <tr>
                                 <td th:text="${request.requester.username}"></td>
                                 <td th:text="${item.name}"></td>
-                                <td th:text="${request.startdate}"></td>
-                                <td th:text="${request.enddate}"></td>
+                                <td th:text="${request.period.startdate}"></td>
+                                <td th:text="${request.period.enddate}"></td>
                                 <td>
-                                    <a type="button" class="indexbtn" th:href="@{'/accept?requestId=' + ${request.id} + '&itemId=' + ${item.id}}">Akzeptieren</a>
+                                    <a type="buttfaker.date().past(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                    faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()on" class="indexbtn" th:href="@{'/accept?requestId=' + ${request.id} + '&itemId=' + ${item.id}}">Akzeptieren</a>
                                 </td>
                                 <td>
                                     <a class="indexbtn" th:href="@{'/declineRequest?requestId=' + ${request.id} + '&itemId=' + ${item.id}}">Ablehnen</a>
@@ -69,8 +70,8 @@
                                 </tr>
                                 <tr>
                                     <td th:text="${myReqItem.name}"></td>
-                                    <td th:text="${myRequest.startdate}"></td>
-                                    <td th:text="${myRequest.enddate}"></td>
+                                    <td th:text="${myRequest.period.startdate}"></td>
+                                    <td th:text="${myRequest.period.enddate}"></td>
                                     <td>
                                         <a class="indexbtn" th:href="@{'/deleteRequest?requestId=' + ${myRequest.id} + '&itemId=' + ${myReqItem.id}}">Löschen</a>
                                     </td>
