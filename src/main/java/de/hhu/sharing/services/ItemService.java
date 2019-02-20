@@ -88,7 +88,9 @@ public class ItemService{
 
     public void accept(Item item, Request request) {
         this.addToPeriods(item, request);
+        this.removeFromRequests(request);
         requestService.removeOverlapping(request, item);
+        items.save(item);
     }
 
     private void addToPeriods(Item item, Request request) {

@@ -51,13 +51,12 @@ public class RequestService {
         Item item = itemService.getFromRequestId(requestId);
         itemService.accept(item, request);
         userService.addToBorrowedItems(request.getRequester(), item);
-        requests.delete(request);
     }
 
     public void removeOverlapping(Request request, Item item) {
         List<Request> requests = new ArrayList<>(item.getRequests());
         for(Request req : requests){
-            if(req.getPeriod().overlapsWith(request.getPeriod())){
+            if(req.getPeriod().overlapsWith(request.getPeriod()) && !req.equals(request)){
                 this.delete(req.getId());
             }
         }
