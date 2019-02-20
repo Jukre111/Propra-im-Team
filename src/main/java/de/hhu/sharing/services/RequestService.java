@@ -50,7 +50,8 @@ public class RequestService {
         Request request = this.get(requestId);
         Item item = itemService.getFromRequestId(requestId);
         itemService.accept(item, request);
-        userService.addToBorrowedItems(request.getRequester(), item);
+        this.removeOverlapping(request, item);
+        //userService.addToBorrowedItems(request.getRequester(), item);
     }
 
     public void removeOverlapping(Request request, Item item) {
