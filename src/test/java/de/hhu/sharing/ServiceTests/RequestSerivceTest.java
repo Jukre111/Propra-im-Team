@@ -34,11 +34,10 @@ public class RequestSerivceTest {
     }
 
 
-    public User generateUser() {
-        LocalDate date = LocalDate.of(2000,1,1);
+    private User generateUser() {
+        LocalDate birthdate = LocalDate.of(2000,1,1);
         Address address = new Address("unistrase","duesseldorf", 40233);
-        User user = new User("user","password", "role", "lastnmae", "forname", "email",date,address);
-        return user;
+        return new User("user","password", "role", "lastname", "forename", "email", birthdate, address);
     }
 
 
