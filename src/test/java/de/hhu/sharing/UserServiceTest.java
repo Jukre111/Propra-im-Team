@@ -56,22 +56,23 @@ public class UserServiceTest {
         Assert.assertTrue(user2.equals(user));
     }
 
-    @Test
-    public void testAddToBorrowedItems(){
-        User user = generateUser();
-
-        Item item = new Item("apfel", "lecker",1,1 ,user );
-        Item item2 = new Item("apfel", "lecker",1,1 ,user );
-        Item item3 = new Item("apfel", "lecker",1,1 ,user );
-        ArrayList<Item> liste = new ArrayList<>();
-        liste.add(item);
-        liste.add(item2);
-        liste.add(item3);
-        userService.addToBorrowedItems(user,item);
-        userService.addToBorrowedItems(user,item2);
-        userService.addToBorrowedItems(user,item3);
-        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
-        Mockito.verify(users, times(3)).save(captor.capture());
-        Assert.assertTrue(captor.getAllValues().get(0).getBorrowedItems().equals(liste));
-    }
+//    Method doesn't exist anymore
+//    @Test
+//    public void testAddToBorrowedItems(){
+//        User user = generateUser();
+//
+//        Item item = new Item("apfel", "lecker",1,1 ,user );
+//        Item item2 = new Item("apfel", "lecker",1,1 ,user );
+//        Item item3 = new Item("apfel", "lecker",1,1 ,user );
+//        ArrayList<Item> liste = new ArrayList<>();
+//        liste.add(item);
+//        liste.add(item2);
+//        liste.add(item3);
+//        userService.addToBorrowedItems(user,item);
+//        userService.addToBorrowedItems(user,item2);
+//        userService.addToBorrowedItems(user,item3);
+//        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
+//        Mockito.verify(users, times(3)).save(captor.capture());
+//        Assert.assertTrue(captor.getAllValues().get(0).getBorrowedItems().equals(liste));
+//    }
 }

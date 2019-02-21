@@ -32,7 +32,7 @@ public class RequestController {
     private RequestService requestService;
 
     @Autowired
-    TransactionService tranService;
+    private TransactionService tranService;
 
     @Autowired
     private BorrowingProcessService processService;

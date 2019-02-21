@@ -7,10 +7,7 @@ import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.security.SecurityConfig;
-import de.hhu.sharing.services.ItemService;
-import de.hhu.sharing.services.RequestService;
-import de.hhu.sharing.services.TransactionService;
-import de.hhu.sharing.services.UserService;
+import de.hhu.sharing.services.*;
 import de.hhu.sharing.web.RequestController;
 import org.junit.Assert;
 import org.junit.Test;
@@ -58,6 +55,9 @@ public class RequestControllerTest{
     @MockBean
     TransactionService transService;
 
+    @MockBean
+    BorrowingProcessService processService;
+
     public User createUser(){
         LocalDate date = LocalDate.of(2000,1,1);
         Address address = new Address("unistrase","duesseldorf", 40233);
@@ -101,16 +101,6 @@ public class RequestControllerTest{
         map.add("itemId","2");
         mvc.perform(MockMvcRequestBuilders.get("/deleteRequest").params(map))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
-    }
-
-    @WithMockUser
-    @Test
-    public void retrieveStatusMessage()throws Exception{
-        User user = createUser();
-        Mockito.when(userService.get("user")).thenReturn(user);
-        mvc.perform(MockMvcRequestBuilders.get("/messages"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
     }
 
 
