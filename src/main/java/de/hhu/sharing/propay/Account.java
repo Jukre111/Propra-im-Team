@@ -1,5 +1,6 @@
-package de.hhu.sharing.model;
+package de.hhu.sharing.propay;
 
+import de.hhu.sharing.propay.Reservation;
 import lombok.Data;
 
 import java.util.ArrayList;
