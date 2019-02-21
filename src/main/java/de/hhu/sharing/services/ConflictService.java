@@ -33,8 +33,12 @@ public class ConflictService {
         return conflicts.findAll();
     }
 
-    public void create(String problem, Item item, User prosecuter, User accused) {
-        Conflict conflict = new Conflict(problem, item, prosecuter, accused);
+    public void create(String problem, Item item, User prosecuter, User accused, BorrowingProcess process) {
+        Conflict conflict = new Conflict(problem, item, prosecuter, accused, process);
         conflicts.save(conflict);
+    }
+
+    public void removeConflict(Conflict conflict){
+        conflicts.delete(conflict);
     }
 }

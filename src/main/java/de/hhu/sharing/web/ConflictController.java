@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class ConflictController {
@@ -45,7 +46,7 @@ public class ConflictController {
     public String saveConflict(@RequestParam("id") Long id, String problem){
         BorrowingProcess process = borrowingProcessService.getBorrowingProcess(id);
         Item item =  borrowingProcessService.getItemFromProcess(process);
-        conflictService.create(problem, item, item.getLender(), userService.getBorrowerFromBorrowingProcessId(id));
+        conflictService.create(problem, item, item.getLender(), userService.getBorrowerFromBorrowingProcessId(id), process);
         return "redirect:/account";
     }
 
@@ -59,5 +60,34 @@ public class ConflictController {
     public String conflictDetails (Model model, @RequestParam("id") Long id){
         model.addAttribute("conflict", conflictService.get(id));
         return "conflictDetails";
+    }
+
+    @GetMapping("/borrower")
+    public String borower(@RequestParam("id") Long id){
+        Conflict conflict = conflictService.get(id);
+        User borrower = conflict.getBorrower();
+        // Hier Kaution an borrower zurückgeben.
+
+        User owner = conflict.getOwner();
+        BorrowingProcess process = conflict.getProcess();
+        conflictService.removeConflict(conflict);
+        borrowingProcessService.returnItem(process.getId(), owner);
+
+        return "redirect:/conflictView";
+    }
+
+
+    @GetMapping("/owner")
+    public String owner(@RequestParam("id") Long id){
+        Conflict conflict = conflictService.get(id);
+        User owner = conflict.getOwner();
+        // Hier Kaution an owner überweisen.
+
+        BorrowingProcess process = conflict.getProcess();
+        conflictService.removeConflict(conflict);
+
+        borrowingProcessService.returnItem(process.getId(), owner);
+
+        return "redirect:/conflictView";
     }
 }

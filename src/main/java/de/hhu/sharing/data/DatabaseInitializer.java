@@ -2,7 +2,6 @@ package de.hhu.sharing.data;
 
 import com.github.javafaker.Faker;
 import de.hhu.sharing.model.*;
-import org.apache.tomcat.jni.Time;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -101,8 +100,8 @@ public class DatabaseInitializer implements ServletContextInitializer {
         Conflict conflict = new Conflict();
         conflict.setItem(item1);
         conflict.setProblem("Problem");
-        conflict.setAccused(user2);
-        conflict.setProsecuter(user1);
+        conflict.setBorrower(user2);
+        conflict.setOwner(user1);
         conflicts.save(conflict);
 
     }
