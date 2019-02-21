@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.internal.verification.VerificationModeFactory.times;
@@ -52,6 +53,16 @@ public class ItemServiceTest {
         return new Item("apfel", "lecker", 1, 1, user);
     }
 
+    private List<Item> generateItemList(User user){
+        Item item = generateItem(user);
+        Item item2 = generateItem(user);
+        Item item3 = generateItem(user);
+        ArrayList<Item> list = new ArrayList<>();
+        list.add(item);
+        list.add(item2);
+        list.add(item3);
+        return list;
+    }
     @Test
     public void testCreate(){
         User user = generateUser("dude");
@@ -110,43 +121,39 @@ public class ItemServiceTest {
         liste.add(item2);
         liste.add(item3);
         Mockito.when(items.findAll()).thenReturn(liste);
-        Assert.assertTrue(itemService.getAll().equals(liste));
+        Assert.assertEquals(itemService.getAll(), liste);
     }
 
     @Test
     public void testGetFromRequestId(){
-
         User user = generateUser("dude");
         Item item = generateItem(user);
         Mockito.when(items.findByRequests_id(1L)).thenReturn(Optional.of(item));
-        Assert.assertTrue(itemService.getFromRequestId(1L).equals(item));
+        Assert.assertEquals(itemService.getFromRequestId(1L), item);
     }
 
     @Test
     public void testGetAllIPosted(){
         User user = generateUser("dude");
-        Item item = generateItem(user);
-        Item item2 = generateItem(user);
-        Item item3 = generateItem(user);
-        ArrayList<Item> liste = new ArrayList<>();
-        liste.add(item);
-        liste.add(item2);
-        liste.add(item3);
-        Mockito.when(items.findAllByLender(user)).thenReturn(liste);
-        Assert.assertTrue(itemService.getAllIPosted(user).equals(liste));
+        List<Item> list = generateItemList(user);
+        Mockito.when(items.findAllByLender(user)).thenReturn(list);
+        Assert.assertEquals(itemService.getAllIPosted(user), list);
     }
 
     @Test
     public void testGetAllIRequested(){
         User user = generateUser("dude");
-        Item item = generateItem(user);
-        Item item2 = generateItem(user);
-        Item item3 = generateItem(user);
-        ArrayList<Item> liste = new ArrayList<>();
-        liste.add(item);
-        liste.add(item2);
-        liste.add(item3);
-        Mockito.when(items.findAllByRequests_requester(user)).thenReturn(liste);
-        Assert.assertTrue(itemService.getAllIRequested(user).equals(liste));
+        List<Item> list = generateItemList(user);
+        Mockito.when(items.findAllByRequests_requester(user)).thenReturn(list);
+        Assert.assertEquals(itemService.getAllIRequested(user),list);
+    }
+
+
+    @Test
+    public void testSearchFor(){
+        User user = generateUser("dude");
+        List<Item> list = generateItemList(user);
+        Mockito.when(items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("lecker", "lecker")).thenReturn(list);
+        Assert.assertEquals(itemService.searchFor("lecker"), list);
     }
 }
