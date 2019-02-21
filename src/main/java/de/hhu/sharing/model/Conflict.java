@@ -26,5 +26,13 @@ public class Conflict {
     @ManyToOne
     private User accused;
 
+    public Conflict(){
+    }
 
+    public Conflict(String problem, Item item, User prosecuter, User accused){
+        this.problem = problem;
+        this.item = item;
+        this.prosecuter = prosecuter;
+        this.accused = accused;
+    }
 }

@@ -1,9 +1,12 @@
 package de.hhu.sharing.web;
 
+import de.hhu.sharing.model.BorrowingProcess;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
+import de.hhu.sharing.services.BorrowingProcessService;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.RequestService;
+import de.hhu.sharing.services.TransactionService;
 import de.hhu.sharing.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +30,12 @@ public class RequestController {
 
     @Autowired
     private RequestService requestService;
+
+    @Autowired
+    TransactionService tranService;
+
+    @Autowired
+    private BorrowingProcessService processService;
 
     @GetMapping("/request")
     public String request(@RequestParam(name = "id") Long id, Model model, Principal p, RedirectAttributes redirectAttributes){
@@ -53,19 +62,19 @@ public class RequestController {
         return "redirect:/messages";
     }
 
-    @GetMapping("/messages")
-    public String messages(Model model, Principal p){
-        User user = userService.get(p.getName());
-        model.addAttribute("user", user);
-        model.addAttribute("allMyItems", itemService.getAllIPosted(user));
-        model.addAttribute("myRequestedItems", itemService.getAllIRequested(user));
-        return "messages";
-    }
-
     @GetMapping("/accept")
     public String accept(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId, RedirectAttributes redirectAttributes){
-        requestService.accept(requestId);
-        redirectAttributes.addFlashAttribute("itemAccepted",true);
+//        if(!item.isAvailable()) {
+//            redirectAttributes.addFlashAttribute("notAvailable",true);
+//        return "redirect:/messages";
+//        }
+        int transProPayResponse = tranService.createTransaction(requestId, itemId);
+        if(transProPayResponse != 200) {
+            return "redirect:/messages";
+        } else {
+           processService.accept(requestId);
+           redirectAttributes.addFlashAttribute("itemAccepted",true);
+        }
         return "redirect:/messages";
     }
 

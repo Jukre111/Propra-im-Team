@@ -2,20 +2,18 @@ package de.hhu.sharing.web;
 
 import de.hhu.sharing.data.TransactionRepository;
 import de.hhu.sharing.data.UserRepository;
-import de.hhu.sharing.model.Account;
-import de.hhu.sharing.model.Transaction;
+import de.hhu.sharing.propay.Account;
+import de.hhu.sharing.propay.Transaction;
 import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.List;
 import de.hhu.sharing.services.ProPayService;
-import java.util.Optional;
 
 @Controller
 public class ProPayController {

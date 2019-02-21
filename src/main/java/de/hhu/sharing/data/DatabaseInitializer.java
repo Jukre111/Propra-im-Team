@@ -73,12 +73,12 @@ public class DatabaseInitializer implements ServletContextInitializer {
         for(User user : users.findAll()){
             List<Item> itemList = items.findFirst2ByLenderNot(user);
             Request request1 = new Request(
-                    faker.date().past(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                    faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                    new Period(faker.date().past(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                            faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()),
                     user);
             Request request2 = new Request(
-                    faker.date().past(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                    faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                    new Period(faker.date().past(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                            faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()),
                     user);
             requests.save(request1);
             requests.save(request2);

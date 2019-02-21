@@ -3,6 +3,7 @@ package de.hhu.sharing.web;
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
+import de.hhu.sharing.services.BorrowingProcessService;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class ItemController {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private BorrowingProcessService processService;
 
     @GetMapping("/detailsItem")
     public String details(@RequestParam(name = "id") Long id, Model model){
@@ -48,7 +52,7 @@ public class ItemController {
     }
 
     @PostMapping("/saveItem")
-    public String saveItem(Long id, String name, String description, Integer rental, Integer deposit, Principal p, RedirectAttributes redirectAttributes){
+    public String saveItem(Long id, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("rental") Integer rental, @RequestParam("deposit") Integer deposit, Principal p, RedirectAttributes redirectAttributes){
 //        if(!item.isAvailable()){
 //            redirectAttributes.addFlashAttribute("notAvailable",true);
 //            return "redirect:/account";
@@ -76,4 +80,10 @@ public class ItemController {
         return "redirect:/account";
     }
 
+    @GetMapping("/returnItem")
+    public String returnItem( @RequestParam("id") Long id, Principal p){
+        User user = userService.get(p.getName());
+        processService.returnItem(id, user);
+        return "redirect:/account";
+    }
 }

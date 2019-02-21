@@ -1,6 +1,7 @@
 package de.hhu.sharing.model;
 
 import lombok.Data;
+import org.hibernate.annotations.IndexColumn;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -27,8 +28,15 @@ public class User {
     @Embedded
     private Address address;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private final List<Item> borrowedItems = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name="borrowed")
+    @IndexColumn(base = 1, name = "bor")
+    private final List<BorrowingProcess> borrowed = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name="lend")
+    @IndexColumn(base = 1, name = "len")
+    private final List<BorrowingProcess> lend = new ArrayList<>();
 
     public User(){
     }
@@ -46,8 +54,19 @@ public class User {
         this.address = address;
     }
 
-    public void addToBorrowedItems(Item item) {
-        //borrowedItems.add(item);
+    public void addToBorrowed(BorrowingProcess process) {
+        this.borrowed.add(process);
     }
 
+    public void removeFromBorrowed(BorrowingProcess process) {
+        this.borrowed.remove(process);
+    }
+
+    public void addToLend(BorrowingProcess process) {
+        this.lend.add(process);
+    }
+
+    public void removeFromLend(BorrowingProcess process) {
+        this.lend.remove(process);
+    }
 }

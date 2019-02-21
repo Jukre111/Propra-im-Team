@@ -36,131 +36,108 @@ schreiben (mit Namen)
 * Schnittstelle zu ProPay
 
 ## Model Datenstrukturen
-* User
+* User bestehen aus:
 . username : String (id)
+** user haben eindeutige Usernamen, die in der Datenbank als Id verwendet werden.
 . password : String
 . role : String
+** Es gibt die Rollen Admin und User.
+*** Admins können die Konfliktlösestelle in ihrem Account aufrufen, für User wird der entsprechende
+Button nicht dargestellt.
 . lastname : String
 . forename : String
 . email : String
 . birthdate : LocalDate
 . address : Address
-. borrowedItems : List<Item>
+. borrowedItems :
 
-Wir haben uns entschieden den username als Id zu benutzen, da wir sowieso verlangen
-wollen, dass jeder Nutzer einen anderen Username hat. Die Items, die dem User
-gehoeren werden hier nicht gespeichert, stattdessen wird in jedem Item der Besitzer
+
+ Die Items, die dem User gehoeren werden hier nicht gespeichert, stattdessen wird in jedem Item der Besitzer
 vermerkt.
 
 * Item
 . id : Long
+** ids werden von der Datenbank generiert.
 . name : String
 . description : String
 . rental : int
 . deposit : int
-. startdate : LocalDate
-. enddate : LocalDate
+. Availability : List periods
+** Hier werden alle Zeiträume gespeichert, in denen das Item verliehen ist.
 . lender : User
-* Address (Embeddable)
-. street : String
-. city : String
-. postcode : int
-* Message
-. id : Long (ID)
-. sender : User
-. receiver : User
-. item : Item
-. subject : String
-. message : String
-* Reservation
-. id : int
-. amount : int
-* Account
-. account : String
-. amount : int
-. reservations : Reservation[]
 
-## Erläuterung der Model Datenstruktur
+
+* Request
+. id : Long
+** ids werden von Datenbank generiert.
+. Zeitraum : period
+. requester : User
+** User der ausleihen möchte.
+
+* BorrowedItems
+. id : Long
+. item : Item
+** Item das ausgeliehen wird.
+. request : Request
+** request der akzeptiert wurde, sodass das Item jetzt ausgeliehen ist.
+-> Das BorrowedItem repräsentiert den Ausleihprozess. Jeder User hat eine Liste ausgeliehener
+BorrowedItems und verliehener BorrowedItems.
+
+
+## Erläuterung der Datenstruktur
 * User:
 . Jeder Benutzer der Website wird als User Objekt gespeichert.
-. Die ID der User-Klasse ist der username, d.h. er kann nur von einem Account verwendet werden.
+. Die User werden vom DatabaseInitializer mithilfe von Fakern autogeneriert.
+. Die Regestrierung neuer usern ist nicht möglich.
+
+
 * Address:
 . Jede Adresse eines Benutzers wird als Objekt der Klasse Address im User gespeichert.
 . Address ist embeddable, damit Benutzer mit derselben Adresse diese speichern können.
+
 * Item:
 . Jeder zur Vermietung eingestellte Artikel wird als Objekt der Klasse Item gespeichert.
 . Die ID wird automatisch generiert, um die Artikel eindeutig voneinannder unterscheiden zu können.
-* Message:
-. Jede Nachricht (User -> User oder System -> User) wird als Objekt der Klasse Message gespeichert.
-. Die ID wird automatisch generiert und ist eindeutig.
-. Jede Nachricht ist dem Artikel zugeordnet, um den es geht.
-* Reservation:
-. Klasse/Modell wird verwendet um die Json Dateien zu verarbeiten.
-* Account:
-. Klasse/Modell wird verwendet um die Json Dateien zu verarbeiten.
+. In jedem Item wird gespeichert, wem es gehört.
 
-## Datenbank fuellen
-Da die Registrierung optional ist, speichern wir beim Starten des Programms ueber
-den DatabaseInitializer mehrere User und Items in der Datenbank. Falls spaeter noch
-Zeit ist, implementieren wir die Registrierung und aendern dies.
+* Request:
+. Ein Request wird generiert, wenn ein User ein Item eines anderen Users ausleihen möchte.
 
 
-## Struktur der Website
-* Base-Site
-. Banner
-* BaseWithSearchBar-Site
-. Banner
-. Nachrichten (Button)
-. Account (Button)
-. Suche in Angebote (Suchfeld -> Button los)
-* Login-Site
-. Benutzername (Input)
-. Passwort (Input)
-. Einloggen (Button)
-. Registrieren (Link)
-* Index-Site
-. BaseWithSearchBar
-. Liste Angebote (Details anfordern -> Button)
-. Angebotliste (Anfrage auf Details -> Button)
-* Account-Site
-. BaseWithSearchBar
-. Artikel einstellen (Button)
-. Liste verliehener Items (bearbeiten, loeschen -> Buttons)
-. Liste geliehener Items (abgeben -> Button)
-. Clearing Stelle (Button)
-* Mailbox-Site
-. BaseWithSearchBar
-. Liste an erhaltenen Nachrichten
-. Nachricht anzeigen (Button pro Nachricht)
-. E-mail schreiben (Button)
-* DisplayMessage-Site
-. BaseWithSearchBar
-. Sender (Text)
-. Betreff (Text)
-. Inhalt (Text)
-* WriteMessage-Site
-. BaseWithSearchBar
-. Empfängerfeld (Input)
-. Itemauswahl (DropList)
-. Betreff (Input)
-. Inhalt (Input)
-. Abbrechen (Button)
-. Senden (Button)
 
 
-## Erläuterung der Website Struktur
-* Login:
-. Wird aufgerufen, wenn man noch nicht eingeloggt ist.
-. Man wird auch hierherweitergeleitet, solang man nicht eingeloggt ist.
-* localhost:8080/
-. öffnet index.html
-* localhost:8080/account
-. Öffnet account.html mit Daten des Nutzers.
-* localhost:8080/details
-. Wenn Item existiert/gefunden wird, wird details.html mit den Daten des Items geöffnet.
-. Sonst wird eine RuntimeException geworfen.
-* localhost:8080/newItem
-. Öffnet newItem.html
+## Webstruktur
+
+* Alle Html-Dateien benutzen das Layout der baseWithSearchBar.html, sodass grundlegende Funktionen,
+wie Suche, Nachrichten, Account und Logout immer verfügbar sind.
+
+
+* Index.html:
+. Enthält Liste alles vorhandenen Items.
+. Jedes Item hat einen Detail-Button, der zu der Seite Details.html führt, wobei die Id des
+entsprechenden Items mitgegeben wird.
+
+* Details.html
+. Es wird eine Detailansicht des entsprechenden Items dargestellt.
+. Darunter steht ein Ausleihbutton und ein Zurückbutton.
+** Der Ausleihbutton linkt auf Request.html und gibt dieser die Id des entsprechenden Items
+mit.
+** Der Zurückbutton linkt auf Index.html.
+
+* messages.html:
+. Enthält zwei Tabellen:
+** Die erste Tabelle enthält eine Liste aller Requests, die an den angemeldeten User gestellt
+wurden (Zu Items, die mir gehören.)
+** Diese Requests kann die angemeldete Person akzeptieren oder ablehnen.
+
+Bearbeiten:
+** -> Wird akzeptiert
+** -> Wird abgelehnt, so wird der Request gelöscht.
+
+** Die zweite Tabelle enthält eine Liste aller Requests, die der angemeldete User gestellt hat.
+** ->
+
+
 
 ## Architektur
 GUI <-> Controller <-> Logik <-> Model <-> Datenbank <- DatabaseInitializer
