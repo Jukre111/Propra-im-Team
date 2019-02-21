@@ -62,7 +62,9 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 			<div class="alert alert-success" role="alert" th:if="${deleted}" >Objekt gelöscht.</div>
 			<div class="alert alert-success" role="alert" th:if="${edited}" >Objekt bearbeitet.</div>
 			<div class="alert alert-success" role="alert" th:if="${saved}" >Objekt erstellt.</div>
-			<div class="alert alert-danger" role="alert" th:if="${notAvailable}" >Objekt nicht verfügbar.</div>
+			<div class="alert alert-success" role="alert" th:if="${returned}" >Objekt zurückerhalten.</div>
+			<div class="alert alert-danger" role="alert" th:if="${notChangeable}" >Objekt nicht veränderbar. Es sind noch Requests, Verleihungen oder Konflikte offen.</div>
+            <div class="alert alert-danger" role="alert" th:if="${notLender}" >Keine Berechtigung.</div>
 			<form style="padding: 20px" class="form-horizontal">
 				<div class="media">
 					<div class="media-left media-middle">
@@ -70,7 +72,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 						<!--<img class="media-object" id="circular--landscape" th:src="{user.image}">-->
 					</div>
 					<div class="media-body">
-						<div class="form-group">
+						<div class="form-group">InvocableHandlerMethod
 							<label for="username" class="col-sm-2 control-label">Benutzername</label>
 							<div class="col-xs-6">
 							<input type="text" class="form-control" id="name" name="name" th:value="${user.username}" readonly/>

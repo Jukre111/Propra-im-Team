@@ -14,6 +14,9 @@ public class ItemService{
     @Autowired
     private ItemRepository items;
 
+    @Autowired
+    private ConflictService conflictService;
+
     public void create(String name, String description, Integer rental, Integer deposit, User user) {
         Item item = new Item(name, description, rental, deposit, user);
         items.save(item);
@@ -64,5 +67,10 @@ public class ItemService{
 
     public List<Item> searchFor(String query) {
         return this.items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query,query);
+    }
+
+    public boolean isChangeable(Long id) {
+        Item item = this.get(id);
+        return item.noPeriodsAndRequests() && conflictService.noConflictWith(item);
     }
 }
