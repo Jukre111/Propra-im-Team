@@ -1,5 +1,7 @@
 package de.hhu.sharing.web;
 
+import de.hhu.sharing.model.BorrowingProcess;
+import de.hhu.sharing.services.BorrowingProcessService;
 import de.hhu.sharing.services.ConflictService;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.UserService;
@@ -23,10 +25,14 @@ public class ConflictController {
     @Autowired
     private ConflictService conflictService;
 
+    @Autowired
+    private BorrowingProcessService borrowingProcessService;
+
     @GetMapping("/conflict")
     public String conflictPage(Model model, Principal p, @RequestParam("id") Long id){
-        model.addAttribute("item", itemService.get(id));
-        model.addAttribute("user", userService.get(p.getName()));
+
+        BorrowingProcess borrowingProcess = borrowingProcessService.getBorrowingProcess(id);
+        model.addAttribute( "borrowingProcess", borrowingProcess);
         return "conflict";
     }
 

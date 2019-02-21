@@ -50,4 +50,9 @@ public class BorrowingProcessService {
         process.getItem().removeFromPeriods(process.getPeriod());
         processes.delete(process);
     }
+
+    public BorrowingProcess getBorrowingProcess(Long id){
+    BorrowingProcess borrowingProcess = processes.findById(id).orElseThrow(()-> new RuntimeException("BorrowindProcess not found."));
+    return borrowingProcess;
+    }
 }
