@@ -111,4 +111,48 @@ public class TransactionRepositoryTest {
         Assertions.assertThat(transRepo.findBySource(source).contains(trans3)).isTrue();
         Assertions.assertThat(transRepo.findBySource(source).contains(trans4)).isTrue();
     }
+
+    @Test
+    public void testFindByProcessId() {
+        Address sharedAdress = new Address("Gemeinsames", "Wohnhaus", 1234);
+        User source = new User();
+        User target = new User();
+        source.setUsername("source");
+        source.setAddress(sharedAdress);
+        target.setUsername("target");
+        target.setAddress(sharedAdress);
+
+        userRepo.save(source);
+        userRepo.save(target);
+
+        source = userRepo.findByUsername("source").get();
+        target = userRepo.findByUsername("target").get();
+
+        Transaction trans3 = new Transaction();
+        Transaction trans4 = new Transaction();
+        Transaction trans5 = new Transaction();
+
+        trans3.setReservationId(3);
+        trans4.setReservationId(4);
+        trans5.setReservationId(5);
+
+        trans3.setSource(source);
+        trans3.setTarget(target);
+        trans4.setSource(source);
+        trans4.setTarget(target);
+        trans5.setSource(target);
+        trans5.setTarget(source);
+
+        trans3.setProcessId(3L);
+        trans4.setProcessId(4L);
+        trans5.setProcessId(5L);
+
+        transRepo.save(trans3);
+        transRepo.save(trans4);
+        transRepo.save(trans5);
+
+        Assertions.assertThat(transRepo.findByProcessId(3L)).isNotEqualTo(null);
+        Assertions.assertThat(transRepo.findByProcessId(4L)).isNotEqualTo(null);
+        Assertions.assertThat(transRepo.findByProcessId(5L)).isNotEqualTo(null);
+    }
 }

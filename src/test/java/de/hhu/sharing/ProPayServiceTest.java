@@ -8,15 +8,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
-import org.springframework.test.context.ContextConfiguration;
 
 import de.hhu.sharing.services.ProPayService;
 import org.springframework.web.client.RestTemplate;
 
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
-@ContextConfiguration(classes = ProPayServiceTestConfiguration.class)
-public class ProPayTest {
+public class ProPayServiceTest {
 
     @Mock
     TransactionRepository transRepo;
@@ -84,10 +82,7 @@ public class ProPayTest {
     }
 
     @Test
-    public void checkNullPointers() throws Exception {
-        String usernameSource = "user3";
-        int reservationId = 1;
-        String json = "{\"account\":\"user3\",\"amount\":50.0,\"reservations\":[{\"id\":1,\"amount\":30.0},{\"id\":2,\"amount\":15.0}]}";
+    public void checkNullPointers() {
         Mockito.when(pps.showAccount("user4")).thenReturn(null);
         int response = pps.createAccount("user4");
         Assertions.assertThat(response).isEqualTo(-1);
