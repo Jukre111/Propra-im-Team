@@ -28,7 +28,7 @@
         </tr>
         <tr th:each="conflict : ${allConflicts}">
             <td th:text="${conflict.item.name}"></td>
-            <td th:text="${conflict.prosecuter.username}"></td>
+            <td th:text="${conflict.owner.username}"></td>
             <td></td>
             <td>
                 <a type="button" th:href="@{'/conflictDetails?id=' + ${conflict.id}}" class="indexbtn">Details</a>

@@ -11,6 +11,14 @@ public class Account {
     int amount;
     ArrayList<Reservation> reservations;
 
+    public Account() {}
+
+    public Account(String account, int amount, ArrayList<Reservation> reservations) {
+        this.account = account;
+        this.amount = amount;
+        this.reservations = reservations;
+    }
+
     public int getLatestReservationId() {
         return reservations.get(reservations.size() - 1).getId();
     }
