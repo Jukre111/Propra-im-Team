@@ -30,6 +30,11 @@ public class BorrowingProcessService {
         return process;
     }
 
+    public Item getItemFromProcess(BorrowingProcess process){
+        Item item = process.getItem();
+        return item;
+    }
+
     public void accept(Long requestId) {
         Request request = requestService.get(requestId);
         Item item = itemService.getFromRequestId(requestId);

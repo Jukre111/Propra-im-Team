@@ -20,7 +20,7 @@
 <body>
 
 <div layout:fragment="body">
-    <form th:action="@{/saveConflict}" action="./index.html" method="post">
+    <form th:action="@{'/saveConflict?id=' + ${borrowingProcess.id}}" action="./index.html" method="post">
         <div class="style textPosition" style="padding: 20px">
             <h1><span type="text" style="font-size: 30pt; color: #BD1D6F">Konfliktprotokoll</span></h1>
             <div class="form-horizontal" style="padding-top: 60px">
@@ -46,7 +46,7 @@
                 <div class="form-group">
                     <label for="username" class="col-sm-2 control-label">Ausleiher</label>
                     <div class="col-xs-6">
-                        <input type="text" class="form-control" id="accused" name="username" th:value="${borrowingProcess.request.requester.username}" readonly/>
+                        <input type="text" class="form-control" id="accused" name="username" th:value="${borrower.username}" readonly/>
                     </div>
                 </div>
                 <div class="form-group">
