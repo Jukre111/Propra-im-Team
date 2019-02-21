@@ -1,6 +1,4 @@
 package de.hhu.sharing.ServiceTests;
-
-import de.hhu.sharing.ServiceTests.ProPayServiceTestConfiguration;
 import de.hhu.sharing.data.TransactionRepository;
 import de.hhu.sharing.propay.Account;
 import de.hhu.sharing.propay.Transaction;
@@ -10,10 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
 import org.springframework.test.context.ContextConfiguration;
-
 import de.hhu.sharing.services.ProPayService;
 import org.springframework.web.client.RestTemplate;
-
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ContextConfiguration(classes = ProPayServiceTestConfiguration.class)
