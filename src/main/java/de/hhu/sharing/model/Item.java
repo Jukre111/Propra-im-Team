@@ -3,8 +3,8 @@ package de.hhu.sharing.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.transaction.Transactional;
+import java.util.*;
 
 @Data
 @Entity
@@ -23,9 +23,11 @@ public class Item {
     @ManyToOne
     private User lender;
 
-    private boolean available = true;
+    @ElementCollection
+    private final List<Period> periods = new ArrayList<>();
+
     @OneToMany(fetch = FetchType.EAGER)
-    private List<Request> requests = new ArrayList<>();
+    private final List<Request> requests = new ArrayList<>();
 
     public Item(){
     }
@@ -45,4 +47,15 @@ public class Item {
     public void removeFromRequests(Request request) {
         requests.remove(request);
     }
+
+    @Transactional
+    public void addToPeriods(Period period){
+        this.periods.add(period);
+    }
+
+    @Transactional
+    public void removeFromPeriods(Period period){
+        this.periods.remove(period);
+    }
+
 }

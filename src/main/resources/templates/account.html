@@ -133,10 +133,18 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 		<div style="padding: 20px">
 			<table>
 				<tr>
-					<th><font size="4">Ausgeliehene Objekte</font></th>
+					<th width="90%"><font size="4">Ausgeliehene Objekte</font></th>
+					<th width="10%">von</th>
+					<th width="10%">bis</th>
+					<th width="10%">Rückgabe</th>
 				</tr>
-				<tr th:each="borrow : ${user.borrowedItems}">
-					<td th:text="${borrow.name}"></td>
+				<tr th:each="borrow : ${user.borrowed}">
+					<td th:text="${borrow.item.name}"></td>
+					<td th:text="${borrow.period.startdate}"></td>
+					<td th:text="${borrow.period.enddate}"></td>
+					<td>
+						<a th:href="@{'/returnItem?id=' + ${borrow.id}}" class="indexbtn">Rückgabe</a>
+					</td>
 				</tr>
 			</table>
 		</div>
@@ -150,9 +158,10 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 				</tr>
 				<tr th:each="lend : ${lendItems}">
 					<td th:text="${lend.name}"></td>
-					<td>
-						<span th:if="${lend.available}" style="padding-left: 25px">&#10003;</span>
-						<span th:unless="${lend.available}" style="padding-left: 25px">&#10007;</span>
+					<td>avail
+					<!--
+						<span th:if="${lend.available}" style="padding-left: 25px">&#10003;</--span>
+						<span th:unless="${lend.available}" style="padding-left: 25px">&#10007;</span>-->
 					</td>
 					<td>
 						<a class="indexbtn" th:href="@{'/editItem?id=' + ${lend.id}}">Bearbeiten</a>

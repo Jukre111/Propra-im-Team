@@ -1,7 +1,9 @@
 package de.hhu.sharing.web;
 
+import de.hhu.sharing.model.BorrowingProcess;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
+import de.hhu.sharing.services.BorrowingProcessService;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.RequestService;
 import de.hhu.sharing.services.TransactionService;
@@ -32,6 +34,9 @@ public class RequestController {
     @Autowired
     TransactionService tranService;
 
+    @Autowired
+    private BorrowingProcessService processService;
+
     @GetMapping("/request")
     public String request(@RequestParam(name = "id") Long id, Model model, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
@@ -57,15 +62,6 @@ public class RequestController {
         return "redirect:/messages";
     }
 
-    @GetMapping("/messages")
-    public String messages(Model model, Principal p){
-        User user = userService.get(p.getName());
-        model.addAttribute("user", user);
-        model.addAttribute("allMyItems", itemService.getAllIPosted(user));
-        model.addAttribute("myRequestedItems", itemService.getAllIRequested(user));
-        return "messages";
-    }
-
     @GetMapping("/accept")
     public String accept(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId, RedirectAttributes redirectAttributes){
 //        if(!item.isAvailable()) {
@@ -76,7 +72,8 @@ public class RequestController {
         if(transProPayResponse != 200) {
             return "redirect:/messages";
         } else {
-            requestService.accept(requestId);
+           processService.accept(requestId);
+           redirectAttributes.addFlashAttribute("itemAccepted",true);
         }
         return "redirect:/messages";
     }

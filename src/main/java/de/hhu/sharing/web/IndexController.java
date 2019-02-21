@@ -24,11 +24,6 @@ public class IndexController {
     @Autowired
     private ItemService itemService;
 
-    @Autowired
-    private UserRepository users;
-
-
-
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("items", itemService.getAll());
@@ -44,20 +39,14 @@ public class IndexController {
         return "account";
     }
 
-    @GetMapping("/returnItem")
-    public String returnItem( @RequestParam("id") Long id, Principal p){
-        Item item = itemService.get(id);
+    @GetMapping("/messages")
+    public String messages(Model model, Principal p){
         User user = userService.get(p.getName());
-        List<Item> allMyItems = user.getBorrowedItems();
-        allMyItems.remove(item);
-        user.setBorrowedItems(allMyItems);
-        users.save(user);
-
-        // Verfügbarkeit muss noch verändert werden.
-
-        return "redirect:/account";
+        model.addAttribute("user", user);
+        model.addAttribute("allMyItems", itemService.getAllIPosted(user));
+        model.addAttribute("myRequestedItems", itemService.getAllIRequested(user));
+        return "messages";
     }
-
 
     @GetMapping("/search")
     public String search(@RequestParam final String query, Model model) {

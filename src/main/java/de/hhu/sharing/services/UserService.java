@@ -18,9 +18,4 @@ public class UserService {
                         () -> new RuntimeException("User not found!"));
         return user;
     }
-
-    public void addToBorrowedItems(User user, Item item) {
-        user.addToBorrowedItems(item);
-        users.save(user);
-    }
 }
