@@ -43,17 +43,20 @@ public class RequestSerivceTest {
 
     public Item generateItem() {
         User user = generateUser();
-        Item item = new Item("apfel", "lecker",1,1 ,user );
-        return item;
+        return new Item("apfel", "lecker",1,1 ,user );
+    }
+
+    public Request generateRequest() {
+        User requester = generateUser();
+        Period period = new Period(LocalDate.of(2000,2,2),LocalDate.of(2000,2,3));
+        return new Request(period ,requester);
     }
 
     @Test
     public void testGet(){
-        User requester = generateUser();
-        Period period = new Period(LocalDate.of(2000,2,2),LocalDate.of(2000,2,3));
-        Request request = new Request(period ,requester);
+        Request request = generateRequest();
         Mockito.when(requests.findById(1L)).thenReturn(Optional.of(request));
-        Assert.assertTrue(requestService.get(1L).equals(request));
+        Assert.assertEquals(requestService.get(1L), request);
     }
 //    Methods changed, to be fixed
 //    @Test
