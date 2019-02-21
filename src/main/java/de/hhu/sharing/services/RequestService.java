@@ -18,6 +18,9 @@ public class RequestService {
     @Autowired
     private ItemService itemService;
 
+    @Autowired
+    private TransactionService transService;
+
     public Request get(Long id){
         Request request = this.requests.findById(id)
                 .orElseThrow(
@@ -27,9 +30,11 @@ public class RequestService {
 
     public void create(Long itemId, LocalDate startdate, LocalDate enddate, User user) {
         Request request = new Request(new Period(startdate, enddate), user);
-        requests.save(request);
         Item item = itemService.get(itemId);
-        item.addToRequests(request);
+        if(transService.checkFinances(request,item)){
+            requests.save(request);
+            item.addToRequests(request);
+        }
     }
 
     public void delete(Long requestId) {
