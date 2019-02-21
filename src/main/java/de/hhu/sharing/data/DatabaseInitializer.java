@@ -59,7 +59,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
     private void initItems(Faker faker){
         for(User user : users.findAll()){
             for(int j = 0; j < 3; j++){
-                Item item = new Item(faker.hipster().word(),
+                Item item = new Item(faker.pokemon().name(),
                         String.join("\n", faker.lorem().paragraphs(3)),
                         faker.number().numberBetween(1,1000),
                         faker.number().numberBetween(1,1000),
@@ -86,6 +86,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
             itemList.get(1).addToRequests(request2);
             items.saveAll(itemList);
         }
+
 
         Address adminAddress = new Address(faker.address().streetAddress(),faker.pokemon().location(), Integer.parseInt(faker.address().zipCode()));
         User admin = new User("admin", encoder.encode("admin") ,"ROLE_ADMIN", faker.gameOfThrones().house(),
