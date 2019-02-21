@@ -112,11 +112,11 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					</div>
 				</div>
 				<div>
-				<form method="POST" enctype="multipart/form-data" action="/uploadUserPic">
+				<form method="post" enctype="multipart/form-data" th:action=@{"/uploadUserPic"}>
        				<table>
             			<tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
-            			<tr><td></td><td><input type="submit" class="indexbtn" th:href="@{/uploadUserPic}" value="Upload Image" /></td></tr>
-       					</table>
+            			<tr><td></td><td><input type="submit" class="indexbtn" value="Upload Image" /></td></tr>
+       				</table>
     			</form>
 					<a class="indexbtn" th:href="@{/uploadUserPic}">Upload Image</a>
 				</div>
