@@ -30,4 +30,8 @@ public class ConflictService {
         Conflict conflict = new Conflict(problem, item, prosecuter, accused);
         conflicts.save(conflict);
     }
+
+    public boolean noConflictWith(Item item) {
+        return conflicts.findAllByItem(item).isEmpty();
+    }
 }

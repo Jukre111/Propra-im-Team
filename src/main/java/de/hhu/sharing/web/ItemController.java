@@ -46,21 +46,24 @@ public class ItemController {
     }
 
     @GetMapping("/editItem")
-    public String editItem(Model model, @RequestParam("id") Long id){
+    public String editItem(Model model, @RequestParam("id") Long id, RedirectAttributes redirectAttributes){
+        if(!itemService.isChangeable(id)){
+            redirectAttributes.addFlashAttribute("notChangeable", true);
+            return "redirect:/account";
+        }
         model.addAttribute("item", itemService.get(id));
         return "item";
     }
 
     @PostMapping("/saveItem")
     public String saveItem(Long id, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("rental") Integer rental, @RequestParam("deposit") Integer deposit, Principal p, RedirectAttributes redirectAttributes){
-//        if(!item.isAvailable()){
-//            redirectAttributes.addFlashAttribute("notAvailable",true);
-//            return "redirect:/account";
-//        }
         User user = userService.get(p.getName());
         if(id == null){
             itemService.create(name, description, rental, deposit, user);
             redirectAttributes.addFlashAttribute("saved",true);
+        }
+        else if(!itemService.isChangeable(id)){
+            redirectAttributes.addFlashAttribute("notChangeable", true);
         }
         else {
             itemService.edit(id,name, description, rental, deposit, user);
@@ -71,10 +74,10 @@ public class ItemController {
 
     @GetMapping("/deleteItem")
     public String deleteItem(@RequestParam("id") Long id, RedirectAttributes redirectAttributes){
-//        if(!item.isAvailable()){
-//            redirectAttributes.addFlashAttribute("notAvailable",true);
-//            return "redirect:/account";
-//        }
+        if(!itemService.isChangeable(id)){
+            redirectAttributes.addFlashAttribute("notChangeable", true);
+            return "redirect:/account";
+        }
         itemService.delete(id);
         redirectAttributes.addFlashAttribute("deleted",true);
         return "redirect:/account";
