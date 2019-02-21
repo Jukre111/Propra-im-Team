@@ -62,9 +62,6 @@ public class ItemController {
             itemService.create(name, description, rental, deposit, user);
             redirectAttributes.addFlashAttribute("saved",true);
         }
-        else if(!itemService.isChangeable(id)){
-            redirectAttributes.addFlashAttribute("notChangeable", true);
-        }
         else {
             itemService.edit(id,name, description, rental, deposit, user);
             redirectAttributes.addFlashAttribute("edited",true);
