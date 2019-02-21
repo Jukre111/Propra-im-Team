@@ -37,8 +37,8 @@ public class RequestController {
     @Autowired
     private BorrowingProcessService processService;
 
-    @GetMapping("/request")
-    public String request(@RequestParam(name = "id") Long id, Model model, Principal p, RedirectAttributes redirectAttributes){
+    @GetMapping("/newRequest")
+    public String newRequest(@RequestParam("id") Long id, Model model, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         Item item = itemService.get(id);
         if(item.getLender() == user){
@@ -74,20 +74,8 @@ public class RequestController {
         return "redirect:/messages";
     }
 
-    @GetMapping("/declineRequest")
-    public String declineRequest(@RequestParam("id") Long id , Principal p, RedirectAttributes redirectAttributes){
-        User user = userService.get(p.getName());
-        if(itemService.getFromRequestId(id).getLender() != user){
-            redirectAttributes.addFlashAttribute("notLender",true);
-            return "redirect:/messages";
-        }
-        requestService.delete(id);
-        redirectAttributes.addFlashAttribute("declined",true);
-        return "redirect:/messages";
-    }
-
-    @GetMapping("/accept")
-    public String accept(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId, Principal p, RedirectAttributes redirectAttributes){
+    @GetMapping("/acceptRequest")
+    public String acceptRequest(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         if(itemService.getFromRequestId(requestId).getLender() != user){
             redirectAttributes.addFlashAttribute("notLender",true);
@@ -99,6 +87,18 @@ public class RequestController {
         }
         processService.accept(requestId);
         redirectAttributes.addFlashAttribute("accepted",true);
+        return "redirect:/messages";
+    }
+
+    @GetMapping("/declineRequest")
+    public String declineRequest(@RequestParam("id") Long id , Principal p, RedirectAttributes redirectAttributes){
+        User user = userService.get(p.getName());
+        if(itemService.getFromRequestId(id).getLender() != user){
+            redirectAttributes.addFlashAttribute("notLender",true);
+            return "redirect:/messages";
+        }
+        requestService.delete(id);
+        redirectAttributes.addFlashAttribute("declined",true);
         return "redirect:/messages";
     }
 }

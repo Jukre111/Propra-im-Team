@@ -47,7 +47,7 @@
                                 <td th:text="${request.period.startdate}"></td>
                                 <td th:text="${request.period.enddate}"></td>
                                 <td>
-                                    <a type="button" class="indexbtn" th:href="@{'/accept?requestId=' + ${request.id} + '&itemId=' + ${item.id}}">Akzeptieren</a>
+                                    <a type="button" class="indexbtn" th:href="@{'/acceptRequest?requestId=' + ${request.id} + '&itemId=' + ${item.id}}">Akzeptieren</a>
                                 </td>
                                 <td>
                                     <a class="indexbtn" th:href="@{'/declineRequest?id=' + ${request.id}}">Ablehnen</a>
