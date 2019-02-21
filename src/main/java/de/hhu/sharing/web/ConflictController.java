@@ -65,7 +65,7 @@ public class ConflictController {
     @GetMapping("/borrower")
     public String borrower(@RequestParam("id") Long id){
         Conflict conflict = conflictService.get(id);
-        User borrower = conflict.getBorrower();
+        //User borrower = conflict.getBorrower();
         // Hier Kaution an borrower zurückgeben.
 
         User owner = conflict.getOwner();
