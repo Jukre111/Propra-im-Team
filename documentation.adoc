@@ -13,14 +13,16 @@ schreiben (mit Namen)
 
 ## Codeformatierung & Richtlinien
 
-* commits im imperativ und auf englisch.
-* Code auf englisch, CamelCase verwenden.
+* Commits im imperativ und auf Englisch.
+* Code auf Englisch, CamelCase verwenden.
 * Tabs werden verwendet.
-* ĉheckstyle verwenden.
+* Checkstyle verwenden.
+* FindBugs wird benutzt und Fehler zeitnah korrigiert.
 
 ## Aufgaben:
 * Login
 * Travis
+* FindBugs
 * Docker & Dockercompose
 * Datenbank (Postgres)
 * Benutzerkonto
@@ -33,20 +35,110 @@ schreiben (mit Namen)
 * Artikel löschen
 * Schnittstelle zu ProPay
 
-## Datenstruktur
-* User
-. id : long
-. mail : String
-. username : String
-. borrowedItems : List<Item>
-. loanedItems : List<Item>
+## Model Datenstrukturen
+* User bestehen aus:
+. username : String (id)
+** user haben eindeutige Usernamen, die in der Datenbank als Id verwendet werden.
+. password : String
+. role : String
+** Es gibt die Rollen Admin und User.
+*** Admins können die Konfliktlösestelle in ihrem Account aufrufen, für User wird der entsprechende
+Button nicht dargestellt.
+. lastname : String
+. forename : String
+. email : String
+. birthdate : LocalDate
+. address : Address
+. borrowedItems :
+
+
+ Die Items, die dem User gehoeren werden hier nicht gespeichert, stattdessen wird in jedem Item der Besitzer
+vermerkt.
+
 * Item
-. id : long
-. titel : String
+. id : Long
+** ids werden von der Datenbank generiert.
+. name : String
 . description : String
-. caution : int
-. rent : int
-. returnDate : Date
-. ownerId : long
-. renterId : long
-. (ownerId != renterId) 
+. rental : int
+. deposit : int
+. Availability : List periods
+** Hier werden alle Zeiträume gespeichert, in denen das Item verliehen ist.
+. lender : User
+
+
+* Request
+. id : Long
+** ids werden von Datenbank generiert.
+. Zeitraum : period
+. requester : User
+** User der ausleihen möchte.
+
+* BorrowedItems
+. id : Long
+. item : Item
+** Item das ausgeliehen wird.
+. request : Request
+** request der akzeptiert wurde, sodass das Item jetzt ausgeliehen ist.
+-> Das BorrowedItem repräsentiert den Ausleihprozess. Jeder User hat eine Liste ausgeliehener
+BorrowedItems und verliehener BorrowedItems.
+
+
+## Erläuterung der Datenstruktur
+* User:
+. Jeder Benutzer der Website wird als User Objekt gespeichert.
+. Die User werden vom DatabaseInitializer mithilfe von Fakern autogeneriert.
+. Die Regestrierung neuer usern ist nicht möglich.
+
+
+* Address:
+. Jede Adresse eines Benutzers wird als Objekt der Klasse Address im User gespeichert.
+. Address ist embeddable, damit Benutzer mit derselben Adresse diese speichern können.
+
+* Item:
+. Jeder zur Vermietung eingestellte Artikel wird als Objekt der Klasse Item gespeichert.
+. Die ID wird automatisch generiert, um die Artikel eindeutig voneinannder unterscheiden zu können.
+. In jedem Item wird gespeichert, wem es gehört.
+
+* Request:
+. Ein Request wird generiert, wenn ein User ein Item eines anderen Users ausleihen möchte.
+
+
+
+
+## Webstruktur
+
+* Alle Html-Dateien benutzen das Layout der baseWithSearchBar.html, sodass grundlegende Funktionen,
+wie Suche, Nachrichten, Account und Logout immer verfügbar sind.
+
+
+* Index.html:
+. Enthält Liste alles vorhandenen Items.
+. Jedes Item hat einen Detail-Button, der zu der Seite Details.html führt, wobei die Id des
+entsprechenden Items mitgegeben wird.
+
+* Details.html
+. Es wird eine Detailansicht des entsprechenden Items dargestellt.
+. Darunter steht ein Ausleihbutton und ein Zurückbutton.
+** Der Ausleihbutton linkt auf Request.html und gibt dieser die Id des entsprechenden Items
+mit.
+** Der Zurückbutton linkt auf Index.html.
+
+* messages.html:
+. Enthält zwei Tabellen:
+** Die erste Tabelle enthält eine Liste aller Requests, die an den angemeldeten User gestellt
+wurden (Zu Items, die mir gehören.)
+** Diese Requests kann die angemeldete Person akzeptieren oder ablehnen.
+
+Bearbeiten:
+** -> Wird akzeptiert
+** -> Wird abgelehnt, so wird der Request gelöscht.
+
+** Die zweite Tabelle enthält eine Liste aller Requests, die der angemeldete User gestellt hat.
+** ->
+
+
+
+## Architektur
+GUI <-> Controller <-> Logik <-> Model <-> Datenbank <- DatabaseInitializer
+

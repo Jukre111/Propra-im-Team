@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset = "utf-8"/>
+<title>Account</title>
+
+<style>
+	#conflictbtn {
+		display:block;
+		width:200px;
+		height:200px;
+		line-height:200px;
+		padding-left: 5px;
+		padding-right: 5px;
+		border: 2px solid #f5f5f5;
+		border-radius: 50%;
+		color: #fff;
+		text-align:center;
+		text-decoration:none;
+		box-shadow: 0 0 3px gray;
+		font-size:20px;
+		font-weight:bold;
+		background-color: #E74498;
+	}
+
+	#conflictbtn:hover {background-color: #BD1D6F}
+
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2;}
+
+#circular--landscape {
+  display: inline-block;
+  position: relative;
+  width: 250px;
+  height: 250px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+#circular--landscape img {
+  width: auto;
+  height: 100%;
+  margin-left: -50px;
+}
+
+</style>
+</head>
+<body>
+	<div layout:fragment="body">
+		<div style="padding: 20px; padding-left: 250px">
+			<div class="alert alert-success" role="alert" th:if="${deleted}" >Objekt gelöscht.</div>
+			<div class="alert alert-success" role="alert" th:if="${edited}" >Objekt bearbeitet.</div>
+			<div class="alert alert-success" role="alert" th:if="${saved}" >Objekt erstellt.</div>
+			<div class="alert alert-danger" role="alert" th:if="${notAvailable}" >Objekt nicht verfügbar.</div>
+			<form style="padding: 20px" class="form-horizontal">
+				<div class="media">
+					<div class="media-left media-middle">
+						<img class="media-object" id="circular--landscape" src="bendi.png">
+						<!--<img class="media-object" id="circular--landscape" th:src="{user.image}">-->
+					</div>
+					<div class="media-body">
+						<div class="form-group">
+							<label for="username" class="col-sm-2 control-label">Benutzername</label>
+							<div class="col-xs-6">
+							<input type="text" class="form-control" id="name" name="name" th:value="${user.username}" readonly/>
+							</div>
+							<a class="indexbtn" href="/propayAccount">ProPay Account</a>
+						</div>
+						<div class="form-group">
+							<label for="forename" class="col-sm-2 control-label">Vorname</label>
+							<div class="col-xs-6">
+							<input type="text" class="form-control" id="forename" name="forename" th:value="${user.forename}" readonly/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="lastname" class="col-sm-2 control-label">Nachname</label>
+							<div class="col-xs-6">
+							<input type="text" class="form-control" id="lastname" name="lastname" th:value="${user.lastname}" readonly/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="email" class="col-sm-2 control-label">E-Mail</label>
+							<div class="col-xs-6">
+							<input type="text" class="form-control" id="email" name="email" th:value="${user.email}" readonly/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="birthdate" class="col-sm-2 control-label">Geburtstag</label>
+							<div class="col-xs-3">
+							<input type="text" class="form-control" id="birthdate" name="birthdate" th:value="${user.birthdate}" readonly/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="street" class="col-sm-2 control-label">Straße</label>
+							<div class="col-xs-6">
+								<input type="text" class="form-control" id="street" name="street" th:value="${address.street}" readonly/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="postcode city" class="col-sm-2 control-label">PLZ / Stadt</label>
+							<div class="col-xs-6">
+								<input type="number text" class="form-control" id="postcode city" name="postcode city" th:value="${address.postcode} + ' ' + ${address.city}" readonly/>
+							</div>
+						</div>
+						<!--<div class="form-group">
+							<label for="budget" class="col-sm-2 control-label">ProPay Guthaben</label>
+							<div class="col-xs-3">
+								<div class="input-group">
+									<div class="input-group-addon">€</div>
+									<input type="text" class="form-control" th:value="${user.budget}" placeholder="Budget">
+									<div class="input-group-addon">,00</div>
+								</div>
+							</div>
+						</div>-->
+					</div>
+					<div class="media-right media-middle" th:if="${user.role == 'ROLE_ADMIN'}">
+						<a id="conflictbtn" th:href="@{/conflictView}" style="margin-right: 150px">Konfliktlösestelle</a>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div style="padding: 20px">
+			<table>
+				<tr>
+					<th width="70%"><font size="4">Ausgeliehene Objekte</font></th>
+					<th width="10%">von</th>
+					<th width="10%">bis</th>
+					<th width="10%">Konflikt</th>
+				</tr>
+				<tr th:each="borrow : ${user.borrowed}">
+					<td th:text="${borrow.item.name}"></td>
+					<td th:text="${borrow.period.startdate}"></td>
+					<td th:text="${borrow.period.enddate}"></td>
+					<td>
+						<a class="indexbtn" th:href="@{'/conflict?id=' + ${borrow.id}}">Konflikt</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="padding: 20px">
+			<table>
+				<tr>
+					<th width="70%"><font size="4">Eigene Objekte</font></th>
+					<th width="10%">Verfügbar</th>
+					<th width="10%">Bearbeiten</th>
+					<th width="10%">Entfernen</th>
+				</tr>
+				<tr th:each="lend : ${lendItems}">
+					<td th:text="${lend.name}"></td>
+					<td>
+					<!--
+						<span th:if="${lend.available}" style="padding-left: 25px">&#10003;</--span>
+						<span th:unless="${lend.available}" style="padding-left: 25px">&#10007;</span>-->
+					</td>
+					<td>
+						<a class="indexbtn" th:href="@{'/editItem?id=' + ${lend.id}}">Bearbeiten</a>
+					</td>
+					<td>
+						<a class="indexbtn" th:href="@{'/deleteItem?id=' + ${lend.id}}">Entfernen</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="padding: 20px">
+			<table>
+				<tr>
+					<th width="80%"><font size="4">Verliehene Objekte</font></th>
+					<th width="10%">Objekt zurück erhalten</th>
+					<th width="10%">Konflikt</th>
+				</tr>
+				<tr th:each="process : ${user.lend}">
+					<td th:text="${process.item.name}"></td>
+					<td>
+						<a th:href="@{'/returnItem?id=' + ${process.id}}" class="indexbtn">Erhalten</a>
+					</td>
+					<td>
+						<a class="indexbtn" th:href="@{'/conflict?id=' + ${process.id}}">Konflikt</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

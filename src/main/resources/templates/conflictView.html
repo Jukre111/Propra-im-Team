@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Sharing</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {background-color: #f2f2f2;}
+    </style>
+</head>
+<body>
+<div layout:fragment="body" style="padding-left: 50px; padding-right: 50px">
+    <table>
+        <tr>
+            <th width="20%">Objekt</th>
+            <th width="20%">Besitzer</th>
+            <th width="50%"></th>
+            <th width="10%">Details</th>
+        </tr>
+        <tr th:each="conflict : ${allConflicts}">
+            <td th:text="${conflict.item.name}"></td>
+            <td th:text="${conflict.owner.username}"></td>
+            <td></td>
+            <td>
+                <a type="button" th:href="@{'/conflictDetails?id=' + ${conflict.id}}" class="indexbtn">Details</a>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
