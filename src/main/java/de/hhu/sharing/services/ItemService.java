@@ -35,10 +35,9 @@ public class ItemService{
     }
 
     public Item get(Long id) {
-        Item item = this.items.findById(id)
+        return this.items.findById(id)
                 .orElseThrow(
                         () -> new RuntimeException("Item not found!"));
-        return item;
     }
 
     public List<Item> getAll() {
@@ -46,10 +45,9 @@ public class ItemService{
     }
 
     public Item getFromRequestId(Long requestId) {
-        Item item = this.items.findByRequests_id(requestId)
+        return this.items.findByRequests_id(requestId)
                 .orElseThrow(
                         () -> new RuntimeException("Item not found!"));
-        return item;
     }
 
     public List<Item> getAllIPosted(User user) {
