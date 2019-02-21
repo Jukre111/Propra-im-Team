@@ -20,6 +20,9 @@ public class BorrowingProcessService {
     @Autowired
     private ItemService itemService;
 
+    @Autowired
+    private UserService userService;
+
     private BorrowingProcess get(Long id) {
         BorrowingProcess process = this.processes.findById(id)
                 .orElseThrow(
@@ -43,10 +46,9 @@ public class BorrowingProcessService {
         item.getLender().addToLend(process);
     }
 
-    public void returnItem(Long processId, User borrower){
+    public void returnItem(Long processId, User lender){
         BorrowingProcess process = this.get(processId);
-        borrower.removeFromBorrowed(process);
-        process.getItem().getLender().removeFromLend(process);
+        userService.removeProcessFromProcessLists(lender, process);
         process.getItem().removeFromPeriods(process.getPeriod());
         processes.delete(process);
     }
