@@ -45,10 +45,9 @@ public class ItemService{
     }
 
     public Item getFromRequestId(Long requestId) {
-        Item item = this.items.findByRequests_id(requestId)
+        return this.items.findByRequests_id(requestId)
                 .orElseThrow(
                         () -> new RuntimeException("Item not found!"));
-        return item;
     }
 
     public List<Item> getAllIPosted(User user) {
