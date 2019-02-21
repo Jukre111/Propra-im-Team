@@ -1,5 +1,7 @@
 package de.hhu.sharing.services;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -9,6 +11,12 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
 
+import de.hhu.sharing.data.ImageRepository;
+import de.hhu.sharing.data.ItemRepository;
+import de.hhu.sharing.data.UserRepository;
+import de.hhu.sharing.model.Image;
+import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.User;
 import de.hhu.sharing.storage.StorageException;
 import de.hhu.sharing.storage.StorageFileNotFoundException;
 import de.hhu.sharing.storage.StorageProperties;
@@ -27,31 +35,69 @@ public class FileSystemStorageService implements StorageService {
     private final Path rootLocation;
 
     @Autowired
+    private ImageRepository imageRepo;
+    
+    @Autowired
+    private UserRepository userRepo;   
+    
+    @Autowired
+    private ItemRepository itemRepo;
+    
+    @Autowired
     public FileSystemStorageService(StorageProperties properties) {
         this.rootLocation = Paths.get(properties.getLocation());
     }
+    
+    private Image createImageVars() {
+    	Image image = new Image();
+        image.setMimeType("image/jpeg");
+    	return image;
+    }
 
     @Override
-    public void store(MultipartFile file) {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+    public void storeUser(MultipartFile file, User user){
+    	byte[] byteArr = null;
+		try {
+			byteArr = file.getBytes();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
         try {
-            if (file.isEmpty()) {
-                throw new StorageException("Failed to store empty file " + filename);
-            }
-            if (filename.contains("..")) {
-                // This is a security check
-                throw new StorageException(
-                        "Cannot store file with relative path outside current directory "
-                                + filename);
-            }
-            try (InputStream inputStream = file.getInputStream()) {
-                Files.copy(inputStream, this.rootLocation.resolve(filename),
-                        StandardCopyOption.REPLACE_EXISTING);
-            }
+        	InputStream inputStream = new ByteArrayInputStream(byteArr);
+            //convert file into array of bytes
+            inputStream.read(byteArr);
+            inputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (IOException e) {
-            throw new StorageException("Failed to store file " + filename, e);
+        Image image = createImageVars();
+        image.setImageData(byteArr);
+        imageRepo.save(image);
+        user.setImage(image);
+        userRepo.save(user);
+    }
+    
+    @Override
+    public void storeItem(MultipartFile file, Item item){
+    	byte[] byteArr = null;
+		try {
+			byteArr = file.getBytes();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+        try {
+        	InputStream inputStream = new ByteArrayInputStream(byteArr);
+            //convert file into array of bytes
+            inputStream.read(byteArr);
+            inputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        Image image = createImageVars();
+        image.setImageData(byteArr);
+        imageRepo.save(image);
+        item.setImage(image);
+        itemRepo.save(item);
     }
 
     @Override

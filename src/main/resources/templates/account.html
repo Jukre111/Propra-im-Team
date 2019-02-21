@@ -65,8 +65,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 	<form style="padding: 20px" class="form-horizontal">
 		<div class="media">
 			<div class="media-left media-middle">
-				<img class="media-object" id="circular--landscape" src="bendi.png">
-				<!--<img class="media-object" id="circular--landscape" th:src="{user.image}">-->
+				<img class="img" id="circular--landscape" th:src="@{/getUserPic}">
 			</div>
 			<div class="media-body">
 				<div class="form-group">
@@ -111,6 +110,16 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					<div class="col-xs-6">
 						<input type="number text" class="form-control" id="postcode city" name="postcode city" th:value="${address.postcode} + ' ' + ${address.city}" readonly/>
 					</div>
+				</div>
+				<div>
+				<form method="POST" enctype="multipart/form-data" action="/uploadUserPic">
+       				<table>
+            			<tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
+            			<tr><td></td><td><input type="submit" class="indexbtn" th:href="@{/uploadUserPic}" value="Upload Image" /></td></tr>
+       					</table>
+    			</form>
+					<a class="indexbtn" th:href="@{/uploadUserPic}">Upload Image</a>
+				</div>
 				</div>
 				<!--<div class="form-group">
 					<label for="budget" class="col-sm-2 control-label">ProPay Guthaben</label>

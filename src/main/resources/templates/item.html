@@ -58,7 +58,15 @@
                         <textarea class="form-control" id="description" name="description" th:inline="text" required="">[[${item.description}]]</textarea>
                     </div>
                 </div>
-
+				<div>
+   			    <form method="POST" enctype="multipart/form-data" action="/uploadItemPic">
+        			<table>
+            			<tr><td>File to upload:</td><td><input type="file"  name="file" /></td></tr>
+            			<tr><td></td><td><input  type="submit" class="indexbtn" value="Upload" /></td></tr>
+        			</table>
+   				</form>
+				</div>
+                </div>
                 </div>
             <div class="modal-footer">
                 <a class="indexbtn" href="/" style="padding: 5px">Abbrechen</a>

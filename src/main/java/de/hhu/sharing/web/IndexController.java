@@ -29,7 +29,7 @@ public class IndexController {
 
 
 
-    @GetMapping("/QWEEWQ")
+    @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("items", itemService.getAll());
         return "index";
