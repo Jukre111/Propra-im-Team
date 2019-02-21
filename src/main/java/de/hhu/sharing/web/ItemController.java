@@ -46,9 +46,13 @@ public class ItemController {
     }
 
     @GetMapping("/editItem")
-    public String editItem(Model model, @RequestParam("id") Long id, RedirectAttributes redirectAttributes){
+    public String editItem(Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         if(!itemService.isChangeable(id)){
             redirectAttributes.addFlashAttribute("notChangeable", true);
+            return "redirect:/account";
+        }
+        if(itemService.get(id).getLender() != userService.get(p.getName())){
+            redirectAttributes.addFlashAttribute("notLender",true);
             return "redirect:/account";
         }
         model.addAttribute("item", itemService.get(id));
@@ -70,9 +74,13 @@ public class ItemController {
     }
 
     @GetMapping("/deleteItem")
-    public String deleteItem(@RequestParam("id") Long id, RedirectAttributes redirectAttributes){
+    public String deleteItem(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         if(!itemService.isChangeable(id)){
             redirectAttributes.addFlashAttribute("notChangeable", true);
+            return "redirect:/account";
+        }
+        if(itemService.get(id).getLender() != userService.get(p.getName())){
+            redirectAttributes.addFlashAttribute("notLender",true);
             return "redirect:/account";
         }
         itemService.delete(id);
@@ -81,9 +89,14 @@ public class ItemController {
     }
 
     @GetMapping("/returnItem")
-    public String returnItem( @RequestParam("id") Long id, Principal p){
+    public String returnItem( @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
+        if(processService.get(id).getItem().getLender() != user){
+            redirectAttributes.addFlashAttribute("notLender",true);
+            return "redirect:/account";
+        }
         processService.returnItem(id, user);
+        redirectAttributes.addFlashAttribute("notLender",true);
         return "redirect:/account";
     }
 }

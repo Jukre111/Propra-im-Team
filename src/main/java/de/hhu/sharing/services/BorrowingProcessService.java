@@ -23,7 +23,7 @@ public class BorrowingProcessService {
     @Autowired
     private UserService userService;
 
-    private BorrowingProcess get(Long id) {
+    public BorrowingProcess get(Long id) {
         BorrowingProcess process = this.processes.findById(id)
                 .orElseThrow(
                         () -> new RuntimeException("Process not found!"));
