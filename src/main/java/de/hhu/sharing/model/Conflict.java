@@ -2,10 +2,7 @@ package de.hhu.sharing.model;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Data
 @Entity
@@ -21,18 +18,23 @@ public class Conflict {
     private Item item;
 
     @ManyToOne
-    private User prosecuter;
+    private User owner;
 
     @ManyToOne
-    private User accused;
+    private User borrower;
+
+    @ManyToOne
+    private BorrowingProcess process;
 
     public Conflict(){
     }
 
-    public Conflict(String problem, Item item, User prosecuter, User accused){
+    public Conflict(String problem, Item item, User owner, User borrower, BorrowingProcess process){
         this.problem = problem;
         this.item = item;
-        this.prosecuter = prosecuter;
-        this.accused = accused;
+        this.owner = owner;
+        this.borrower = borrower;
+        this.process = process;
     }
+
 }
