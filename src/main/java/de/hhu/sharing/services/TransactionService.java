@@ -30,10 +30,7 @@ public class TransactionService {
         int rent = item.getRental()*(int) days;
         proService.createAccount(requester.getUsername());
         int amount = proService.showAccount(requester.getUsername()).getAmount();
-        if(amount >= (rent+item.getDeposit())){
-            return true;
-        }
-        return false;
+        return amount >= (rent+item.getDeposit());
     }
     public int createTransaction(Long requestId, Long itemId) {
         Item item = itemRepo.findById(itemId).get();

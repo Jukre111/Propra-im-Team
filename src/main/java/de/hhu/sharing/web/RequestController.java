@@ -96,10 +96,9 @@ public class RequestController {
         if(tranService.createTransaction(requestId, itemId) != 200) {
             redirectAttributes.addFlashAttribute("propayError",true);
             return "redirect:/messages";
-        } else {
-           processService.accept(requestId);
-           redirectAttributes.addFlashAttribute("accepted",true);
         }
+        processService.accept(requestId);
+        redirectAttributes.addFlashAttribute("accepted",true);
         return "redirect:/messages";
     }
 }

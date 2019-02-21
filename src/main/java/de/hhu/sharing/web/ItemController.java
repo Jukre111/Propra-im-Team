@@ -96,7 +96,7 @@ public class ItemController {
             return "redirect:/account";
         }
         processService.returnItem(id, user);
-        redirectAttributes.addFlashAttribute("notLender",true);
+        redirectAttributes.addFlashAttribute("returned",true);
         return "redirect:/account";
     }
 }
