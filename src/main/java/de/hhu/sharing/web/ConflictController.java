@@ -1,13 +1,11 @@
 package de.hhu.sharing.web;
 
+import de.hhu.sharing.data.TransactionRepository;
 import de.hhu.sharing.model.BorrowingProcess;
 import de.hhu.sharing.model.Conflict;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
-import de.hhu.sharing.services.BorrowingProcessService;
-import de.hhu.sharing.services.ConflictService;
-import de.hhu.sharing.services.ItemService;
-import de.hhu.sharing.services.UserService;
+import de.hhu.sharing.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +29,12 @@ public class ConflictController {
 
     @Autowired
     private BorrowingProcessService borrowingProcessService;
+
+    @Autowired
+    private ProPayService proService;
+
+    @Autowired
+    private TransactionRepository transRepo;
 
     @GetMapping("/conflict")
     public String conflictPage(Model model, Principal p, @RequestParam("id") Long id){
@@ -65,13 +69,14 @@ public class ConflictController {
     @GetMapping("/borrower")
     public String borrower(@RequestParam("id") Long id){
         Conflict conflict = conflictService.get(id);
-        //User borrower = conflict.getBorrower();
-        // Hier Kaution an borrower zurückgeben.
-
+        User borrower = conflict.getBorrower();
         User owner = conflict.getOwner();
+
         BorrowingProcess process = conflict.getProcess();
-        conflictService.removeConflict(conflict);
-        borrowingProcessService.returnItem(process.getId(), owner);
+        if(proService.cancelDeposit(borrower.getUsername(),transRepo.findByProcessId(process.getId())) == 200) {
+            conflictService.removeConflict(conflict);
+            borrowingProcessService.returnItem(process.getId(), owner);
+        }
 
         return "redirect:/conflictView";
     }
@@ -81,12 +86,13 @@ public class ConflictController {
     public String owner(@RequestParam("id") Long id){
         Conflict conflict = conflictService.get(id);
         User owner = conflict.getOwner();
-        // Hier Kaution an owner überweisen.
+        User borrower = conflict.getBorrower();
 
         BorrowingProcess process = conflict.getProcess();
-        conflictService.removeConflict(conflict);
-
-        borrowingProcessService.returnItem(process.getId(), owner);
+        if(proService.collectDeposit(borrower.getUsername(),transRepo.findByProcessId(process.getId())) == 200) {
+            conflictService.removeConflict(conflict);
+            borrowingProcessService.returnItem(process.getId(), owner);
+        }
 
         return "redirect:/conflictView";
     }
