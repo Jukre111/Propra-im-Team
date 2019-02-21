@@ -50,9 +50,10 @@ public class RequestController {
     }
 
     @PostMapping("/saveRequest")
-    public String saveRequest(Long id, String startdate, String enddate, Principal p){
+    public String saveRequest(Long id, String startdate, String enddate, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         requestService.create(id, LocalDate.parse(startdate), LocalDate.parse(enddate), user);
+        redirectAttributes.addFlashAttribute("requested",true);
         return "redirect:/";
     }
 
@@ -68,8 +69,7 @@ public class RequestController {
 //            redirectAttributes.addFlashAttribute("notAvailable",true);
 //        return "redirect:/messages";
 //        }
-        int transProPayResponse = tranService.createTransaction(requestId, itemId);
-        if(transProPayResponse != 200) {
+        if(tranService.createTransaction(requestId, itemId) != 200) {
             return "redirect:/messages";
         } else {
            processService.accept(requestId);
