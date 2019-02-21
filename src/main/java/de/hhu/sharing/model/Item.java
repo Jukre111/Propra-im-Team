@@ -59,7 +59,7 @@ public class Item {
     }
 
     @Transactional
-    public boolean isChangeable() {
+    public boolean noPeriodsAndRequests() {
         return periods.isEmpty() && requests.isEmpty();
     }
 }

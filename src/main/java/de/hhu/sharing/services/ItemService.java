@@ -71,6 +71,6 @@ public class ItemService{
 
     public boolean isChangeable(Long id) {
         Item item = this.get(id);
-        return item.isChangeable() && conflictService.noConflictWith(item);
+        return item.noPeriodsAndRequests() && conflictService.noConflictWith(item);
     }
 }
