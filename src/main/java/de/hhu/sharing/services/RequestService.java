@@ -1,5 +1,6 @@
 package de.hhu.sharing.services;
 
+import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ public class RequestService {
 
     @Autowired
     private RequestRepository requests;
+
+    @Autowired
+    private ItemRepository items;
 
     @Autowired
     private ItemService itemService;
@@ -31,10 +35,8 @@ public class RequestService {
     public void create(Long itemId, LocalDate startdate, LocalDate enddate, User user) {
         Request request = new Request(new Period(startdate, enddate), user);
         Item item = itemService.get(itemId);
-        if(transService.checkFinances(request,item)){
-            requests.save(request);
-            item.addToRequests(request);
-        }
+        item.addToRequests(request);
+        requests.save(request);
     }
 
     public void delete(Long requestId) {

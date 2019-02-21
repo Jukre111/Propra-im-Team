@@ -52,6 +52,11 @@ public class RequestController {
     @PostMapping("/saveRequest")
     public String saveRequest(Long id, String startdate, String enddate, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
+        Item item = itemService.get(id);
+        if(!tranService.checkFinances(user, item, LocalDate.parse(startdate), LocalDate.parse(enddate))){
+            redirectAttributes.addFlashAttribute("noCredit",true);
+            return "redirect:/";
+        }
         requestService.create(id, LocalDate.parse(startdate), LocalDate.parse(enddate), user);
         redirectAttributes.addFlashAttribute("requested",true);
         return "redirect:/";

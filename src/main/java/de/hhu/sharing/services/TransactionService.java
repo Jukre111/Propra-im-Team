@@ -9,6 +9,8 @@ import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
@@ -23,16 +25,11 @@ public class TransactionService {
     @Autowired
     ProPayService proService;
 
-    public boolean checkFinances (Request request, Item item){
-        User borrower = request.getRequester();
-
-        long days = DAYS.between(request.getPeriod().getStartdate(),request.getPeriod().getEnddate());
+    public boolean checkFinances(User requester, Item item, LocalDate startdate, LocalDate enddate){
+        long days = DAYS.between(startdate, enddate);
         int rent = item.getRental()*(int) days;
-
-        proService.createAccount(borrower.getUsername());
-
-        int amount = proService.showAccount(borrower.getUsername()).getAmount();
-
+        proService.createAccount(requester.getUsername());
+        int amount = proService.showAccount(requester.getUsername()).getAmount();
         if(amount >= (rent+item.getDeposit())){
             return true;
         }
@@ -51,7 +48,7 @@ public class TransactionService {
 
         Transaction trans = new Transaction(rent, item.getDeposit(), item, lender, borrower);
         
-        if(checkFinances(request, item)){
+        if(checkFinances(request.getRequester(), item, request.getPeriod().getStartdate(), request.getPeriod().getStartdate())){
             int responseTransfer = proService.transferMoney(borrower.getUsername(), lender.getUsername(), rent);
             int responseDeposit = proService.createDeposit(borrower.getUsername(), lender.getUsername(), trans);
             //Transaction will be saved in proService due to reasons...
