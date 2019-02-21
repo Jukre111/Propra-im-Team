@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -72,13 +73,14 @@ public class DatabaseInitializer implements ServletContextInitializer {
     private void initRequests(Faker faker){
         for(User user : users.findAll()){
             List<Item> itemList = items.findFirst2ByLenderNot(user);
+            LocalDate startdate = faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             Request request1 = new Request(
-                    new Period(faker.date().past(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                            faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()),
-                    user);
+                    new Period(startdate,
+                            faker.date().future(10,TimeUnit.DAYS, Date.from(startdate.atStartOfDay(ZoneId.systemDefault()).toInstant())).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()),
+                            user);
             Request request2 = new Request(
-                    new Period(faker.date().past(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                            faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()),
+                    new Period(startdate,
+                            faker.date().future(10,TimeUnit.DAYS, Date.from(startdate.atStartOfDay(ZoneId.systemDefault()).toInstant())).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()),
                     user);
             requests.save(request1);
             requests.save(request2);

@@ -49,5 +49,12 @@ public class RequestService {
         }
     }
 
-
+    public void deleteOutdatedRequests() {
+        List<Request> requests = new ArrayList<>(this.requests.findAll());
+        for(Request req : requests){
+            if(req.getPeriod().isOutdated()){
+                this.delete(req.getId());
+            }
+        }
+    }
 }
