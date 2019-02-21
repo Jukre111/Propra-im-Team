@@ -63,17 +63,19 @@ public class RequestController {
     }
 
     @GetMapping("/deleteRequest")
-    public String deleteRequest(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId){
-        requestService.delete(requestId);
+    public String deleteRequest(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
+        User user = userService.get(p.getName());
+        if(requestService.get(id).getRequester() != user){
+            redirectAttributes.addFlashAttribute("notRequester",true);
+            return "redirect:/messages";
+        }
+        requestService.delete(id);
+        redirectAttributes.addFlashAttribute("deleted",true);
         return "redirect:/messages";
     }
 
     @GetMapping("/accept")
     public String accept(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId, RedirectAttributes redirectAttributes){
-//        if(!item.isAvailable()) {
-//            redirectAttributes.addFlashAttribute("notAvailable",true);
-//        return "redirect:/messages";
-//        }
         if(tranService.createTransaction(requestId, itemId) != 200) {
             return "redirect:/messages";
         } else {
