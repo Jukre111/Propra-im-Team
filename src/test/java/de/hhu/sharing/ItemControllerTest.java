@@ -4,6 +4,7 @@ import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
+import de.hhu.sharing.services.BorrowingProcessService;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.RequestService;
 import de.hhu.sharing.services.UserService;
@@ -41,6 +42,9 @@ public class ItemControllerTest {
 
     @MockBean
     RequestService requestService;
+
+    @MockBean
+    BorrowingProcessService borrowingProcessService;
 
     @MockBean
     UserRepository userRepo;
