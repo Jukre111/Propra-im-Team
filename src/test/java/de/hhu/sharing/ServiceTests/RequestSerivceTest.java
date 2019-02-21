@@ -3,18 +3,18 @@ import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.model.*;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.RequestService;
+import de.hhu.sharing.services.TransactionService;
 import de.hhu.sharing.services.UserService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.time.LocalDate;
 import java.util.Optional;
 
 public class RequestSerivceTest {
-
-    @Mock
-    private UserService userService;
 
     @Mock
     private RequestRepository requests;
@@ -22,9 +22,11 @@ public class RequestSerivceTest {
     @Mock
     private ItemService itemService;
 
+    @Mock
+    private TransactionService transactionService;
+
     @InjectMocks
     private RequestService requestService;
-
 
     @Before
     public void initialize(){
