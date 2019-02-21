@@ -74,6 +74,18 @@ public class RequestController {
         return "redirect:/messages";
     }
 
+    @GetMapping("/declineRequest")
+    public String declineRequest(@RequestParam("id") Long id , Principal p, RedirectAttributes redirectAttributes){
+        User user = userService.get(p.getName());
+        if(itemService.getFromRequestId(id).getLender() != user){
+            redirectAttributes.addFlashAttribute("notLender",true);
+            return "redirect:/messages";
+        }
+        requestService.delete(id);
+        redirectAttributes.addFlashAttribute("declined",true);
+        return "redirect:/messages";
+    }
+
     @GetMapping("/accept")
     public String accept(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId, RedirectAttributes redirectAttributes){
         if(tranService.createTransaction(requestId, itemId) != 200) {
@@ -82,12 +94,6 @@ public class RequestController {
            processService.accept(requestId);
            redirectAttributes.addFlashAttribute("itemAccepted",true);
         }
-        return "redirect:/messages";
-    }
-
-    @GetMapping("/declineRequest")
-    public String declineRequest(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId ){
-        requestService.delete(requestId);
         return "redirect:/messages";
     }
 }
