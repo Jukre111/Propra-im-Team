@@ -87,12 +87,18 @@ public class RequestController {
     }
 
     @GetMapping("/accept")
-    public String accept(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId, RedirectAttributes redirectAttributes){
+    public String accept(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId, Principal p, RedirectAttributes redirectAttributes){
+        User user = userService.get(p.getName());
+        if(itemService.getFromRequestId(requestId).getLender() != user){
+            redirectAttributes.addFlashAttribute("notLender",true);
+            return "redirect:/messages";
+        }
         if(tranService.createTransaction(requestId, itemId) != 200) {
+            redirectAttributes.addFlashAttribute("propayError",true);
             return "redirect:/messages";
         } else {
            processService.accept(requestId);
-           redirectAttributes.addFlashAttribute("itemAccepted",true);
+           redirectAttributes.addFlashAttribute("accepted",true);
         }
         return "redirect:/messages";
     }

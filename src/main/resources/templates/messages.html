@@ -20,11 +20,12 @@
 <body>
 
 <div layout:fragment="body">
-    <div class="alert alert-success" role="alert" th:if="${itemAccepted}" >Objekt erfolgreich verliehen. Überschneidende Anfragen wurden gelöscht.</div>
+    <div class="alert alert-success" role="alert" th:if="${accepted}" >Objekt verliehen. Überschneidende Anfragen wurden gelöscht.</div>
     <div class="alert alert-success" role="alert" th:if="${deleted}" >Anfrage erfolgreich gelöscht.</div>
     <div class="alert alert-success" role="alert" th:if="${declined}" >Anfrage abgelehnt.</div>
     <div class="alert alert-danger" role="alert" th:if="${notRequester}" >Keine Berechtigung Anfrage zu löschen.</div>
     <div class="alert alert-danger" role="alert" th:if="${notLender}" >Keine Berechtigung Anfrage beantzuworten.</div>
+    <div class="alert alert-danger" role="alert" th:if="${propayError}" >ProPay-Fehler.</div>
     <div class="row" style="padding: 20px">
         <div class="col-sm-5" style="padding: 20px; margin-left: 30px">
             <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name">Anfragen</span></h1>
