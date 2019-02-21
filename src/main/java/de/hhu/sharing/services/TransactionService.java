@@ -29,7 +29,7 @@ public class TransactionService {
         User lender = item.getLender();
         User borrower = request.getRequester();
 
-        long days = DAYS.between(request.getStartdate(),request.getEnddate());
+        long days = DAYS.between(request.getPeriod().getStartdate(),request.getPeriod().getEnddate());
         int rent = item.getRental()*(int) days;
 
         proService.createAccount(lender.getUsername());
