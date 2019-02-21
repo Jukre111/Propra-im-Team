@@ -30,6 +30,11 @@ public class BorrowingProcessService {
         return process;
     }
 
+    public Item getItemFromProcess(BorrowingProcess process){
+        Item item = process.getItem();
+        return item;
+    }
+
     public void accept(Long requestId) {
         Request request = requestService.get(requestId);
         Item item = itemService.getFromRequestId(requestId);
@@ -51,5 +56,10 @@ public class BorrowingProcessService {
         userService.removeProcessFromProcessLists(lender, process);
         process.getItem().removeFromPeriods(process.getPeriod());
         processes.delete(process);
+    }
+
+    public BorrowingProcess getBorrowingProcess(Long id){
+    BorrowingProcess borrowingProcess = processes.findById(id).orElseThrow(()-> new RuntimeException("BorrowindProcess not found."));
+    return borrowingProcess;
     }
 }
