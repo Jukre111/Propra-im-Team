@@ -39,7 +39,7 @@ public class ConflictController {
     @GetMapping("/conflict")
     public String conflictPage(Model model, Principal p, @RequestParam("id") Long id){
 
-        BorrowingProcess borrowingProcess = borrowingProcessService.getBorrowingProcess(id);
+        BorrowingProcess borrowingProcess = borrowingProcessService.get(id);
         model.addAttribute( "borrowingProcess", borrowingProcess);
         User borrower = userService.getBorrowerFromBorrowingProcessId(id);
         model.addAttribute("borrower", borrower);
@@ -48,7 +48,7 @@ public class ConflictController {
 
     @PostMapping("/saveConflict")
     public String saveConflict(@RequestParam("id") Long id, String problem){
-        BorrowingProcess process = borrowingProcessService.getBorrowingProcess(id);
+        BorrowingProcess process = borrowingProcessService.get(id);
         Item item =  borrowingProcessService.getItemFromProcess(process);
         conflictService.create(problem, item, item.getLender(), userService.getBorrowerFromBorrowingProcessId(id), process);
         return "redirect:/account";

@@ -64,6 +64,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 			<div class="alert alert-success" role="alert" th:if="${saved}" >Objekt erstellt.</div>
 			<div class="alert alert-success" role="alert" th:if="${returned}" >Objekt zurückerhalten.</div>
 			<div class="alert alert-danger" role="alert" th:if="${notChangeable}" >Objekt nicht veränderbar. Es sind noch Requests, Verleihungen oder Konflikte offen.</div>
+			<div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${noCredit}" >Der Anfragensteller hat nicht genug ProPray-Guthaben.</div>
             <div class="alert alert-danger" role="alert" th:if="${notLender}" >Keine Berechtigung.</div>
 			<form style="padding: 20px" class="form-horizontal">
 				<div class="media">

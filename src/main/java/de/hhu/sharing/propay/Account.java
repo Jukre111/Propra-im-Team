@@ -20,8 +20,4 @@ public class Account {
         this.amount = amount;
         this.reservations = reservations;
     }
-
-    public int getLatestReservationId(){
-        return reservations.get(reservations.size() - 1).getId();
-    }
 }

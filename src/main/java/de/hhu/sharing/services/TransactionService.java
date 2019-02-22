@@ -3,6 +3,7 @@ package de.hhu.sharing.services;
 import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.data.TransactionRepository;
+import de.hhu.sharing.model.BorrowingProcess;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.Request;
 import de.hhu.sharing.propay.Transaction;
@@ -19,10 +20,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class TransactionService {
 
     @Autowired
-    ItemRepository itemRepo;
-
-    @Autowired
-    RequestRepository reqRepo;
+    private TransactionRepository transactions;
 
     @Autowired
     private ProPayService proPayService;
@@ -33,9 +31,6 @@ public class TransactionService {
     @Autowired
     private RequestService requestService;
 
-    @Autowired
-    private TransactionRepository transactions;
-
     public List<Transaction> getAllFromSender(User user){
         return transactions.findAllBySender(user);
     }
@@ -44,22 +39,13 @@ public class TransactionService {
         return transactions.findAllByReceiver(user);
     }
 
-    public int createTransaction(Long requestId){
-        Item item = itemService.getFromRequestId(requestId);
-        Request request = requestService.get(requestId);
-        User borrower = request.getRequester();
-        User lender = item.getLender();
-
-        int days = (int) DAYS.between(request.getPeriod().getStartdate(),request.getPeriod().getEnddate()) + 1;
+    public void createTransaction(BorrowingProcess process, User borrower, User lender){
+        Item item = process.getItem();
+        int days = (int) DAYS.between(process.getPeriod().getStartdate(),process.getPeriod().getEnddate()) + 1;
         int rent = item.getRental() * days;
-
-        Transaction transaction = new Transaction(rent, item.getDeposit(), item, borrower, lender);
-        if(proPayService.checkFinances(borrower, item, request.getPeriod().getStartdate(), request.getPeriod().getStartdate())){
-            proPayService.transferMoney(borrower, lender, rent);
-            proPayService.createDeposit(borrower, lender, transaction);
-        } else {
-            return -42;
-        }
-        return 200;
+        Transaction transaction = new Transaction(rent, item.getDeposit(),process.getId(), item, borrower, lender);
+        proPayService.transferMoney(borrower, lender, rent);
+        proPayService.createDeposit(borrower, lender, transaction);
+        transactions.save(transaction);
     }
 }

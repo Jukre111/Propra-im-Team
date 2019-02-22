@@ -63,23 +63,16 @@ public class ProPayService {
         int amount = transaction.getDeposit();
         String URL = this.URL + "reservation/reserve/" + sender.getUsername() + "/" + receiver.getUsername() + "?amount=" + amount;
         this.callURL(URL, "POST");
-        Account account = this.getAccount(sender);
-        if (account == null)
-            return;
-        else {
-            transaction.setReservationId(account.getLatestReservationId());
-            transactions.save(transaction);
-        }
     }
 
     public void cancelDeposit(User sender, Transaction transaction) {
-        int reservationId = transaction.getReservationId();
+        Long reservationId = transaction.getId();
         String URL = this.URL + "reservation/release/" + sender.getUsername() + "?reservationId=" + reservationId;
         this.callURL(URL, "POST");
     }
 
     public void collectDeposit(User sender, Transaction transaction) {
-        int reservationId = transaction.getReservationId();
+        Long reservationId = transaction.getId();
         String URL = this.URL + "reservation/punish/" + sender.getUsername() + "?reservationId=" + reservationId;
         this.callURL(URL, "POST");
         transaction.setDepositRevoked(true);
@@ -91,6 +84,7 @@ public class ProPayService {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(method);
             connection.connect();
+            connection.getResponseCode();
         } catch (IOException e) {
             throw new RuntimeException("ProPay not reachable!");
         }

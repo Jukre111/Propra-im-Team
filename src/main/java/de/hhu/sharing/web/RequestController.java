@@ -1,6 +1,7 @@
 package de.hhu.sharing.web;
 
 import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.Request;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,25 +77,27 @@ public class RequestController {
     }
 
     @GetMapping("/acceptRequest")
-    public String acceptRequest(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId, Principal p, RedirectAttributes redirectAttributes){
+    public String acceptRequest(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
-        if(!requestService.isLender(requestId, user)){
+        Item item = itemService.getFromRequestId(id);
+        Request request = requestService.get(id);
+        if(!requestService.isLender(id, user)){
             redirectAttributes.addFlashAttribute("notLender",true);
             return "redirect:/messages";
         }
-        if(requestService.isOutdated(requestId)){
+        if(requestService.isOutdated(id)){
             redirectAttributes.addFlashAttribute("outdatedRequest",true);
             return "redirect:/messages";
         }
-        if(requestService.isOverlappingWithAvailability(requestId)){
+        if(requestService.isOverlappingWithAvailability(id)){
             redirectAttributes.addFlashAttribute("overlappingRequest",true);
             return "redirect:/messages";
         }
-        if(transactionService.createTransaction(requestId) != 200) {
-            redirectAttributes.addFlashAttribute("propayError",true);
+        if(!proPayService.checkFinances(request.getRequester(), item, request.getPeriod().getStartdate(), request.getPeriod().getEnddate())){
+            redirectAttributes.addFlashAttribute("noCredit",true);
             return "redirect:/messages";
         }
-        processService.accept(requestId);
+        processService.accept(id);
         redirectAttributes.addFlashAttribute("accepted",true);
         return "redirect:/messages";
     }

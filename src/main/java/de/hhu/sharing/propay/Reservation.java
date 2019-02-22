@@ -5,14 +5,14 @@ import lombok.Data;
 @Data
 public class Reservation {
 
-    private int id;
+    private Long id;
     private int amount;
 
     public Reservation(){
     }
 
-    public Reservation(int reservationId, int amount){
+    public Reservation(Long id, int amount){
+        this.id = id;
         this.amount = amount;
-        this.id = reservationId;
     }
 }

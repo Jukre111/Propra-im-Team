@@ -32,6 +32,9 @@ public class BorrowingProcessService {
     private ProPayService proService;
 
     @Autowired
+    private TransactionService transactionService;
+
+    @Autowired
     private TransactionRepository transRepo;
 
     public BorrowingProcess get(Long id) {
@@ -50,24 +53,18 @@ public class BorrowingProcessService {
         Request request = requestService.get(requestId);
         Item item = itemService.getFromRequestId(requestId);
         item.addToPeriods(request.getPeriod());
-        this.createProcessForUsers(item, request);
+        this.createProcess(item, request);
         requestService.deleteOverlappingRequestsFromItem(request, item);
-
     }
 
-    private void createProcessForUsers(Item item, Request request) {
+    private void createProcess(Item item, Request request) {
         BorrowingProcess process = new BorrowingProcess(item, request.getPeriod());
         processes.save(process);
-
-        ArrayList <BorrowingProcess> listProcesses = (ArrayList<BorrowingProcess>) processes.findAll();
-        BorrowingProcess process1 = listProcesses.get(listProcesses.size()-1);
-        List<Transaction> list = transRepo.findAll();
-        Transaction trans = list.get(list.size()-1);
-        trans.setProcessId(process1.getId());
-        transRepo.save(trans);
-
-        request.getRequester().addToBorrowed(process);
-        item.getLender().addToLend(process);
+        User borrower = request.getRequester();
+        User lender = item.getLender();
+        transactionService.createTransaction(process, borrower, lender);
+        borrower.addToBorrowed(process);
+        lender.addToLend(process);
     }
 
     public void returnItem(Long processId, User lender){
@@ -79,10 +76,5 @@ public class BorrowingProcessService {
         process.getItem().removeFromPeriods(process.getPeriod());
         processes.delete(process);
 
-    }
-
-    public BorrowingProcess getBorrowingProcess(Long id){
-    BorrowingProcess borrowingProcess = processes.findById(id).orElseThrow(()-> new RuntimeException("BorrowindProcess not found."));
-    return borrowingProcess;
     }
 }
