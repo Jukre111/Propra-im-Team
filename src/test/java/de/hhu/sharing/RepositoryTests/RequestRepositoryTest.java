@@ -31,6 +31,7 @@ public class RequestRepositoryTest {
         LocalDate enddate=  LocalDate.of(2000,2,2);
         LocalDate date =  LocalDate.of(1996,2,12);
         Period period = new Period(startdate, enddate);
+        
         Address address = new Address("unistrase","duesseldorf", 40233);
         User user1 = new User("user1","password","role","lastname","forname", "email", date, address);
         User user2 = new User("user2","password","role","lastname","forname", "email", date, address);
