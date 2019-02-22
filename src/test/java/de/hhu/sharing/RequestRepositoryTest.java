@@ -4,11 +4,13 @@ import de.hhu.sharing.data.MessageRepository;
 import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.*;
+import de.hhu.sharing.storage.StorageService;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
@@ -23,6 +25,10 @@ public class RequestRepositoryTest {
 
     @Autowired
     RequestRepository reqRepo;
+
+    @MockBean
+    StorageService storageService;
+
 
     public ArrayList<Request> createRequests(){
 

@@ -3,12 +3,14 @@ package de.hhu.sharing;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.User;
+import de.hhu.sharing.storage.StorageService;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
@@ -18,8 +20,13 @@ import java.util.Optional;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class UserRepositoryTest {
+
     @Autowired
     UserRepository userRepo;
+
+    @MockBean
+    StorageService storageService;
+
 
     public ArrayList<User> createUsers(){
         User user1 = new User();
