@@ -10,15 +10,15 @@
             var endDt = document.getElementById("enddate").value;
             var button = document.getElementById("button");
 
-            if(startDt && new Date(startDt).getTime() <= Date.now()){
+            if(startDt && new Date(startDt).getTime() < Date.now()){
                 console.log("failure");
                 button.disabled = true;
-                alert("Das Startdatum darf nicht vor morgen liegen!");
+                alert("Das Startdatum kann nicht vor heute liegen!");
             }
             else if(startDt && endDt && new Date(startDt).getTime() > new Date(endDt).getTime()){
                 console.log("failure");
                 button.disabled = true;
-                alert("Das Enddatum darf nicht vor dem Startdatum liegen!");
+                alert("Das Enddatum kann nicht vor dem Startdatum liegen!");
             }
             else {
                 console.log("work work work");

@@ -85,6 +85,14 @@ public class RequestController {
             redirectAttributes.addFlashAttribute("notLender",true);
             return "redirect:/messages";
         }
+        if(requestService.isOutdated(requestId)){
+            redirectAttributes.addFlashAttribute("outdatedRequest",true);
+            return "redirect:/messages";
+        }
+        if(requestService.isOverlappingWithAvailability(requestId)){
+            redirectAttributes.addFlashAttribute("overlappingRequest",true);
+            return "redirect:/messages";
+        }
         if(tranService.createTransaction(requestId, itemId) != 200) {
             redirectAttributes.addFlashAttribute("propayError",true);
             return "redirect:/messages";

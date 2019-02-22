@@ -44,7 +44,17 @@ public class RequestService {
         Item item = itemService.getFromRequestId(request.getId());
         item.removeFromRequests(request);
         requests.delete(request);
+    }
 
+    public boolean isOverlappingWithAvailability(Long requestId) {
+        Request request = this.get(requestId);
+        Item item = itemService.getFromRequestId(requestId);
+        return !item.isAvailableAt(request.getPeriod());
+    }
+
+    public boolean isOutdated(Long requestId) {
+        Request request = this.get(requestId);
+        return request.getPeriod().isOutdated();
     }
 
     public void deleteOverlappingRequestsFromItem(Request request, Item item) {
