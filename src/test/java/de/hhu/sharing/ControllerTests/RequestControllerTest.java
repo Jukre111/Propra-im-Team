@@ -5,6 +5,7 @@ import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.Request;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.security.SecurityConfig;
 import de.hhu.sharing.services.*;
@@ -104,34 +105,40 @@ public class RequestControllerTest{
     @WithMockUser
     @Test
     public void retrieveStatusDeleteRequest()throws Exception{
-//        User user = createUser();
-//        Mockito.when(userService.get("user")).thenReturn(user);
-//        Mockito.when(requestService.get(1L).getRequester()).thenReturn(user);
-//        mvc.perform(MockMvcRequestBuilders.get("/deleteRequest?id=1"))
-//                .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
+        User user = createUser();
+        Request request = new Request();
+        request.setRequester(user);
+        Mockito.when(userService.get("user")).thenReturn(user);
+        Mockito.when(requestService.get(1L)).thenReturn(request);
+        mvc.perform(MockMvcRequestBuilders.get("/deleteRequest?id=1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
     }
 
 
     @WithMockUser
     @Test
     public void retrieveStatusAcceptRequest()throws Exception{
-//        User user = createUser();
-//        Mockito.when(userService.get("user")).thenReturn(user);
-//        Mockito.when(itemService.getFromRequestId(1L).getLender()).thenReturn(user);
-//        Mockito.when(transService.createTransaction(1L, 2L)).thenReturn(200);
-//        mvc.perform(MockMvcRequestBuilders.get("/acceptRequest?requestId=1&itemId=2"))
-//                .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
+        User lender = createUser();
+        Item item = new Item ("item","desc1", 10, 500, lender);
+        item.setId(2L);
+        Mockito.when(userService.get("user")).thenReturn(lender);
+        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
+        Mockito.when(transService.createTransaction(1L, 2L)).thenReturn(200);
+        mvc.perform(MockMvcRequestBuilders.get("/acceptRequest?requestId=1&itemId=2").param("id", "1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
     }
 
 
     @WithMockUser
     @Test
     public void retrieveStatusDeclineRequest()throws Exception{
-//        User user = createUser();
-//        Mockito.when(userService.get("user")).thenReturn(user);
-//        Mockito.when(itemService.getFromRequestId(1L).getLender()).thenReturn(user);
-//        mvc.perform(MockMvcRequestBuilders.get("/declineRequest?requestId=1&itemId=2"))
-//                .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
+        User lender = createUser();
+        Item item = new Item ("item","desc1", 10, 500, lender);
+        item.setId(2L);
+        Mockito.when(userService.get("user")).thenReturn(lender);
+        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
+        mvc.perform(MockMvcRequestBuilders.get("/declineRequest?requestId=1&itemId=2").param("id", "1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
     }
 
 
