@@ -64,32 +64,44 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                 </div>
             </div>
             <div style="padding: 20px">
+                <font size="4">Eingegangene Transaktionen</font>
                 <table>
                     <tr>
-                        <th width="20%"><font size="4">Miete</font></th>
-                        <th width="20%">Kaution</th>
-                        <th width="30%">Artikel</th>
-                        <th width="30%">Empfaenger</th>
+                        <th width="10%">Miete</th>
+                        <th width="10%">Kaution</th>
+                        <th width="10%">Kaution eingezogen</th>
+                        <th width="20%">Artikel</th>
+                        <th width="20%">Sender</th>
                     </tr>
                     <tr th:each="sendelement : ${send}">
                         <td th:text="${sendelement.wholeRent}"></td>
                         <td th:text="${sendelement.deposit}"></td>
+                        <td>
+                            <span th:if="${sendelement.depositRevoked == true}">Ja</span>
+                            <span th:unless="${sendelement.depositRevoked == true}">Nein</span>
+                        </td>
                         <td th:text="${sendelement.item.getName()}"></td>
                         <td th:text="${sendelement.receiver.getUsername()}"></td>
                     </tr>
                 </table>
             </div>
             <div style="padding: 20px">
+                <font size="4">Ausgegangene Transaktionen</font>
                 <table>
                     <tr>
-                        <th width="20%"><font size="4">Miete</font></th>
-                        <th width="20%">Kaution</th>
-                        <th width="30%">Artikel</th>
-                        <th width="30%">Sender</th>
+                        <th width="10%">Miete</th>
+                        <th width="10%">Kaution</th>
+                        <th width="10%">Kaution entzogen</th>
+                        <th width="20%">Artikel</th>
+                        <th width="20%">Empfaenger</th>
                     </tr>
                     <tr th:each="receiveelement : ${received}">
                         <td th:text="${receiveelement.wholeRent}"></td>
                         <td th:text="${receiveelement.deposit}"></td>
+                        <td>
+                            <span th:if="${receiveelement.depositRevoked == true}">Ja</span>
+                            <span th:unless="${receiveelement.depositRevoked == true}">Nein</span>
+                        </td>
                         <td th:text="${receiveelement.item.getName()}"></td>
                         <td th:text="${receiveelement.sender.getUsername()}"></td>
                     </tr>

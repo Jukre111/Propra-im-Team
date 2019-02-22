@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
@@ -60,10 +61,14 @@ public class ItemController {
     }
 
     @PostMapping("/saveItem")
-    public String saveItem(Long id, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("rental") Integer rental, @RequestParam("deposit") Integer deposit, Principal p, RedirectAttributes redirectAttributes){
+    public String saveItem(Long id, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("rental") Integer rental, @RequestParam("deposit") Integer deposit, @RequestParam("file") MultipartFile file , Principal p, RedirectAttributes redirectAttributes){
+//        if(!item.isAvailable()){
+//            redirectAttributes.addFlashAttribute("notAvailable",true);
+//            return "redirect:/account";
+//        }
         User user = userService.get(p.getName());
         if(id == null){
-            itemService.create(name, description, rental, deposit, user);
+            itemService.create(name, description, rental, deposit, user, file);
             redirectAttributes.addFlashAttribute("saved",true);
         }
         else {

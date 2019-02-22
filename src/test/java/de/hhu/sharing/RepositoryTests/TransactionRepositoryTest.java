@@ -1,24 +1,32 @@
-package de.hhu.sharing;
+package de.hhu.sharing.RepositoryTests;
 
 import de.hhu.sharing.data.TransactionRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.propay.Transaction;
 import de.hhu.sharing.model.User;
+import de.hhu.sharing.storage.StorageService;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class TransactionRepositoryTest {
+
     @Autowired
     TransactionRepository transRepo;
+
     @Autowired
     UserRepository userRepo;
+
+    @MockBean
+    StorageService storageService;
+
 
     @Test
     public void testFindAll() {

@@ -19,7 +19,10 @@ public class Item {
     private String description;
     private int rental;     //per Day
     private int deposit;
-
+    
+    @OneToOne
+    private Image image;
+    
     @ManyToOne
     private User lender;
 
@@ -40,6 +43,16 @@ public class Item {
         this.lender = lender;
     }
 
+    public Item(String name, String description, int rental, int deposit, User lender, Image image){
+        this.name = name;
+        this.description = description;
+        this.rental = rental;
+        this.deposit = deposit;
+        this.lender = lender;
+        this.image = image;
+    }
+    
+    
     public void addToRequests(Request request) {
         requests.add(request);
     }
