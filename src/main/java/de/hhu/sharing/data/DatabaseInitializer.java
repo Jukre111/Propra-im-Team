@@ -7,7 +7,7 @@ import de.hhu.sharing.services.FileSystemStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
-import org.springframework.mock.web.MockMultipartFile;
+//import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
@@ -59,7 +59,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
         initRequests(faker);
     }
 
-    private MultipartFile getImageFile() throws FileNotFoundException {
+   /* private MultipartFile getImageFile() throws FileNotFoundException {
     	File file = ResourceUtils.getFile(
     			"classpath:nyan_cat.gif");
     	FileInputStream input;
@@ -72,15 +72,15 @@ public class DatabaseInitializer implements ServletContextInitializer {
 			e.printStackTrace();
 		}
 		return multipartFile;
-    }
+    }*/
     
     private void initUsers(Faker faker){
-    	MultipartFile nyanCat = null;
+    	/*MultipartFile nyanCat = null;
 		try {
 			nyanCat = getImageFile();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}
+		}*/
         for(int i = 1; i < 21; i++){
             Address address = new Address(
                     faker.address().streetAddress(),
@@ -93,7 +93,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
                     faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                     address);
             users.save(user);
-        	fileService.storeUser(nyanCat, user);
+        	//fileService.storeUser(nyanCat, user);
         }
     }
 
