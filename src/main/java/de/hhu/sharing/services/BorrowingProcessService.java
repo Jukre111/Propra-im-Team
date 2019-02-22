@@ -71,7 +71,7 @@ public class BorrowingProcessService {
         BorrowingProcess process = this.get(processId);
         User borrower = userService.getBorrowerFromBorrowingProcessId(processId);
 
-        proService.cancelDeposit(borrower,transRepo.findByProcessId(processId));
+        proService.releaseDeposit(borrower, transactionService.getFromProcessId(processId));
         userService.removeProcessFromProcessLists(lender, process);
         process.getItem().removeFromPeriods(process.getPeriod());
         processes.delete(process);

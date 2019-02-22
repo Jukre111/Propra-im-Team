@@ -2,6 +2,7 @@ package de.hhu.sharing.data;
 
 import com.github.javafaker.Faker;
 import de.hhu.sharing.model.*;
+import de.hhu.sharing.services.ProPayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,6 +32,9 @@ public class DatabaseInitializer implements ServletContextInitializer {
 
     @Autowired
     private ConflictRepository conflicts;
+
+    @Autowired
+    private ProPayService proPayService;
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException{

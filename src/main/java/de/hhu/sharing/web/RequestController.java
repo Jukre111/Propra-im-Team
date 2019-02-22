@@ -51,7 +51,7 @@ public class RequestController {
     public String saveRequest(Long id, String startdate, String enddate, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         Item item = itemService.get(id);
-        if(!proPayService.checkFinances(user, item, LocalDate.parse(startdate), LocalDate.parse(enddate))){
+        if(!proPayService.enoughCredit(user, item, LocalDate.parse(startdate), LocalDate.parse(enddate))){
             redirectAttributes.addFlashAttribute("noCredit",true);
             return "redirect:/";
         }
@@ -93,7 +93,7 @@ public class RequestController {
             redirectAttributes.addFlashAttribute("overlappingRequest",true);
             return "redirect:/messages";
         }
-        if(!proPayService.checkFinances(request.getRequester(), item, request.getPeriod().getStartdate(), request.getPeriod().getEnddate())){
+        if(!proPayService.enoughCredit(request.getRequester(), item, request.getPeriod().getStartdate(), request.getPeriod().getEnddate())){
             redirectAttributes.addFlashAttribute("noCredit",true);
             return "redirect:/messages";
         }

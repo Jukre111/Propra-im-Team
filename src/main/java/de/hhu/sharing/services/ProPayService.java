@@ -20,20 +20,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @Service
 public class ProPayService {
 
-    @Autowired
-    private TransactionRepository transactions;
-
     private RestTemplate rt = new RestTemplate();
     private String URL = "http://localhost:8888/";
-
-    /*
-        ReservationID is definite in ProPay, meaning each ReservationID
-        no matter from whom to whom is increase by one.
-        Transfer and Reservation from Money only works,
-        as long as the SourceUser has enough money, else there is an error message.
-        The number of the error message is returned to another service
-        which has to deal with it.
-     */
 
     public Account getAccount(User user) {
         String URL = this.URL + "account/" + user.getUsername() + "/";
@@ -42,38 +30,40 @@ public class ProPayService {
         return new Gson().fromJson(jsonAccount, Account.class);
     }
 
-    public boolean checkFinances(User user, Item item, LocalDate startdate, LocalDate enddate){
+    public boolean enoughCredit(User user, Item item, LocalDate startdate, LocalDate enddate){
         int days = (int) DAYS.between(startdate, enddate) + 1;
         int rent = item.getRental() * days;
         int amount = this.getAccount(user).getAmount();
         return amount >= (rent + item.getDeposit());
     }
 
-    public void raiseBalance(User user, int amount) {
+    public void rechargeCredit(User user, int amount) {
         String URL = this.URL + "account/" + user.getUsername() + "?amount=" + amount;
         this.callURL(URL, "POST");
     }
 
-    public void transferMoney(User sender, User receiver, int amount) {
-        String URL = this.URL + "account/" + sender.getUsername() + "/transfer/" + receiver.getUsername() + "?amount=" + amount;
+    public void initiateTransaction(Transaction transaction) {
+        String URL = this.URL
+                + "account/" + transaction.getSender().getUsername()
+                + "/transfer/" + transaction.getReceiver().getUsername()
+                + "?amount=" + transaction.getWholeRent();
         this.callURL(URL, "POST");
+        URL = this.URL
+                + "reservation/reserve/" + transaction.getSender().getUsername()
+                + "/" + transaction.getReceiver().getUsername()
+                + "?amount=" + transaction.getDeposit();
+        this.callURL(URL, "POST");
+        Account account = this.getAccount(transaction.getSender());
+        transaction.setId(account.getLastReservationId());
     }
 
-    public void createDeposit(User sender, User receiver, Transaction transaction) {
-        int amount = transaction.getDeposit();
-        String URL = this.URL + "reservation/reserve/" + sender.getUsername() + "/" + receiver.getUsername() + "?amount=" + amount;
-        this.callURL(URL, "POST");
-    }
-
-    public void cancelDeposit(User sender, Transaction transaction) {
-        Long reservationId = transaction.getId();
-        String URL = this.URL + "reservation/release/" + sender.getUsername() + "?reservationId=" + reservationId;
+    public void releaseDeposit(User sender, Transaction transaction) {
+        String URL = this.URL + "reservation/release/" + sender.getUsername() + "?reservationId=" + transaction.getId();
         this.callURL(URL, "POST");
     }
 
     public void collectDeposit(User sender, Transaction transaction) {
-        Long reservationId = transaction.getId();
-        String URL = this.URL + "reservation/punish/" + sender.getUsername() + "?reservationId=" + reservationId;
+        String URL = this.URL + "reservation/punish/" + sender.getUsername() + "?reservationId=" + transaction.getId();
         this.callURL(URL, "POST");
         transaction.setDepositRevoked(true);
     }
@@ -89,9 +79,4 @@ public class ProPayService {
             throw new RuntimeException("ProPay not reachable!");
         }
     }
-
-    public void changeTemplateTo(RestTemplate rt) {
-        this.rt = rt;
-    }
-
 }

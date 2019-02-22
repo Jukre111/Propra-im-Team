@@ -14,12 +14,11 @@ import javax.persistence.ManyToOne;
 public class Transaction {
 
     @Id
-    @GeneratedValue
     private Long id;
     private int wholeRent;
     private int deposit;
     private Long processId;
-    private boolean depositRevoked;
+    private boolean depositRevoked = false;
 
     @ManyToOne
     private Item item;
@@ -31,14 +30,12 @@ public class Transaction {
     private User receiver;
 
     public Transaction() {
-        depositRevoked = false;
     }
 
     public Transaction(int wholeRent, int deposit, Long processId, Item item, User sender, User receiver) {
         this.wholeRent = wholeRent;
         this.deposit = deposit;
         this.processId = processId;
-        this.depositRevoked = false;
         this.item = item;
         this.sender = sender;
         this.receiver = receiver;

@@ -20,4 +20,11 @@ public class Account {
         this.amount = amount;
         this.reservations = reservations;
     }
+
+    public Long getLastReservationId() {
+        if(reservations.isEmpty()){
+            return null;
+        }
+        return reservations.get(reservations.size() - 1).getId();
+    }
 }

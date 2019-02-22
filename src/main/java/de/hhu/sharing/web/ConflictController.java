@@ -22,9 +22,6 @@ public class ConflictController {
     private UserService userService;
 
     @Autowired
-    private ItemService itemService;
-
-    @Autowired
     private ConflictService conflictService;
 
     @Autowired
@@ -34,7 +31,7 @@ public class ConflictController {
     private ProPayService proService;
 
     @Autowired
-    private TransactionRepository transRepo;
+    private  TransactionService transactionService;
 
     @GetMapping("/conflict")
     public String conflictPage(Model model, Principal p, @RequestParam("id") Long id){
@@ -74,7 +71,7 @@ public class ConflictController {
 
         BorrowingProcess process = conflict.getProcess();
 
-        proService.cancelDeposit(borrower,transRepo.findByProcessId(process.getId()));
+        proService.releaseDeposit(borrower, transactionService.getFromProcessId(process.getId()));
         conflictService.removeConflict(conflict);
         borrowingProcessService.returnItem(process.getId(), owner);
 
@@ -91,7 +88,7 @@ public class ConflictController {
 
         BorrowingProcess process = conflict.getProcess();
 
-        proService.collectDeposit(borrower,transRepo.findByProcessId(process.getId()));
+        proService.collectDeposit(borrower, transactionService.getFromProcessId(process.getId()));
         conflictService.removeConflict(conflict);
         borrowingProcessService.returnItem(process.getId(), owner);
 
