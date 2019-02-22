@@ -56,7 +56,7 @@ public class TransactionServiceTest {
         request.setRequester(borrower);
         Mockito.when(proService.showAccount(borrower.getUsername())).thenReturn(new Account("User", 200, reservations));
 
-        Assertions.assertThat(transSevice.checkFinances(request, item)).isTrue();
+        Assertions.assertThat(transSevice.checkFinances(request.getRequester(), item, request.getPeriod().getStartdate(), request.getPeriod().getEnddate())).isTrue();
     }
 
     @Test
@@ -76,7 +76,7 @@ public class TransactionServiceTest {
         request.setRequester(borrower);
         Mockito.when(proService.showAccount(borrower.getUsername())).thenReturn(new Account("User", 100, reservations));
 
-        Assertions.assertThat(transSevice.checkFinances(request, item)).isFalse();
+        Assertions.assertThat(transSevice.checkFinances(request.getRequester(), item, request.getPeriod().getStartdate(), request.getPeriod().getEnddate())).isFalse();
     }
 
 }

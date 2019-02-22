@@ -30,4 +30,9 @@ public class Period {
                 || startdate.isBefore(period.getEnddate()) && enddate.isAfter(period.getEnddate())
                 || startdate.isAfter(period.getStartdate()) && enddate.isBefore(period.getEnddate());
     }
+
+    public boolean isOutdated() {
+        return startdate.isBefore(LocalDate.now())
+                || startdate.isEqual(LocalDate.now());
+    }
 }

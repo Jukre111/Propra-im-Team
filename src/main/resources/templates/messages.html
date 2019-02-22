@@ -20,7 +20,12 @@
 <body>
 
 <div layout:fragment="body">
-    <div class="alert alert-success" role="alert" th:if="${itemAccepted}" >Objekt erfolgreich verliehen. Überschneidende Anfragen wurden gelöscht.</div>
+    <div class="alert alert-success" role="alert" th:if="${accepted}" >Objekt verliehen. Überschneidende Anfragen wurden gelöscht.</div>
+    <div class="alert alert-success" role="alert" th:if="${deleted}" >Anfrage erfolgreich gelöscht.</div>
+    <div class="alert alert-success" role="alert" th:if="${declined}" >Anfrage abgelehnt.</div>
+    <div class="alert alert-danger" role="alert" th:if="${notRequester}" >Keine Berechtigung Anfrage zu löschen.</div>
+    <div class="alert alert-danger" role="alert" th:if="${notLender}" >Keine Berechtigung Anfrage beantzuworten.</div>
+    <div class="alert alert-danger" role="alert" th:if="${propayError}" >ProPay-Fehler.</div>
     <div class="row" style="padding: 20px">
         <div class="col-sm-5" style="padding: 20px; margin-left: 30px">
             <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name">Anfragen</span></h1>
@@ -42,11 +47,10 @@
                                 <td th:text="${request.period.startdate}"></td>
                                 <td th:text="${request.period.enddate}"></td>
                                 <td>
-                                    <a type="buttfaker.date().past(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                    faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()on" class="indexbtn" th:href="@{'/accept?requestId=' + ${request.id} + '&itemId=' + ${item.id}}">Akzeptieren</a>
+                                    <a type="button" class="indexbtn" th:href="@{'/acceptRequest?requestId=' + ${request.id} + '&itemId=' + ${item.id}}">Akzeptieren</a>
                                 </td>
                                 <td>
-                                    <a class="indexbtn" th:href="@{'/declineRequest?requestId=' + ${request.id} + '&itemId=' + ${item.id}}">Ablehnen</a>
+                                    <a class="indexbtn" th:href="@{'/declineRequest?id=' + ${request.id}}">Ablehnen</a>
                                 </td>
                             </tr>
                         </table>
@@ -73,7 +77,7 @@
                                     <td th:text="${myRequest.period.startdate}"></td>
                                     <td th:text="${myRequest.period.enddate}"></td>
                                     <td>
-                                        <a class="indexbtn" th:href="@{'/deleteRequest?requestId=' + ${myRequest.id} + '&itemId=' + ${myReqItem.id}}">Löschen</a>
+                                        <a class="indexbtn" th:href="@{'/deleteRequest?id=' + ${myRequest.id}}">Löschen</a>
                                     </td>
                                 </tr>
                             </table>

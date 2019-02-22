@@ -28,7 +28,4 @@ public class Request {
         this.period = period;
         this.requester = requester;
     }
-
-
-
 }
