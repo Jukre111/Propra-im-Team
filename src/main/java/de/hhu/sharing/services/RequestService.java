@@ -17,19 +17,12 @@ public class RequestService {
     private RequestRepository requests;
 
     @Autowired
-    private ItemRepository items;
-
-    @Autowired
     private ItemService itemService;
 
-    @Autowired
-    private TransactionService transService;
-
     public Request get(Long id){
-        Request request = this.requests.findById(id)
+        return this.requests.findById(id)
                 .orElseThrow(
                         () -> new RuntimeException("Request not found!"));
-        return request;
     }
 
     public void create(Long itemId, LocalDate startdate, LocalDate enddate, User user) {

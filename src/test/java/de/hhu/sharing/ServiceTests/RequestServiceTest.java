@@ -1,4 +1,5 @@
 package de.hhu.sharing.ServiceTests;
+import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.model.*;
 import de.hhu.sharing.services.ItemService;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import static org.mockito.Mockito.times;
+
 public class RequestServiceTest {
 
     @Mock
@@ -21,9 +24,6 @@ public class RequestServiceTest {
 
     @Mock
     private ItemService itemService;
-
-    @Mock
-    private TransactionService transactionService;
 
     @InjectMocks
     private RequestService requestService;
@@ -41,12 +41,12 @@ public class RequestServiceTest {
     }
 
 
-    public Item generateItem() {
+    private Item generateItem() {
         User user = generateUser();
         return new Item("apfel", "lecker",1,1 ,user );
     }
 
-    public Request generateRequest() {
+    private Request generateRequest() {
         User requester = generateUser();
         Period period = new Period(LocalDate.of(2000,2,2),LocalDate.of(2000,2,3));
         return new Request(period ,requester);
@@ -58,26 +58,38 @@ public class RequestServiceTest {
         Mockito.when(requests.findById(1L)).thenReturn(Optional.of(request));
         Assert.assertEquals(requestService.get(1L), request);
     }
-//    Methods changed, to be fixed
-//    @Test
-//    public void testCreate(){
-//        User user = generateUser();
-//        requestService.create(1L, LocalDate.of(2000,2,2),LocalDate.of(2000,2,3),user);
-//        ArgumentCaptor<Request> captor = ArgumentCaptor.forClass(Request.class);
-//        Mockito.verify(requests, times(1)).save(captor.capture());
-//        Assert.assertTrue(captor.getAllValues().get(0).getRequester().equals(user));
-//    }
-//
-//    @Test
-//    public void testDelete(){
-//        User requester = generateUser();
-//        Period period = new Period(LocalDate.of(2000,2,2),LocalDate.of(2000,2,3));
-//        Request request = new Request(period ,requester);
-//        Mockito.when(requests.findById(1L)).thenReturn(Optional.of(request));
-//        requestService.delete(1L);
-//        ArgumentCaptor<Request> captor = ArgumentCaptor.forClass(Request.class);
-//        Mockito.verify(requests, times(1)).delete(captor.capture());
-//        Assert.assertTrue(captor.getAllValues().get(0).getRequester().equals(requester));
-//    }
+
+    @Test
+    public void testCreate(){
+        User user = generateUser();
+        Item item = generateItem();
+        Mockito.when(itemService.get(1L)).thenReturn(item);
+
+        requestService.create(1L, LocalDate.of(2000,2,2),LocalDate.of(2000,2,3),user);
+
+        ArgumentCaptor<Request> captor = ArgumentCaptor.forClass(Request.class);
+        Mockito.verify(requests, times(1)).save(captor.capture());
+
+        Assert.assertEquals(captor.getAllValues().get(0).getRequester(), user);
+        Assert.assertEquals(item.getRequests().get(0).getRequester(), user);
+    }
+
+    @Test
+    public void testDelete(){
+        Request request = generateRequest();
+        request.setId(1L);
+        Item item = generateItem();
+        item.addToRequests(request);
+        Mockito.when(requests.findById(1L)).thenReturn(Optional.of(request));
+        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
+
+        requestService.delete(1L);
+
+        ArgumentCaptor<Request> captor = ArgumentCaptor.forClass(Request.class);
+        Mockito.verify(requests, times(1)).delete(captor.capture());
+
+        Assert.assertEquals(captor.getAllValues().get(0), request);
+        Assert.assertTrue(item.getRequests().isEmpty());
+    }
 
 }
