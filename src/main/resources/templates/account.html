@@ -62,7 +62,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 		<div class="alert alert-success" role="alert" th:if="${edited}" >Objekt bearbeitet.</div>
 		<div class="alert alert-success" role="alert" th:if="${saved}" >Objekt erstellt.</div>
 		<div class="alert alert-danger" role="alert" th:if="${notAvailable}" >Objekt nicht verfügbar.</div>
-	<form style="padding: 20px" class="form-horizontal">
+	<div style="padding: 20px" class="form-horizontal">
 		<div class="media">
 			<div class="media-left media-middle">
 				<img class="img" id="circular--landscape" th:src="@{/getUserPic}">
@@ -111,16 +111,29 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 						<input type="number text" class="form-control" id="postcode city" name="postcode city" th:value="${address.postcode} + ' ' + ${address.city}" readonly/>
 					</div>
 				</div>
-				<div>
-				<form method="post" enctype="multipart/form-data" th:action=@{"/uploadUserPic"}>
+				<div class="form-group">
+					<label for="postcode city" class="col-sm-2 control-label">PLZ / Stadt</label>
+					<div class="col-xs-6">
+						<input type="number text" class="form-control" id="postcode city" name="postcode city" th:value="${address.postcode} + ' ' + ${address.city}" readonly/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Profilbild hochladen</label>
+					<div class="col-xs-6">
+						<form method="post" enctype="multipart/form-data" th:action="@{/handleFileUploadAvatar}">
+							<input type="file" name="file"/>
+							<input type="submit" class="indexbtn" value="hochladen"/>
+						</form>
+					</div>
+				</div>
+				<!--<div>
+				<form method="post" enctype="multipart/form-data" th:action="@{/handleFileUploadAvatar}">
        				<table>
             			<tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
             			<tr><td></td><td><input type="submit" class="indexbtn" value="Upload Image" /></td></tr>
        				</table>
     			</form>
-					<a class="indexbtn" th:href="@{/uploadUserPic}">Upload Image</a>
-				</div>
-				</div>
+				</div>-->
 				<!--<div class="form-group">
 					<label for="budget" class="col-sm-2 control-label">ProPay Guthaben</label>
 					<div class="col-xs-3">	
@@ -131,12 +144,11 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 						</div>
 					</div>
 				</div>-->
-			</div>
 			<div class="media-right media-middle" th:if="${user.role == 'ROLE_ADMIN'}">
 				<a id="conflictbtn" th:href="@{/conflictView}" style="margin-right: 150px">Konfliktlösestelle</a>
 			</div>
 		</div>
-	</form>
+	</div>
 		<div style="padding: 20px">
 			<table>
 				<tr>
