@@ -38,9 +38,7 @@ public class ItemRepositoryTest {
 
         Request request = new Request(period,user);
         requestRepo.save(request);
-        Request requestEntity = requestRepo.findById(request.getId()).get();
-
-        return requestEntity;
+        return requestRepo.findById(request.getId()).get();
     }
 
     public User createUser(String username){
@@ -48,8 +46,7 @@ public class ItemRepositoryTest {
         Address address = new Address("unistrase","duesseldorf", 40233);
         User user = new User(username,"password", "role", "lastnmae", "forname", "email",birthdate,address);
         userRepo.save(user);
-        User userEntity = userRepo.findByUsername(username).get();
-        return userEntity;
+        return userRepo.findByUsername(username).get();
     }
 
 
@@ -81,9 +78,7 @@ public class ItemRepositoryTest {
         Optional<Item> optionalItem = itemRepo.findById(items.get(0).getId());
 
         Assert.assertTrue(optionalItem.isPresent());
-        if(optionalItem.isPresent()){
-            Assertions.assertThat(optionalItem.get().getId()).isEqualTo(items.get(0).getId());
-        }
+        Assertions.assertThat(optionalItem.get().getId()).isEqualTo(items.get(0).getId());
     }
 
     @Test
