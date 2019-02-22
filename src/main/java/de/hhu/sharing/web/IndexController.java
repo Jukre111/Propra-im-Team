@@ -5,6 +5,7 @@ import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.ItemService;
+import de.hhu.sharing.services.RequestService;
 import de.hhu.sharing.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,9 @@ public class IndexController {
     @Autowired
     private ItemService itemService;
 
+    @Autowired
+    private RequestService requestService;
+
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("items", itemService.getAll());
@@ -42,6 +46,7 @@ public class IndexController {
     @GetMapping("/messages")
     public String messages(Model model, Principal p){
         User user = userService.get(p.getName());
+        requestService.deleteOutdatedRequests();
         model.addAttribute("user", user);
         model.addAttribute("allMyItems", itemService.getAllIPosted(user));
         model.addAttribute("myRequestedItems", itemService.getAllIRequested(user));

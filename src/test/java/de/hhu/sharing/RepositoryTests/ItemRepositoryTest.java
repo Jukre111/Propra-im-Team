@@ -39,19 +39,17 @@ public class ItemRepositoryTest {
         Request request = new Request(period,user);
         requestRepo.save(request);
         Request requestEntity = requestRepo.findById(request.getId()).get();
-        requestRepo.save(requestEntity);
 
-        return request;
+        return requestEntity;
     }
 
     public User createUser(String username){
-        LocalDate date = LocalDate.of(2000,1,1);
+        LocalDate birthdate = LocalDate.of(2000,1,1);
         Address address = new Address("unistrase","duesseldorf", 40233);
-        User user = new User(username,"password", "role", "lastnmae", "forname", "email",date,address);
+        User user = new User(username,"password", "role", "lastnmae", "forname", "email",birthdate,address);
         userRepo.save(user);
         User userEntity = userRepo.findByUsername(username).get();
-        userRepo.save(userEntity);
-        return user;
+        return userEntity;
     }
 
 

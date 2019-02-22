@@ -38,6 +38,10 @@ public class ConflictService {
         conflicts.save(conflict);
     }
 
+    public boolean noConflictWith(Item item) {
+        return conflicts.findAllByItem(item).isEmpty();
+    }
+
     public void removeConflict(Conflict conflict){
         conflicts.delete(conflict);
     }

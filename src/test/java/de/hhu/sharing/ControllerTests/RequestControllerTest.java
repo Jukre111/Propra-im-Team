@@ -12,6 +12,7 @@ import de.hhu.sharing.web.RequestController;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -69,12 +70,12 @@ public class RequestControllerTest{
     @Test
     public void retrieveStatusRequest()throws Exception{
         User user = createUser();
-        Item item = new Item("name", "description", 42,42, user);
+        Item item = new Item("name", "description", 42,42, new User());
 
         Mockito.when(userService.get("user")).thenReturn(user);
         Mockito.when(itemService.get(1L)).thenReturn(item);
-        mvc.perform(MockMvcRequestBuilders.get("/request?id=1"))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
+        mvc.perform(MockMvcRequestBuilders.get("/newRequest?id=1"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
 
@@ -82,8 +83,12 @@ public class RequestControllerTest{
     @Test
     public void retrieveStatusPostRequest()throws Exception{
         User user = createUser();
+        Item item = new Item("name", "description", 42,42, user);
         Mockito.when(userService.get("user")).thenReturn(user);
+        Mockito.when(itemService.get(1L)).thenReturn(item);
+        Mockito.when(transService.checkFinances(user, item, LocalDate.parse("2000-01-01"), LocalDate.parse("2000-02-02"))).thenReturn(true);
         MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
+        map.add("id", "1");
         map.add("startdate","2000-01-01");
         map.add("enddate","2000-02-02");
 
@@ -95,34 +100,34 @@ public class RequestControllerTest{
     @WithMockUser
     @Test
     public void retrieveStatusDeleteRequest()throws Exception{
-
-        MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
-        map.add("requestId","1");
-        map.add("itemId","2");
-        mvc.perform(MockMvcRequestBuilders.get("/deleteRequest").params(map))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
+//        User user = createUser();
+//        Mockito.when(userService.get("user")).thenReturn(user);
+//        Mockito.when(requestService.get(1L).getRequester()).thenReturn(user);
+//        mvc.perform(MockMvcRequestBuilders.get("/deleteRequest?id=1"))
+//                .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
     }
 
 
     @WithMockUser
     @Test
-    public void retrieveStatusAccept()throws Exception{
-        MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
-        map.add("requestId","1");
-        map.add("itemId","2");
-        mvc.perform(MockMvcRequestBuilders.get("/accept").params(map))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
+    public void retrieveStatusAcceptRequest()throws Exception{
+//        User user = createUser();
+//        Mockito.when(userService.get("user")).thenReturn(user);
+//        Mockito.when(itemService.getFromRequestId(1L).getLender()).thenReturn(user);
+//        Mockito.when(transService.createTransaction(1L, 2L)).thenReturn(200);
+//        mvc.perform(MockMvcRequestBuilders.get("/acceptRequest?requestId=1&itemId=2"))
+//                .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
     }
 
 
     @WithMockUser
     @Test
     public void retrieveStatusDeclineRequest()throws Exception{
-        MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
-        map.add("requestId","1");
-        map.add("itemId","2");
-        mvc.perform(MockMvcRequestBuilders.get("/declineRequest").params(map))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
+//        User user = createUser();
+//        Mockito.when(userService.get("user")).thenReturn(user);
+//        Mockito.when(itemService.getFromRequestId(1L).getLender()).thenReturn(user);
+//        mvc.perform(MockMvcRequestBuilders.get("/declineRequest?requestId=1&itemId=2"))
+//                .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
     }
 
 

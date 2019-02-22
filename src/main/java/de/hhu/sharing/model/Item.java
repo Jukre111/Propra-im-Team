@@ -58,4 +58,8 @@ public class Item {
         this.periods.remove(period);
     }
 
+    @Transactional
+    public boolean noPeriodsAndRequests() {
+        return periods.isEmpty() && requests.isEmpty();
+    }
 }
