@@ -20,6 +20,7 @@ public class ProPayServiceTest {
     TransactionRepository transRepo;
     @Mock
     RestTemplate rt;
+    @Spy
     @InjectMocks
     ProPayService pps = new ProPayService();
 
@@ -74,11 +75,12 @@ public class ProPayServiceTest {
                 "]}";
 
         prepareRestTemplate(URL,json);
-        pps.createDeposit(userSrc, userTar, trans);
+        Mockito.doReturn(200).when(pps).callURL(Mockito.anyString(), Mockito.anyString());
+        int response = pps.createDeposit(userSrc, userTar, trans);
         ArgumentCaptor<Transaction> captor = ArgumentCaptor.forClass(Transaction.class);
         Mockito.verify(transRepo, times(1)).save(captor.capture());
         Assert.assertTrue(captor.getAllValues().get(0).getReservationId() == 2);
-
+        Assertions.assertThat(response).isEqualTo(200);
     }
 
     @Test

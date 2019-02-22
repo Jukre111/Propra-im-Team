@@ -8,6 +8,7 @@ import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.RequestService;
 import de.hhu.sharing.services.UserService;
+import de.hhu.sharing.storage.StorageService;
 import de.hhu.sharing.web.IndexController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +33,9 @@ public class IndexControllerTest {
 
     @Autowired
     MockMvc mvc;
+
+    @MockBean
+    StorageService storeService;
 
     @MockBean
     ItemService itemService;

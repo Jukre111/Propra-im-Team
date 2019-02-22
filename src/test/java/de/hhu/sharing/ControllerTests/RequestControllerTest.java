@@ -8,6 +8,7 @@ import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.security.SecurityConfig;
 import de.hhu.sharing.services.*;
+import de.hhu.sharing.storage.StorageService;
 import de.hhu.sharing.web.RequestController;
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,6 +44,9 @@ public class RequestControllerTest{
 
     @Autowired
     MockMvc mvc;
+
+    @MockBean
+    StorageService storeService;
 
     @MockBean
     UserService userService;
