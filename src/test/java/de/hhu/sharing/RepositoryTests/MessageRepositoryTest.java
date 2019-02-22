@@ -1,4 +1,4 @@
-package de.hhu.sharing;
+package de.hhu.sharing.RepositoryTests;
 
 import de.hhu.sharing.data.MessageRepository;
 import de.hhu.sharing.model.Message;

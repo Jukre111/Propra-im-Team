@@ -1,33 +1,16 @@
-package de.hhu.sharing;
+package de.hhu.sharing.ServiceTests;
 
-import de.hhu.sharing.data.ItemRepository;
-import de.hhu.sharing.data.TransactionRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
-import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
-import de.hhu.sharing.services.ItemService;
-import de.hhu.sharing.services.ProPayService;
-import de.hhu.sharing.services.RequestService;
 import de.hhu.sharing.services.UserService;
-import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Optional;
 
-import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class UserServiceTest {
 
