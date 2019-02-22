@@ -34,19 +34,10 @@ public class BorrowingProcessService {
     @Autowired
     private TransactionService transactionService;
 
-    @Autowired
-    private TransactionRepository transRepo;
-
     public BorrowingProcess get(Long id) {
-        BorrowingProcess process = this.processes.findById(id)
+        return this.processes.findById(id)
                 .orElseThrow(
                         () -> new RuntimeException("Process not found!"));
-        return process;
-    }
-
-    public Item getItemFromProcess(BorrowingProcess process){
-        Item item = process.getItem();
-        return item;
     }
 
     public void accept(Long requestId) {
@@ -70,7 +61,6 @@ public class BorrowingProcessService {
     public void returnItem(Long processId, User lender){
         BorrowingProcess process = this.get(processId);
         User borrower = userService.getBorrowerFromBorrowingProcessId(processId);
-
         proService.releaseDeposit(borrower, transactionService.getFromProcessId(processId));
         userService.removeProcessFromProcessLists(lender, process);
         process.getItem().removeFromPeriods(process.getPeriod());

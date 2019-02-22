@@ -1,6 +1,5 @@
 package de.hhu.sharing.web;
 
-import de.hhu.sharing.data.TransactionRepository;
 import de.hhu.sharing.model.BorrowingProcess;
 import de.hhu.sharing.model.Conflict;
 import de.hhu.sharing.model.Item;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.security.Principal;
-import java.util.List;
 
 @Controller
 public class ConflictController {
@@ -46,7 +44,7 @@ public class ConflictController {
     @PostMapping("/saveConflict")
     public String saveConflict(@RequestParam("id") Long id, String problem){
         BorrowingProcess process = borrowingProcessService.get(id);
-        Item item =  borrowingProcessService.getItemFromProcess(process);
+        Item item =  process.getItem();
         conflictService.create(problem, item, item.getLender(), userService.getBorrowerFromBorrowingProcessId(id), process);
         return "redirect:/account";
     }
@@ -88,7 +86,7 @@ public class ConflictController {
 
         BorrowingProcess process = conflict.getProcess();
 
-        proService.collectDeposit(borrower, transactionService.getFromProcessId(process.getId()));
+        proService.punishDeposit(borrower, transactionService.getFromProcessId(process.getId()));
         conflictService.removeConflict(conflict);
         borrowingProcessService.returnItem(process.getId(), owner);
 

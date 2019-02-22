@@ -62,7 +62,7 @@ public class ProPayService {
         this.callURL(URL, "POST");
     }
 
-    public void collectDeposit(User sender, Transaction transaction) {
+    public void punishDeposit(User sender, Transaction transaction) {
         String URL = this.URL + "reservation/punish/" + sender.getUsername() + "?reservationId=" + transaction.getId();
         this.callURL(URL, "POST");
         transaction.setDepositRevoked(true);

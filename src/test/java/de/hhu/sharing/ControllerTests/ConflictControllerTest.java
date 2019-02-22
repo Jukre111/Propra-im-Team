@@ -17,7 +17,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -142,7 +141,7 @@ public class ConflictControllerTest {
         Conflict conflict = createConflict();
         Mockito.when(conService.get(Mockito.anyLong())).thenReturn(conflict);
         Mockito.when(transRepo.findByProcessId(1L)).thenReturn(trans);
-        Mockito.when(proService.collectDeposit("Borrower", trans)).thenReturn(200);
+        Mockito.when(proService.punishDeposit("Borrower", trans)).thenReturn(200);
 
         mvc.perform(MockMvcRequestBuilders.get("/borrower").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/conflictView"));
@@ -155,7 +154,7 @@ public class ConflictControllerTest {
         Conflict conflict = createConflict();
         Mockito.when(conService.get(Mockito.anyLong())).thenReturn(conflict);
         Mockito.when(transRepo.findByProcessId(1L)).thenReturn(trans);
-        Mockito.when(proService.collectDeposit("Borrower", trans)).thenReturn(200);
+        Mockito.when(proService.punishDeposit("Borrower", trans)).thenReturn(200);
 
         mvc.perform(MockMvcRequestBuilders.get("/owner").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/conflictView"));
