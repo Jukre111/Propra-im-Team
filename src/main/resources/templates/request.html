@@ -43,6 +43,7 @@
 <body>
 
 <div layout:fragment="body">
+    <div class="alert alert-danger" role="alert" th:if="${notAvailable}" >Objekt zum angegebenen Zeitraum nicht verfügbar.</div>
     <div class="style textPosition" style="padding: 20px">
         <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name" th:text="${item.name}"></span></h1>
         <div class="form-horizontal" style="padding-top: 60px">
