@@ -3,6 +3,8 @@ services:
 
   sharing:
     build: .
+    ports:
+      - "8080:8080"
 
   sharingDB:
     image: postgres
@@ -11,4 +13,12 @@ services:
       - POSTGRES_PASSWORD=secret
     volumes:
       - ./data:/var/lib/postgres/data
+
+  propay:
+    image: propra/propay
+    ports:
+      - "8888:8888"
+    # Optional
+    volumes:
+      - ./data:/code/data
 

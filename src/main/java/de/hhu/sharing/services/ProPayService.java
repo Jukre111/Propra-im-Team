@@ -30,7 +30,7 @@ public class ProPayService {
      */
 
     public Account showAccount(String username) {
-        String URL = "http://localhost:8888/account/" + username + "/";
+        String URL = "http://propay:8888/account/" + username;
         String jsonAccount = rt.getForObject(URL, String.class);
         Account account = new Gson().fromJson(jsonAccount, Account.class);
         return account;
@@ -46,14 +46,14 @@ public class ProPayService {
 
     //returns a http response or in case of an Exception an -1
     public int raiseBalance(String username, int amount) {
-        String URL = "http://localhost:8888/account/" + username + "?amount=" + amount;
+        String URL = "http://propay:8888/account/" + username + "?amount=" + amount;
         int response = this.callURL(URL, "POST");
         return response;
     }
 
     //returns a http response or in case of an Exception an -1
     public int transferMoney(String usernameSource, String usernameTarget, int amount) {
-        String URL = "http://localhost:8888/account/" + usernameSource + "/transfer/" + usernameTarget + "?amount=" + amount;
+        String URL = "http://propay:8888/account/" + usernameSource + "/transfer/" + usernameTarget + "?amount=" + amount;
         int response = this.callURL(URL, "POST");
         return response;
     }
@@ -61,7 +61,7 @@ public class ProPayService {
     //returns a http response or in case of an Exception an -1
     public int createDeposit(String usernameSource, String usernameTarget, Transaction trans) {
         int amount = trans.getDeposit();
-        String URL = "http://localhost:8888/reservation/reserve/" + usernameSource + "/" + usernameTarget + "?amount=" + amount;
+        String URL = "http://propay:8888/reservation/reserve/" + usernameSource + "/" + usernameTarget + "?amount=" + amount;
         int response = this.callURL(URL, "POST");
         Account account = this.showAccount(usernameSource);
         if (account == null)
@@ -76,7 +76,7 @@ public class ProPayService {
     //returns a http response or in case of an Exception an -1
     public int cancelDeposit(String usernameSource, Transaction trans) {
         int reservationId = trans.getReservationId();
-        String URL = "http://localhost:8888/reservation/release/" + usernameSource + "?reservationId=" + reservationId;
+        String URL = "http://propay:8888/reservation/release/" + usernameSource + "?reservationId=" + reservationId;
         int response = this.callURL(URL, "POST");
         return response;
     }
@@ -84,7 +84,7 @@ public class ProPayService {
     //returns a http response or in case of an Exception an -1
     public int collectDeposit(String usernameSource, Transaction trans) {
         int reservationId = trans.getReservationId();
-        String URL = "http://localhost:8888/reservation/punish/" + usernameSource + "?reservationId=" + reservationId;
+        String URL = "http://propay:8888/reservation/punish/" + usernameSource + "?reservationId=" + reservationId;
         int response = this.callURL(URL, "POST");
         trans.setDepositRevoked(true);
         return response;

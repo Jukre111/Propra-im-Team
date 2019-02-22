@@ -75,7 +75,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 						<div class="col-xs-6">
 						<input type="text" class="form-control" id="name" name="name" th:value="${user.username}" readonly/>
 						</div>
-						<a class="indexbtn" href="/propayAccount">ProPay Account</a>
+						<a class="indexbtn" th:href=@{'/propayAccount'}>ProPay Account</a>
 					</div>
 					<div class="form-group">
 						<label for="forename" class="col-sm-2 control-label">Vorname</label>
