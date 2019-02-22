@@ -26,6 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
         http.formLogin().permitAll();
         http.logout().permitAll();
+        http.csrf().disable();
         http.userDetailsService(userService);
 
     }

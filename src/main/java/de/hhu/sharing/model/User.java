@@ -25,6 +25,9 @@ public class User {
     private String email;
     private LocalDate birthdate;
 
+    @OneToOne
+    private Image image;
+    
     @Embedded
     private Address address;
 
@@ -52,6 +55,20 @@ public class User {
         this.email = email;
         this.birthdate = birthdate;
         this.address = address;
+    }
+    
+    public User(String username, String password, String role,
+            String lastname, String forename, String email,
+            LocalDate birthdate, Address address, Image image){
+    	this.username = username;
+    	this.password = password;
+    	this.role = role;
+    	this.lastname = lastname;
+    	this.forename = forename;
+    	this.email = email;
+    	this.birthdate = birthdate;
+    	this.address = address;
+    	this.image = image;
     }
 
     public void addToBorrowed(BorrowingProcess process) {

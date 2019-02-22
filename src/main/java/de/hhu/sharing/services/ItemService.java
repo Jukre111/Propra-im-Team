@@ -3,9 +3,16 @@ package de.hhu.sharing.services;
 import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
+import de.hhu.sharing.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -14,9 +21,20 @@ public class ItemService{
     @Autowired
     private ItemRepository items;
 
-    public void create(String name, String description, Integer rental, Integer deposit, User user) {
+    @Autowired
+    private ConflictService conflictService;
+    @Autowired
+    private StorageService storageService;
+
+
+    public void create(String name, String description, Integer rental, Integer deposit, User user, MultipartFile file) {
         Item item = new Item(name, description, rental, deposit, user);
         items.save(item);
+        if(file!=null) {
+        	storageService.storeItem(file, item);
+        }else {
+        	System.out.println("No picture");
+        }
     }
 
     public void edit(Long id, String name, String description, Integer rental, Integer deposit, User user) {
@@ -64,5 +82,10 @@ public class ItemService{
 
     public List<Item> searchFor(String query) {
         return this.items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query,query);
+    }
+
+    public boolean isChangeable(Long id) {
+        Item item = this.get(id);
+        return item.noPeriodsAndRequests() && conflictService.noConflictWith(item);
     }
 }

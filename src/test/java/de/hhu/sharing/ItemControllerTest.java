@@ -77,6 +77,8 @@ public class ItemControllerTest {
     @WithMockUser
     public void retrieveStatusEditItem() throws Exception{
         Item item = itemCreator();
+        Mockito.when(itemService.isChangeable(1L)).thenReturn(true);
+        Mockito.when(userService.get("user")).thenReturn(item.getLender());
         Mockito.when(itemService.get(1L)).thenReturn(item);
         mvc.perform(MockMvcRequestBuilders.get("/editItem").param("id","1"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
