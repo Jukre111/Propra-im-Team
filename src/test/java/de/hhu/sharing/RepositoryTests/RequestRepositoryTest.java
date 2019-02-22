@@ -54,6 +54,16 @@ public class RequestRepositoryTest {
     }
 
     @Test
+    public void testFindAll(){
+        ArrayList<Request> requests = createRequests();
+        reqRepo.save(requests.get(0));
+        reqRepo.save(requests.get(1));
+
+        Assertions.assertThat(reqRepo.findAll().size()).isEqualTo(2);
+
+
+    }
+    @Test
     public void testFindAllByRequester() {
 
         ArrayList<Request> requests = createRequests();
@@ -61,9 +71,6 @@ public class RequestRepositoryTest {
         reqRepo.save(requests.get(0));
         reqRepo.save(requests.get(1));
         reqRepo.save(requests.get(2));
-
-
-
 
         Assertions.assertThat(reqRepo.findAllByRequester(requests.get(0).getRequester()).size()).isEqualTo(2);
     }
