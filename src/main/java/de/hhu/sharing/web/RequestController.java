@@ -1,6 +1,5 @@
 package de.hhu.sharing.web;
 
-import de.hhu.sharing.model.BorrowingProcess;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.BorrowingProcessService;
@@ -32,7 +31,7 @@ public class RequestController {
     private RequestService requestService;
 
     @Autowired
-    private TransactionService tranService;
+    private TransactionService transactionService;
 
     @Autowired
     private BorrowingProcessService processService;
@@ -40,12 +39,11 @@ public class RequestController {
     @GetMapping("/newRequest")
     public String newRequest(@RequestParam("id") Long id, Model model, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
-        Item item = itemService.get(id);
-        if(item.getLender() == user){
+        if(itemService.isOwner(id, user)){
             redirectAttributes.addFlashAttribute("ownItem",true);
             return "redirect:/";
         }
-        model.addAttribute("item", item);
+        model.addAttribute("item", itemService.get(id));
         return "request";
     }
 
@@ -53,11 +51,11 @@ public class RequestController {
     public String saveRequest(Long id, String startdate, String enddate, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         Item item = itemService.get(id);
-        if(!tranService.checkFinances(user, item, LocalDate.parse(startdate), LocalDate.parse(enddate))){
+        if(!transactionService.checkFinances(user, item, LocalDate.parse(startdate), LocalDate.parse(enddate))){
             redirectAttributes.addFlashAttribute("noCredit",true);
             return "redirect:/";
         }
-        if(!itemService.checkAvailability(item, LocalDate.parse(startdate), LocalDate.parse(enddate))){
+        if(!itemService.isAvailableAt(item, LocalDate.parse(startdate), LocalDate.parse(enddate))){
             redirectAttributes.addFlashAttribute("notAvailable",true);
             return "redirect:/newRequest?id=" + id;
         }
@@ -69,7 +67,7 @@ public class RequestController {
     @GetMapping("/deleteRequest")
     public String deleteRequest(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
-        if(requestService.get(id).getRequester() != user){
+        if(!requestService.isRequester(id, user)){
             redirectAttributes.addFlashAttribute("notRequester",true);
             return "redirect:/messages";
         }
@@ -81,7 +79,7 @@ public class RequestController {
     @GetMapping("/acceptRequest")
     public String acceptRequest(@RequestParam("requestId") Long requestId, @RequestParam("itemId") Long itemId, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
-        if(itemService.getFromRequestId(requestId).getLender() != user){
+        if(!requestService.isLender(requestId, user)){
             redirectAttributes.addFlashAttribute("notLender",true);
             return "redirect:/messages";
         }
@@ -93,7 +91,7 @@ public class RequestController {
             redirectAttributes.addFlashAttribute("overlappingRequest",true);
             return "redirect:/messages";
         }
-        if(tranService.createTransaction(requestId, itemId) != 200) {
+        if(transactionService.createTransaction(requestId, itemId) != 200) {
             redirectAttributes.addFlashAttribute("propayError",true);
             return "redirect:/messages";
         }
@@ -105,7 +103,7 @@ public class RequestController {
     @GetMapping("/declineRequest")
     public String declineRequest(@RequestParam("id") Long id , Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
-        if(itemService.getFromRequestId(id).getLender() != user){
+        if(!requestService.isLender(id, user)){
             redirectAttributes.addFlashAttribute("notLender",true);
             return "redirect:/messages";
         }

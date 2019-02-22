@@ -57,6 +57,14 @@ public class RequestService {
         return request.getPeriod().isOutdated();
     }
 
+    public boolean isRequester(Long requestId, User user) {
+        return this.get(requestId).getRequester() == user;
+    }
+
+    public boolean isLender(Long requestId, User user) {
+        return itemService.getFromRequestId(requestId).getLender() == user;
+    }
+
     public void deleteOverlappingRequestsFromItem(Request request, Item item) {
         List<Request> requests = new ArrayList<>(item.getRequests());
         for(Request req : requests){

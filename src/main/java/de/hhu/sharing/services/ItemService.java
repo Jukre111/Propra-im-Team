@@ -77,7 +77,12 @@ public class ItemService{
         return item.noPeriodsAndRequests() && conflictService.noConflictWith(item);
     }
 
-    public boolean checkAvailability(Item item, LocalDate startdate, LocalDate enddate) {
+    public boolean isAvailableAt(Item item, LocalDate startdate, LocalDate enddate) {
         return item.isAvailableAt(new Period(startdate, enddate));
+    }
+
+    public boolean isOwner(Long id, User user) {
+        Item item = this.get(id);
+        return item.getLender() == user;
     }
 }
