@@ -30,33 +30,16 @@ public class ProPayController {
         final User user = this.userRepo.findByUsername(p.getName()).orElseThrow(
                 ()-> new RuntimeException("User not found"));
         String username = user.getUsername();
-        //User user2 = userRepo.findByUsername("user2").get();
 
         model.addAttribute("user", user);
         Account account = proPay.showAccount(username);
         model.addAttribute("amount", account.getAmount());
-
-        /*Transaction trans1 = new Transaction();
-        Transaction trans2 = new Transaction();
-        Transaction trans3 = new Transaction();
-        trans1.setSource(user1);
-        trans1.setTarget(user2);
-        trans2.setSource(user1);
-        trans2.setTarget(user2);
-        trans3.setSource(user2);
-        trans3.setTarget(user1);
-
-        transRepo.save(trans1);
-        transRepo.save(trans2);
-        transRepo.save(trans3);*/
 
         List<Transaction> sendMoney = transRepo.findBySource(user);
         model.addAttribute("send", sendMoney);
 
         List<Transaction> receivedMoney = transRepo.findByTarget(user);
         model.addAttribute("receive", receivedMoney);
-        //Transaction transaction = new Transaction();
-        //model.addAttribute("transactions", transaction);
         return "propayAccount";
     }
 
