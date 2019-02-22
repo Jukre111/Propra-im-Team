@@ -130,7 +130,7 @@ public class ItemRepositoryTest {
         Item item = items.get(0);
 
         User user = createUser("superTestMan");
-        
+
         Request request = createRequest(user);
         item.addToRequests(request);
 
