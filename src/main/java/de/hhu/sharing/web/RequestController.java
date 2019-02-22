@@ -57,6 +57,10 @@ public class RequestController {
             redirectAttributes.addFlashAttribute("noCredit",true);
             return "redirect:/";
         }
+        if(!itemService.checkAvailability(item, LocalDate.parse(startdate), LocalDate.parse(enddate))){
+            redirectAttributes.addFlashAttribute("notAvailable",true);
+            return "redirect:/newRequest?id=" + id;
+        }
         requestService.create(id, LocalDate.parse(startdate), LocalDate.parse(enddate), user);
         redirectAttributes.addFlashAttribute("requested",true);
         return "redirect:/";
