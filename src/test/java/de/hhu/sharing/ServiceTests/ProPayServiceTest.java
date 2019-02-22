@@ -1,4 +1,4 @@
-package de.hhu.sharing;
+package de.hhu.sharing.ServiceTests;
 
 import de.hhu.sharing.data.TransactionRepository;
 import de.hhu.sharing.propay.Account;
