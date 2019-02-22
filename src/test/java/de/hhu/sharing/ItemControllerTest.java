@@ -4,6 +4,7 @@ import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
+import de.hhu.sharing.services.BorrowingProcessService;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.RequestService;
 import de.hhu.sharing.services.UserService;
@@ -43,6 +44,9 @@ public class ItemControllerTest {
     RequestService requestService;
 
     @MockBean
+    BorrowingProcessService borrowingProcessService;
+
+    @MockBean
     UserRepository userRepo;
 
     public Item itemCreator(){
@@ -73,6 +77,8 @@ public class ItemControllerTest {
     @WithMockUser
     public void retrieveStatusEditItem() throws Exception{
         Item item = itemCreator();
+        Mockito.when(itemService.isChangeable(1L)).thenReturn(true);
+        Mockito.when(userService.get("user")).thenReturn(item.getLender());
         Mockito.when(itemService.get(1L)).thenReturn(item);
         mvc.perform(MockMvcRequestBuilders.get("/editItem").param("id","1"))
                 .andExpect(MockMvcResultMatchers.status().is(200));

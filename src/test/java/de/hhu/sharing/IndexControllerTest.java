@@ -6,6 +6,7 @@ import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.ItemService;
+import de.hhu.sharing.services.RequestService;
 import de.hhu.sharing.services.UserService;
 import de.hhu.sharing.web.IndexController;
 import org.junit.Test;
@@ -36,6 +37,8 @@ public class IndexControllerTest {
     ItemService itemService;
     @MockBean
     UserService userService;
+    @MockBean
+    RequestService requestService;
 
     @MockBean
     UserRepository users;

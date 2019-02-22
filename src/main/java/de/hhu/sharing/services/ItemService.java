@@ -2,10 +2,13 @@ package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.Period;
 import de.hhu.sharing.model.User;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -13,6 +16,9 @@ public class ItemService{
 
     @Autowired
     private ItemRepository items;
+
+    @Autowired
+    private ConflictService conflictService;
 
     public void create(String name, String description, Integer rental, Integer deposit, User user) {
         Item item = new Item(name, description, rental, deposit, user);
@@ -64,5 +70,19 @@ public class ItemService{
 
     public List<Item> searchFor(String query) {
         return this.items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query,query);
+    }
+
+    public boolean isChangeable(Long id) {
+        Item item = this.get(id);
+        return item.noPeriodsAndRequests() && conflictService.noConflictWith(item);
+    }
+
+    public boolean isAvailableAt(Item item, LocalDate startdate, LocalDate enddate) {
+        return item.isAvailableAt(new Period(startdate, enddate));
+    }
+
+    public boolean isOwner(Long id, User user) {
+        Item item = this.get(id);
+        return item.getLender() == user;
     }
 }

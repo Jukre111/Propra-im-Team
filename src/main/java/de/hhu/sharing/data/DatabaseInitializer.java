@@ -2,7 +2,6 @@ package de.hhu.sharing.data;
 
 import com.github.javafaker.Faker;
 import de.hhu.sharing.model.*;
-import org.apache.tomcat.jni.Time;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -59,7 +59,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
     private void initItems(Faker faker){
         for(User user : users.findAll()){
             for(int j = 0; j < 3; j++){
-                Item item = new Item(faker.hipster().word(),
+                Item item = new Item(faker.pokemon().name(),
                         String.join("\n", faker.lorem().paragraphs(3)),
                         faker.number().numberBetween(1,1000),
                         faker.number().numberBetween(1,1000),
@@ -72,13 +72,14 @@ public class DatabaseInitializer implements ServletContextInitializer {
     private void initRequests(Faker faker){
         for(User user : users.findAll()){
             List<Item> itemList = items.findFirst2ByLenderNot(user);
+            LocalDate startdate = faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             Request request1 = new Request(
-                    new Period(faker.date().past(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                            faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()),
-                    user);
+                    new Period(startdate,
+                            faker.date().future(10,TimeUnit.DAYS, Date.from(startdate.atStartOfDay(ZoneId.systemDefault()).toInstant())).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()),
+                            user);
             Request request2 = new Request(
-                    new Period(faker.date().past(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                            faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()),
+                    new Period(startdate,
+                            faker.date().future(10,TimeUnit.DAYS, Date.from(startdate.atStartOfDay(ZoneId.systemDefault()).toInstant())).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()),
                     user);
             requests.save(request1);
             requests.save(request2);
@@ -86,6 +87,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
             itemList.get(1).addToRequests(request2);
             items.saveAll(itemList);
         }
+
 
         Address adminAddress = new Address(faker.address().streetAddress(),faker.pokemon().location(), Integer.parseInt(faker.address().zipCode()));
         User admin = new User("admin", encoder.encode("admin") ,"ROLE_ADMIN", faker.gameOfThrones().house(),
@@ -100,8 +102,8 @@ public class DatabaseInitializer implements ServletContextInitializer {
         Conflict conflict = new Conflict();
         conflict.setItem(item1);
         conflict.setProblem("Problem");
-        conflict.setAccused(user2);
-        conflict.setProsecuter(user1);
+        conflict.setBorrower(user2);
+        conflict.setOwner(user1);
         conflicts.save(conflict);
 
     }

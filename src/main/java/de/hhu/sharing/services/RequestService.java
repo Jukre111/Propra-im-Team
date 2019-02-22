@@ -1,5 +1,6 @@
 package de.hhu.sharing.services;
 
+import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,13 @@ public class RequestService {
     private RequestRepository requests;
 
     @Autowired
+    private ItemRepository items;
+
+    @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private TransactionService transService;
 
     public Request get(Long id){
         Request request = this.requests.findById(id)
@@ -27,9 +34,9 @@ public class RequestService {
 
     public void create(Long itemId, LocalDate startdate, LocalDate enddate, User user) {
         Request request = new Request(new Period(startdate, enddate), user);
-        requests.save(request);
         Item item = itemService.get(itemId);
         item.addToRequests(request);
+        requests.save(request);
     }
 
     public void delete(Long requestId) {
@@ -37,7 +44,25 @@ public class RequestService {
         Item item = itemService.getFromRequestId(request.getId());
         item.removeFromRequests(request);
         requests.delete(request);
+    }
 
+    public boolean isOverlappingWithAvailability(Long requestId) {
+        Request request = this.get(requestId);
+        Item item = itemService.getFromRequestId(requestId);
+        return !item.isAvailableAt(request.getPeriod());
+    }
+
+    public boolean isOutdated(Long requestId) {
+        Request request = this.get(requestId);
+        return request.getPeriod().isOutdated();
+    }
+
+    public boolean isRequester(Long requestId, User user) {
+        return this.get(requestId).getRequester() == user;
+    }
+
+    public boolean isLender(Long requestId, User user) {
+        return itemService.getFromRequestId(requestId).getLender() == user;
     }
 
     public void deleteOverlappingRequestsFromItem(Request request, Item item) {
@@ -49,5 +74,12 @@ public class RequestService {
         }
     }
 
-
+    public void deleteOutdatedRequests() {
+        List<Request> requests = new ArrayList<>(this.requests.findAll());
+        for(Request req : requests){
+            if(req.getPeriod().isOutdated()){
+                this.delete(req.getId());
+            }
+        }
+    }
 }

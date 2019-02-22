@@ -13,4 +13,6 @@ public interface TransactionRepository extends CrudRepository<Transaction, Integ
 
     List<Transaction> findBySource(User source);
 
+    Transaction findByProcessId(long id);
+
 }
