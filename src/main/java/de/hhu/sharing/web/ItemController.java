@@ -3,6 +3,7 @@ package de.hhu.sharing.web;
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
+import de.hhu.sharing.services.BorrowingProcessService;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
 
+    @Autowired
+    private BorrowingProcessService processService;
+
     @GetMapping("/detailsItem")
     public String details(@RequestParam(name = "id") Long id, Model model){
         Item item = itemService.get(id);
@@ -43,7 +47,15 @@ public class ItemController {
     }
 
     @GetMapping("/editItem")
-    public String editItem(Model model, @RequestParam("id") Long id){
+    public String editItem(Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
+        if(!itemService.isChangeable(id)){
+            redirectAttributes.addFlashAttribute("notChangeable", true);
+            return "redirect:/account";
+        }
+        if(itemService.get(id).getLender() != userService.get(p.getName())){
+            redirectAttributes.addFlashAttribute("notLender",true);
+            return "redirect:/account";
+        }
         model.addAttribute("item", itemService.get(id));
         return "item";
     }
@@ -67,14 +79,29 @@ public class ItemController {
     }
 
     @GetMapping("/deleteItem")
-    public String deleteItem(@RequestParam("id") Long id, RedirectAttributes redirectAttributes){
-//        if(!item.isAvailable()){
-//            redirectAttributes.addFlashAttribute("notAvailable",true);
-//            return "redirect:/account";
-//        }
+    public String deleteItem(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
+        if(!itemService.isChangeable(id)){
+            redirectAttributes.addFlashAttribute("notChangeable", true);
+            return "redirect:/account";
+        }
+        if(itemService.get(id).getLender() != userService.get(p.getName())){
+            redirectAttributes.addFlashAttribute("notLender",true);
+            return "redirect:/account";
+        }
         itemService.delete(id);
         redirectAttributes.addFlashAttribute("deleted",true);
         return "redirect:/account";
     }
 
+    @GetMapping("/returnItem")
+    public String returnItem( @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
+        User user = userService.get(p.getName());
+        if(processService.get(id).getItem().getLender() != user){
+            redirectAttributes.addFlashAttribute("notLender",true);
+            return "redirect:/account";
+        }
+        processService.returnItem(id, user);
+        redirectAttributes.addFlashAttribute("returned",true);
+        return "redirect:/account";
+    }
 }

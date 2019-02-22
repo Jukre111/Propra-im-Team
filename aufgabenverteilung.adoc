@@ -10,11 +10,14 @@
 (* Person anlegen
 * Person bearbeiten
 * Person löschen)
+* Bilder zu Items hochladen
+* Rückgabe muss akzeptiert werden!! 
 
 To-Do Morgen:
 * Kaution an A oder B überweisen
 * Rückgabe Item
-*
+* Wenn Konflikt gelöst wurde mit BorrowingProcess aus A.lend und B.borrowed entfernt werden
+und Period aus Item (und Kaution an entsprechende Partei überwiesen werden).
 
 * Schnittstelle zu ProPay
 
@@ -33,3 +36,4 @@ To-Do Morgen:
 * Login
 * Suche (optional)
 * Requests
+* Rückgabe Item

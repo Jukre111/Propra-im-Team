@@ -19,7 +19,9 @@
 </head>
 <body>
 <div layout:fragment="body" style="padding-left: 50px; padding-right: 50px">
+    <div class="alert alert-success" role="alert" th:if="${requested}" >Anfrage erfolgreich gestellt.</div>
     <div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${ownItem}" >Eigenes Objekt nicht an sich selbst verleihbar.</div>
+    <div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${noCredit}" >Nicht genug ProPray-Guthaben.</div>
     <table>
         <tr>
             <th width="20%">Angebote</th>

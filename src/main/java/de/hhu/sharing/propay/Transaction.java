@@ -1,9 +1,10 @@
-package de.hhu.sharing.model;
+package de.hhu.sharing.propay;
 
+import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.User;
 import lombok.Data;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
@@ -14,6 +15,8 @@ public class Transaction {
     int reservationId;
     int wholeRent;
     int deposit;
+    long processId;
+
     boolean depositRevoked;
 
     public Transaction() {

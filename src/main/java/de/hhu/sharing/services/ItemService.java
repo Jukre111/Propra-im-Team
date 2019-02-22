@@ -2,7 +2,6 @@ package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.Request;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,8 @@ public class ItemService{
     @Autowired
     private ItemRepository items;
 
+    @Autowired
+    private ConflictService conflictService;
     @Autowired
     private StorageService storageService;
 
@@ -79,27 +80,12 @@ public class ItemService{
 
     }
 
-
-    public void addToRequests(Long itemId, Request request) {
-        Item item = this.get(itemId);
-        item.addToRequests(request);
-        items.save(item);
-    }
-
-    public void removeFromRequests(Request request) {
-        Item item = this.getFromRequestId(request.getId());
-        item.removeFromRequests(request);
-        items.save(item);
-    }
-
     public List<Item> searchFor(String query) {
         return this.items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query,query);
     }
 
-
-    public void handleFileUploadItem( MultipartFile file, Item item) {
-        storageService.storeItem(file, item);
-
+    public boolean isChangeable(Long id) {
+        Item item = this.get(id);
+        return item.noPeriodsAndRequests() && conflictService.noConflictWith(item);
     }
-
 }
