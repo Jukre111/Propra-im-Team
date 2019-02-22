@@ -89,6 +89,7 @@ public class ItemRepositoryTest {
 
         List<Item> itemList = itemRepo.findAllByLender(items.get(0).getLender());
         Assertions.assertThat(itemList.size()).isEqualTo(2);
+        Assertions.assertThat(itemList.get(0).getLender().getUsername()).isEqualTo("testman");
 
     }
 
@@ -117,21 +118,20 @@ public class ItemRepositoryTest {
         User user = createUser("superTestMan");
         List<Item> itemList = itemRepo.findFirst2ByLenderNot(user);
         Assertions.assertThat(itemList.size()).isEqualTo(2);
+        Assertions.assertThat(itemList.get(0)).isEqualTo(items.get(0));
+        Assertions.assertThat(itemList.get(1)).isEqualTo(items.get(1));
     }
 
     @Test
     public void tesFindByRequests_id(){
         ArrayList<Item> items = createItems();
         Item item = items.get(0);
-
         User user = createUser("superTestMan");
-
         Request request = createRequest(user);
         item.addToRequests(request);
-
         itemRepo.save(item);
 
-        Optional<Item> optionalItem = itemRepo.findByRequests_id(items.get(0).getRequests().get(0).getId());
+        Optional<Item> optionalItem = itemRepo.findByRequests_id(request.getId());
         Assertions.assertThat(optionalItem.get()).isEqualTo(items.get(0));
     }
 
@@ -150,16 +150,13 @@ public class ItemRepositoryTest {
         ArrayList<Item> items = createItems();
         Item item = items.get(0);
         itemRepo.save(item);
-
         User user = createUser("superTestMan");
-
-       Request request = createRequest(user);
-
+        Request request = createRequest(user);
         item.addToRequests(request);
-
         itemRepo.save(item);
 
         List <Item> itemList = itemRepo.findAllByRequests_requester(user);
         Assertions.assertThat(itemList.size()).isEqualTo(1);
+        Assertions.assertThat(itemList.get(0)).isEqualTo(item);
     }
 }
