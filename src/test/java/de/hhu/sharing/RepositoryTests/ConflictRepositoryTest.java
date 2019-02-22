@@ -6,11 +6,13 @@ import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.*;
 import de.hhu.sharing.services.BorrowingProcessService;
+import de.hhu.sharing.storage.StorageService;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
@@ -32,7 +34,8 @@ public class ConflictRepositoryTest {
     @Autowired
     BorrowingProcessRepository bPRepo;
 
-
+    @MockBean
+    StorageService storageService;
 
 
     @Test

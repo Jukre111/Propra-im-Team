@@ -1,3 +1,4 @@
+
 package de.hhu.sharing.ServiceTests;
 
 import de.hhu.sharing.data.ItemRepository;
@@ -9,6 +10,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +53,9 @@ public class ItemServiceTest {
     }
     @Test
     public void testCreate(){
+        MultipartFile file = null;
         User user = generateUser("dude");
-        itemService.create("item","description",1,1,user);
+        itemService.create("item","description",1,1,user, file);
         ArgumentCaptor<Item> captor = ArgumentCaptor.forClass(Item.class);
         Mockito.verify(items, times(1)).save(captor.capture());
         Assert.assertEquals(captor.getAllValues().get(0).getName(), "item");

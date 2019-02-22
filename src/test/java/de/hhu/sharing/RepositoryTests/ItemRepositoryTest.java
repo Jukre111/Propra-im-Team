@@ -1,15 +1,18 @@
+
 package de.hhu.sharing.RepositoryTests;
 
 import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.*;
+import de.hhu.sharing.storage.StorageService;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
@@ -29,6 +32,9 @@ public class ItemRepositoryTest {
 
     @Autowired
     RequestRepository requestRepo;
+
+    @MockBean
+    StorageService storageService;
 
     public Request createRequest(User user){
 
@@ -102,7 +108,7 @@ public class ItemRepositoryTest {
 
         List<Item> itemList1 = itemRepo.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("apf", "egal");
         List<Item> itemList2 = itemRepo.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("banane", "Kern");
-        
+
         Assertions.assertThat(itemList1.size()).isEqualTo(2);
         Assertions.assertThat(itemList2.size()).isEqualTo(2);
 
