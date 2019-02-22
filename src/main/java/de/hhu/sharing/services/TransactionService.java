@@ -29,8 +29,6 @@ public class TransactionService {
         long days = DAYS.between(request.getPeriod().getStartdate(),request.getPeriod().getEnddate());
         int rent = item.getRental()*(int) days;
 
-        proService.createAccount(borrower.getUsername());
-
         int amount = proService.showAccount(borrower.getUsername()).getAmount();
 
         if(amount >= (rent+item.getDeposit())){

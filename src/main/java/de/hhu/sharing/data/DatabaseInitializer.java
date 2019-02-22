@@ -2,7 +2,6 @@ package de.hhu.sharing.data;
 
 import com.github.javafaker.Faker;
 import de.hhu.sharing.model.*;
-import org.apache.tomcat.jni.Time;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -59,7 +58,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
     private void initItems(Faker faker){
         for(User user : users.findAll()){
             for(int j = 0; j < 3; j++){
-                Item item = new Item(faker.hipster().word(),
+                Item item = new Item(faker.pokemon().name(),
                         String.join("\n", faker.lorem().paragraphs(3)),
                         faker.number().numberBetween(1,1000),
                         faker.number().numberBetween(1,1000),
@@ -87,6 +86,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
             items.saveAll(itemList);
         }
 
+
         Address adminAddress = new Address(faker.address().streetAddress(),faker.pokemon().location(), Integer.parseInt(faker.address().zipCode()));
         User admin = new User("admin", encoder.encode("admin") ,"ROLE_ADMIN", faker.gameOfThrones().house(),
                 faker.lordOfTheRings().character(), faker.internet().emailAddress(), faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), adminAddress);
@@ -100,8 +100,8 @@ public class DatabaseInitializer implements ServletContextInitializer {
         Conflict conflict = new Conflict();
         conflict.setItem(item1);
         conflict.setProblem("Problem");
-        conflict.setAccused(user2);
-        conflict.setProsecuter(user1);
+        conflict.setBorrower(user2);
+        conflict.setOwner(user1);
         conflicts.save(conflict);
 
     }

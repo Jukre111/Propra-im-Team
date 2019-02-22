@@ -20,7 +20,7 @@ public class UserService {
         return user;
     }
 
-    private User getBorrowerFromBorrowingProcessId(Long processId) {
+    public User getBorrowerFromBorrowingProcessId(Long processId) {
         User user = this.users.findByBorrowed_id(processId)
                 .orElseThrow(
                         () -> new RuntimeException("Item not found!"));
