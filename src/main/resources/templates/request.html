@@ -10,18 +10,19 @@
             var endDt = document.getElementById("enddate").value;
             var button = document.getElementById("button");
 
-            if(startDt && endDt)
-            {
-                if( (new Date(startDt).getTime() > new Date(endDt).getTime()))
-                {
-                    console.log("failure");
-                    button.disabled = true;
-                    alert("Das Enddatum darf nicht vor dem Startdatum liegen!");
-                }
-                else {
-                    console.log("work work work");
-                    button.disabled = false;
-                }
+            if(startDt && new Date(startDt).getTime() <= Date.now()){
+                console.log("failure");
+                button.disabled = true;
+                alert("Das Startdatum darf nicht vor morgen liegen!");
+            }
+            else if(startDt && endDt && new Date(startDt).getTime() > new Date(endDt).getTime()){
+                console.log("failure");
+                button.disabled = true;
+                alert("Das Enddatum darf nicht vor dem Startdatum liegen!");
+            }
+            else {
+                console.log("work work work");
+                button.disabled = false;
             }
         }
     </script>
