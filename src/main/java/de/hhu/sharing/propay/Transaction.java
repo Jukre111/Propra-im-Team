@@ -12,32 +12,31 @@ import javax.persistence.ManyToOne;
 @Data
 public class Transaction {
     @Id
-    int reservationId;
-    int wholeRent;
-    int deposit;
-    long processId;
+    private int reservationId;
+    private int wholeRent;
+    private int deposit;
+    private long processId;
+    private boolean depositRevoked;
 
-    boolean depositRevoked;
+    @ManyToOne
+    private Item item;
+
+    @ManyToOne
+    private User sender;
+
+    @ManyToOne
+    private User receiver;
 
     public Transaction() {
         depositRevoked = false;
     }
 
-    public Transaction(int wholeRent, int deposit, Item item, User source, User target) {
+    public Transaction(int wholeRent, int deposit, Item item, User sender, User receiver) {
         this.wholeRent = wholeRent;
         this.deposit = deposit;
         this.depositRevoked = false;
         this.item = item;
-        this.source = source;
-        this.target = target;
+        this.sender = sender;
+        this.receiver = receiver;
     }
-
-    @ManyToOne
-    Item item;
-
-    @ManyToOne
-    User source;
-
-    @ManyToOne
-    User target;
 }

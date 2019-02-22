@@ -4,14 +4,15 @@ import lombok.Data;
 
 @Data
 public class Reservation {
-    int id;
-    int amount;
 
-    public Reservation() {}
+    private int id;
+    private int amount;
 
-    public Reservation(int reservationId, int amount) {
+    public Reservation(){
+    }
+
+    public Reservation(int reservationId, int amount){
         this.amount = amount;
         this.id = reservationId;
     }
-
 }

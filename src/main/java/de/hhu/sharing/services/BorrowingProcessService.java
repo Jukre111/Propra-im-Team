@@ -72,7 +72,7 @@ public class BorrowingProcessService {
 
     public void returnItem(Long processId, User lender){
         BorrowingProcess process = this.get(processId);
-        String borrower = userService.getBorrowerFromBorrowingProcessId(processId).getUsername();
+        User borrower = userService.getBorrowerFromBorrowingProcessId(processId);
 
         if(proService.cancelDeposit(borrower,transRepo.findByProcessId(processId))==200){
             userService.removeProcessFromProcessLists(lender, process);

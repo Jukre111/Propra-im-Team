@@ -8,10 +8,8 @@ import java.util.List;
 
 public interface TransactionRepository extends CrudRepository<Transaction, Integer> {
     List<Transaction> findAll();
-
-    List<Transaction> findByTarget(User target);
-
-    List<Transaction> findBySource(User source);
+    List<Transaction> findAllBySender(User user);
+    List<Transaction> findAllByReceiver(User user);
 
     Transaction findByProcessId(long id);
 
