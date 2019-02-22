@@ -48,7 +48,7 @@ public class FileSystemStorageService implements StorageService {
         this.rootLocation = Paths.get(properties.getLocation());
     }
     
-    private Image createImageVars(String mimetype) {
+    public Image createImageVars(String mimetype) {
     	Image image = new Image();
     	switch(mimetype){
         case "image/jpeg":
