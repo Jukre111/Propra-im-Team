@@ -1,8 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.w3.org/1999/xhtml">
+<script type="text/javascript" src="scripts/components/jquery.min.js"></script>
+<script type="text/javascript" src="scripts/dateTimePicker.min.js"></script>
 <head>
     <title>Detailansicht</title>
+    <script type="text/javascript">
+        $(document).ready(function()
+        {
+            var periodList = document.getElementById("period");
+            var period;
+
+            for(period of periodList){
+            $('#basic').calendar({
+                num_next_month: 1
+            });
+            unavailable: period;
+                }
+            }
+        }
+    </script>
     <style>
 .style {
 	border-radius: 5px;
@@ -44,6 +61,7 @@
                 <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name" th:text="${item.name}"></span></h1>
                 <div class="form-horizontal" style="padding-top: 60px">
                     <input type="hidden" class="form-control" id="id" name="id" th:value="${item.id}" readonly/>
+                    <input type="hidden" class="form-control" id="period" name="period" th:value="${item.periods}" readonly/>
                     <div class="form-group">
                         <label for="name" class="col-sm-2 control-label">Objektname</label>
                         <div class="col-xs-6">
@@ -92,6 +110,12 @@
                         <label for="description" class="col-sm-2 control-label">Beschreibung</label>
                         <div class="col-xs-7">
                             <textarea class="form-control" id="description" name="description" th:inline="text" readonly>[[${item.description}]]</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="availability" class="col-sm-2 control-label">Verfügbarkeit</label>
+                        <div class="col-xs-6">
+                            <div id="basic" data-toggle="calendar" ></div>
                         </div>
                     </div>
                 </div>
