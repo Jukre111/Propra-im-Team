@@ -4,9 +4,15 @@ import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.Request;
 import de.hhu.sharing.model.User;
+import de.hhu.sharing.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +22,15 @@ public class ItemService{
     @Autowired
     private ItemRepository items;
 
+    @Autowired
+    private StorageService storageService;
 
-    public void create(String name, String description, Integer rental, Integer deposit, User user) {
+
+    public void create(String name, String description, Integer rental, Integer deposit, User user, MultipartFile file) {
         Item item = new Item(name, description, rental, deposit, user);
         items.save(item);
+        storageService.storeItem(file, item);
+
     }
 
     public void edit(Long id, String name, String description, Integer rental, Integer deposit, User user) {
@@ -81,4 +92,11 @@ public class ItemService{
     public List<Item> searchFor(String query) {
         return this.items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query,query);
     }
+
+
+    public void handleFileUploadItem( MultipartFile file, Item item) {
+        storageService.storeItem(file, item);
+
+    }
+
 }
