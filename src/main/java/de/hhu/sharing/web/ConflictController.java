@@ -73,10 +73,11 @@ public class ConflictController {
         User owner = conflict.getOwner();
 
         BorrowingProcess process = conflict.getProcess();
-        if(proService.cancelDeposit(borrower,transRepo.findByProcessId(process.getId())) == 200) {
-            conflictService.removeConflict(conflict);
-            borrowingProcessService.returnItem(process.getId(), owner);
-        }
+
+        proService.cancelDeposit(borrower,transRepo.findByProcessId(process.getId()));
+        conflictService.removeConflict(conflict);
+        borrowingProcessService.returnItem(process.getId(), owner);
+
 
         return "redirect:/conflictView";
     }
@@ -89,10 +90,10 @@ public class ConflictController {
         User borrower = conflict.getBorrower();
 
         BorrowingProcess process = conflict.getProcess();
-        if(proService.collectDeposit(borrower,transRepo.findByProcessId(process.getId())) == 200) {
-            conflictService.removeConflict(conflict);
-            borrowingProcessService.returnItem(process.getId(), owner);
-        }
+
+        proService.collectDeposit(borrower,transRepo.findByProcessId(process.getId()));
+        conflictService.removeConflict(conflict);
+        borrowingProcessService.returnItem(process.getId(), owner);
 
         return "redirect:/conflictView";
     }

@@ -74,11 +74,11 @@ public class BorrowingProcessService {
         BorrowingProcess process = this.get(processId);
         User borrower = userService.getBorrowerFromBorrowingProcessId(processId);
 
-        if(proService.cancelDeposit(borrower,transRepo.findByProcessId(processId))==200){
-            userService.removeProcessFromProcessLists(lender, process);
-            process.getItem().removeFromPeriods(process.getPeriod());
-            processes.delete(process);
-        }
+        proService.cancelDeposit(borrower,transRepo.findByProcessId(processId));
+        userService.removeProcessFromProcessLists(lender, process);
+        process.getItem().removeFromPeriods(process.getPeriod());
+        processes.delete(process);
+
     }
 
     public BorrowingProcess getBorrowingProcess(Long id){

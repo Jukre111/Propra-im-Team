@@ -25,7 +25,13 @@ public class TransactionService {
     RequestRepository reqRepo;
 
     @Autowired
-    ProPayService proService;
+    private ProPayService proPayService;
+
+    @Autowired
+    private ItemService itemService;
+
+    @Autowired
+    private RequestService requestService;
 
     @Autowired
     private TransactionRepository transactions;
@@ -38,37 +44,21 @@ public class TransactionService {
         return transactions.findAllByReceiver(user);
     }
 
-    public boolean checkFinances(User requester, Item item, LocalDate startdate, LocalDate enddate){
-        long days = DAYS.between(startdate, enddate);
-        int rent = item.getRental()*(int) days;
-        proService.createAccount(requester);
-        int amount = proService.getAccount(requester).getAmount();
-        return amount >= (rent+item.getDeposit());
-    }
-    public int createTransaction(Long requestId, Long itemId) {
-        Item item = itemRepo.findById(itemId).get();
-        Request request = reqRepo.findById(requestId).get();
-        User lender = item.getLender();
+    public int createTransaction(Long requestId){
+        Item item = itemService.getFromRequestId(requestId);
+        Request request = requestService.get(requestId);
         User borrower = request.getRequester();
+        User lender = item.getLender();
 
-        long days = DAYS.between(request.getPeriod().getStartdate(),request.getPeriod().getEnddate());
-        int rent = item.getRental()*(int) days;
+        int days = (int) DAYS.between(request.getPeriod().getStartdate(),request.getPeriod().getEnddate()) + 1;
+        int rent = item.getRental() * days;
 
-        proService.createAccount(lender);
-
-        Transaction trans = new Transaction(rent, item.getDeposit(), item, lender, borrower);
-        
-        if(checkFinances(request.getRequester(), item, request.getPeriod().getStartdate(), request.getPeriod().getStartdate())){
-            int responseTransfer = proService.transferMoney(borrower, lender, rent);
-            int responseDeposit = proService.createDeposit(borrower, lender, trans);
-            //Transaction will be saved in proService due to reasons...
-
-            if(responseDeposit!=200)
-                return responseDeposit;
-            else if(responseTransfer!=200)
-                return responseTransfer;
+        Transaction transaction = new Transaction(rent, item.getDeposit(), item, borrower, lender);
+        if(proPayService.checkFinances(borrower, item, request.getPeriod().getStartdate(), request.getPeriod().getStartdate())){
+            proPayService.transferMoney(borrower, lender, rent);
+            proPayService.createDeposit(borrower, lender, transaction);
         } else {
-            return -1;
+            return -42;
         }
         return 200;
     }

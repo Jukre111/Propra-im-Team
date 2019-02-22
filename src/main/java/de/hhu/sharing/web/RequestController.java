@@ -2,11 +2,7 @@ package de.hhu.sharing.web;
 
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
-import de.hhu.sharing.services.BorrowingProcessService;
-import de.hhu.sharing.services.ItemService;
-import de.hhu.sharing.services.RequestService;
-import de.hhu.sharing.services.TransactionService;
-import de.hhu.sharing.services.UserService;
+import de.hhu.sharing.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +30,9 @@ public class RequestController {
     private TransactionService transactionService;
 
     @Autowired
+    private ProPayService proPayService;
+
+    @Autowired
     private BorrowingProcessService processService;
 
     @GetMapping("/newRequest")
@@ -51,7 +50,7 @@ public class RequestController {
     public String saveRequest(Long id, String startdate, String enddate, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         Item item = itemService.get(id);
-        if(!transactionService.checkFinances(user, item, LocalDate.parse(startdate), LocalDate.parse(enddate))){
+        if(!proPayService.checkFinances(user, item, LocalDate.parse(startdate), LocalDate.parse(enddate))){
             redirectAttributes.addFlashAttribute("noCredit",true);
             return "redirect:/";
         }
@@ -91,7 +90,7 @@ public class RequestController {
             redirectAttributes.addFlashAttribute("overlappingRequest",true);
             return "redirect:/messages";
         }
-        if(transactionService.createTransaction(requestId, itemId) != 200) {
+        if(transactionService.createTransaction(requestId) != 200) {
             redirectAttributes.addFlashAttribute("propayError",true);
             return "redirect:/messages";
         }

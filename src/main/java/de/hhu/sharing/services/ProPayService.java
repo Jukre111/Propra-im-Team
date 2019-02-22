@@ -2,6 +2,7 @@ package de.hhu.sharing.services;
 
 import com.google.gson.Gson;
 import de.hhu.sharing.data.TransactionRepository;
+import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.propay.Account;
 import de.hhu.sharing.propay.Transaction;
@@ -12,6 +13,9 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDate;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 public class ProPayService {
@@ -20,6 +24,7 @@ public class ProPayService {
     private TransactionRepository transactions;
 
     private RestTemplate rt = new RestTemplate();
+    private String URL = "http://localhost:8888/";
 
     /*
         ReservationID is definite in ProPay, meaning each ReservationID
@@ -31,79 +36,64 @@ public class ProPayService {
      */
 
     public Account getAccount(User user) {
-        String URL = "http://localhost:8888/account/" + user.getUsername() + "/";
+        String URL = this.URL + "account/" + user.getUsername() + "/";
+        this.callURL(URL, "GET");
         String jsonAccount = rt.getForObject(URL, String.class);
         return new Gson().fromJson(jsonAccount, Account.class);
     }
 
-    //returns a http response or in case of an Exception an -1
-    public int createAccount(User user) {
-        if (this.getAccount(user) == null)
-            return -1;
-        else
-            return 200;
+    public boolean checkFinances(User user, Item item, LocalDate startdate, LocalDate enddate){
+        int days = (int) DAYS.between(startdate, enddate) + 1;
+        int rent = item.getRental() * days;
+        int amount = this.getAccount(user).getAmount();
+        return amount >= (rent + item.getDeposit());
     }
 
-    //returns a http response or in case of an Exception an -1
-    public int raiseBalance(User user, int amount) {
-        String URL = "http://localhost:8888/account/" + user.getUsername() + "?amount=" + amount;
-        int response = this.callURL(URL, "POST");
-        return response;
+    public void raiseBalance(User user, int amount) {
+        String URL = this.URL + "account/" + user.getUsername() + "?amount=" + amount;
+        this.callURL(URL, "POST");
     }
 
-    //returns a http response or in case of an Exception an -1
-    public int transferMoney(User sender, User receiver, int amount) {
-        String URL = "http://localhost:8888/account/" + sender.getUsername() + "/transfer/" + receiver.getUsername() + "?amount=" + amount;
-        int response = this.callURL(URL, "POST");
-        return response;
+    public void transferMoney(User sender, User receiver, int amount) {
+        String URL = this.URL + "account/" + sender.getUsername() + "/transfer/" + receiver.getUsername() + "?amount=" + amount;
+        this.callURL(URL, "POST");
     }
 
-    //returns a http response or in case of an Exception an -1
-    public int createDeposit(User sender, User receiver, Transaction transaction) {
+    public void createDeposit(User sender, User receiver, Transaction transaction) {
         int amount = transaction.getDeposit();
-        String URL = "http://localhost:8888/reservation/reserve/" + sender.getUsername() + "/" + receiver.getUsername() + "?amount=" + amount;
-        int response = this.callURL(URL, "POST");
+        String URL = this.URL + "reservation/reserve/" + sender.getUsername() + "/" + receiver.getUsername() + "?amount=" + amount;
+        this.callURL(URL, "POST");
         Account account = this.getAccount(sender);
         if (account == null)
-            return -1;
+            return;
         else {
             transaction.setReservationId(account.getLatestReservationId());
             transactions.save(transaction);
         }
-        return response;
     }
 
-    //returns a http response or in case of an Exception an -1
-    public int cancelDeposit(User sender, Transaction transaction) {
+    public void cancelDeposit(User sender, Transaction transaction) {
         int reservationId = transaction.getReservationId();
-        String URL = "http://localhost:8888/reservation/release/" + sender.getUsername() + "?reservationId=" + reservationId;
-        int response = this.callURL(URL, "POST");
-        return response;
+        String URL = this.URL + "reservation/release/" + sender.getUsername() + "?reservationId=" + reservationId;
+        this.callURL(URL, "POST");
     }
 
-    //returns a http response or in case of an Exception an -1
-    public int collectDeposit(User sender, Transaction transaction) {
+    public void collectDeposit(User sender, Transaction transaction) {
         int reservationId = transaction.getReservationId();
-        String URL = "http://localhost:8888/reservation/punish/" + sender.getUsername() + "?reservationId=" + reservationId;
-        int response = this.callURL(URL, "POST");
+        String URL = this.URL + "reservation/punish/" + sender.getUsername() + "?reservationId=" + reservationId;
+        this.callURL(URL, "POST");
         transaction.setDepositRevoked(true);
-        return response;
     }
 
-    //returns a http response or in case of an Exception an -1
-    public int callURL(String Url, String method) {
-        URL url = null;
+    private void callURL(String urlString, String method) {
         try {
-            url = new URL(Url);
+            URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(method);
             connection.connect();
-            return connection.getResponseCode();
         } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("URL bugged/not reachable");
+            throw new RuntimeException("ProPay not reachable!");
         }
-        return -1;
     }
 
     public void changeTemplateTo(RestTemplate rt) {
