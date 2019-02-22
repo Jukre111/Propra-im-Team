@@ -1,8 +1,9 @@
 package de.hhu.sharing.RepositoryTests;
 
+import de.hhu.sharing.data.BorrowingProcessRepository;
+import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.UserRepository;
-import de.hhu.sharing.model.Address;
-import de.hhu.sharing.model.User;
+import de.hhu.sharing.model.*;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,76 +19,69 @@ import java.util.Optional;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class UserRepositoryTest {
+
     @Autowired
     UserRepository userRepo;
 
-    public ArrayList<User> createUsers(){
-        User user1 = new User();
-        User user2 = new User();
+    @Autowired
+    BorrowingProcessRepository bPRepo;
 
-        // Address is needed to compile the test
-        Address add1 = new Address();
+    @Autowired
+    ItemRepository itemRepo;
 
-        add1.setCity("Duesseldorf");
-        add1.setPostcode(40233);
-        add1.setStreet("Universitaetsstrasse 1");
+    public User createUser(String username){
+        LocalDate birthdate = LocalDate.of(2000,1,1);
+        Address address = new Address("unistrase","duesseldorf", 40233);
+        User user = new User(username,"password", "role", "lastnmae", "forname", "email",birthdate,address);
+        userRepo.save(user);
+        return userRepo.findByUsername(username).get();
+    }
 
-        user1.setUsername("Nutzer1");
-        user1.setForename("Joe");
-        user1.setLastname("Karl");
-        user1.setRole("ROLE_ADMIN");
-        user1.setEmail("Person1@test.de");
-        user1.setPassword("pswd");
-        user1.setAddress(add1);
+    public BorrowingProcess createBorrowedProcess(){
 
-        LocalDate date1 = LocalDate.of(2019, 5, 13);
-        user1.setBirthdate(date1);
+        User user = createUser("testman");
 
-        user2.setUsername("Nutzer2");
-        user2.setForename("Joey");
-        user2.setLastname("Karlus");
-        user2.setRole("ROLE_ADMIN");
-        user2.setEmail("Person2@test.de");
-        user2.setPassword("pswd");
-        user2.setAddress(add1);
+        LocalDate startdate = LocalDate.of(2010,1,1);
+        LocalDate enddate = LocalDate.of(2010,2,2);
+        Period period = new Period(startdate,enddate);
 
+        Item item = new Item("apfel", "lecker",1,1 ,user);
+        itemRepo.save(item);
+        itemRepo.findById(item.getId()).get();
 
-        LocalDate date2 = LocalDate.of(2014, 5, 13);
-        user2.setBirthdate(date2);
-
-        userRepo.save(user1);
-        userRepo.save(user2);
-        ArrayList<User> users = new ArrayList<>();
-        users.add(user1);
-        users.add(user2);
-
-        return users;
+        BorrowingProcess bP = new BorrowingProcess(item,period);
+        bPRepo.save(bP);
+        return bPRepo.findById(bP.getId()).get();
     }
 
 
     @Test
     public void testFindAll() {
-        ArrayList<User> users = createUsers();
-
-        userRepo.save(users.get(0));
-        userRepo.save(users.get(1));
+        createUser("testman1");
+        createUser("testman2");
         Assertions.assertThat(userRepo.findAll().size()).isEqualTo(2);
     }
 
     @Test
     public void testFindByUsername(){
 
-        ArrayList<User> users = createUsers();
+        createUser("testman");
+        Optional<User> optionalUser = userRepo.findByUsername("testman");
+        Assertions.assertThat(optionalUser.get().getUsername()).isEqualTo("testman");
+    }
 
-        userRepo.save(users.get(0));
-        userRepo.save(users.get(1));
+    @Test
+    public void testFindByBorrowed_id(){
 
-        Optional<User> optionalUser = userRepo.findByUsername("Nutzer1");
+        User user = createUser("testman");
+        BorrowingProcess bP = createBorrowedProcess();
 
-        Assert.assertTrue(optionalUser.isPresent());
-        if(optionalUser.isPresent()){
-            Assertions.assertThat(optionalUser.get().getUsername()).isEqualTo("Nutzer1");
-        }
+        user.addToBorrowed(bP);
+
+        Optional<User> optionalUser = userRepo.findByBorrowed_id(bP.getId());
+
+        Assertions.assertThat(optionalUser.get().getBorrowed().get(0).getId()).isEqualTo(bP.getId());
 
     }
+
 }
