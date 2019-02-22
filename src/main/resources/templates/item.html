@@ -58,8 +58,11 @@
                             <textarea class="form-control" id="description" name="description" th:inline="text" required="">[[${item.description}]]</textarea>
                         </div>
                     </div>
-                    <div>
-                        <input type="file"  name="file"/>
+                    <div class="form-group">
+                        <label for="description" class="col-sm-2 control-label">Bilder hinzufügen (max. 150KB)</label>
+                        <div class="col-xs-6">
+                            <input type="file"  name="file"/>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <a class="indexbtn" href="/" style="padding: 5px">Abbrechen</a>
