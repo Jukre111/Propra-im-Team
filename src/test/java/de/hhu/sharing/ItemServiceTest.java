@@ -22,6 +22,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -50,8 +51,9 @@ public class ItemServiceTest {
 
     @Test
     public void testCreate(){
+    	MultipartFile file = null;
         User user = generateUser();
-        itemService.create("item","description",1,1,user);
+        itemService.create("item","description",1,1,user, file);
         ArgumentCaptor<Item> captor = ArgumentCaptor.forClass(Item.class);
         Mockito.verify(items, times(1)).save(captor.capture());
         Assert.assertTrue(captor.getAllValues().get(0).getName().equals("item"));

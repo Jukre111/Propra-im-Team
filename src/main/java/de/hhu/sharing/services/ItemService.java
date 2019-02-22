@@ -29,8 +29,11 @@ public class ItemService{
     public void create(String name, String description, Integer rental, Integer deposit, User user, MultipartFile file) {
         Item item = new Item(name, description, rental, deposit, user);
         items.save(item);
-        storageService.storeItem(file, item);
-
+        if(file!=null) {
+        	storageService.storeItem(file, item);
+        }else {
+        	System.out.println("No picture");
+        }
     }
 
     public void edit(Long id, String name, String description, Integer rental, Integer deposit, User user) {

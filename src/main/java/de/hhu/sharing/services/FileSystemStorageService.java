@@ -48,15 +48,31 @@ public class FileSystemStorageService implements StorageService {
         this.rootLocation = Paths.get(properties.getLocation());
     }
     
-    private Image createImageVars() {
+    private Image createImageVars(String mimetype) {
     	Image image = new Image();
-        image.setMimeType("image/jpeg");
+    	switch(mimetype){
+        case "image/jpeg":
+        	image.setMimeType("image/jpeg");
+            break;
+        case "image/png":
+        	image.setMimeType("image/png");
+            break;
+        case "image/gif":
+        	image.setMimeType("image/gif");
+            break;
+        case "image/bmp":
+        	image.setMimeType("image/bmp");
+            break;
+        default:
+            System.out.println("No valid data");
+        }
     	return image;
     }
 
     @Override
     public void storeUser(MultipartFile file, User user){
     	byte[] byteArr = null;
+    	String mimetype = file.getContentType();
 		try {
 			byteArr = file.getBytes();
 		} catch (IOException e1) {
@@ -70,7 +86,7 @@ public class FileSystemStorageService implements StorageService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Image image = createImageVars();
+        Image image = createImageVars(mimetype);
         image.setImageData(byteArr);
         imageRepo.save(image);
         user.setImage(image);
@@ -79,6 +95,7 @@ public class FileSystemStorageService implements StorageService {
     
     @Override
     public void storeItem(MultipartFile file, Item item){
+    	String mimetype = file.getContentType();
     	byte[] byteArr = null;
 		try {
 			byteArr = file.getBytes();
@@ -93,7 +110,7 @@ public class FileSystemStorageService implements StorageService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Image image = createImageVars();
+        Image image = createImageVars(mimetype);
         image.setImageData(byteArr);
         imageRepo.save(image);
         item.setImage(image);

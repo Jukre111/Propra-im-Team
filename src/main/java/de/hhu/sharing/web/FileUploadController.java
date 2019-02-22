@@ -108,7 +108,7 @@ public class FileUploadController {
     }
 
     @PostMapping("/handleFileUploadItem")
-    public String handleFileUploadItem(@RequestParam("file") MultipartFile file,
+    public String handleFileUploadItem(MultipartFile file,
                                    RedirectAttributes redirectAttributes, Item item) {
         storageService.storeItem(file, item);
         redirectAttributes.addFlashAttribute("message",
