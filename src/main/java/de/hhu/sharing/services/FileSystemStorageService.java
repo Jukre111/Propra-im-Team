@@ -71,7 +71,7 @@ public class FileSystemStorageService implements StorageService {
 
     @Override
     public void storeUser(MultipartFile file, User user){
-    	byte[] byteArr = null;
+    	byte[] byteArr = new byte[1];
     	String mimetype = file.getContentType();
 		try {
 			byteArr = file.getBytes();
@@ -81,8 +81,13 @@ public class FileSystemStorageService implements StorageService {
         try {
         	InputStream inputStream = new ByteArrayInputStream(byteArr);
             //convert file into array of bytes
-            inputStream.read(byteArr);
-            inputStream.close();
+            int actualLength = inputStream.read(byteArr);
+            if(actualLength==byteArr.length){
+                inputStream.close();
+            }else{
+                inputStream.reset();
+                inputStream.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -96,7 +101,7 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public void storeItem(MultipartFile file, Item item){
     	String mimetype = file.getContentType();
-    	byte[] byteArr = null;
+    	byte[] byteArr = new byte[1];
 		try {
 			byteArr = file.getBytes();
 		} catch (IOException e1) {
@@ -104,9 +109,14 @@ public class FileSystemStorageService implements StorageService {
 		}
         try {
         	InputStream inputStream = new ByteArrayInputStream(byteArr);
-            //convert file into array of bytes
-            inputStream.read(byteArr);
-            inputStream.close();
+            //convert file into array of byte
+            int actualLength = inputStream.read(byteArr);
+            if(actualLength==byteArr.length){
+                inputStream.close();
+            }else{
+                inputStream.reset();
+                inputStream.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
