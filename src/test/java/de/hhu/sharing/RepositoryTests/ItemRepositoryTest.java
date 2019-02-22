@@ -132,11 +132,7 @@ public class ItemRepositoryTest {
         Item item = items.get(0);
 
         User user = createUser("superTestMan");
-
-        LocalDate startdate = LocalDate.of(2010,1,1);
-        LocalDate enddate = LocalDate.of(2010,2,2);
-        Period period = new Period(startdate,enddate);
-
+        
         Request request = createRequest(user);
         item.addToRequests(request);
 

@@ -43,15 +43,13 @@ public class ConflictRepositoryTest {
         userRepo.save(user2);
 
         User userEntity1 = userRepo.findByUsername("user1").get();
-        userRepo.save(userEntity1);
         User userEntity2 = userRepo.findByUsername("user2").get();
-        userRepo.save(userEntity2);
 
         Item item = new Item("apfel", "lecker",1,1 ,user1 );
         itemRepo.save(item);
         Item itemEntity = itemRepo.findById(item.getId()).get();
-        Conflict conflict1 = new Conflict("problem", item, user1,user2);
-        Conflict conflict2 = new Conflict("problem", item, user2,user1);
+        Conflict conflict1 = new Conflict("problem", itemEntity, userEntity1,userEntity2);
+        Conflict conflict2 = new Conflict("problem", itemEntity, userEntity2,userEntity1);
         conflictRepo.save(conflict1);
         conflictRepo.save(conflict2);
         Assertions.assertThat(conflictRepo.findAll().size()).isEqualTo(2);
