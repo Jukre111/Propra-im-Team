@@ -89,7 +89,7 @@ public class ItemControllerTest {
     }
 
 
-   /* @Test
+    @Test
     @WithMockUser
     public void retrieveStatusSaveItem() throws Exception{
         LocalDate date = LocalDate.of(2000,1,1);
@@ -104,7 +104,7 @@ public class ItemControllerTest {
 
         mvc.perform(MockMvcRequestBuilders.post("/saveItem").with(csrf()).params(map))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/account"));
-    }*/
+    }
 
     @Test
     @WithMockUser

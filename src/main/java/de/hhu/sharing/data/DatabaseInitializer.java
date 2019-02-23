@@ -3,25 +3,18 @@ package de.hhu.sharing.data;
 import com.github.javafaker.Faker;
 import de.hhu.sharing.model.*;
 import de.hhu.sharing.services.FileSystemStorageService;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
-//import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Path;
+import java.io.*;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -59,28 +52,25 @@ public class DatabaseInitializer implements ServletContextInitializer {
         initRequests(faker);
     }
 
-   /* private MultipartFile getImageFile() throws FileNotFoundException {
-    	File file = ResourceUtils.getFile(
-    			"classpath:nyan_cat.gif");
-    	FileInputStream input;
-    	MultipartFile multipartFile = null;
+    private byte[] getDefaultUserImage(){
+        byte[] byteArr = new byte[1];
+        File file = new File("nyan_cat.gif");
+        try {
+            file = ResourceUtils.getFile(
+                    "classpath:nyan_cat.gif");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 		try {
-			input = new FileInputStream(file);
-			multipartFile = new MockMultipartFile("file",
-			file.getName(), "image/gif", input);
+            byteArr = Files.readAllBytes(file.toPath());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return multipartFile;
-    }*/
+		return byteArr;
+    }
     
     private void initUsers(Faker faker){
-    	/*MultipartFile nyanCat = null;
-		try {
-			nyanCat = getImageFile();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}*/
+        byte[] byteArr = getDefaultUserImage();
         for(int i = 1; i < 21; i++){
             Address address = new Address(
                     faker.address().streetAddress(),
@@ -93,7 +83,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
                     faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                     address);
             users.save(user);
-        	//fileService.storeUser(nyanCat, user);
+        	fileService.storeUserInitalizer(byteArr, user);
         }
     }
 

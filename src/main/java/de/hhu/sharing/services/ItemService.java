@@ -4,11 +4,13 @@ import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.storage.StorageService;
+import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
@@ -34,7 +36,7 @@ public class ItemService{
         	storageService.storeItem(file, item);
         }else {
         	System.out.println("No picture");
-        }
+       }
     }
 
     public void edit(Long id, String name, String description, Integer rental, Integer deposit, User user) {
