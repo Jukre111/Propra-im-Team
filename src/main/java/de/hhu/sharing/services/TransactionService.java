@@ -43,4 +43,9 @@ public class TransactionService {
         proPayService.initiateTransaction(transaction);
         transactions.save(transaction);
     }
+
+    public void setDepositRevoked (Transaction trans, String status){
+        trans.setDepositRevoked(status);
+        transactions.save(trans);
+    }
 }
