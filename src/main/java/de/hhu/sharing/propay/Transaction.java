@@ -18,7 +18,7 @@ public class Transaction {
     private int wholeRent;
     private int deposit;
     private Long processId;
-    private boolean depositRevoked = false;
+    private String depositRevoked = "offen";
 
     @ManyToOne
     private Item item;

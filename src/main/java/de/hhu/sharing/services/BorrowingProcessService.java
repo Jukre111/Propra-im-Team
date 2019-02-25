@@ -66,7 +66,6 @@ public class BorrowingProcessService {
         else{
             proPayService.punishDeposit(borrower, transactionService.getFromProcessId(processId));
         }
-        proPayService.releaseDeposit(borrower, transactionService.getFromProcessId(processId));
         userService.removeProcessFromProcessLists(process);
         process.getItem().removeFromPeriods(process.getPeriod());
         processes.delete(process);
