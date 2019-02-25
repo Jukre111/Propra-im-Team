@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.mockito.*;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.NestedServletException;
 
 import java.nio.charset.Charset;
 import java.time.LocalDate;
@@ -131,11 +132,17 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void testGet(){
+    public void testGetItemFound(){
         User user = generateUser("dude");
         Item item = generateItem(user);
         Mockito.when(items.findById(1L)).thenReturn(Optional.of(item));
-        Assert.assertTrue(itemService.get(1L).getName().equals("apfel"));
+        Assert.assertEquals(itemService.get(1L).getName(),"apfel");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testGetItemNotFound(){
+        Mockito.when(items.findById(1L)).thenReturn(Optional.empty());
+        itemService.get(1L);
     }
 
     @Test
@@ -158,6 +165,12 @@ public class ItemServiceTest {
         Item item = generateItem(user);
         Mockito.when(items.findByRequests_id(1L)).thenReturn(Optional.of(item));
         Assert.assertEquals(itemService.getFromRequestId(1L), item);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testGetFromRequestIdItemNotFound(){
+        Mockito.when(items.findByRequests_id(1L)).thenReturn(Optional.empty());
+        itemService.getFromRequestId(1L);
     }
 
     @Test
@@ -183,5 +196,15 @@ public class ItemServiceTest {
         List<Item> list = generateItemList(user);
         Mockito.when(items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("lecker", "lecker")).thenReturn(list);
         Assert.assertEquals(itemService.searchFor("lecker"), list);
+    }
+
+    @Test
+    public void testIsChangeable(){
+       /* User user = generateUser("username");
+        Item item = generateItem(user);
+        item.setId(1L);
+
+        Mockito.when(items.findById(1L)).thenReturn(Optional.of(item));
+*/
     }
 }
