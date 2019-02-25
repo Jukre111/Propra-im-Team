@@ -23,16 +23,22 @@ public class UserService {
     public User getBorrowerFromBorrowingProcessId(Long processId) {
         User user = this.users.findByBorrowed_id(processId)
                 .orElseThrow(
-                        () -> new RuntimeException("Item not found!"));
+                        () -> new RuntimeException("User not found!"));
         return user;
     }
 
-    public void removeProcessFromProcessLists(User lender, BorrowingProcess process) {
+    public void removeProcessFromProcessLists(BorrowingProcess process) {
+        User lender = process.getItem().getLender();
         lender.removeFromLend(process);
         users.save(lender);
         User borrower = this.getBorrowerFromBorrowingProcessId(process.getId());
         borrower.removeFromBorrowed(process);
         users.save(borrower);
+    }
 
+    public boolean userIsInvolvedToProcess(User user, BorrowingProcess process) {
+        User borrower = this.getBorrowerFromBorrowingProcessId(process.getId());
+        User lender = process.getItem().getLender();
+        return user == borrower || user == lender;
     }
 }

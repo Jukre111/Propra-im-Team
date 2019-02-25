@@ -1,9 +1,7 @@
 package de.hhu.sharing.web;
 
-import de.hhu.sharing.data.TransactionRepository;
 import de.hhu.sharing.model.BorrowingProcess;
 import de.hhu.sharing.model.Conflict;
-import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.security.Principal;
-import java.util.List;
 
 @Controller
 public class ConflictController {
@@ -22,78 +21,87 @@ public class ConflictController {
     private UserService userService;
 
     @Autowired
-    private ItemService itemService;
-
-    @Autowired
     private ConflictService conflictService;
 
     @Autowired
     private BorrowingProcessService borrowingProcessService;
 
-    @Autowired
-    private ProPayService proService;
-
-    @Autowired
-    private TransactionRepository transRepo;
-
     @GetMapping("/conflict")
-    public String conflictPage(Model model, Principal p, @RequestParam("id") Long id){
-
-        BorrowingProcess borrowingProcess = borrowingProcessService.getBorrowingProcess(id);
-        model.addAttribute( "borrowingProcess", borrowingProcess);
-        User borrower = userService.getBorrowerFromBorrowingProcessId(id);
-        model.addAttribute("borrower", borrower);
-        return "conflict";
+    public String conflict(Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
+        User user = userService.get(p.getName());
+        BorrowingProcess process = borrowingProcessService.get(id);
+        if(!userService.userIsInvolvedToProcess(user, process)){
+            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            return "redirect:/account";
+        }
+        Conflict conflict = conflictService.getFromBorrowindProcess(process);
+        if(conflict != null){
+            return "redirect:/conflictDetails?id=" + conflict.getId();
+        }
+        model.addAttribute( "borrowingProcess", process);
+        model.addAttribute("borrower", userService.getBorrowerFromBorrowingProcessId(id));
+        return "conflictNew";
     }
 
     @PostMapping("/saveConflict")
-    public String saveConflict(@RequestParam("id") Long id, String problem){
-        BorrowingProcess process = borrowingProcessService.getBorrowingProcess(id);
-        Item item =  borrowingProcessService.getItemFromProcess(process);
-        conflictService.create(problem, item, item.getLender(), userService.getBorrowerFromBorrowingProcessId(id), process);
+    public String saveConflict(@RequestParam("id") Long id, String problem, Principal p, RedirectAttributes redirectAttributes){
+        User user = userService.get(p.getName());
+        BorrowingProcess process = borrowingProcessService.get(id);
+        if(!userService.userIsInvolvedToProcess(user, process)){
+            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            return "redirect:/account";
+        }
+        Conflict conflict = conflictService.getFromBorrowindProcess(process);
+        if(conflict != null){
+            redirectAttributes.addFlashAttribute("conflictExistsAlready",true);
+            return "redirect:/conflictDetails?id=" + conflict.getId();
+        }
+        conflictService.create(process.getItem().getLender(), userService.getBorrowerFromBorrowingProcessId(id), process, user, problem);
         return "redirect:/account";
     }
 
-    @GetMapping("/conflictView")
+    @PostMapping("/conflictNewMessage")
+    public String addMessageToConflict(@RequestParam("id") Long id, String message, Principal p, RedirectAttributes redirectAttributes){
+        User user = userService.get(p.getName());
+        Conflict conflict = conflictService.get(id);
+        if(!userService.userIsInvolvedToProcess(user, conflict.getProcess())){
+            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            return "redirect:/account";
+        }
+        conflictService.addToMessages(conflict, user, message);
+        return "redirect:/conflictDetails?id=" + conflict.getId();
+    }
+
+    @GetMapping("/conflictDetails")
+    public String conflictDetails (Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
+        User user = userService.get(p.getName());
+        Conflict conflict = conflictService.get(id);
+        if(!userService.userIsInvolvedToProcess(user, conflict.getProcess()) && !user.getRole().equals("ROLE_ADMIN")){
+            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            return "redirect:/account";
+        }
+        model.addAttribute("conflict", conflictService.get(id));
+        model.addAttribute("user", user);
+        return "conflictDetails";
+    }
+
+    @GetMapping("/admin/conflicts")
     public String conflictView(Model model){
         model.addAttribute("allConflicts", conflictService.getAll());
         return "conflictView";
     }
 
-    @GetMapping("/conflictDetails")
-    public String conflictDetails (Model model, @RequestParam("id") Long id){
-        model.addAttribute("conflict", conflictService.get(id));
-        return "conflictDetails";
+    @GetMapping("admin/conflicts/lender")
+    public String lender(@RequestParam("id") Long id){
+        Conflict conflict = conflictService.get(id);
+        borrowingProcessService.itemReturned(conflict.getProcess().getId(), "bad");
+        return "redirect:/admin/conflicts";
     }
 
-    @GetMapping("/borrower")
+    @GetMapping("admin/conflicts/borrower")
     public String borrower(@RequestParam("id") Long id){
         Conflict conflict = conflictService.get(id);
-        User borrower = conflict.getBorrower();
-        User owner = conflict.getOwner();
-
-        BorrowingProcess process = conflict.getProcess();
-        if(proService.cancelDeposit(borrower.getUsername(),transRepo.findByProcessId(process.getId())) == 200) {
-            conflictService.removeConflict(conflict);
-            borrowingProcessService.returnItem(process.getId(), owner);
-        }
-
-        return "redirect:/conflictView";
-    }
-
-
-    @GetMapping("/owner")
-    public String owner(@RequestParam("id") Long id){
-        Conflict conflict = conflictService.get(id);
-        User owner = conflict.getOwner();
-        User borrower = conflict.getBorrower();
-
-        BorrowingProcess process = conflict.getProcess();
-        if(proService.collectDeposit(borrower.getUsername(),transRepo.findByProcessId(process.getId())) == 200) {
-            conflictService.removeConflict(conflict);
-            borrowingProcessService.returnItem(process.getId(), owner);
-        }
-
-        return "redirect:/conflictView";
+        borrowingProcessService.itemReturned(conflict.getProcess().getId(), "good");
+        return "redirect:/admin/conflicts";
     }
 }

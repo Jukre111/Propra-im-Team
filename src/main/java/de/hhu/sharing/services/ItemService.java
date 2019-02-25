@@ -2,7 +2,9 @@ package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.Period;
 import de.hhu.sharing.model.User;
+import org.apache.tomcat.jni.Local;
 import de.hhu.sharing.storage.StorageService;
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,7 @@ public class ItemService{
 
     @Autowired
     private ConflictService conflictService;
+
     @Autowired
     private StorageService storageService;
 
@@ -87,5 +91,14 @@ public class ItemService{
     public boolean isChangeable(Long id) {
         Item item = this.get(id);
         return item.noPeriodsAndRequests() && conflictService.noConflictWith(item);
+    }
+
+    public boolean isAvailableAt(Item item, LocalDate startdate, LocalDate enddate) {
+        return item.isAvailableAt(new Period(startdate, enddate));
+    }
+
+    public boolean isOwner(Long id, User user) {
+        Item item = this.get(id);
+        return item.getLender() == user;
     }
 }

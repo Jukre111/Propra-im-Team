@@ -1,15 +1,14 @@
 package de.hhu.sharing.services;
 
-import de.hhu.sharing.data.ItemRepository;
-import de.hhu.sharing.data.RequestRepository;
+import de.hhu.sharing.data.TransactionRepository;
+import de.hhu.sharing.model.BorrowingProcess;
 import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.Request;
 import de.hhu.sharing.propay.Transaction;
 import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.List;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -17,46 +16,36 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class TransactionService {
 
     @Autowired
-    ItemRepository itemRepo;
+    private TransactionRepository transactions;
 
     @Autowired
-    RequestRepository reqRepo;
+    private ProPayService proPayService;
 
-    @Autowired
-    ProPayService proService;
-
-    public boolean checkFinances(User requester, Item item, LocalDate startdate, LocalDate enddate){
-        long days = DAYS.between(startdate, enddate);
-        int rent = item.getRental()*(int) days;
-        proService.createAccount(requester.getUsername());
-        int amount = proService.showAccount(requester.getUsername()).getAmount();
-        return amount >= (rent+item.getDeposit());
+    public Transaction getFromProcessId(Long processId){
+        return transactions.findByProcessId(processId)
+                .orElseThrow(
+                    () -> new RuntimeException("Item not found!"));
     }
-    public int createTransaction(Long requestId, Long itemId) {
-        Item item = itemRepo.findById(itemId).get();
-        Request request = reqRepo.findById(requestId).get();
-        User lender = item.getLender();
-        User borrower = request.getRequester();
 
-        long days = DAYS.between(request.getPeriod().getStartdate(),request.getPeriod().getEnddate());
-        int rent = item.getRental()*(int) days;
+    public List<Transaction> getAllFromSender(User user){
+        return transactions.findAllBySender(user);
+    }
 
-        proService.createAccount(lender.getUsername());
+    public List<Transaction> getAllFromReceiver(User user){
+        return transactions.findAllByReceiver(user);
+    }
 
-        Transaction trans = new Transaction(rent, item.getDeposit(), item, lender, borrower);
-        
-        if(checkFinances(request.getRequester(), item, request.getPeriod().getStartdate(), request.getPeriod().getStartdate())){
-            int responseTransfer = proService.transferMoney(borrower.getUsername(), lender.getUsername(), rent);
-            int responseDeposit = proService.createDeposit(borrower.getUsername(), lender.getUsername(), trans);
-            //Transaction will be saved in proService due to reasons...
+    public void createTransaction(BorrowingProcess process, User borrower, User lender){
+        Item item = process.getItem();
+        int days = (int) DAYS.between(process.getPeriod().getStartdate(),process.getPeriod().getEnddate()) + 1;
+        int rent = item.getRental() * days;
+        Transaction transaction = new Transaction(rent, item.getDeposit(),process.getId(), item, borrower, lender);
+        proPayService.initiateTransaction(transaction);
+        transactions.save(transaction);
+    }
 
-            if(responseDeposit!=200)
-                return responseDeposit;
-            else if(responseTransfer!=200)
-                return responseTransfer;
-        } else {
-            return -1;
-        }
-        return 200;
+    public void setDepositRevoked (Transaction trans, String status){
+        trans.setDepositRevoked(status);
+        transactions.save(trans);
     }
 }

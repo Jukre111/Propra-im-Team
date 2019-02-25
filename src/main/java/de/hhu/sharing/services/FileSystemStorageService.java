@@ -84,6 +84,18 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
+    public void storeItemInitalizer(byte[] byteArr, Item item) {
+        //byte[] bytes = byteArr;
+        Image image = new Image();
+        String contentType = "image/gif";
+        image.setMimeType(contentType);
+        image.setImageData(byteArr);
+        imageRepo.save(image);
+        item.setImage(image);
+        itemRepo.save(item);
+    }
+
+    @Override
     public void storeUser(MultipartFile file, User user){
     	byte[] byteArr = readFile(file);
         Image image = null;

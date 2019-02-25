@@ -5,39 +5,39 @@ import de.hhu.sharing.model.User;
 import lombok.Data;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
 @Data
 public class Transaction {
-    @Id
-    int reservationId;
-    int wholeRent;
-    int deposit;
-    long processId;
 
-    boolean depositRevoked;
+    @Id
+    private Long id;
+    private int wholeRent;
+    private int deposit;
+    private Long processId;
+    private String depositRevoked = "offen";
+
+    @ManyToOne
+    private Item item;
+
+    @ManyToOne
+    private User sender;
+
+    @ManyToOne
+    private User receiver;
 
     public Transaction() {
-        depositRevoked = false;
     }
 
-    public Transaction(int wholeRent, int deposit, Item item, User source, User target) {
+    public Transaction(int wholeRent, int deposit, Long processId, Item item, User sender, User receiver) {
         this.wholeRent = wholeRent;
         this.deposit = deposit;
-        this.depositRevoked = false;
+        this.processId = processId;
         this.item = item;
-        this.source = source;
-        this.target = target;
+        this.sender = sender;
+        this.receiver = receiver;
     }
-
-    @ManyToOne
-    Item item;
-
-    @ManyToOne
-    User source;
-
-    @ManyToOne
-    User target;
 }

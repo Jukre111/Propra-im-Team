@@ -1,10 +1,7 @@
 package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.ConflictRepository;
-import de.hhu.sharing.model.BorrowingProcess;
-import de.hhu.sharing.model.Conflict;
-import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.User;
+import de.hhu.sharing.model.*;
 import groovy.transform.AutoImplement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,32 +14,35 @@ public class ConflictService {
     @Autowired
     private ConflictRepository conflicts;
 
-    @Autowired
-    private BorrowingProcessService borrowingProcessService;
-
     public Conflict get(Long id){
-        Conflict conflict = this.conflicts.findById(id)
+        return this.conflicts.findById(id)
                 .orElseThrow(
                         ()-> new RuntimeException("Conflict not found"));
-        return conflict;
     }
 
-
+    public Conflict getFromBorrowindProcess(BorrowingProcess process) {
+        return this.conflicts.findByProcess(process);
+    }
 
     public List<Conflict> getAll() {
         return conflicts.findAll();
     }
 
-    public void create(String problem, Item item, User prosecuter, User accused, BorrowingProcess process) {
-        Conflict conflict = new Conflict(problem, item, prosecuter, accused, process);
+    public void create(User lender, User borrower, BorrowingProcess process, User prosecuter, String problem) {
+        Conflict conflict = new Conflict(lender, borrower, process, new Message(prosecuter.getUsername(), problem));
         conflicts.save(conflict);
     }
 
-    public boolean noConflictWith(Item item) {
-        return conflicts.findAllByItem(item).isEmpty();
+    public void delete(Conflict conflict){
+        conflicts.delete(conflict);
     }
 
-    public void removeConflict(Conflict conflict){
-        conflicts.delete(conflict);
+    public boolean noConflictWith(Item item) {
+        return conflicts.findAllByProcess_Item(item).isEmpty();
+    }
+
+    public void addToMessages(Conflict conflict, User user, String message) {
+        conflict.addToMessages(new Message(user.getUsername(), message));
+        conflicts.save(conflict);
     }
 }

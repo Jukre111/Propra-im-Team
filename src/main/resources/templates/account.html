@@ -63,7 +63,8 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 		<div class="alert alert-success" role="alert" th:if="${saved}" >Objekt erstellt.</div>
 		<div class="alert alert-danger" role="alert" th:if="${notAvailable}" >Objekt nicht verfügbar.</div>
 		<div class="alert alert-danger" role="alert" th:if="${notChangeable}" >Objekt nicht veränderbar. Es sind noch Requests, Verleihungen oder Konflikte offen.</div>
-		<div class="alert alert-danger" role="alert" th:if="${notLender}" >Keine Berechtigung.</div>
+		<div class="alert alert-danger" role="alert" th:if="${noCredit}" >Der Anfragensteller hat nicht genug ProPray-Guthaben.</div>
+		<div class="alert alert-danger" role="alert" th:if="${notAuthorized}" >Keine Berechtigung.</div>
 		<div style="padding: 20px" class="form-horizontal">
 			<div class="media">
 				<div class="media-left media-middle">
@@ -125,7 +126,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					</div>-->
 
 					<div class="media-right media-middle" th:if="${user.role == 'ROLE_ADMIN'}">
-						<a id="conflictbtn" th:href="@{/conflictView}" style="margin-right: 150px">Konfliktlösestelle</a>
+						<a id="conflictbtn" th:href="@{/admin/conflicts}" style="margin-right: 150px">Konfliktlösestelle</a>
 					</div>
 					<div class="form-group">
 						<label class="col-sm-2 control-label">Profilbild hochladen</label>
@@ -200,7 +201,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 				<tr th:each="process : ${user.lend}">
 					<td th:text="${process.item.name}"></td>
 					<td>
-						<a th:href="@{'/returnItem?id=' + ${process.id}}" class="indexbtn">Erhalten</a>
+						<a th:href="@{'/itemReturned?id=' + ${process.id}}" class="indexbtn">Erhalten</a>
 					</td>
 					<td>
 						<a class="indexbtn" th:href="@{'/conflict?id=' + ${process.id}}">Konflikt</a>

@@ -75,4 +75,15 @@ public class Item {
     public boolean noPeriodsAndRequests() {
         return periods.isEmpty() && requests.isEmpty();
     }
+
+    @Transactional
+    public boolean isAvailableAt(Period period) {
+        for(Period per : periods){
+            if(per.overlapsWith(period)){
+                return false;
+            }
+        }
+        return true;
+
+    }
 }

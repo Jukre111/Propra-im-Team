@@ -54,6 +54,12 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="deposits" class="col-sm-2 control-label">Davon reservierte Kautionen</label>
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control" id="deposits" name="amount" th:value="${deposits}" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="sum" class="col-sm-2 control-label">Aufladebetrag</label>
                         <div class="col-xs-6">
                             <input type="number" min="0" class="form-control" id="sum" name="sum" />
@@ -63,7 +69,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                     </div>
                 </div>
             </div>
-            <div style="padding: 20px">
+            <div class="col-sm-5" style="padding: 20px; margin-left: 30px">
                 <font size="4">Eingegangene Transaktionen</font>
                 <table>
                     <tr>
@@ -73,19 +79,19 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                         <th width="20%">Artikel</th>
                         <th width="20%">Sender</th>
                     </tr>
-                    <tr th:each="sendelement : ${send}">
-                        <td th:text="${sendelement.wholeRent}"></td>
-                        <td th:text="${sendelement.deposit}"></td>
-                        <td>
-                            <span th:if="${sendelement.depositRevoked == true}">Ja</span>
-                            <span th:unless="${sendelement.depositRevoked == true}">Nein</span>
-                        </td>
-                        <td th:text="${sendelement.item.getName()}"></td>
-                        <td th:text="${sendelement.target.getUsername()}"></td>
+                    <tr th:each="transaction : ${received}">
+                        <td th:text="${transaction.wholeRent}"></td>
+                        <td th:text="${transaction.deposit}"></td>
+                        <td th:text="${transaction.depositRevoked}"></td>
+                        <td th:text="${transaction.item.getName()}"></td>
+                        <td th:text="${transaction.sender.getUsername()}"></td>
                     </tr>
                 </table>
+                <table>
+
+                </table>
             </div>
-            <div style="padding: 20px">
+            <div class="col-sm-5" style="padding: 20px; margin-left: 30px">
                 <font size="4">Ausgegangene Transaktionen</font>
                 <table>
                     <tr>
@@ -95,16 +101,16 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                         <th width="20%">Artikel</th>
                         <th width="20%">Empfaenger</th>
                     </tr>
-                    <tr th:each="receiveelement : ${receive}">
-                        <td th:text="${receiveelement.wholeRent}"></td>
-                        <td th:text="${receiveelement.deposit}"></td>
-                        <td>
-                            <span th:if="${receiveelement.depositRevoked == true}">Ja</span>
-                            <span th:unless="${receiveelement.depositRevoked == true}">Nein</span>
-                        </td>
-                        <td th:text="${receiveelement.item.getName()}"></td>
-                        <td th:text="${receiveelement.target.getUsername()}"></td>
+                    <tr th:each="transaction : ${send}">
+                        <td th:text="${transaction.wholeRent}"></td>
+                        <td th:text="${transaction.deposit}"></td>
+                        <td th:text="${transaction.depositRevoked}"></td>
+                        <td th:text="${transaction.item.getName()}"></td>
+                        <td th:text="${transaction.receiver.getUsername()}"></td>
                     </tr>
+                </table>
+                <table>
+
                 </table>
             </div>
         </form>

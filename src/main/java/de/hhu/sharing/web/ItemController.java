@@ -53,7 +53,7 @@ public class ItemController {
             return "redirect:/account";
         }
         if(itemService.get(id).getLender() != userService.get(p.getName())){
-            redirectAttributes.addFlashAttribute("notLender",true);
+            redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/account";
         }
         model.addAttribute("item", itemService.get(id));
@@ -62,10 +62,6 @@ public class ItemController {
 
     @PostMapping("/saveItem")
     public String saveItem(Long id, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("rental") Integer rental, @RequestParam("deposit") Integer deposit, @RequestParam("file") MultipartFile file , Principal p, RedirectAttributes redirectAttributes){
-//        if(!item.isAvailable()){
-//            redirectAttributes.addFlashAttribute("notAvailable",true);
-//            return "redirect:/account";
-//        }
         User user = userService.get(p.getName());
         if(id == null){
             itemService.create(name, description, rental, deposit, user, file);
@@ -85,7 +81,7 @@ public class ItemController {
             return "redirect:/account";
         }
         if(itemService.get(id).getLender() != userService.get(p.getName())){
-            redirectAttributes.addFlashAttribute("notLender",true);
+            redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/account";
         }
         itemService.delete(id);
@@ -93,14 +89,14 @@ public class ItemController {
         return "redirect:/account";
     }
 
-    @GetMapping("/returnItem")
-    public String returnItem( @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
+    @GetMapping("/itemReturned")
+    public String itemReturned(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         if(processService.get(id).getItem().getLender() != user){
-            redirectAttributes.addFlashAttribute("notLender",true);
+            redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/account";
         }
-        processService.returnItem(id, user);
+        processService.itemReturned(id, "good");
         redirectAttributes.addFlashAttribute("returned",true);
         return "redirect:/account";
     }
