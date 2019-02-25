@@ -14,14 +14,10 @@ public class ConflictService {
     @Autowired
     private ConflictRepository conflicts;
 
-    @Autowired
-    private BorrowingProcessService borrowingProcessService;
-
     public Conflict get(Long id){
-        Conflict conflict = this.conflicts.findById(id)
+        return this.conflicts.findById(id)
                 .orElseThrow(
                         ()-> new RuntimeException("Conflict not found"));
-        return conflict;
     }
 
     public Conflict getFromBorrowindProcess(BorrowingProcess process) {
@@ -37,11 +33,16 @@ public class ConflictService {
         conflicts.save(conflict);
     }
 
-    public boolean noConflictWith(Item item) {
-        return conflicts.findAllByItem(item).isEmpty();
+    public void delete(Conflict conflict){
+        conflicts.delete(conflict);
     }
 
-    public void removeConflict(Conflict conflict){
-        conflicts.delete(conflict);
+    public boolean noConflictWith(Item item) {
+        return conflicts.findAllByProcess_Item(item).isEmpty();
+    }
+
+    public void addToMessages(Conflict conflict, User user, String message) {
+        conflict.addToMessages(new Message(user.getUsername(), message));
+        conflicts.save(conflict);
     }
 }

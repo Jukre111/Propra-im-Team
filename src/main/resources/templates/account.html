@@ -192,7 +192,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 				<tr th:each="process : ${user.lend}">
 					<td th:text="${process.item.name}"></td>
 					<td>
-						<a th:href="@{'/returnItem?id=' + ${process.id}}" class="indexbtn">Erhalten</a>
+						<a th:href="@{'/itemReturned?id=' + ${process.id}}" class="indexbtn">Erhalten</a>
 					</td>
 					<td>
 						<a class="indexbtn" th:href="@{'/conflict?id=' + ${process.id}}">Konflikt</a>

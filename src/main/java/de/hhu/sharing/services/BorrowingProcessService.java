@@ -2,10 +2,7 @@ package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.BorrowingProcessRepository;
 import de.hhu.sharing.data.TransactionRepository;
-import de.hhu.sharing.model.BorrowingProcess;
-import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.Request;
-import de.hhu.sharing.model.User;
+import de.hhu.sharing.model.*;
 import de.hhu.sharing.propay.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,6 +31,9 @@ public class BorrowingProcessService {
     @Autowired
     private TransactionService transactionService;
 
+    @Autowired
+    private  ConflictService conflictService;
+
     public BorrowingProcess get(Long id) {
         return this.processes.findById(id)
                 .orElseThrow(
@@ -58,13 +58,16 @@ public class BorrowingProcessService {
         lender.addToLend(process);
     }
 
-    public void returnItem(Long processId, User lender){
+    public void itemReturned(Long processId){
         BorrowingProcess process = this.get(processId);
+        Conflict conflict = conflictService.getFromBorrowindProcess(process);
+        if(conflict != null){
+            conflictService.delete(conflict);
+        }
         User borrower = userService.getBorrowerFromBorrowingProcessId(processId);
         proService.releaseDeposit(borrower, transactionService.getFromProcessId(processId));
-        userService.removeProcessFromProcessLists(lender, process);
+        userService.removeProcessFromProcessLists(process);
         process.getItem().removeFromPeriods(process.getPeriod());
         processes.delete(process);
-
     }
 }

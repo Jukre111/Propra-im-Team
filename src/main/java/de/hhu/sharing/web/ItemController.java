@@ -89,14 +89,14 @@ public class ItemController {
         return "redirect:/account";
     }
 
-    @GetMapping("/returnItem")
-    public String returnItem( @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
+    @GetMapping("/itemReturned")
+    public String itemReturned(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         if(processService.get(id).getItem().getLender() != user){
             redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/account";
         }
-        processService.returnItem(id, user);
+        processService.itemReturned(id);
         redirectAttributes.addFlashAttribute("returned",true);
         return "redirect:/account";
     }
