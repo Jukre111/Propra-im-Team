@@ -54,6 +54,12 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="deposits" class="col-sm-2 control-label">Davon reservierte Kautionen</label>
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control" id="deposits" name="amount" th:value="${deposits}" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="sum" class="col-sm-2 control-label">Aufladebetrag</label>
                         <div class="col-xs-6">
                             <input type="number" min="0" class="form-control" id="sum" name="sum" />
@@ -63,47 +69,67 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                     </div>
                 </div>
             </div>
-            <div style="padding: 20px">
+            <div class="col-sm-5" style="padding: 20px; margin-left: 30px">
                 <font size="4">Eingegangene Transaktionen</font>
                 <table>
                     <tr>
                         <th width="10%">Miete</th>
                         <th width="10%">Kaution</th>
-                        <th width="10%">Kaution eingezogen</th>
-                        <th width="20%">Artikel</th>
-                        <th width="20%">Sender</th>
+                        <th width="20%">Kaution eingezogen</th>
+                        <th width="30%">Artikel</th>
+                        <th width="30%">Sender</th>
                     </tr>
-                    <tr th:each="transaction : ${received}">
-                        <td th:text="${transaction.wholeRent}"></td>
-                        <td th:text="${transaction.deposit}"></td>
-                        <td>
-                            <span th:if="${transaction.depositRevoked == true}">Ja</span>
-                            <span th:unless="${transaction.depositRevoked == true}">Nein</span>
-                        </td>
-                        <td th:text="${transaction.item.getName()}"></td>
-                        <td th:text="${transaction.sender.getUsername()}"></td>
+                    <tr th:each="transRen : ${received}">
+                        <td th:text="${transRen.wholeRent}"></td>
+                        <td th:text="${transRen.deposit}"></td>
+                        <td th:text="${transRen.depositRevoked}"></td>
+                        <td th:text="${transRen.item.getName()}"></td>
+                        <td th:text="${transRen.sender.getUsername()}"></td>
+                    </tr>
+                </table>
+                <br>
+                <table>
+                    <tr>
+                        <th width="40%">Preis</th>
+                        <th width="30%">Artikel</th>
+                        <th width="30%">Sender</th>
+                    </tr>
+                    <tr th:each="transactionPurchase : ${receivedPurchase}">
+                        <td th:text="${transactionPurchase.price}"></td>
+                        <td th:text="${transactionPurchase.item.getName()}"></td>
+                        <td th:text="${transactionPurchase.sender.getUsername()}"></td>
                     </tr>
                 </table>
             </div>
-            <div style="padding: 20px">
+            <div class="col-sm-5" style="padding: 20px; margin-left: 30px">
                 <font size="4">Ausgegangene Transaktionen</font>
                 <table>
                     <tr>
                         <th width="10%">Miete</th>
                         <th width="10%">Kaution</th>
-                        <th width="10%">Kaution entzogen</th>
-                        <th width="20%">Artikel</th>
-                        <th width="20%">Empfaenger</th>
+                        <th width="20%">Kaution entzogen</th>
+                        <th width="30%">Artikel</th>
+                        <th width="30%">Empfaenger</th>
                     </tr>
-                    <tr th:each="transaction : ${sender}">
-                        <td th:text="${transaction.wholeRent}"></td>
-                        <td th:text="${transaction.deposit}"></td>
-                        <td>
-                            <span th:if="${transaction.depositRevoked == true}">Ja</span>
-                            <span th:unless="${transaction.depositRevoked == true}">Nein</span>
-                        </td>
-                        <td th:text="${transaction.item.getName()}"></td>
-                        <td th:text="${transaction.receiver.getUsername()}"></td>
+                    <tr th:each="transRen : ${send}">
+                        <td th:text="${transRen.wholeRent}"></td>
+                        <td th:text="${transRen.deposit}"></td>
+                        <td th:text="${transRen.depositRevoked}"></td>
+                        <td th:text="${transRen.item.getName()}"></td>
+                        <td th:text="${transRen.receiver.getUsername()}"></td>
+                    </tr>
+                </table>
+                <br>
+                <table>
+                    <tr>
+                        <th width="40%">Preis</th>
+                        <th width="30%">Artikel</th>
+                        <th width="30%">Empfaenger</th>
+                    </tr>
+                    <tr th:each="transactionPurchase : ${sendPurchase}">
+                        <td th:text="${transactionPurchase.price}"></td>
+                        <td th:text="${transactionPurchase.item.getName()}"></td>
+                        <td th:text="${transactionPurchase.receiver.getUsername()}"></td>
                     </tr>
                 </table>
             </div>

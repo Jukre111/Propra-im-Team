@@ -103,7 +103,7 @@ public class ItemController {
             redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/account";
         }
-        processService.itemReturned(id);
+        processService.itemReturned(id, "good");
         redirectAttributes.addFlashAttribute("returned",true);
         return "redirect:/account";
     }

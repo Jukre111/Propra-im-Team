@@ -14,7 +14,7 @@
             var endDt = document.getElementById("enddate").value;
             var button = document.getElementById("button");
 
-            if(startDt && new Date(startDt).getUTCDate() < new Date().getUTCDate()){
+            if(startDt && new Date(startDt).getDay() < new Date().getDay()){
                 console.log("failure");
                 button.disabled = true;
                 alert("Das Startdatum kann nicht vor heute liegen!");

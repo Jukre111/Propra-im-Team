@@ -1,7 +1,7 @@
 package de.hhu.sharing.web;
 
 import de.hhu.sharing.model.User;
-import de.hhu.sharing.services.TransactionService;
+import de.hhu.sharing.services.TransactionRentalService;
 import de.hhu.sharing.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,13 +23,14 @@ public class ProPayController {
     private ProPayService proPayService;
 
     @Autowired
-    private TransactionService transactionService;
+    private TransactionRentalService transactionService;
 
     @GetMapping("/propayAccount")
     public String showProPayAccount(Model model, Principal p){
         User user = userService.get(p.getName());
         model.addAttribute("user", user);
         model.addAttribute("amount", proPayService.getAccount(user).getAmount());
+        model.addAttribute("deposits", proPayService.getDepositSum(proPayService.getAccount(user)));
         model.addAttribute("send", transactionService.getAllFromSender(user));
         model.addAttribute("received", transactionService.getAllFromReceiver(user));
         return "propayAccount";

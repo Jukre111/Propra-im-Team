@@ -59,7 +59,7 @@ public class FileSystemStorageService implements StorageService {
         try {
             InputStream inputStream = new ByteArrayInputStream(byteArr);
             int eof = inputStream.read(byteArr);
-            if(eof==-1){
+            if(eof==byteArr.length){
                 inputStream.close();
             }else{
                 inputStream.close();
@@ -89,7 +89,7 @@ public class FileSystemStorageService implements StorageService {
         Image image = new Image();
         String contentType = "image/gif";
         image.setMimeType(contentType);
-        image.setImageData(byteArr);
+        image.setImageData(bytes);
         imageRepo.save(image);
         item.setImage(image);
         itemRepo.save(item);

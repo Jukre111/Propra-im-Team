@@ -1,11 +1,11 @@
 package de.hhu.sharing.services;
 
 import com.google.gson.Gson;
-import de.hhu.sharing.data.TransactionRepository;
+import de.hhu.sharing.data.TransactionRentalRepository;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.propay.Account;
-import de.hhu.sharing.propay.Transaction;
+import de.hhu.sharing.propay.TransactionRental;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -19,6 +19,9 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 public class ProPayService {
+
+    @Autowired
+    TransactionRentalService transRenService;
 
     private RestTemplate rt = new RestTemplate();
     private String URL = "http://localhost:8888/";
@@ -34,7 +37,7 @@ public class ProPayService {
         int days = (int) DAYS.between(startdate, enddate) + 1;
         int rent = item.getRental() * days;
         int amount = this.getAccount(user).getAmount();
-        return amount >= (rent + item.getDeposit());
+        return amount >= (rent + item.getDeposit()+getDepositSum(this.getAccount(user)));
     }
 
     public void rechargeCredit(User user, int amount) {
@@ -42,30 +45,31 @@ public class ProPayService {
         this.callURL(URL, "POST");
     }
 
-    public void initiateTransaction(Transaction transaction) {
+    public void initiateTransactionRental(TransactionRental transRen) {
         String URL = this.URL
-                + "account/" + transaction.getSender().getUsername()
-                + "/transfer/" + transaction.getReceiver().getUsername()
-                + "?amount=" + transaction.getWholeRent();
+                + "account/" + transRen.getSender().getUsername()
+                + "/transfer/" + transRen.getReceiver().getUsername()
+                + "?amount=" + transRen.getWholeRent();
         this.callURL(URL, "POST");
         URL = this.URL
-                + "reservation/reserve/" + transaction.getSender().getUsername()
-                + "/" + transaction.getReceiver().getUsername()
-                + "?amount=" + transaction.getDeposit();
+                + "reservation/reserve/" + transRen.getSender().getUsername()
+                + "/" + transRen.getReceiver().getUsername()
+                + "?amount=" + transRen.getDeposit();
         this.callURL(URL, "POST");
-        Account account = this.getAccount(transaction.getSender());
-        transaction.setId(account.getLastReservationId());
+        Account account = this.getAccount(transRen.getSender());
+        transRen.setId(account.getLastReservationId());
     }
 
-    public void releaseDeposit(User sender, Transaction transaction) {
-        String URL = this.URL + "reservation/release/" + sender.getUsername() + "?reservationId=" + transaction.getId();
+    public void releaseDeposit(User sender, TransactionRental transRen) {
+        String URL = this.URL + "reservation/release/" + sender.getUsername() + "?reservationId=" + transRen.getId();
         this.callURL(URL, "POST");
+        transRenService.setDepositRevoked(transRen,"Nein");
     }
 
-    public void punishDeposit(User sender, Transaction transaction) {
-        String URL = this.URL + "reservation/punish/" + sender.getUsername() + "?reservationId=" + transaction.getId();
+    public void punishDeposit(User sender, TransactionRental transRen) {
+        String URL = this.URL + "reservation/punish/" + sender.getUsername() + "?reservationId=" + transRen.getId();
         this.callURL(URL, "POST");
-        transaction.setDepositRevoked(true);
+        transRenService.setDepositRevoked(transRen,"Ja");
     }
 
     private void callURL(String urlString, String method) {
@@ -78,5 +82,13 @@ public class ProPayService {
         } catch (IOException e) {
             throw new RuntimeException("ProPay not reachable!");
         }
+    }
+
+    public int getDepositSum (Account account){
+        int depositSum = 0;
+        for(int i = 0; i<account.getReservations().size(); i++) {
+            depositSum += account.getReservations().get(i).getAmount();
+        }
+        return depositSum;
     }
 }
