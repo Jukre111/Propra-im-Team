@@ -61,12 +61,6 @@
                         <script type="text/javascript" th:inline="javascript">
                             $(document).ready(function()
                             {
-                                $('#startdatecalendar').click(function() {
-                                    if ($('#startdatecalendar td.selected').length == 0) {
-                                        $('#startdate').val(null);
-                                    }
-                                    console.log("CLICK ON TABLE");
-                                });
                                 $('#startdatecalendar').calendar({
                                     onSelectDate: function(day, month, year) {
                                         $('#startdatecalendar td.cur-month').each(function() {
@@ -76,8 +70,9 @@
                                         }).each(function() {
                                             $(this).addClass('selected');
                                         });
+                                        if (day < 10) day = '0' + day;
+                                        if (month < 10) month = '0' + month;
                                         $('#startdate').val(year + '-' + month + '-' + day);
-                                        console.log("CLICK ON TD");
                                     }
                                 });
                             })
@@ -94,14 +89,16 @@
                             {
                                 $('#enddatecalendar').calendar({
                                     onSelectDate: function(day, month, year) {
-                                        $('#enddatecalendar td').each(function() {
+                                        $('#enddatecalendar td.cur-month').each(function() {
                                             $(this).removeClass('selected');
                                         }).filter(function() {
                                             return $(this).text() == day;
                                         }).each(function() {
-                                           $(this).addClass('selected');
+                                            $(this).addClass('selected');
                                         });
-                                        $('#enddate').val(year + "-" + month + "-" + day)
+                                        if (day < 10) day = '0' + day;
+                                        if (month < 10) month = '0' + month;
+                                        $('#enddate').val(year + '-' + month + '-' + day);
                                     }
                                 });
                             })

@@ -213,12 +213,10 @@
 											}
 											return cls.join(' ');
 										}).data({date: d.getDate(), month: d.getMonth() + 1, year: d.getFullYear()}).append(d.getDate()).click(function(){
-											var day = $(this).data('date'),
+											var date = $(this).data('date'),
 											month = $(this).data('month'),
 											year = $(this).data('year');
-											if (d.getMonth() == date.getMonth()) {
-												_this.options.onSelectDate.call(_this, day, month, year);
-											}
+											_this.options.onSelectDate.call(_this, date, month, year);
 										}));
 									}
 									return ap;
