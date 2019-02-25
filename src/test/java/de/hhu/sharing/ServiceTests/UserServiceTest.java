@@ -67,13 +67,13 @@ public class UserServiceTest {
     }
 
 
-    @Test
-    public void testRemoveProcessFromProcessLists(){
+   // @Test
+  //  public void testRemoveProcessFromProcessLists(){
 
       //  User user = generateUser();
       //  Mockito.when(users.findByBorrowed_id(1L)).thenReturn(Optional.of(user));
 
-    }
+   // }
 //    Method doesn't exist anymore
 //    @Test
 //    public void testAddToBorrowedItems(){

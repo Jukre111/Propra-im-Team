@@ -40,7 +40,7 @@ public class BorrowingProcessServceTest {
     }
 
     private void testAccept(){
-        BPService.accept(1L);
+
     }
 
 }

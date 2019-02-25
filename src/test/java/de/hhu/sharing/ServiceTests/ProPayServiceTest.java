@@ -35,7 +35,7 @@ public class ProPayServiceTest {
         //pps.changeTemplateTo(rt);
     }
 
-    @Test
+    /*@Test
     public void testShowAccount() {
         String userSrc = "Source";
         String URL = "http://localhost:8888/account/" + userSrc + "/";
@@ -50,15 +50,15 @@ public class ProPayServiceTest {
                         "]}";
 
         prepareRestTemplate(URL, json);
-        /*Account account = pps.getAccount(userSrc);
+        Account account = pps.getAccount(userSrc);
 
         Assertions.assertThat(account).isNotEqualTo(null);
         Assertions.assertThat(account.getAmount()).isEqualTo(50);
-        Assertions.assertThat(account.getAccount()).isEqualTo("Source");*/
-    }
+        Assertions.assertThat(account.getAccount()).isEqualTo("Source");
+    }*/
 
-    @Test
-    public void testCreateDeposit() {
+   // @Test
+   // public void testCreateDeposit() {
        /* String userSrc = "Source";
         String userTar = "Target";
         String URL = "http://localhost:8888/account/" + userSrc + "/";
@@ -81,14 +81,14 @@ public class ProPayServiceTest {
         Mockito.verify(transRepo, times(1)).save(captor.capture());
         Assert.assertTrue(captor.getAllValues().get(0).getReservationId() == 2);
         Assertions.assertThat(response).isEqualTo(200);*/
-    }
+   // }
 
-    @Test
-    public void checkNullPointers() {
+ //   @Test
+ //   public void checkNullPointers() {
        /* Mockito.when(pps.getAccount("user4")).thenReturn(null);
         int response = pps.createAccount("user4");
         Assertions.assertThat(response).isEqualTo(-1);
         Assert.assertTrue(true);*/
-    }
+   // }
 
 }
