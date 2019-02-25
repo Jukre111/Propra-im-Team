@@ -56,12 +56,13 @@
                 <div class="form-group">
                     <label for="startdate" class="col-sm-2 control-label">Startdatum</label>
                     <div class="col-xs-6">
-                        <input type="hidden" id="startdate" name="startdate" oninput="compare()" required="" />
+                        <input type="hidden" id="startdate" name="startdate" required="" />
                         <div id="startdatecalendar" data-toggle="calendar"></div>
                         <script type="text/javascript" th:inline="javascript">
                             $(document).ready(function()
                             {
                                 $('#startdatecalendar').calendar({
+                                    unavailable: [[${allDates}]],
                                     onSelectDate: function(day, month, year) {
                                         $('#startdatecalendar td.cur-month').each(function() {
                                             $(this).removeClass('selected');
@@ -73,6 +74,7 @@
                                         if (day < 10) day = '0' + day;
                                         if (month < 10) month = '0' + month;
                                         $('#startdate').val(year + '-' + month + '-' + day);
+                                        compare();
                                     }
                                 });
                             })
@@ -82,12 +84,13 @@
                 <div class="form-group">
                     <label for="enddate" class="col-sm-2 control-label">Enddatum</label>
                     <div class="col-xs-6">
-                        <input type="hidden" id="enddate" name="enddate" oninput="compare()" required="" />
+                        <input type="hidden" id="enddate" name="enddate" required="" />
                         <div id="enddatecalendar" data-toggle="calendar"></div>
                         <script type="text/javascript" th:inline="javascript">
                             $(document).ready(function()
                             {
                                 $('#enddatecalendar').calendar({
+                                    unavailable: [[${allDates}]],
                                     onSelectDate: function(day, month, year) {
                                         $('#enddatecalendar td.cur-month').each(function() {
                                             $(this).removeClass('selected');
@@ -99,6 +102,7 @@
                                         if (day < 10) day = '0' + day;
                                         if (month < 10) month = '0' + month;
                                         $('#enddate').val(year + '-' + month + '-' + day);
+                                        compare();
                                     }
                                 });
                             })
