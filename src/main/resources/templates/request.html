@@ -10,18 +10,19 @@
             var endDt = document.getElementById("enddate").value;
             var button = document.getElementById("button");
 
-            if(startDt && endDt)
-            {
-                if( (new Date(startDt).getTime() > new Date(endDt).getTime()))
-                {
-                    console.log("failure");
-                    button.disabled = true;
-                    alert("Das Enddatum darf nicht vor dem Startdatum liegen!");
-                }
-                else {
-                    console.log("work work work");
-                    button.disabled = false;
-                }
+            if(startDt && new Date(startDt).getUTCDate() < new Date().getUTCDate()){
+                console.log("failure");
+                button.disabled = true;
+                alert("Das Startdatum kann nicht vor heute liegen!");
+            }
+            else if(startDt && endDt && new Date(startDt).getTime() > new Date(endDt).getTime()){
+                console.log("failure");
+                button.disabled = true;
+                alert("Das Enddatum kann nicht vor dem Startdatum liegen!");
+            }
+            else {
+                console.log("work work work");
+                button.disabled = false;
             }
         }
     </script>
@@ -42,6 +43,7 @@
 <body>
 
 <div layout:fragment="body">
+    <div class="alert alert-danger" role="alert" th:if="${notAvailable}" >Objekt zum angegebenen Zeitraum nicht verfügbar.</div>
     <div class="style textPosition" style="padding: 20px">
         <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name" th:text="${item.name}"></span></h1>
         <div class="form-horizontal" style="padding-top: 60px">

@@ -11,10 +11,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class ErrorControllerMultipart extends ResponseEntityExceptionHandler {
 
-Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
 
 @ExceptionHandler(MultipartException.class)
 String handleFileException(HttpServletRequest request, Throwable ex) {
-    return "redirect:/";
+    if(request.getServletPath().equals("/handleFileUploadItem"))
+        return "redirect:/";
+    else
+        return "redirect:/account";
   }
 }

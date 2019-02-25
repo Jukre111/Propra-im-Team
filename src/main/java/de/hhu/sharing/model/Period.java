@@ -32,7 +32,6 @@ public class Period {
     }
 
     public boolean isOutdated() {
-        return startdate.isBefore(LocalDate.now())
-                || startdate.isEqual(LocalDate.now());
+        return startdate.isBefore(LocalDate.now());
     }
 }

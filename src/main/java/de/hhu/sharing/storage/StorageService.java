@@ -11,18 +11,11 @@ import java.util.stream.Stream;
 
 public interface StorageService {
 
-    void init();
-
-    Stream<Path> loadAll();
-
-    Path load(String filename);
-
-    Resource loadAsResource(String filename);
-
-    void deleteAll();
-
 	void storeUser(MultipartFile file, User user);
 	
 	void storeItem(MultipartFile file, Item item);
-    
+
+	void storeUserInitalizer(byte[] byteArr, User user);
+
+	void storeItemInitalizer(byte[] byteArr, Item item);
 }

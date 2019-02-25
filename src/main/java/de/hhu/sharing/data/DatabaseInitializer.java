@@ -4,24 +4,19 @@ import com.github.javafaker.Faker;
 import de.hhu.sharing.model.*;
 import de.hhu.sharing.services.FileSystemStorageService;
 
+import de.hhu.sharing.services.ProPayService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Path;
+import java.io.*;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -46,6 +41,9 @@ public class DatabaseInitializer implements ServletContextInitializer {
     private ConflictRepository conflicts;
 
     @Autowired
+    private ProPayService proPayService;
+
+    @Autowired
     ImageRepository imageRepo;
     
     @Autowired
@@ -59,28 +57,25 @@ public class DatabaseInitializer implements ServletContextInitializer {
         initRequests(faker);
     }
 
-    private MultipartFile getImageFile() throws FileNotFoundException {
-    	File file = ResourceUtils.getFile(
-    			"classpath:nyan_cat.gif");
-    	FileInputStream input;
-    	MultipartFile multipartFile = null;
+    private byte[] getDefaultUserImage(){
+        byte[] byteArr = new byte[1];
+        File file = new File("nyan_cat.gif");
+        try {
+            file = ResourceUtils.getFile(
+                    "classpath:nyan_cat.gif");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 		try {
-			input = new FileInputStream(file);
-			multipartFile = new MockMultipartFile("file",
-			file.getName(), "image/gif", input);
+            byteArr = Files.readAllBytes(file.toPath());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return multipartFile;
+		return byteArr;
     }
     
     private void initUsers(Faker faker){
-    	MultipartFile nyanCat = null;
-		try {
-			nyanCat = getImageFile();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+        byte[] byteArr = getDefaultUserImage();
         for(int i = 1; i < 21; i++){
             Address address = new Address(
                     faker.address().streetAddress(),
@@ -93,11 +88,12 @@ public class DatabaseInitializer implements ServletContextInitializer {
                     faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                     address);
             users.save(user);
-        	fileService.storeUser(nyanCat, user);
+        	fileService.storeUserInitalizer(byteArr, user);
         }
     }
 
     private void initItems(Faker faker){
+        byte[] byteArr = getDefaultUserImage();
         for(User user : users.findAll()){
             for(int j = 0; j < 3; j++){
                 Item item = new Item(faker.pokemon().name(),
@@ -106,6 +102,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
                         faker.number().numberBetween(1,1000),
                         user);
                 items.save(item);
+                fileService.storeItemInitalizer(byteArr, item);
             }
         }
     }
@@ -134,18 +131,6 @@ public class DatabaseInitializer implements ServletContextInitializer {
         User admin = new User("admin", encoder.encode("admin") ,"ROLE_ADMIN", faker.gameOfThrones().house(),
                 faker.lordOfTheRings().character(), faker.internet().emailAddress(), faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), adminAddress);
         users.save(admin);
-
-
-        User user1 = users.findByUsername("user1").orElseThrow(()-> new RuntimeException("Users not there."));
-        User user2 = users.findByUsername("user2").orElseThrow(()-> new RuntimeException("Users not there."));
-        Item item1 = items.findFirstByLender(user1).orElseThrow(()-> new RuntimeException("Item not found."));
-
-        Conflict conflict = new Conflict();
-        conflict.setItem(item1);
-        conflict.setProblem("Problem");
-        conflict.setBorrower(user2);
-        conflict.setOwner(user1);
-        conflicts.save(conflict);
 
     }
 

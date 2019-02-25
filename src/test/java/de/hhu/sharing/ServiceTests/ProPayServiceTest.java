@@ -50,7 +50,7 @@ public class ProPayServiceTest {
                         "]}";
 
         prepareRestTemplate(URL, json);
-        Account account = pps.showAccount(userSrc);
+        Account account = pps.getAccount(userSrc);
 
         Assertions.assertThat(account).isNotEqualTo(null);
         Assertions.assertThat(account.getAmount()).isEqualTo(50);
@@ -85,7 +85,7 @@ public class ProPayServiceTest {
 
     @Test
     public void checkNullPointers() {
-        Mockito.when(pps.showAccount("user4")).thenReturn(null);
+        Mockito.when(pps.getAccount("user4")).thenReturn(null);
         int response = pps.createAccount("user4");
         Assertions.assertThat(response).isEqualTo(-1);
         Assert.assertTrue(true);

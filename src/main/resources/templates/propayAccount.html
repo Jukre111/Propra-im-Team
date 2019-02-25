@@ -73,15 +73,15 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                         <th width="20%">Artikel</th>
                         <th width="20%">Sender</th>
                     </tr>
-                    <tr th:each="sendelement : ${send}">
-                        <td th:text="${sendelement.wholeRent}"></td>
-                        <td th:text="${sendelement.deposit}"></td>
+                    <tr th:each="transaction : ${received}">
+                        <td th:text="${transaction.wholeRent}"></td>
+                        <td th:text="${transaction.deposit}"></td>
                         <td>
-                            <span th:if="${sendelement.depositRevoked == true}">Ja</span>
-                            <span th:unless="${sendelement.depositRevoked == true}">Nein</span>
+                            <span th:if="${transaction.depositRevoked == true}">Ja</span>
+                            <span th:unless="${transaction.depositRevoked == true}">Nein</span>
                         </td>
-                        <td th:text="${sendelement.item.getName()}"></td>
-                        <td th:text="${sendelement.target.getUsername()}"></td>
+                        <td th:text="${transaction.item.getName()}"></td>
+                        <td th:text="${transaction.sender.getUsername()}"></td>
                     </tr>
                 </table>
             </div>
@@ -95,15 +95,15 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                         <th width="20%">Artikel</th>
                         <th width="20%">Empfaenger</th>
                     </tr>
-                    <tr th:each="receiveelement : ${receive}">
-                        <td th:text="${receiveelement.wholeRent}"></td>
-                        <td th:text="${receiveelement.deposit}"></td>
+                    <tr th:each="transaction : ${sender}">
+                        <td th:text="${transaction.wholeRent}"></td>
+                        <td th:text="${transaction.deposit}"></td>
                         <td>
-                            <span th:if="${receiveelement.depositRevoked == true}">Ja</span>
-                            <span th:unless="${receiveelement.depositRevoked == true}">Nein</span>
+                            <span th:if="${transaction.depositRevoked == true}">Ja</span>
+                            <span th:unless="${transaction.depositRevoked == true}">Nein</span>
                         </td>
-                        <td th:text="${receiveelement.item.getName()}"></td>
-                        <td th:text="${receiveelement.target.getUsername()}"></td>
+                        <td th:text="${transaction.item.getName()}"></td>
+                        <td th:text="${transaction.receiver.getUsername()}"></td>
                     </tr>
                 </table>
             </div>

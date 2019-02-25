@@ -54,7 +54,7 @@ public class TransactionServiceTest {
 
         request.setPeriod(new Period(LocalDate.now(),LocalDate.now().plusDays(5)));
         request.setRequester(borrower);
-        Mockito.when(proService.showAccount(borrower.getUsername())).thenReturn(new Account("User", 200, reservations));
+        Mockito.when(proService.getAccount(borrower.getUsername())).thenReturn(new Account("User", 200, reservations));
 
         Assertions.assertThat(transSevice.checkFinances(request.getRequester(), item, request.getPeriod().getStartdate(), request.getPeriod().getEnddate())).isTrue();
     }
@@ -74,7 +74,7 @@ public class TransactionServiceTest {
 
         request.setPeriod(new Period(LocalDate.now(),LocalDate.now().plusDays(5)));
         request.setRequester(borrower);
-        Mockito.when(proService.showAccount(borrower.getUsername())).thenReturn(new Account("User", 100, reservations));
+        Mockito.when(proService.getAccount(borrower.getUsername())).thenReturn(new Account("User", 100, reservations));
 
         Assertions.assertThat(transSevice.checkFinances(request.getRequester(), item, request.getPeriod().getStartdate(), request.getPeriod().getEnddate())).isFalse();
     }

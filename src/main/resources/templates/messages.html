@@ -23,9 +23,10 @@
     <div class="alert alert-success" role="alert" th:if="${accepted}" >Objekt verliehen. Überschneidende Anfragen wurden gelöscht.</div>
     <div class="alert alert-success" role="alert" th:if="${deleted}" >Anfrage erfolgreich gelöscht.</div>
     <div class="alert alert-success" role="alert" th:if="${declined}" >Anfrage abgelehnt.</div>
-    <div class="alert alert-danger" role="alert" th:if="${notRequester}" >Keine Berechtigung Anfrage zu löschen.</div>
-    <div class="alert alert-danger" role="alert" th:if="${notLender}" >Keine Berechtigung Anfrage beantzuworten.</div>
-    <div class="alert alert-danger" role="alert" th:if="${propayError}" >ProPay-Fehler.</div>
+    <div class="alert alert-danger" role="alert" th:if="${notAuthorized}" >Keine Berechtigung.</div>
+    <div class="alert alert-danger" role="alert" th:if="${outdatedRequest}" >Anfrage-Zeitraum liegt in der Vergangenheit.</div>
+    <div class="alert alert-danger" role="alert" th:if="${overlappingRequest}" >Anfrage-Zeitraum überschneidet sich mit Objektverfügbarkeit.</div>
+    <div class="alert alert-danger" role="alert" th:if="${noCredit}" >Anfragensteller hat nicht genug ProPay-Guthaben.</div>
     <div class="row" style="padding: 20px">
         <div class="col-sm-5" style="padding: 20px; margin-left: 30px">
             <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name">Anfragen</span></h1>
@@ -47,7 +48,7 @@
                                 <td th:text="${request.period.startdate}"></td>
                                 <td th:text="${request.period.enddate}"></td>
                                 <td>
-                                    <a type="button" class="indexbtn" th:href="@{'/acceptRequest?requestId=' + ${request.id} + '&itemId=' + ${item.id}}">Akzeptieren</a>
+                                    <a type="button" class="indexbtn" th:href="@{'/acceptRequest?id=' + ${request.id}}">Akzeptieren</a>
                                 </td>
                                 <td>
                                     <a class="indexbtn" th:href="@{'/declineRequest?id=' + ${request.id}}">Ablehnen</a>

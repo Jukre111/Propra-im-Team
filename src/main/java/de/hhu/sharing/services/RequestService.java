@@ -37,7 +37,25 @@ public class RequestService {
         Item item = itemService.getFromRequestId(request.getId());
         item.removeFromRequests(request);
         requests.delete(request);
+    }
 
+    public boolean isOverlappingWithAvailability(Long requestId) {
+        Request request = this.get(requestId);
+        Item item = itemService.getFromRequestId(requestId);
+        return !item.isAvailableAt(request.getPeriod());
+    }
+
+    public boolean isOutdated(Long requestId) {
+        Request request = this.get(requestId);
+        return request.getPeriod().isOutdated();
+    }
+
+    public boolean isRequester(Long requestId, User user) {
+        return this.get(requestId).getRequester() == user;
+    }
+
+    public boolean isLender(Long requestId, User user) {
+        return itemService.getFromRequestId(requestId).getLender() == user;
     }
 
     public void deleteOverlappingRequestsFromItem(Request request, Item item) {

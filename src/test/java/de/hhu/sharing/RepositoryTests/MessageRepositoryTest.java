@@ -1,6 +1,5 @@
 package de.hhu.sharing.RepositoryTests;
 
-import de.hhu.sharing.data.MessageRepository;
 import de.hhu.sharing.model.Message;
 import de.hhu.sharing.storage.StorageService;
 import org.assertj.core.api.Assertions;
