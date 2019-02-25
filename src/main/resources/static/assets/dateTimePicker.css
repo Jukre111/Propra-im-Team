@@ -94,11 +94,15 @@ min-width:40px;
 }
 
 .datetimepicker table tbody td:hover {
-background:#eee;
+background:#E74498;
 cursor:pointer;
 }
 
 .datetimepicker table tbody td:hover.unavailable {
 background:#C55762;
 cursor:not-allowed;
+}
+
+.datetimepicker table tbody td.selected, td.selected:hover {
+    background: #BD1D6F;
 }

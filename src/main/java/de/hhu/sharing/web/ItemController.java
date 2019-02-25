@@ -38,11 +38,7 @@ public class ItemController {
         Item item = itemService.get(id);
         User user = item.getLender();
         Address address = user.getAddress();
-        List <Period> allPeriods = item.getPeriods();
-        List <LocalDate> allDates = new ArrayList<>();
-        for(Period period : allPeriods){
-            allDates.addAll( itemService.allDatesInbetween(period));
-        }
+        List <LocalDate> allDates = itemService.allDatesInbetween(item);
         model.addAttribute("item", item);
         model.addAttribute("user", user);
         model.addAttribute("address", address);
