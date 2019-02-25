@@ -28,9 +28,6 @@ public class RequestController {
     private RequestService requestService;
 
     @Autowired
-    private TransactionService transactionService;
-
-    @Autowired
     private ProPayService proPayService;
 
     @Autowired
@@ -51,6 +48,10 @@ public class RequestController {
     public String saveRequest(Long id, String startdate, String enddate, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         Item item = itemService.get(id);
+        if(itemService.isOwner(id, user)){
+            redirectAttributes.addFlashAttribute("ownItem",true);
+            return "redirect:/";
+        }
         if(!proPayService.enoughCredit(user, item, LocalDate.parse(startdate), LocalDate.parse(enddate))){
             redirectAttributes.addFlashAttribute("noCredit",true);
             return "redirect:/";
@@ -68,7 +69,7 @@ public class RequestController {
     public String deleteRequest(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         if(!requestService.isRequester(id, user)){
-            redirectAttributes.addFlashAttribute("notRequester",true);
+            redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/messages";
         }
         requestService.delete(id);
@@ -82,7 +83,7 @@ public class RequestController {
         Item item = itemService.getFromRequestId(id);
         Request request = requestService.get(id);
         if(!requestService.isLender(id, user)){
-            redirectAttributes.addFlashAttribute("notLender",true);
+            redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/messages";
         }
         if(requestService.isOutdated(id)){
@@ -106,7 +107,7 @@ public class RequestController {
     public String declineRequest(@RequestParam("id") Long id , Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         if(!requestService.isLender(id, user)){
-            redirectAttributes.addFlashAttribute("notLender",true);
+            redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/messages";
         }
         requestService.delete(id);

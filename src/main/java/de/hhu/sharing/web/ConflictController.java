@@ -79,8 +79,15 @@ public class ConflictController {
     }
 
     @GetMapping("/conflictDetails")
-    public String conflictDetails (Model model, @RequestParam("id") Long id){
+    public String conflictDetails (Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
+        User user = userService.get(p.getName());
+        Conflict conflict = conflictService.get(id);
+        if(!userService.userIsInvolvedToProcess(user, conflict.getProcess()) && !user.getRole().equals("ROLE_ADMIN")){
+            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            return "redirect:/account";
+        }
         model.addAttribute("conflict", conflictService.get(id));
+        model.addAttribute("user", user);
         return "conflictDetails";
     }
 
