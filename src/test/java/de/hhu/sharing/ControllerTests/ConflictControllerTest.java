@@ -1,8 +1,8 @@
 package de.hhu.sharing.ControllerTests;
 
-import de.hhu.sharing.data.TransactionRepository;
+import de.hhu.sharing.data.TransactionRentalRepository;
 import de.hhu.sharing.model.*;
-import de.hhu.sharing.propay.Transaction;
+import de.hhu.sharing.propay.TransactionRental;
 import de.hhu.sharing.services.*;
 import de.hhu.sharing.storage.StorageService;
 import de.hhu.sharing.web.ConflictController;
@@ -46,7 +46,7 @@ public class ConflictControllerTest {
     BorrowingProcessService borrowingProcessService;
 
     @MockBean
-    TransactionRepository transRepo;
+    TransactionRentalRepository transRepo;
 
     @MockBean
     ConflictService conService;
@@ -143,11 +143,11 @@ public class ConflictControllerTest {
     @Test
     @WithMockUser
     public void retrieveStatusBorrower() throws Exception {
-        Transaction trans = new Transaction();
+        TransactionRental transRen = new TransactionRental();
         Conflict conflict = createConflict();
         Mockito.when(conService.get(Mockito.anyLong())).thenReturn(conflict);
-        Mockito.when(transRepo.findByProcessId(1L)).thenReturn(trans);
-        Mockito.when(proService.punishDeposit("Borrower", trans)).thenReturn(200);
+        Mockito.when(transRepo.findByProcessId(1L)).thenReturn(transRen);
+        Mockito.when(proService.punishDeposit("Borrower", transRen)).thenReturn(200);
 
         mvc.perform(MockMvcRequestBuilders.get("/borrower").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/conflictView"));
@@ -156,11 +156,11 @@ public class ConflictControllerTest {
     @Test
     @WithMockUser
     public void retrieveStatusOwner() throws Exception {
-        Transaction trans = new Transaction();
+        TransactionRental transRen = new TransactionRental();
         Conflict conflict = createConflict();
         Mockito.when(conService.get(Mockito.anyLong())).thenReturn(conflict);
-        Mockito.when(transRepo.findByProcessId(1L)).thenReturn(trans);
-        Mockito.when(proService.punishDeposit("Borrower", trans)).thenReturn(200);
+        Mockito.when(transRepo.findByProcessId(1L)).thenReturn(transRen);
+        Mockito.when(proService.punishDeposit("Borrower", transRen)).thenReturn(200);
 
         mvc.perform(MockMvcRequestBuilders.get("/lender").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/conflictView"));

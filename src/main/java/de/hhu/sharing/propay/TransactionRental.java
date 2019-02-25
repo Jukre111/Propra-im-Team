@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @Data
-public class Transaction {
+public class TransactionRental {
 
     @Id
     private Long id;
@@ -29,10 +29,10 @@ public class Transaction {
     @ManyToOne
     private User receiver;
 
-    public Transaction() {
+    public TransactionRental() {
     }
 
-    public Transaction(int wholeRent, int deposit, Long processId, Item item, User sender, User receiver) {
+    public TransactionRental(int wholeRent, int deposit, Long processId, Item item, User sender, User receiver) {
         this.wholeRent = wholeRent;
         this.deposit = deposit;
         this.processId = processId;

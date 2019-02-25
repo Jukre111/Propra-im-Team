@@ -1,8 +1,8 @@
 package de.hhu.sharing.ServiceTests;
 
-import de.hhu.sharing.data.TransactionRepository;
+import de.hhu.sharing.data.TransactionRentalRepository;
 import de.hhu.sharing.propay.Account;
-import de.hhu.sharing.propay.Transaction;
+import de.hhu.sharing.propay.TransactionRental;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,7 +17,7 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 public class ProPayServiceTest {
 
     /*@Mock
-    TransactionRepository transRepo;
+    TransactionRentalRepository transRepo;
     @Mock
     RestTemplate rt;
     @Spy
@@ -62,8 +62,8 @@ public class ProPayServiceTest {
         String userSrc = "Source";
         String userTar = "Target";
         String URL = "http://localhost:8888/account/" + userSrc + "/";
-        Transaction trans = new Transaction();
-        trans.setDeposit(666);
+        TransactionRental transRen = new TransactionRental();
+        transRen.setDeposit(666);
         String json = "{\"account\":\"Source\"," +
                 "\"amount\":50.0," +
                 "\"reservations\":[{" +
@@ -76,8 +76,8 @@ public class ProPayServiceTest {
 
         prepareRestTemplate(URL,json);
         Mockito.doReturn(200).when(pps).callURL(Mockito.anyString(), Mockito.anyString());
-        int response = pps.createDeposit(userSrc, userTar, trans);
-        ArgumentCaptor<Transaction> captor = ArgumentCaptor.forClass(Transaction.class);
+        int response = pps.createDeposit(userSrc, userTar, transRen);
+        ArgumentCaptor<TransactionRental> captor = ArgumentCaptor.forClass(TransactionRental.class);
         Mockito.verify(transRepo, times(1)).save(captor.capture());
         Assert.assertTrue(captor.getAllValues().get(0).getReservationId() == 2);
         Assertions.assertThat(response).isEqualTo(200);

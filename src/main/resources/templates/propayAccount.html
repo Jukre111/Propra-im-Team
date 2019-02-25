@@ -79,12 +79,12 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                         <th width="30%">Artikel</th>
                         <th width="30%">Sender</th>
                     </tr>
-                    <tr th:each="transaction : ${received}">
-                        <td th:text="${transaction.wholeRent}"></td>
-                        <td th:text="${transaction.deposit}"></td>
-                        <td th:text="${transaction.depositRevoked}"></td>
-                        <td th:text="${transaction.item.getName()}"></td>
-                        <td th:text="${transaction.sender.getUsername()}"></td>
+                    <tr th:each="transRen : ${received}">
+                        <td th:text="${transRen.wholeRent}"></td>
+                        <td th:text="${transRen.deposit}"></td>
+                        <td th:text="${transRen.depositRevoked}"></td>
+                        <td th:text="${transRen.item.getName()}"></td>
+                        <td th:text="${transRen.sender.getUsername()}"></td>
                     </tr>
                 </table>
                 <br>
@@ -111,12 +111,12 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                         <th width="30%">Artikel</th>
                         <th width="30%">Empfaenger</th>
                     </tr>
-                    <tr th:each="transaction : ${send}">
-                        <td th:text="${transaction.wholeRent}"></td>
-                        <td th:text="${transaction.deposit}"></td>
-                        <td th:text="${transaction.depositRevoked}"></td>
-                        <td th:text="${transaction.item.getName()}"></td>
-                        <td th:text="${transaction.receiver.getUsername()}"></td>
+                    <tr th:each="transRen : ${send}">
+                        <td th:text="${transRen.wholeRent}"></td>
+                        <td th:text="${transRen.deposit}"></td>
+                        <td th:text="${transRen.depositRevoked}"></td>
+                        <td th:text="${transRen.item.getName()}"></td>
+                        <td th:text="${transRen.receiver.getUsername()}"></td>
                     </tr>
                 </table>
                 <br>

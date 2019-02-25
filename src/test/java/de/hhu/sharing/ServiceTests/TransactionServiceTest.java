@@ -9,7 +9,7 @@ import de.hhu.sharing.model.User;
 import de.hhu.sharing.propay.Account;
 import de.hhu.sharing.propay.Reservation;
 import de.hhu.sharing.services.ProPayService;
-import de.hhu.sharing.services.TransactionService;
+import de.hhu.sharing.services.TransactionRentalService;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import org.mockito.MockitoAnnotations;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class TransactionServiceTest {
+class TransactionRentalServiceTest {
     /*@Mock
     ItemRepository itemRepo;
 
@@ -32,7 +32,7 @@ public class TransactionServiceTest {
     ProPayService proService;
 
     @InjectMocks
-    TransactionService transSevice;
+    TransactionRentalService transSevice;
 
     @Before
     public void initialize(){

@@ -24,7 +24,7 @@ public class BorrowingProcessService {
     private ProPayService proPayService;
 
     @Autowired
-    private TransactionService transactionService;
+    private TransactionRentalService transactionService;
 
     @Autowired
     private  ConflictService conflictService;
@@ -48,7 +48,7 @@ public class BorrowingProcessService {
         processes.save(process);
         User borrower = request.getRequester();
         User lender = item.getLender();
-        transactionService.createTransaction(process, borrower, lender);
+        transactionService.createTransactionRental(process, borrower, lender);
         borrower.addToBorrowed(process);
         lender.addToLend(process);
     }
