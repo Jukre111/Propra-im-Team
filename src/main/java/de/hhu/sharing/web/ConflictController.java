@@ -27,7 +27,7 @@ public class ConflictController {
     private BorrowingProcessService borrowingProcessService;
 
     @Autowired
-    private ProPayService proService;
+    private ProPayService proPayService;
 
     @Autowired
     private  TransactionService transactionService;
@@ -91,35 +91,25 @@ public class ConflictController {
         return "conflictDetails";
     }
 
-    @GetMapping("/borrower")
-    public String borrower(@RequestParam("id") Long id){
-        Conflict conflict = conflictService.get(id);
-        User borrower = conflict.getBorrower();
-        User owner = conflict.getOwner();
-
-        BorrowingProcess process = conflict.getProcess();
-
-        proService.releaseDeposit(borrower, transactionService.getFromProcessId(process.getId()));
-        conflictService.removeConflict(conflict);
-        borrowingProcessService.returnItem(process.getId(), owner);
-
-
-        return "redirect:/conflictView";
+    @GetMapping("/admin/conflicts")
+    public String conflictView(Model model){
+        model.addAttribute("allConflicts", conflictService.getAll());
+        return "conflictView";
     }
 
+    @GetMapping("admin/conflicts/lender")
+    public String lender(@RequestParam("id") Long id){
+//        Conflict conflict = conflictService.get(id);
+//        conflictService.delete(conflict);
+//        proPayService.punishDeposit(conflict.getBorrower(), transactionService.getFromProcessId(conflict.getProcess().getId()));
+//        //to do
+        return "redirect:/admin/conflicts";
+    }
 
-    @GetMapping("/owner")
-    public String owner(@RequestParam("id") Long id){
+    @GetMapping("admin/conflicts/borrower")
+    public String borrower(@RequestParam("id") Long id){
         Conflict conflict = conflictService.get(id);
-        User owner = conflict.getOwner();
-        User borrower = conflict.getBorrower();
-
-        BorrowingProcess process = conflict.getProcess();
-
-        proService.punishDeposit(borrower, transactionService.getFromProcessId(process.getId()));
-        conflictService.removeConflict(conflict);
-        borrowingProcessService.returnItem(process.getId(), owner);
-
-        return "redirect:/conflictView";
+        borrowingProcessService.itemReturned(conflict.getProcess().getId());
+        return "redirect:/admin/conflicts";
     }
 }
