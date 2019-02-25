@@ -92,6 +92,22 @@ public class FileSystemStorageServiceTest {
     }
     
     @Test
+    public void testStoreItemInitalizer() throws Exception{
+    	User user = generateUser("user");
+    	Item item = generateItem(user);
+    	MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));         
+    	fileStorageService.storeItemInitalizer(jsonFile.getBytes(), item);
+        ArgumentCaptor<Image> captor = ArgumentCaptor.forClass(Image.class);
+        Mockito.verify(images, times(1)).save(captor.capture());
+        Assert.assertEquals(captor.getAllValues().get(0).getMimeType(), "image/gif");
+        Assert.assertEquals(captor.getAllValues().get(0).getImageData().length, jsonFile.getBytes().length);
+        ArgumentCaptor<Item> captor2 = ArgumentCaptor.forClass(Item.class);
+        Mockito.verify(items, times(1)).save(captor2.capture());
+        Assert.assertEquals(captor2.getAllValues().get(0).getName(), "apfel");
+        Assert.assertEquals(captor2.getAllValues().get(0).getDescription(), "lecker");
+    }
+    
+    @Test
     public void testStoreUser() throws Exception{
     	User user = generateUser("user");
     	MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));         

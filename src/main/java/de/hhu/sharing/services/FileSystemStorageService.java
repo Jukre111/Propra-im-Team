@@ -85,11 +85,11 @@ public class FileSystemStorageService implements StorageService {
 
     @Override
     public void storeItemInitalizer(byte[] byteArr, Item item) {
-        //byte[] bytes = byteArr;
+        byte[] bytes = byteArr;
         Image image = new Image();
         String contentType = "image/gif";
         image.setMimeType(contentType);
-        image.setImageData(byteArr);
+        image.setImageData(bytes);
         imageRepo.save(image);
         item.setImage(image);
         itemRepo.save(item);
