@@ -1,5 +1,6 @@
 package de.hhu.sharing.ControllerTests;
 
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 
 import org.junit.Before;
@@ -78,7 +79,7 @@ public class FileUploadControllerTests {
 	@Test
 	@WithMockUser(username = "user")
 	public void shouldUploadAvatarPic() throws Exception {
-		MockMultipartFile jsonFile = new MockMultipartFile("test.json", "", "application/json", "{\"key1\": \"value1\"}".getBytes());
+		MockMultipartFile jsonFile = new MockMultipartFile("test.json", "", "application/json", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
 		 mvc.perform(MockMvcRequestBuilders.multipart("/handleFileUploadAvatar")
 	                .file("file", jsonFile.getBytes())
 	                .characterEncoding("UTF-8"))
@@ -88,7 +89,7 @@ public class FileUploadControllerTests {
 	@Test
 	@WithMockUser(username = "user")
 	public void shouldUploadItemPic() throws Exception {
-		MockMultipartFile jsonFile = new MockMultipartFile("test.json", "", "application/json", "{\"key1\": \"value1\"}".getBytes());
+		MockMultipartFile jsonFile = new MockMultipartFile("test.json", "", "application/json", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
 		mvc.perform(MockMvcRequestBuilders.multipart("/handleFileUploadItem")
 				.file("file", jsonFile.getBytes())
 				.characterEncoding("UTF-8"))
@@ -98,7 +99,7 @@ public class FileUploadControllerTests {
 	@Test
 	@WithMockUser(username = "user")
 	public void downloadUserImage() throws Exception {
-		MockMultipartFile jsonFile = new MockMultipartFile("test.json", "", "application/json", "{\"key1\": \"value1\"}".getBytes());
+		MockMultipartFile jsonFile = new MockMultipartFile("test.json", "", "application/json", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
 		User user = generateUser("user");
 		Image image = new Image();
 		image.setImageData(jsonFile.getBytes());
@@ -112,7 +113,7 @@ public class FileUploadControllerTests {
 	@Test
 	@WithMockUser(username = "user")
 	public void downloadItemImage() throws Exception {
-		MockMultipartFile jsonFile = new MockMultipartFile("test.json", "", "application/json", "{\"key1\": \"value1\"}".getBytes());
+		MockMultipartFile jsonFile = new MockMultipartFile("test.json", "", "application/json", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
 		User user = generateUser("user");
 		Item item = generateItem(user);
 		Image image = new Image();
@@ -127,9 +128,7 @@ public class FileUploadControllerTests {
 	@Test
 	@WithMockUser(username = "user")
 	public void downloadUserImageNoImage() throws Exception {
-		MockMultipartFile jsonFile = new MockMultipartFile("test.json", "", "application/json", "{\"key1\": \"value1\"}".getBytes());
 		User user = generateUser("user");
-		Image image = new Image();
         Mockito.when(userService.get("user")).thenReturn(user);
         mvc.perform(MockMvcRequestBuilders.get("/getUserPic?id=1"))
         .andExpect(MockMvcResultMatchers.status().is(400));
@@ -137,10 +136,7 @@ public class FileUploadControllerTests {
 	@Test
 	@WithMockUser(username = "user")
 	public void downloadItemImageNoImage() throws Exception {
-		MockMultipartFile jsonFile = new MockMultipartFile("test.json", "", "application/json", "{\"key1\": \"value1\"}".getBytes());
-		User user = generateUser("user");
-		Item item = new Item();
-		Image image = new Image();
+			Item item = new Item();
         Mockito.when(itemService.get(1L)).thenReturn(item);
         mvc.perform(MockMvcRequestBuilders.get("/getItemPic?id=1"))
         .andExpect(MockMvcResultMatchers.status().is(400));
