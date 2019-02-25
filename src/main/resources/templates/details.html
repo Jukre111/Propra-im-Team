@@ -2,6 +2,10 @@
 <html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
+    <link rel="stylesheet" href="assets/style.css"/>
+    <link rel="stylesheet" href="assets/dateTimePicker.css"/>
+    <script type="text/javascript" src="scripts/components/jquery.min.js"></script>
+    <script type="text/javascript" src="scripts/dateTimePicker.min.js"></script>
     <title>Detailansicht</title>
     <style>
 .style {
@@ -87,6 +91,18 @@
                         <div class="col-xs-6">
                             <input type="number text" class="form-control" id="postcode city" name="postcode city" th:value="${address.postcode} + ' ' + ${address.city}" readonly/>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <div id="basic" data-toggle="calendar"></div>
+                        <script type="text/javascript" th:inline="javascript">
+                            $(document).ready(function()
+                            {
+                                $('#basic').calendar({
+                                    num_next_month: 1,
+                                    unavailable: [[${allDates}]]
+                                });
+                            })
+                        </script>
                     </div>
                     <div class="form-group">
                         <label for="description" class="col-sm-2 control-label">Beschreibung</label>
