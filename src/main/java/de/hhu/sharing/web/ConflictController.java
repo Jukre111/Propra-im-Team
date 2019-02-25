@@ -66,10 +66,16 @@ public class ConflictController {
         return "redirect:/account";
     }
 
-    @GetMapping("/conflictView")
-    public String conflictView(Model model){
-        model.addAttribute("allConflicts", conflictService.getAll());
-        return "conflictView";
+    @PostMapping("/conflictNewMessage")
+    public String addMessageToConflict(@RequestParam("id") Long id, String message, Principal p, RedirectAttributes redirectAttributes){
+        User user = userService.get(p.getName());
+        Conflict conflict = conflictService.get(id);
+        if(!userService.userIsInvolvedToProcess(user, conflict.getProcess())){
+            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            return "redirect:/account";
+        }
+        conflictService.addToMessages(conflict, user, message);
+        return "redirect:/conflictDetails?id=" + conflict.getId();
     }
 
     @GetMapping("/conflictDetails")
