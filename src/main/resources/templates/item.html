@@ -61,7 +61,7 @@
                     <div class="form-group">
                         <label for="description" class="col-sm-2 control-label">Bilder hinzufügen (max. 150KB)</label>
                         <div class="col-xs-6">
-                            <input type="file"  name="file"/>
+                            <input type="file"  name="file" id="file" accept="image/*"/>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -69,6 +69,15 @@
                         <button type="submit" class="indexbtn" style="padding: 5px" name="button">Speichern</button>
                     </div>
                 </form>
+                <script>
+                var uploadField = document.getElementById("file");
+                uploadField.onchange = function() {
+                if(this.files[0].size > 153600){
+                    alert("Bild ist zu groß, bitte achte auf die maximale Größe von 150KB");
+                    this.value = "";
+                };
+                }
+                </script>
             </div>
         </div>
     </div>

@@ -84,7 +84,7 @@ public class FileUploadController {
     }
 
     @PostMapping("/handleFileUploadAvatar")
-    public String handleFileUploadAvatar( MultipartFile file,
+    public String handleFileUploadAvatar(@RequestParam("file") MultipartFile file,
                                    RedirectAttributes redirectAttributes, Principal p) {
     	User user = userService.get(p.getName());
         storageService.storeUser(file, user);
@@ -108,7 +108,7 @@ public class FileUploadController {
     }
 
     @PostMapping("/handleFileUploadItem")
-    public String handleFileUploadItem(MultipartFile file,
+    public String handleFileUploadItem(@RequestParam("file") MultipartFile file,
                                    RedirectAttributes redirectAttributes, Item item) {
         storageService.storeItem(file, item);
         redirectAttributes.addFlashAttribute("message",
