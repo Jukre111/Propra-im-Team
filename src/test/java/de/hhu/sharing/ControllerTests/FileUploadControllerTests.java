@@ -136,7 +136,7 @@ public class FileUploadControllerTests {
 	@Test
 	@WithMockUser(username = "user")
 	public void downloadItemImageNoImage() throws Exception {
-			Item item = new Item();
+		Item item = new Item();
         Mockito.when(itemService.get(1L)).thenReturn(item);
         mvc.perform(MockMvcRequestBuilders.get("/getItemPic?id=1"))
         .andExpect(MockMvcResultMatchers.status().is(400));
