@@ -75,9 +75,9 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                     <tr>
                         <th width="10%">Miete</th>
                         <th width="10%">Kaution</th>
-                        <th width="10%">Kaution eingezogen</th>
-                        <th width="20%">Artikel</th>
-                        <th width="20%">Sender</th>
+                        <th width="20%">Kaution eingezogen</th>
+                        <th width="30%">Artikel</th>
+                        <th width="30%">Sender</th>
                     </tr>
                     <tr th:each="transaction : ${received}">
                         <td th:text="${transaction.wholeRent}"></td>
@@ -87,8 +87,18 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                         <td th:text="${transaction.sender.getUsername()}"></td>
                     </tr>
                 </table>
+                <br>
                 <table>
-
+                    <tr>
+                        <th width="40%">Preis</th>
+                        <th width="30%">Artikel</th>
+                        <th width="30%">Sender</th>
+                    </tr>
+                    <tr th:each="transactionPurchase : ${receivedPurchase}">
+                        <td th:text="${transactionPurchase.price}"></td>
+                        <td th:text="${transactionPurchase.item.getName()}"></td>
+                        <td th:text="${transactionPurchase.sender.getUsername()}"></td>
+                    </tr>
                 </table>
             </div>
             <div class="col-sm-5" style="padding: 20px; margin-left: 30px">
@@ -97,9 +107,9 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                     <tr>
                         <th width="10%">Miete</th>
                         <th width="10%">Kaution</th>
-                        <th width="10%">Kaution entzogen</th>
-                        <th width="20%">Artikel</th>
-                        <th width="20%">Empfaenger</th>
+                        <th width="20%">Kaution entzogen</th>
+                        <th width="30%">Artikel</th>
+                        <th width="30%">Empfaenger</th>
                     </tr>
                     <tr th:each="transaction : ${send}">
                         <td th:text="${transaction.wholeRent}"></td>
@@ -109,8 +119,18 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                         <td th:text="${transaction.receiver.getUsername()}"></td>
                     </tr>
                 </table>
+                <br>
                 <table>
-
+                    <tr>
+                        <th width="40%">Preis</th>
+                        <th width="30%">Artikel</th>
+                        <th width="30%">Empfaenger</th>
+                    </tr>
+                    <tr th:each="transactionPurchase : ${sendPurchase}">
+                        <td th:text="${transactionPurchase.price}"></td>
+                        <td th:text="${transactionPurchase.item.getName()}"></td>
+                        <td th:text="${transactionPurchase.receiver.getUsername()}"></td>
+                    </tr>
                 </table>
             </div>
         </form>
