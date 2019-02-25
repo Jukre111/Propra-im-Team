@@ -79,9 +79,9 @@ public class ConflictControllerTest {
         Conflict conflict = new Conflict();
         conflict.setId(1L);
         conflict.setItem(item);
-        conflict.setOwner(item.getLender());
+        conflict.setLender(item.getLender());
         conflict.setBorrower(createUser("Borrower"));
-        conflict.setProcess(createProcess(conflict.getOwner()));
+        conflict.setProcess(createProcess(conflict.getLender()));
         return conflict;
     }
 
@@ -156,7 +156,7 @@ public class ConflictControllerTest {
         Mockito.when(transRepo.findByProcessId(1L)).thenReturn(trans);
         Mockito.when(proService.punishDeposit("Borrower", trans)).thenReturn(200);
 
-        mvc.perform(MockMvcRequestBuilders.get("/owner").param("id", "1"))
+        mvc.perform(MockMvcRequestBuilders.get("/lender").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/conflictView"));
     }
 }

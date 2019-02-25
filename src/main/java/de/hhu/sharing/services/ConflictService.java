@@ -1,10 +1,7 @@
 package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.ConflictRepository;
-import de.hhu.sharing.model.BorrowingProcess;
-import de.hhu.sharing.model.Conflict;
-import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.User;
+import de.hhu.sharing.model.*;
 import groovy.transform.AutoImplement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,14 +24,16 @@ public class ConflictService {
         return conflict;
     }
 
-
+    public Conflict getFromBorrowindProcess(BorrowingProcess process) {
+        return this.conflicts.findByProcess(process);
+    }
 
     public List<Conflict> getAll() {
         return conflicts.findAll();
     }
 
-    public void create(String problem, Item item, User prosecuter, User accused, BorrowingProcess process) {
-        Conflict conflict = new Conflict(problem, item, prosecuter, accused, process);
+    public void create(User lender, User borrower, BorrowingProcess process, User prosecuter, String problem) {
+        Conflict conflict = new Conflict(lender, borrower, process, new Message(prosecuter.getUsername(), problem));
         conflicts.save(conflict);
     }
 

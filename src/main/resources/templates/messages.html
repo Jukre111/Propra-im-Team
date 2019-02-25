@@ -23,8 +23,7 @@
     <div class="alert alert-success" role="alert" th:if="${accepted}" >Objekt verliehen. Überschneidende Anfragen wurden gelöscht.</div>
     <div class="alert alert-success" role="alert" th:if="${deleted}" >Anfrage erfolgreich gelöscht.</div>
     <div class="alert alert-success" role="alert" th:if="${declined}" >Anfrage abgelehnt.</div>
-    <div class="alert alert-danger" role="alert" th:if="${notRequester}" >Keine Berechtigung Anfrage zu löschen.</div>
-    <div class="alert alert-danger" role="alert" th:if="${notLender}" >Keine Berechtigung Anfrage beantzuworten.</div>
+    <div class="alert alert-danger" role="alert" th:if="${notAuthorized}" >Keine Berechtigung.</div>
     <div class="alert alert-danger" role="alert" th:if="${outdatedRequest}" >Anfrage-Zeitraum liegt in der Vergangenheit.</div>
     <div class="alert alert-danger" role="alert" th:if="${overlappingRequest}" >Anfrage-Zeitraum überschneidet sich mit Objektverfügbarkeit.</div>
     <div class="alert alert-danger" role="alert" th:if="${noCredit}" >Anfragensteller hat nicht genug ProPay-Guthaben.</div>

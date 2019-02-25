@@ -50,10 +50,19 @@ public class ConflictController {
     }
 
     @PostMapping("/saveConflict")
-    public String saveConflict(@RequestParam("id") Long id, String problem){
+    public String saveConflict(@RequestParam("id") Long id, String problem, Principal p, RedirectAttributes redirectAttributes){
+        User user = userService.get(p.getName());
         BorrowingProcess process = borrowingProcessService.get(id);
-        Item item =  process.getItem();
-        conflictService.create(problem, item, item.getLender(), userService.getBorrowerFromBorrowingProcessId(id), process);
+        if(!userService.userIsInvolvedToProcess(user, process)){
+            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            return "redirect:/account";
+        }
+        Conflict conflict = conflictService.getFromBorrowindProcess(process);
+        if(conflict != null){
+            redirectAttributes.addFlashAttribute("conflictExistsAlready",true);
+            return "redirect:/conflictDetails?id=" + conflict.getId();
+        }
+        conflictService.create(process.getItem().getLender(), userService.getBorrowerFromBorrowingProcessId(id), process, user, problem);
         return "redirect:/account";
     }
 

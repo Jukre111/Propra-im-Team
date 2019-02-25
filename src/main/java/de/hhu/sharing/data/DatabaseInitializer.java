@@ -140,16 +140,15 @@ public class DatabaseInitializer implements ServletContextInitializer {
         users.save(admin);
 
 
-        User user1 = users.findByUsername("user1").orElseThrow(()-> new RuntimeException("Users not there."));
-        User user2 = users.findByUsername("user2").orElseThrow(()-> new RuntimeException("Users not there."));
-        Item item1 = items.findFirstByLender(user1).orElseThrow(()-> new RuntimeException("Item not found."));
-
-        Conflict conflict = new Conflict();
-        conflict.setItem(item1);
-        conflict.setProblem("Problem");
-        conflict.setBorrower(user2);
-        conflict.setOwner(user1);
-        conflicts.save(conflict);
+//        User user1 = users.findByUsername("user1").orElseThrow(()-> new RuntimeException("Users not there."));
+//        User user2 = users.findByUsername("user2").orElseThrow(()-> new RuntimeException("Users not there."));
+//        Item item1 = items.findFirstByLender(user1).orElseThrow(()-> new RuntimeException("Item not found."));
+//
+//        Conflict conflict = new Conflict();
+//        conflict.setProblem("Problem");
+//        conflict.setBorrower(user2);
+//        conflict.setLender(user1);
+//        conflicts.save(conflict);
 
     }
 

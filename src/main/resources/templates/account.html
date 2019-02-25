@@ -64,7 +64,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 		<div class="alert alert-danger" role="alert" th:if="${notAvailable}" >Objekt nicht verfügbar.</div>
 		<div class="alert alert-danger" role="alert" th:if="${notChangeable}" >Objekt nicht veränderbar. Es sind noch Requests, Verleihungen oder Konflikte offen.</div>
 		<div class="alert alert-danger" role="alert" th:if="${noCredit}" >Der Anfragensteller hat nicht genug ProPray-Guthaben.</div>
-		<div class="alert alert-danger" role="alert" th:if="${notLender}" >Keine Berechtigung.</div>
+		<div class="alert alert-danger" role="alert" th:if="${notAuthorized}" >Keine Berechtigung.</div>
 		<div style="padding: 20px" class="form-horizontal">
 			<div class="media">
 				<div class="media-left media-middle">

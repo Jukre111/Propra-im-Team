@@ -92,7 +92,7 @@ public class RequestServiceTest {
     @Test
     public void testDeleteOverlappingRequestsFromItem(){
         User requester = generateUser("requester");
-        User owner = generateUser("owner");
+        User owner = generateUser("lender");
         User otherRequester = generateUser("otherRequester");
 
         Request request = generateRequest(requester);
