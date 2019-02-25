@@ -22,7 +22,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class TransactionServiceTest {
-    @Mock
+    /*@Mock
     ItemRepository itemRepo;
 
     @Mock
@@ -77,6 +77,6 @@ public class TransactionServiceTest {
         Mockito.when(proService.getAccount(borrower.getUsername())).thenReturn(new Account("User", 100, reservations));
 
         Assertions.assertThat(transSevice.checkFinances(request.getRequester(), item, request.getPeriod().getStartdate(), request.getPeriod().getEnddate())).isFalse();
-    }
+    }*/
 
 }

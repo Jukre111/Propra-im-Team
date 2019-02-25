@@ -111,7 +111,7 @@ public class ItemControllerTest {
         mvc.perform(MockMvcRequestBuilders.get("/deleteItem").param("id","1"));
     }
 
-    @Test
+    /*@Test
     @WithMockUser
     public void retrieveStatusReturnItem() throws Exception{
         Item item = itemCreator();
@@ -121,6 +121,6 @@ public class ItemControllerTest {
         Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
         mvc.perform(MockMvcRequestBuilders.get("/returnItem").param("id","1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/account"));
-    }
+    }*/
 
 }
