@@ -20,6 +20,9 @@ import static java.time.temporal.ChronoUnit.DAYS;
 @Service
 public class ProPayService {
 
+    @Autowired
+    TransactionService transService;
+
     private RestTemplate rt = new RestTemplate();
     private String URL = "http://localhost:8888/";
 
@@ -34,7 +37,7 @@ public class ProPayService {
         int days = (int) DAYS.between(startdate, enddate) + 1;
         int rent = item.getRental() * days;
         int amount = this.getAccount(user).getAmount();
-        return amount >= (rent + item.getDeposit());
+        return amount >= (rent + item.getDeposit()+getDepositSum(this.getAccount(user)));
     }
 
     public void rechargeCredit(User user, int amount) {
@@ -60,12 +63,13 @@ public class ProPayService {
     public void releaseDeposit(User sender, Transaction transaction) {
         String URL = this.URL + "reservation/release/" + sender.getUsername() + "?reservationId=" + transaction.getId();
         this.callURL(URL, "POST");
+        transService.setDepositRevoked(transaction,"Nein");
     }
 
     public void punishDeposit(User sender, Transaction transaction) {
         String URL = this.URL + "reservation/punish/" + sender.getUsername() + "?reservationId=" + transaction.getId();
         this.callURL(URL, "POST");
-        transaction.setDepositRevoked(true);
+        transService.setDepositRevoked(transaction,"Ja");
     }
 
     private void callURL(String urlString, String method) {
@@ -78,5 +82,13 @@ public class ProPayService {
         } catch (IOException e) {
             throw new RuntimeException("ProPay not reachable!");
         }
+    }
+
+    public int getDepositSum (Account account){
+        int depositSum = 0;
+        for(int i = 0; i<account.getReservations().size(); i++) {
+            depositSum += account.getReservations().get(i).getAmount();
+        }
+        return depositSum;
     }
 }
