@@ -12,8 +12,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,15 +61,44 @@ public class ItemServiceTest {
         list.add(item3);
         return list;
     }
+
     @Test
-    public void testCreate(){
-        MultipartFile file = null;
+    public void testCreateFileExists(){
+        MockMultipartFile jsonFile = new MockMultipartFile("test.json", "", "application/json", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
         User user = generateUser("dude");
-        itemService.create("item","description",1,1,user, file);
-        ArgumentCaptor<Item> captor = ArgumentCaptor.forClass(Item.class);
-        Mockito.verify(items, times(1)).save(captor.capture());
-        Assert.assertEquals(captor.getAllValues().get(0).getName(), "item");
-        Assert.assertEquals(captor.getAllValues().get(0).getLender(), user);
+
+        itemService.create("item","description",1,1,user, jsonFile);
+
+        ArgumentCaptor<Item> captorItem1 = ArgumentCaptor.forClass(Item.class);
+        Mockito.verify(items, times(1)).save(captorItem1.capture());
+
+        ArgumentCaptor<Item> captorItem2 = ArgumentCaptor.forClass(Item.class);
+        ArgumentCaptor<MockMultipartFile> captorMockMultipartFile = ArgumentCaptor.forClass(MockMultipartFile.class);
+        Mockito.verify(storageService, times(1)).storeItem(captorMockMultipartFile.capture(),captorItem2.capture());
+
+        Assert.assertEquals(captorItem1.getAllValues().get(0).getName(), "item");
+        Assert.assertEquals(captorItem1.getAllValues().get(0).getLender(), user);
+        Assert.assertEquals(captorItem2.getAllValues().get(0).getName(), "item");
+        Assert.assertEquals(captorItem2.getAllValues().get(0).getLender(), user);
+        Assert.assertEquals(captorMockMultipartFile.getValue(), jsonFile);
+    }
+
+    @Test
+    public void testCreateFileNull(){
+        MockMultipartFile jsonFile = null;
+        User user = generateUser("dude");
+        Item item = new Item("item","description",1,1,user);
+
+        itemService.create("item","description",1,1,user, jsonFile);
+
+        ArgumentCaptor<Item> captorItem1 = ArgumentCaptor.forClass(Item.class);
+        Mockito.verify(items, times(1)).save(captorItem1.capture());
+
+        Mockito.verify(storageService, times(0)).storeItem(jsonFile, item);
+
+        Assert.assertEquals(captorItem1.getAllValues().get(0).getName(), "item");
+        Assert.assertEquals(captorItem1.getAllValues().get(0).getLender(), user);
+
     }
 
 
