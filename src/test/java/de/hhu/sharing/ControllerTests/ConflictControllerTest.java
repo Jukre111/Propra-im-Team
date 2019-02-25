@@ -1,10 +1,7 @@
 package de.hhu.sharing.ControllerTests;
 
-import de.hhu.sharing.data.TransactionRepository;
 import de.hhu.sharing.model.*;
-import de.hhu.sharing.propay.Transaction;
 import de.hhu.sharing.services.*;
-import de.hhu.sharing.storage.StorageService;
 import de.hhu.sharing.web.ConflictController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,140 +20,295 @@ import org.springframework.util.MultiValueMap;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-
 @RunWith(SpringRunner.class)
 @WebMvcTest(ConflictController.class)
 public class ConflictControllerTest {
+
     @Autowired
     MockMvc mvc;
-
-    @MockBean
-    StorageService storeService;
-
-    @MockBean
-    ItemService itemService;
 
     @MockBean
     UserService userService;
 
     @MockBean
+    ConflictService conflictService;
+
+    @MockBean
     BorrowingProcessService borrowingProcessService;
 
-    @MockBean
-    TransactionRepository transRepo;
-
-    @MockBean
-    ConflictService conService;
-
-    @MockBean
-    ProPayService proService;
-
-    private User createUser(String Username) {
-        User user = new User();
-        user.setUsername("user");
-        user.setAddress(new Address("Strasse", "Stadt", 41460));
-        return user;
+    private User createUser(String username, String role) {
+        return new User(username, "password", role,
+                "Nachname", "Vorname", "email@web.de", LocalDate.now(),
+                new Address("Strasse", "Stadt", 41460));
     }
 
-    private BorrowingProcess createProcess(User lender) {
-        BorrowingProcess process = new BorrowingProcess();
-        process.setPeriod(new Period(LocalDate.now(), LocalDate.now().plusDays(1)));
-        process.setItem(createItem(lender));
-        process.setId(1L);
+    private Item createItem(String name, User lender) {
+        return new Item(name, "Beschreibung", 10, 100, lender);
+    }
+
+    private BorrowingProcess createProcess(User borrower, User lender) {
+        BorrowingProcess process = new BorrowingProcess(createItem("Item", lender),
+                new Period(LocalDate.now(), LocalDate.now().plusDays(1)));
+        borrower.addToBorrowed(process);
+        lender.addToLend(process);
         return process;
     }
 
-    private Item createItem(User lender) {
-        Item item = new Item();
-        item.setId(1L);
-        item.setLender(lender);
-        return item;
-    }
-
-    private Conflict createConflict() {
-        Item item = createItem(createUser("Lender"));
-        Conflict conflict = new Conflict();
+    private Conflict createConflict(User lender, User borrower, BorrowingProcess process){
+        Conflict conflict = new Conflict(lender, borrower, process, new Message(lender.getUsername(), "Problem"));
         conflict.setId(1L);
-      /*  conflict.setItem(item);
-        conflict.setLender(item.getLender());
-        conflict.setBorrower(createUser("Borrower"));
-        conflict.setProcess(createProcess(conflict.getLender()));*/
         return conflict;
     }
 
     @Test
     @WithMockUser
     public void retrieveStatusConflict() throws Exception {
-        User lender = createUser("Lender");
-        User borrower = createUser("Borrower");
-        BorrowingProcess process = createProcess(lender);
-
+        User lender = createUser("Lender", "ROLE_USER");
+        User borrower = createUser("Borrower", "ROLE_USER");
+        BorrowingProcess process = createProcess(borrower, lender);
+        Mockito.when(userService.get("user")).thenReturn(borrower);
+        Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
+        Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(true);
+        Mockito.when(conflictService.getFromBorrowindProcess(process)).thenReturn(null);
         Mockito.when(userService.getBorrowerFromBorrowingProcessId(1L)).thenReturn(borrower);
-       /* Mockito.when(borrowingProcessService.getBorrowingProcess(1L)).thenReturn(process);
+
         mvc.perform(MockMvcRequestBuilders.get("/conflict").param("id", "1"))
-                .andExpect(MockMvcResultMatchers.status().is(200));*/
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     @WithMockUser
-    public void retrieveStatusPostSaveConflict() throws Exception {
-        User borrower = createUser("Borrower");
-        User lender = createUser("Lender");
-        BorrowingProcess process = createProcess(lender);
+    public void redirectConflictWhenNotAuthorized() throws Exception {
+        User lender = createUser("Lender", "ROLE_USER");
+        User borrower = createUser("Borrower", "ROLE_USER");
+        BorrowingProcess process = createProcess(borrower, lender);
+        Mockito.when(userService.get("user")).thenReturn(borrower);
+        Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
+        Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(false);
 
-      /*  Mockito.when(borrowingProcessService.getBorrowingProcess(Mockito.anyLong())).thenReturn(process);
-        Mockito.when(borrowingProcessService.getItemFromProcess(process)).thenReturn(process.getItem());
-        Mockito.when(userService.getBorrowerFromBorrowingProcessId(Mockito.anyLong())).thenReturn(borrower);
+        mvc.perform(MockMvcRequestBuilders.get("/conflict").param("id", "1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attribute("notAuthorized", true));
+    }
 
+    @Test
+    @WithMockUser
+    public void redirectConflictWhenConflictExists() throws Exception {
+        User lender = createUser("Lender", "ROLE_USER");
+        User borrower = createUser("Borrower", "ROLE_USER");
+        BorrowingProcess process = createProcess(borrower, lender);
+        Conflict conflict = createConflict(lender, borrower, process);
+        Mockito.when(userService.get("user")).thenReturn(borrower);
+        Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
+        Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(true);
+        Mockito.when(conflictService.getFromBorrowindProcess(process)).thenReturn(conflict);
+
+        mvc.perform(MockMvcRequestBuilders.get("/conflict").param("id", "1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/conflictDetails?id=1"))
+                .andExpect(MockMvcResultMatchers.status().isFound());
+    }
+
+    @Test
+    @WithMockUser
+    public void redirectSaveConflict() throws Exception {
+        User lender = createUser("Lender", "ROLE_USER");
+        User borrower = createUser("Borrower", "ROLE_USER");
+        BorrowingProcess process = createProcess(borrower, lender);
+        Mockito.when(userService.get("user")).thenReturn(borrower);
+        Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
+        Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(true);
+        Mockito.when(conflictService.getFromBorrowindProcess(process)).thenReturn(null);
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("id", "1");
         map.add("problem", "This test.");
 
-        mvc.perform(MockMvcRequestBuilders.post("/saveConflict").with(csrf()).params(map))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"));*/
+        mvc.perform(MockMvcRequestBuilders.post("/saveConflict").params(map))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
+                .andExpect(MockMvcResultMatchers.status().isFound());
     }
 
     @Test
     @WithMockUser
-    public void retrieveStatusConflictView() throws Exception {
-        Mockito.when(conService.getAll()).thenReturn(new ArrayList<>());
-        mvc.perform(MockMvcRequestBuilders.get("/conflictView"))
-                .andExpect(MockMvcResultMatchers.status().is(200));
+    public void redirectSaveConflictWhenNotAuthorized() throws Exception {
+        User lender = createUser("Lender", "ROLE_USER");
+        User borrower = createUser("Borrower", "ROLE_USER");
+        BorrowingProcess process = createProcess(borrower, lender);
+        Mockito.when(userService.get("user")).thenReturn(borrower);
+        Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
+        Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(false);
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("id", "1");
+        map.add("problem", "This test.");
+
+        mvc.perform(MockMvcRequestBuilders.post("/saveConflict").params(map))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attribute("notAuthorized", true));
+    }
+
+    @Test
+    @WithMockUser
+    public void redirectSaveConflictWhenConflictExists() throws Exception {
+        User lender = createUser("Lender", "ROLE_USER");
+        User borrower = createUser("Borrower", "ROLE_USER");
+        BorrowingProcess process = createProcess(borrower, lender);
+        Conflict conflict = createConflict(lender, borrower, process);
+        Mockito.when(userService.get("user")).thenReturn(borrower);
+        Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
+        Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(true);
+        Mockito.when(conflictService.getFromBorrowindProcess(process)).thenReturn(conflict);
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("id", "1");
+        map.add("problem", "This test.");
+
+        mvc.perform(MockMvcRequestBuilders.post("/saveConflict").params(map))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/conflictDetails?id=1"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attribute("conflictExistsAlready", true));
+    }
+
+    @Test
+    @WithMockUser
+    public void redirectAddMessageToConflict() throws Exception {
+        User lender = createUser("Lender", "ROLE_USER");
+        User borrower = createUser("Borrower", "ROLE_USER");
+        BorrowingProcess process = createProcess(borrower, lender);
+        Conflict conflict = createConflict(lender, borrower, process);
+        Mockito.when(userService.get("user")).thenReturn(borrower);
+        Mockito.when(conflictService.get(1L)).thenReturn(conflict);
+        Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(true);
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("id", "1");
+        map.add("message", "New message.");
+
+        mvc.perform(MockMvcRequestBuilders.post("/conflictNewMessage").params(map))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/conflictDetails?id=1"))
+                .andExpect(MockMvcResultMatchers.status().isFound());
+    }
+
+    @Test
+    @WithMockUser
+    public void redirectAddMessageToConflictWhenNotAuthorized() throws Exception {
+        User lender = createUser("Lender", "ROLE_USER");
+        User borrower = createUser("Borrower", "ROLE_USER");
+        BorrowingProcess process = createProcess(borrower, lender);
+        Conflict conflict = createConflict(lender, borrower, process);
+        Mockito.when(userService.get("user")).thenReturn(borrower);
+        Mockito.when(conflictService.get(1L)).thenReturn(conflict);
+        Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(false);
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("id", "1");
+        map.add("message", "New message.");
+
+        mvc.perform(MockMvcRequestBuilders.post("/conflictNewMessage").params(map))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attribute("notAuthorized", true));
     }
 
     @Test
     @WithMockUser
     public void retrieveStatusConflictDetails() throws Exception {
-        Conflict conflict = createConflict();
-        Mockito.when(conService.get(Mockito.anyLong())).thenReturn(conflict);
+        User lender = createUser("Lender", "ROLE_USER");
+        User borrower = createUser("Borrower", "ROLE_USER");
+        BorrowingProcess process = createProcess(borrower, lender);
+        Conflict conflict = createConflict(lender, borrower, process);
+        Mockito.when(userService.get("user")).thenReturn(borrower);
+        Mockito.when(conflictService.get(1L)).thenReturn(conflict);
+        Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(true);
+
         mvc.perform(MockMvcRequestBuilders.get("/conflictDetails").param("id", "1"))
-                .andExpect(MockMvcResultMatchers.status().is(200));
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     @WithMockUser
-    public void retrieveStatusBorrower() throws Exception {
-        Transaction trans = new Transaction();
-        Conflict conflict = createConflict();
-        Mockito.when(conService.get(Mockito.anyLong())).thenReturn(conflict);
-     /*   Mockito.when(transRepo.findByProcessId(1L)).thenReturn(trans);
-        Mockito.when(proService.punishDeposit("Borrower", trans)).thenReturn(200);
+    public void retrieveStatusConflictDetailsWhenAdmin() throws Exception {
+        User lender = createUser("Lender", "ROLE_USER");
+        User borrower = createUser("Borrower", "ROLE_USER");
+        BorrowingProcess process = createProcess(borrower, lender);
+        Conflict conflict = createConflict(lender, borrower, process);
+        User admin = createUser("Admin", "ROLE_ADMIN");
+        Mockito.when(userService.get("user")).thenReturn(admin);
+        Mockito.when(conflictService.get(1L)).thenReturn(conflict);
 
-        mvc.perform(MockMvcRequestBuilders.get("/borrower").param("id", "1"))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/conflictView"));*/
+        mvc.perform(MockMvcRequestBuilders.get("/conflictDetails").param("id", "1"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     @WithMockUser
-    public void retrieveStatusOwner() throws Exception {
-        Transaction trans = new Transaction();
-        Conflict conflict = createConflict();
-        Mockito.when(conService.get(Mockito.anyLong())).thenReturn(conflict);
-     /*   Mockito.when(transRepo.findByProcessId(1L)).thenReturn(trans);
-        Mockito.when(proService.punishDeposit("Borrower", trans)).thenReturn(200);
+    public void redirectConflictDetailsWhenNotAuthorized() throws Exception {
+        User lender = createUser("Lender", "ROLE_USER");
+        User borrower = createUser("Borrower", "ROLE_USER");
+        BorrowingProcess process = createProcess(borrower, lender);
+        Conflict conflict = createConflict(lender, borrower, process);
+        Mockito.when(userService.get("user")).thenReturn(borrower);
+        Mockito.when(conflictService.get(1L)).thenReturn(conflict);
+        Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(false);
 
-        mvc.perform(MockMvcRequestBuilders.get("/lender").param("id", "1"))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/conflictView"));*/
+        mvc.perform(MockMvcRequestBuilders.get("/conflictDetails").param("id", "1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attribute("notAuthorized", true));
+    }
+
+    @Test
+    @WithMockUser
+    public void forbiddenForNotAdminConflictView() throws Exception {
+        Mockito.when(conflictService.getAll()).thenReturn(new ArrayList<>());
+        mvc.perform(MockMvcRequestBuilders.get("/admin/conflicts"))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void retrieveStatusForAdminConflictView() throws Exception {
+        Mockito.when(conflictService.getAll()).thenReturn(new ArrayList<>());
+        mvc.perform(MockMvcRequestBuilders.get("/admin/conflicts"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    public void forbiddenForNotAdminLender() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/admin/conflicts/lender").param("id","1"))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void redirectForAdminLender() throws Exception {
+        User lender = createUser("Lender", "ROLE_USER");
+        User borrower = createUser("Borrower", "ROLE_USER");
+        BorrowingProcess process = createProcess(borrower, lender);
+        Conflict conflict = createConflict(lender, borrower, process);
+        Mockito.when(userService.get("user")).thenReturn(borrower);
+        Mockito.when(conflictService.get(1L)).thenReturn(conflict);
+        mvc.perform(MockMvcRequestBuilders.get("/admin/conflicts/lender").param("id","1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/conflicts"))
+                .andExpect(MockMvcResultMatchers.status().isFound());
+    }
+
+    @Test
+    @WithMockUser
+    public void forbiddenForNotAdminBorrower() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/admin/conflicts/borrower").param("id","1"))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void redirectForAdminBorrower() throws Exception {
+        User lender = createUser("Lender", "ROLE_USER");
+        User borrower = createUser("Borrower", "ROLE_USER");
+        BorrowingProcess process = createProcess(borrower, lender);
+        Conflict conflict = createConflict(lender, borrower, process);
+        Mockito.when(userService.get("user")).thenReturn(borrower);
+        Mockito.when(conflictService.get(1L)).thenReturn(conflict);
+        mvc.perform(MockMvcRequestBuilders.get("/admin/conflicts/borrower").param("id","1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/conflicts"))
+                .andExpect(MockMvcResultMatchers.status().isFound());
     }
 }
