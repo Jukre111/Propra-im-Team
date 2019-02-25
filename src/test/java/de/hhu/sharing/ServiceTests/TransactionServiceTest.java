@@ -79,9 +79,4 @@ class TransactionRentalServiceTest {
 
         Assertions.assertThat(transSevice.checkFinances(request.getRequester(), item, request.getPeriod().getStartdate(), request.getPeriod().getEnddate())).isFalse();
     }*/
-
-       Assertions.assertThat(transSevice.checkFinances(request.getRequester(), item, request.getPeriod().getStartdate(), request.getPeriod().getEnddate())).isFalse();
-
-    }*/
-
 }

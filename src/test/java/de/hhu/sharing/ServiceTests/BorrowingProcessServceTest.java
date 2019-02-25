@@ -26,9 +26,6 @@ public class BorrowingProcessServceTest {
     private ProPayService proPayService;
 
     @Mock
-    private TransactionService transactionService;
-
-    @Mock
     private  ConflictService conflictService;
 
     @InjectMocks
