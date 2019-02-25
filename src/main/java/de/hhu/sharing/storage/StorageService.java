@@ -16,4 +16,6 @@ public interface StorageService {
 	void storeItem(MultipartFile file, Item item);
 
 	void storeUserInitalizer(byte[] byteArr, User user);
+
+	void storeItemInitalizer(byte[] byteArr, Item item);
 }

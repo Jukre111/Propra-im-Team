@@ -93,6 +93,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
     }
 
     private void initItems(Faker faker){
+        byte[] byteArr = getDefaultUserImage();
         for(User user : users.findAll()){
             for(int j = 0; j < 3; j++){
                 Item item = new Item(faker.pokemon().name(),
@@ -101,6 +102,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
                         faker.number().numberBetween(1,1000),
                         user);
                 items.save(item);
+                fileService.storeItemInitalizer(byteArr, item);
             }
         }
     }
@@ -129,17 +131,6 @@ public class DatabaseInitializer implements ServletContextInitializer {
         User admin = new User("admin", encoder.encode("admin") ,"ROLE_ADMIN", faker.gameOfThrones().house(),
                 faker.lordOfTheRings().character(), faker.internet().emailAddress(), faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), adminAddress);
         users.save(admin);
-
-
-//        User user1 = users.findByUsername("user1").orElseThrow(()-> new RuntimeException("Users not there."));
-//        User user2 = users.findByUsername("user2").orElseThrow(()-> new RuntimeException("Users not there."));
-//        Item item1 = items.findFirstByLender(user1).orElseThrow(()-> new RuntimeException("Item not found."));
-//
-//        Conflict conflict = new Conflict();
-//        conflict.setProblem("Problem");
-//        conflict.setBorrower(user2);
-//        conflict.setLender(user1);
-//        conflicts.save(conflict);
 
     }
 
