@@ -4,6 +4,7 @@ import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
+import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.RequestService;
@@ -25,6 +26,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RunWith(SpringRunner.class)
@@ -68,12 +71,24 @@ public class IndexControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-
-
     @WithMockUser
     @Test
     public void retrieveStatusSearch()throws Exception{
         mvc.perform(MockMvcRequestBuilders.get("/search?query=item"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @WithMockUser
+    @Test
+    public void retrieveStatusMessages() throws Exception{
+        LocalDate date = LocalDate.of(2000,1,1);
+        Address address = new Address("unistrase","duesseldorf", 40233);
+        User user = new User("user","password", "role", "lastnmae", "forname", "email",date,address);
+        Mockito.when(userService.get("user")).thenReturn(user);
+        List<Item> itemList = new ArrayList<>();
+        Mockito.when(itemService.getAllIPosted(user)).thenReturn(itemList);
+        Mockito.when(itemService.getAllIRequested(user)).thenReturn(itemList);
+        mvc.perform(MockMvcRequestBuilders.get("/messages"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 

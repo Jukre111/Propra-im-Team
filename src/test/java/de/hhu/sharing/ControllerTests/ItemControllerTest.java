@@ -1,9 +1,7 @@
 package de.hhu.sharing.ControllerTests;
 
 import de.hhu.sharing.data.UserRepository;
-import de.hhu.sharing.model.Address;
-import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.User;
+import de.hhu.sharing.model.*;
 import de.hhu.sharing.services.BorrowingProcessService;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.RequestService;
@@ -73,7 +71,8 @@ public class ItemControllerTest {
     @Test
     @WithMockUser
     public void retrieveStatusDetailsNewItem() throws Exception{
-        mvc.perform(MockMvcRequestBuilders.get("/newItem"));
+        mvc.perform(MockMvcRequestBuilders.get("/newItem"))
+                .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
 
@@ -110,6 +109,18 @@ public class ItemControllerTest {
     @WithMockUser
     public void retrieveStatusDeleteItem() throws Exception{
         mvc.perform(MockMvcRequestBuilders.get("/deleteItem").param("id","1"));
+    }
+
+    @Test
+    @WithMockUser
+    public void retrieveStatusReturnItem() throws Exception{
+        Item item = itemCreator();
+        Mockito.when(userService.get("user")).thenReturn(item.getLender());
+        BorrowingProcess process = new BorrowingProcess(item, new Period(LocalDate.now(), LocalDate.now().plusDays(2)));
+        process.setId(1L);
+        Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
+        mvc.perform(MockMvcRequestBuilders.get("/returnItem").param("id","1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"));
     }
 
 }
