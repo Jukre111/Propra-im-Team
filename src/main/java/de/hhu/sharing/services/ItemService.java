@@ -101,4 +101,25 @@ public class ItemService{
         Item item = this.get(id);
         return item.getLender() == user;
     }
+
+
+    public List allDatesInbetween(Item item){
+
+        List <Period> allPeriods = item.getPeriods();
+        List <LocalDate> allDates = new ArrayList<>();
+        for(Period period : allPeriods){
+            LocalDate current = period.getStartdate();
+            List <LocalDate> periodDates = new ArrayList<>();
+            while(!current.isAfter(period.getEnddate())) {
+                periodDates.add(current);
+                current = current.plusDays(1);
+            }
+            allDates.addAll(periodDates);
+
+
+        }
+
+
+        return allDates;
+    }
 }
