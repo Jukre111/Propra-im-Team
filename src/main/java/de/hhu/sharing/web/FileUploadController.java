@@ -58,16 +58,6 @@ public class FileUploadController {
     public FileUploadController(StorageService storageService) {
         this.storageService = storageService;
     }
-
-    @GetMapping("/uploadUserPic")
-    public String uploadUserPic(Model model) throws IOException {
-        return "uploadUserPic";
-    }
-    
-    @GetMapping("/uploadItemPic")
-    public String uploadItemPic(Model model) throws IOException {
-        return "uploadItemPic";
-    }
     
     @RequestMapping(value = "getUserPic", method = RequestMethod.GET)
     @ResponseBody
