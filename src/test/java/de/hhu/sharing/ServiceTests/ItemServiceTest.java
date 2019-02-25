@@ -12,8 +12,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.NestedServletException;
 
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,15 +62,44 @@ public class ItemServiceTest {
         list.add(item3);
         return list;
     }
+
     @Test
-    public void testCreate(){
-        MultipartFile file = null;
+    public void testCreateFileExists(){
+        MockMultipartFile jsonFile = new MockMultipartFile("test.json", "", "application/json", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
         User user = generateUser("dude");
-        itemService.create("item","description",1,1,user, file);
-        ArgumentCaptor<Item> captor = ArgumentCaptor.forClass(Item.class);
-        Mockito.verify(items, times(1)).save(captor.capture());
-        Assert.assertEquals(captor.getAllValues().get(0).getName(), "item");
-        Assert.assertEquals(captor.getAllValues().get(0).getLender(), user);
+
+        itemService.create("item","description",1,1,user, jsonFile);
+
+        ArgumentCaptor<Item> captorItem1 = ArgumentCaptor.forClass(Item.class);
+        Mockito.verify(items, times(1)).save(captorItem1.capture());
+
+        ArgumentCaptor<Item> captorItem2 = ArgumentCaptor.forClass(Item.class);
+        ArgumentCaptor<MockMultipartFile> captorMockMultipartFile = ArgumentCaptor.forClass(MockMultipartFile.class);
+        Mockito.verify(storageService, times(1)).storeItem(captorMockMultipartFile.capture(),captorItem2.capture());
+
+        Assert.assertEquals(captorItem1.getAllValues().get(0).getName(), "item");
+        Assert.assertEquals(captorItem1.getAllValues().get(0).getLender(), user);
+        Assert.assertEquals(captorItem2.getAllValues().get(0).getName(), "item");
+        Assert.assertEquals(captorItem2.getAllValues().get(0).getLender(), user);
+        Assert.assertEquals(captorMockMultipartFile.getValue(), jsonFile);
+    }
+
+    @Test
+    public void testCreateFileNull(){
+        MockMultipartFile jsonFile = null;
+        User user = generateUser("dude");
+        Item item = new Item("item","description",1,1,user);
+
+        itemService.create("item","description",1,1,user, jsonFile);
+
+        ArgumentCaptor<Item> captorItem1 = ArgumentCaptor.forClass(Item.class);
+        Mockito.verify(items, times(1)).save(captorItem1.capture());
+
+        Mockito.verify(storageService, times(0)).storeItem(jsonFile, item);
+
+        Assert.assertEquals(captorItem1.getAllValues().get(0).getName(), "item");
+        Assert.assertEquals(captorItem1.getAllValues().get(0).getLender(), user);
+
     }
 
 
@@ -100,11 +132,17 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void testGet(){
+    public void testGetItemFound(){
         User user = generateUser("dude");
         Item item = generateItem(user);
         Mockito.when(items.findById(1L)).thenReturn(Optional.of(item));
-        Assert.assertTrue(itemService.get(1L).getName().equals("apfel"));
+        Assert.assertEquals(itemService.get(1L).getName(),"apfel");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testGetItemNotFound(){
+        Mockito.when(items.findById(1L)).thenReturn(Optional.empty());
+        itemService.get(1L);
     }
 
     @Test
@@ -127,6 +165,12 @@ public class ItemServiceTest {
         Item item = generateItem(user);
         Mockito.when(items.findByRequests_id(1L)).thenReturn(Optional.of(item));
         Assert.assertEquals(itemService.getFromRequestId(1L), item);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testGetFromRequestIdItemNotFound(){
+        Mockito.when(items.findByRequests_id(1L)).thenReturn(Optional.empty());
+        itemService.getFromRequestId(1L);
     }
 
     @Test
@@ -152,5 +196,15 @@ public class ItemServiceTest {
         List<Item> list = generateItemList(user);
         Mockito.when(items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("lecker", "lecker")).thenReturn(list);
         Assert.assertEquals(itemService.searchFor("lecker"), list);
+    }
+
+    @Test
+    public void testIsChangeable(){
+       /* User user = generateUser("username");
+        Item item = generateItem(user);
+        item.setId(1L);
+
+        Mockito.when(items.findById(1L)).thenReturn(Optional.of(item));
+*/
     }
 }
