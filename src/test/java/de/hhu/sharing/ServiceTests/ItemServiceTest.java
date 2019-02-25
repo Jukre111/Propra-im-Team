@@ -4,6 +4,7 @@ package de.hhu.sharing.ServiceTests;
 import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.Period;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.ConflictService;
 import de.hhu.sharing.services.ItemService;
@@ -37,14 +38,15 @@ public class ItemServiceTest {
     @InjectMocks
     private ItemService itemService;
 
-    @Before public void initialize(){
+    @Before
+    public void initialize() {
         MockitoAnnotations.initMocks(this);
     }
 
     private User generateUser(String username) {
-        LocalDate birthdate = LocalDate.of(2000,1,1);
-        Address address = new Address("unistrase","duesseldorf", 40233);
-        User user = new User(username,"password", "role", "lastname", "forename", "email", birthdate, address);
+        LocalDate birthdate = LocalDate.of(2000, 1, 1);
+        Address address = new Address("unistrase", "duesseldorf", 40233);
+        User user = new User(username, "password", "role", "lastname", "forename", "email", birthdate, address);
         return user;
     }
 
@@ -52,7 +54,7 @@ public class ItemServiceTest {
         return new Item("apfel", "lecker", 1, 1, user);
     }
 
-    private List<Item> generateItemList(User user){
+    private List<Item> generateItemList(User user) {
         Item item = generateItem(user);
         Item item2 = generateItem(user);
         Item item3 = generateItem(user);
@@ -64,18 +66,18 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void testCreateFileExists(){
+    public void testCreateFileExists() {
         MockMultipartFile jsonFile = new MockMultipartFile("test.json", "", "application/json", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
         User user = generateUser("dude");
 
-        itemService.create("item","description",1,1,user, jsonFile);
+        itemService.create("item", "description", 1, 1, user, jsonFile);
 
         ArgumentCaptor<Item> captorItem1 = ArgumentCaptor.forClass(Item.class);
         Mockito.verify(items, times(1)).save(captorItem1.capture());
 
         ArgumentCaptor<Item> captorItem2 = ArgumentCaptor.forClass(Item.class);
         ArgumentCaptor<MockMultipartFile> captorMockMultipartFile = ArgumentCaptor.forClass(MockMultipartFile.class);
-        Mockito.verify(storageService, times(1)).storeItem(captorMockMultipartFile.capture(),captorItem2.capture());
+        Mockito.verify(storageService, times(1)).storeItem(captorMockMultipartFile.capture(), captorItem2.capture());
 
         Assert.assertEquals(captorItem1.getAllValues().get(0).getName(), "item");
         Assert.assertEquals(captorItem1.getAllValues().get(0).getLender(), user);
@@ -85,12 +87,12 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void testCreateFileNull(){
+    public void testCreateFileNull() {
         MockMultipartFile jsonFile = null;
         User user = generateUser("dude");
-        Item item = new Item("item","description",1,1,user);
+        Item item = new Item("item", "description", 1, 1, user);
 
-        itemService.create("item","description",1,1,user, jsonFile);
+        itemService.create("item", "description", 1, 1, user, jsonFile);
 
         ArgumentCaptor<Item> captorItem1 = ArgumentCaptor.forClass(Item.class);
         Mockito.verify(items, times(1)).save(captorItem1.capture());
@@ -104,12 +106,12 @@ public class ItemServiceTest {
 
 
     @Test
-    public void testEdit(){
+    public void testEdit() {
         User user1 = generateUser("user1");
         User user2 = generateUser("user2");
         Item item = generateItem(user1);
         Mockito.when(items.findById(1L)).thenReturn(Optional.of(item));
-        itemService.edit(1L,"item","description",1,1,user2);
+        itemService.edit(1L, "item", "description", 1, 1, user2);
         ArgumentCaptor<Item> captor = ArgumentCaptor.forClass(Item.class);
         Mockito.verify(items, times(1)).save(captor.capture());
 
@@ -119,7 +121,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void testDelete(){
+    public void testDelete() {
         User user = generateUser("dude");
         Item item = generateItem(user);
         Mockito.when(items.findById(1L)).thenReturn(Optional.of(item));
@@ -132,35 +134,29 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void testGetItemFound(){
+    public void testGetItemFound() {
         User user = generateUser("dude");
         Item item = generateItem(user);
         Mockito.when(items.findById(1L)).thenReturn(Optional.of(item));
-        Assert.assertEquals(itemService.get(1L).getName(),"apfel");
+        Assert.assertEquals(itemService.get(1L).getName(), "apfel");
     }
 
     @Test(expected = RuntimeException.class)
-    public void testGetItemNotFound(){
+    public void testGetItemNotFound() {
         Mockito.when(items.findById(1L)).thenReturn(Optional.empty());
         itemService.get(1L);
     }
 
     @Test
-    public void testGetAll(){
-        User user = generateUser("dude");
-        Item item = generateItem(user);
-        Item item2 = generateItem(user);
-        Item item3 = generateItem(user);
-        ArrayList<Item> liste = new ArrayList<>();
-        liste.add(item);
-        liste.add(item2);
-        liste.add(item3);
-        Mockito.when(items.findAll()).thenReturn(liste);
-        Assert.assertEquals(itemService.getAll(), liste);
+    public void testGetAll() {
+        User user = generateUser("username");
+        List<Item> list = generateItemList(user);
+        Mockito.when(items.findAll()).thenReturn(list);
+        Assert.assertEquals(itemService.getAll(), list);
     }
 
     @Test
-    public void testGetFromRequestId(){
+    public void testGetFromRequestId() {
         User user = generateUser("dude");
         Item item = generateItem(user);
         Mockito.when(items.findByRequests_id(1L)).thenReturn(Optional.of(item));
@@ -168,13 +164,13 @@ public class ItemServiceTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void testGetFromRequestIdItemNotFound(){
+    public void testGetFromRequestIdItemNotFound() {
         Mockito.when(items.findByRequests_id(1L)).thenReturn(Optional.empty());
         itemService.getFromRequestId(1L);
     }
 
     @Test
-    public void testGetAllIPosted(){
+    public void testGetAllIPosted() {
         User user = generateUser("dude");
         List<Item> list = generateItemList(user);
         Mockito.when(items.findAllByLender(user)).thenReturn(list);
@@ -182,16 +178,16 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void testGetAllIRequested(){
+    public void testGetAllIRequested() {
         User user = generateUser("dude");
         List<Item> list = generateItemList(user);
         Mockito.when(items.findAllByRequests_requester(user)).thenReturn(list);
-        Assert.assertEquals(itemService.getAllIRequested(user),list);
+        Assert.assertEquals(itemService.getAllIRequested(user), list);
     }
 
 
     @Test
-    public void testSearchFor(){
+    public void testSearchFor() {
         User user = generateUser("dude");
         List<Item> list = generateItemList(user);
         Mockito.when(items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("lecker", "lecker")).thenReturn(list);
@@ -199,12 +195,103 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void testIsChangeable(){
-       /* User user = generateUser("username");
+    public void testIsChangeableNoPeriodsNoRequestsNoConflicts() {
+        User user1 = generateUser("dude");
+        Item item1 = generateItem(user1);
+        item1.setId(1L);
+
+        Mockito.when(items.findById(1L)).thenReturn(Optional.of(item1));
+        Mockito.when(conflictService.noConflictWith(item1)).thenReturn(true);
+
+        Assert.assertTrue(itemService.isChangeable(1L));
+    }
+
+
+    @Test
+    public void testIsChangeablePeriodsAndRequestsConflicts() {
+        User user1 = generateUser("dude");
+        Item item1 = generateItem(user1);
+        item1.setId(1L);
+        item1.addToPeriods(new Period());
+
+        Mockito.when(items.findById(1L)).thenReturn(Optional.of(item1));
+        Mockito.when(conflictService.noConflictWith(item1)).thenReturn(false);
+
+        Assert.assertFalse(itemService.isChangeable(1L));
+    }
+
+    @Test
+    public void testIsChangeablePeriodsAndRequestsNoConflicts() {
+        User user1 = generateUser("dude");
+        Item item1 = generateItem(user1);
+        item1.setId(1L);
+        item1.addToPeriods(new Period());
+
+        Mockito.when(items.findById(1L)).thenReturn(Optional.of(item1));
+        Mockito.when(conflictService.noConflictWith(item1)).thenReturn(true);
+
+        Assert.assertFalse(itemService.isChangeable(1L));
+    }
+
+    @Test
+    public void testIsChangeableNoPeriodsNoRequestsConflicts() {
+        User user1 = generateUser("dude");
+        Item item1 = generateItem(user1);
+        item1.setId(1L);
+
+        Mockito.when(items.findById(1L)).thenReturn(Optional.of(item1));
+        Mockito.when(conflictService.noConflictWith(item1)).thenReturn(false);
+
+        Assert.assertFalse(itemService.isChangeable(1L));
+    }
+
+    @Test
+    public void testIsAvailableAtTrue(){
+        User user1 = generateUser("dude");
+        Item item1 = generateItem(user1);
+        LocalDate startdate1 = LocalDate.of(2019,4,5);
+        LocalDate enddate1 = LocalDate.of(2019,4,7);
+        LocalDate startdate2 = LocalDate.of(2019,4,17);
+        LocalDate enddate2 = LocalDate.of(2019,4,20);
+        Period period = new Period(startdate1, enddate1);
+        item1.addToPeriods(period);
+
+        Assert.assertTrue( itemService.isAvailableAt(item1, startdate2, enddate2));
+    }
+
+    @Test
+    public void testIsAvailableAtFalse(){
+        User user1 = generateUser("dude");
+        Item item1 = generateItem(user1);
+        LocalDate startdate1 = LocalDate.of(2019,4,5);
+        LocalDate enddate1 = LocalDate.of(2019,4,7);
+        LocalDate startdate2 = LocalDate.of(2019,4,6);
+        LocalDate enddate2 = LocalDate.of(2019,4,20);
+        Period period = new Period(startdate1, enddate1);
+        item1.addToPeriods(period);
+
+        Assert.assertFalse( itemService.isAvailableAt(item1, startdate2, enddate2));
+    }
+
+    @Test
+    public void testIsOwnerTrue(){
+        User user = generateUser("testman");
         Item item = generateItem(user);
         item.setId(1L);
-
         Mockito.when(items.findById(1L)).thenReturn(Optional.of(item));
-*/
+
+        Assert.assertTrue(itemService.isOwner(1L, user));
+    }
+
+    @Test
+    public void testIsOwnerFalse(){
+        User user = generateUser("testman");
+        User user2 = generateUser("testman");
+        Item item = generateItem(user);
+        item.setId(1L);
+        Mockito.when(items.findById(1L)).thenReturn(Optional.of(item));
+
+        Assert.assertFalse(itemService.isOwner(1L, user2));
     }
 }
+
