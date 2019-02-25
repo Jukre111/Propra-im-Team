@@ -34,5 +34,9 @@ public class UserService {
         borrower.removeFromBorrowed(process);
         users.save(borrower);
 
+    public boolean userIsInvolvedToProcess(User user, BorrowingProcess process) {
+        User borrower = this.getBorrowerFromBorrowingProcessId(process.getId());
+        User lender = process.getItem().getLender();
+        return user == borrower || user == lender;
     }
 }
