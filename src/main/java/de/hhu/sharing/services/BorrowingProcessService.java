@@ -1,14 +1,9 @@
 package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.BorrowingProcessRepository;
-import de.hhu.sharing.data.TransactionRepository;
 import de.hhu.sharing.model.*;
-import de.hhu.sharing.propay.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class BorrowingProcessService {
@@ -26,7 +21,7 @@ public class BorrowingProcessService {
     private UserService userService;
 
     @Autowired
-    private ProPayService proService;
+    private ProPayService proPayService;
 
     @Autowired
     private TransactionService transactionService;
@@ -58,14 +53,20 @@ public class BorrowingProcessService {
         lender.addToLend(process);
     }
 
-    public void itemReturned(Long processId){
+    public void itemReturned(Long processId, String condition){
         BorrowingProcess process = this.get(processId);
         Conflict conflict = conflictService.getFromBorrowindProcess(process);
         if(conflict != null){
             conflictService.delete(conflict);
         }
         User borrower = userService.getBorrowerFromBorrowingProcessId(processId);
-        proService.releaseDeposit(borrower, transactionService.getFromProcessId(processId));
+        if(condition.equals("good")){
+            proPayService.releaseDeposit(borrower, transactionService.getFromProcessId(processId));
+        }
+        else{
+            proPayService.punishDeposit(borrower, transactionService.getFromProcessId(processId));
+        }
+        proPayService.releaseDeposit(borrower, transactionService.getFromProcessId(processId));
         userService.removeProcessFromProcessLists(process);
         process.getItem().removeFromPeriods(process.getPeriod());
         processes.delete(process);
