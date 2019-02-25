@@ -1,22 +1,29 @@
 package de.hhu.sharing.data;
 
-import de.hhu.sharing.model.Address;
-import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.User;
+import com.github.javafaker.Faker;
+import de.hhu.sharing.model.*;
+import de.hhu.sharing.services.FileSystemStorageService;
+
+import de.hhu.sharing.services.ProPayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+
+import java.io.*;
+import java.nio.file.Files;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Date;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Component
-public class
-DatabaseInitializer implements ServletContextInitializer {
+public class DatabaseInitializer implements ServletContextInitializer {
 
     @Autowired
     private UserRepository users;
@@ -25,76 +32,106 @@ DatabaseInitializer implements ServletContextInitializer {
     private ItemRepository items;
 
     @Autowired
+    private RequestRepository requests;
+
+    @Autowired
     private PasswordEncoder encoder;
 
+    @Autowired
+    private ConflictRepository conflicts;
+
+    @Autowired
+    private ProPayService proPayService;
+
+    @Autowired
+    ImageRepository imageRepo;
+    
+    @Autowired
+    FileSystemStorageService fileService;
+    
     @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
-        System.out.println("Populating the database");
-
-        User hans = mkUser("Hansi", "1234","ROLE_USER", "Hans", "Hans", "test1@test.de",
-                LocalDate.of(1990, 12, 12),
-                mkAddress("Kaiser-Wilhelm-Allee 3","Leverkusen", 51373));
-        Item mixer = mkItem("Mixer", "mixt Sachen", 5, 20,
-                LocalDate.of(2019, 1, 1),
-                LocalDate.of(2019, 2, 12),
-                hans);
-
-        User peter = mkUser("Nashorn",  "2345","ROLE_USER", "Peti", "Peter","test2@test.de",
-                LocalDate.of(1991, 12, 1),
-                mkAddress("Berliner Ring 3","Wolfsburg",  38440));
-
-        Item fahrrad = mkItem("Fahrrad", "Räder die fahren", 20, 200,
-                LocalDate.of(2019, 1, 1),
-                LocalDate.of(2019, 2, 12),
-                peter);
-        Item motorrad = mkItem("Motorrad", "Moter mit Rädern", 50, 2000,
-                LocalDate.of(2019, 1, 1),
-                LocalDate.of(2019, 2, 12),
-                peter);
-
-        User guenther = mkUser("Guenther", "password", "ROLE_ADMIN","Gurke","Guenther", "test3@test.de",
-                LocalDate.of(1995, 8, 21),
-                mkAddress("Dorfstrasse 50","Feusisberg, Schweiz",  8834));
-
-
-        users.saveAll(Arrays.asList(hans,peter,guenther));
-        items.saveAll(Arrays.asList(mixer,fahrrad,motorrad));
-        peter.addToBorrowedItem(mixer);
-        users.saveAll(Arrays.asList(hans,peter,guenther));
-
+    public void onStartup(ServletContext servletContext) throws ServletException{
+        final Faker faker = new Faker(Locale.GERMAN);
+        initUsers(faker);
+        initItems(faker);
+        initRequests(faker);
     }
 
-    private Address mkAddress(String street, String city, int pc) {
-        Address address = new Address();
-        address.setStreet(street);
-        address.setPostcode(pc);
-        address.setCity(city);
-        return address;
+    private byte[] getDefaultUserImage(){
+        byte[] byteArr = new byte[1];
+        File file = new File("nyan_cat.gif");
+        try {
+            file = ResourceUtils.getFile(
+                    "classpath:nyan_cat.gif");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+		try {
+            byteArr = Files.readAllBytes(file.toPath());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return byteArr;
+    }
+    
+    private void initUsers(Faker faker){
+        byte[] byteArr = getDefaultUserImage();
+        for(int i = 1; i < 21; i++){
+            Address address = new Address(
+                    faker.address().streetAddress(),
+                    faker.lordOfTheRings().location(),
+                    Integer.parseInt(faker.address().zipCode()));
+            User user = new User("user" + i, encoder.encode("password" + i), "ROLE_USER",
+                    faker.gameOfThrones().house(),
+                    faker.pokemon().name(),
+                    faker.internet().emailAddress(),
+                    faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                    address);
+            users.save(user);
+        	fileService.storeUserInitalizer(byteArr, user);
+        }
     }
 
-    private User mkUser(String username, String password, String role, String lastname, String forename, String mail, LocalDate birthdate, Address address) {
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(encoder.encode(password));
-        user.setRole(role);
-        user.setLastname(lastname);
-        user.setForename(forename);
-        user.setEmail(mail);
-        user.setBirthdate(birthdate);
-        user.setAddress(address);
-        return user;
+    private void initItems(Faker faker){
+        byte[] byteArr = getDefaultUserImage();
+        for(User user : users.findAll()){
+            for(int j = 0; j < 3; j++){
+                Item item = new Item(faker.pokemon().name(),
+                        String.join("\n", faker.lorem().paragraphs(3)),
+                        faker.number().numberBetween(1,1000),
+                        faker.number().numberBetween(1,1000),
+                        user);
+                items.save(item);
+                fileService.storeItemInitalizer(byteArr, item);
+            }
+        }
     }
 
-    private Item mkItem(String name, String description, int rental, int deposit, LocalDate startdate, LocalDate enddate, User lender){
-        Item item = new Item();
-        item.setName(name);
-        item.setDescription(description);
-        item.setRental(rental);
-        item.setDeposit(deposit);
-        item.setStartdate(startdate);
-        item.setEnddate(enddate);
-        item.setLender(lender);
-        return item;
+    private void initRequests(Faker faker){
+        for(User user : users.findAll()){
+            List<Item> itemList = items.findFirst2ByLenderNot(user);
+            LocalDate startdate = faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            Request request1 = new Request(
+                    new Period(startdate,
+                            faker.date().future(10,TimeUnit.DAYS, Date.from(startdate.atStartOfDay(ZoneId.systemDefault()).toInstant())).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()),
+                            user);
+            Request request2 = new Request(
+                    new Period(startdate,
+                            faker.date().future(10,TimeUnit.DAYS, Date.from(startdate.atStartOfDay(ZoneId.systemDefault()).toInstant())).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()),
+                    user);
+            requests.save(request1);
+            requests.save(request2);
+            itemList.get(0).addToRequests(request1);
+            itemList.get(1).addToRequests(request2);
+            items.saveAll(itemList);
+        }
+
+
+        Address adminAddress = new Address(faker.address().streetAddress(),faker.pokemon().location(), Integer.parseInt(faker.address().zipCode()));
+        User admin = new User("admin", encoder.encode("admin") ,"ROLE_ADMIN", faker.gameOfThrones().house(),
+                faker.lordOfTheRings().character(), faker.internet().emailAddress(), faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), adminAddress);
+        users.save(admin);
+
     }
 
 }

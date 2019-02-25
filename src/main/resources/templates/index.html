@@ -4,16 +4,6 @@
 <head>
 <title>Sharing</title>
 <style>
-    #indexbtn {
-        border: 2px solid #999;
-        border-radius: 0.5em;
-        font-size: 1.2em;
-        color: #fff;
-        background-color: #E74498;
-    }
-
-    #indexbtn:hover {background-color: #BD1D6F}
-
     table {
     border-collapse: collapse;
     width: 100%;
@@ -28,10 +18,10 @@
 </style>
 </head>
 <body>
-<h1 layout:fragment="title">
-    Angebote
-</h1>
-<div layout:fragment="content">
+<div layout:fragment="body" style="padding-left: 50px; padding-right: 50px">
+    <div class="alert alert-success" role="alert" th:if="${requested}" >Anfrage erfolgreich gestellt.</div>
+    <div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${ownItem}" >Eigenes Objekt nicht an sich selbst verleihbar.</div>
+    <div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${noCredit}" >Nicht genug ProPray-Guthaben.</div>
     <table>
         <tr>
             <th width="20%">Angebote</th>
@@ -40,12 +30,11 @@
         </tr>
         <tr th:each="item : ${items}">
             <td th:text="${item.name}"></td>
-            <td th:text="${#strings.abbreviate(item.description,20)} "></td>
+            <td th:text="${#strings.abbreviate(item.description,100)} "></td>
             <td>
-                <a type="button" th:href="@{'/details?id=' + ${item.Id}}" id="indexbtn" style="margin-right: 20px; float: right">Details</a>
+                <a type="button" th:href="@{'/detailsItem?id=' + ${item.Id}}" class="indexbtn">Details</a>
             </td>
         </tr>
-
     </table>
 </div>
 </body>

@@ -4,16 +4,6 @@
 <head>
     <title>Suchergebnisse</title>
     <style>
-        #indexbtn {
-            border: 2px solid #999;
-            border-radius: 0.5em;
-            font-size: 1.2em;
-            color: #fff;
-            background-color: #E74498;
-        }
-
-        #indexbtn:hover {background-color: #BD1D6F}
-
         table {
             border-collapse: collapse;
             width: 100%;
@@ -28,11 +18,11 @@
     </style>
 </head>
 <body>
-<h1 layout:fragment="title">
-    Suchergebnisse für <span th:text="|'${query}'|"></span>
-</h1>
-<div layout:fragment="content">
-    <table>
+<div layout:fragment="body" style="padding-left: 50px; padding-right: 50px">
+    <div>
+        <h1><span style="font-size: 20pt">Suchergebnisse für</span> <span style="font-size: 30pt; color: #BD1D6F" th:text="|'${query}'|"></span></h1>
+    </div>
+    <table style="padding-top: 20px">
         <tr>
             <th width="20%">Angebote</th>
             <th width="70%">Beschreibung</th>
@@ -40,9 +30,9 @@
         </tr>
         <tr th:each="item : ${items}">
             <td th:text="${item.name}"></td>
-            <td th:text="${#strings.abbreviate(item.description,20)} "></td>
+            <td th:text="${#strings.abbreviate(item.description,100)} "></td>
             <td>
-                <a type="button" th:href="@{'/details?id=' + ${item.Id}}" id="indexbtn" style="margin-right: 20px; float: right">Details</a>
+                <a type="button" th:href="@{'/detailsItem?id=' + ${item.Id}}" class="indexbtn">Details</a>
             </td>
         </tr>
 

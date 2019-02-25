@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset = "utf-8"/>
+    <title>Account</title>
+
+    <style>
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2;}
+
+#circular--landscape {
+  display: inline-block;
+  position: relative;
+  width: 250px;
+  height: 250px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+#circular--landscape img {
+  width: auto;
+  height: 100%;
+  margin-left: -50px;
+}
+
+</style>
+</head>
+<body>
+<div layout:fragment="body">
+    <div style="padding: 20px"  class="form-horizontal">
+        <form th:action="@{/savePayIn}" method="post">
+            <div class="media">
+                <div class="media-body">
+                    <div class="form-group">
+                        <label for="username" class="col-sm-2 control-label">Benutzername</label>
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control" id="username" name="username" th:value="${user.username}" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount" class="col-sm-2 control-label">Kontostand</label>
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control" id="amount" name="amount" th:value="${amount}" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="deposits" class="col-sm-2 control-label">Davon reservierte Kautionen</label>
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control" id="deposits" name="amount" th:value="${deposits}" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sum" class="col-sm-2 control-label">Aufladebetrag</label>
+                        <div class="col-xs-6">
+                            <input type="number" min="0" class="form-control" id="sum" name="sum" />
+                            <br>
+                            <button type="submit" class="indexbtn" name="button">Aufladen</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-5" style="padding: 20px; margin-left: 30px">
+                <font size="4">Eingegangene Transaktionen</font>
+                <table>
+                    <tr>
+                        <th width="10%">Miete</th>
+                        <th width="10%">Kaution</th>
+                        <th width="20%">Kaution eingezogen</th>
+                        <th width="30%">Artikel</th>
+                        <th width="30%">Sender</th>
+                    </tr>
+                    <tr th:each="transRen : ${received}">
+                        <td th:text="${transRen.wholeRent}"></td>
+                        <td th:text="${transRen.deposit}"></td>
+                        <td th:text="${transRen.depositRevoked}"></td>
+                        <td th:text="${transRen.item.getName()}"></td>
+                        <td th:text="${transRen.sender.getUsername()}"></td>
+                    </tr>
+                </table>
+                <br>
+                <table>
+                    <tr>
+                        <th width="40%">Preis</th>
+                        <th width="30%">Artikel</th>
+                        <th width="30%">Sender</th>
+                    </tr>
+                    <tr th:each="transactionPurchase : ${receivedPurchase}">
+                        <td th:text="${transactionPurchase.price}"></td>
+                        <td th:text="${transactionPurchase.item.getName()}"></td>
+                        <td th:text="${transactionPurchase.sender.getUsername()}"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-sm-5" style="padding: 20px; margin-left: 30px">
+                <font size="4">Ausgegangene Transaktionen</font>
+                <table>
+                    <tr>
+                        <th width="10%">Miete</th>
+                        <th width="10%">Kaution</th>
+                        <th width="20%">Kaution entzogen</th>
+                        <th width="30%">Artikel</th>
+                        <th width="30%">Empfaenger</th>
+                    </tr>
+                    <tr th:each="transRen : ${send}">
+                        <td th:text="${transRen.wholeRent}"></td>
+                        <td th:text="${transRen.deposit}"></td>
+                        <td th:text="${transRen.depositRevoked}"></td>
+                        <td th:text="${transRen.item.getName()}"></td>
+                        <td th:text="${transRen.receiver.getUsername()}"></td>
+                    </tr>
+                </table>
+                <br>
+                <table>
+                    <tr>
+                        <th width="40%">Preis</th>
+                        <th width="30%">Artikel</th>
+                        <th width="30%">Empfaenger</th>
+                    </tr>
+                    <tr th:each="transactionPurchase : ${sendPurchase}">
+                        <td th:text="${transactionPurchase.price}"></td>
+                        <td th:text="${transactionPurchase.item.getName()}"></td>
+                        <td th:text="${transactionPurchase.receiver.getUsername()}"></td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

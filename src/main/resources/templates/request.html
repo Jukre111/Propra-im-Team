@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml" xmlns:min="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="assets/style.css"/>
+    <link rel="stylesheet" href="assets/dateTimePicker.css"/>
+    <script type="text/javascript" src="scripts/components/jquery.min.js"></script>
+    <script type="text/javascript" src="scripts/dateTimePicker.js"></script>
+    <title>Anfrage</title>
+    <script>
+        function compare()
+        {
+            var startDt = document.getElementById("startdate").value;
+            var endDt = document.getElementById("enddate").value;
+            var button = document.getElementById("button");
+
+            if(startDt && new Date(startDt).getDay() < new Date().getDay()){
+                console.log("failure");
+                button.disabled = true;
+                alert("Das Startdatum kann nicht vor heute liegen!");
+            }
+            else if(startDt && endDt && new Date(startDt).getTime() > new Date(endDt).getTime()){
+                console.log("failure");
+                button.disabled = true;
+                alert("Das Enddatum kann nicht vor dem Startdatum liegen!");
+            }
+            else {
+                console.log("work work work");
+                button.disabled = false;
+            }
+        }
+    </script>
+    <style>
+        .style {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            margin-top: 2%;
+            margin-left: 25%;
+            margin-right: 25%;
+        }
+
+        .textPosition {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="body">
+    <div class="alert alert-danger" role="alert" th:if="${notAvailable}" >Objekt zum angegebenen Zeitraum nicht verfügbar.</div>
+    <div class="style textPosition" style="padding: 20px">
+        <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name" th:text="${item.name}"></span></h1>
+        <div class="form-horizontal" style="padding-top: 60px">
+            <form th:action="@{/saveRequest}" method="post">
+                <input type="hidden" class="form-control" id="id" name="id" th:value="${item.id}" readonly/>
+                <div class="form-group">
+                    <label for="startdate" class="col-sm-2 control-label">Startdatum</label>
+                    <div class="col-xs-6">
+                        <input type="hidden" id="startdate" name="startdate" required="" />
+                        <div id="startdatecalendar" data-toggle="calendar"></div>
+                        <script type="text/javascript" th:inline="javascript">
+                            $(document).ready(function()
+                            {
+                                $('#startdatecalendar').calendar({
+                                    unavailable: [[${allDates}]],
+                                    onSelectDate: function(day, month, year) {
+                                        $('#startdatecalendar td.cur-month').each(function() {
+                                            $(this).removeClass('selected');
+                                        }).filter(function() {
+                                            return $(this).text() == day;
+                                        }).each(function() {
+                                            $(this).addClass('selected');
+                                        });
+                                        if (day < 10) day = '0' + day;
+                                        if (month < 10) month = '0' + month;
+                                        $('#startdate').val(year + '-' + month + '-' + day);
+                                        compare();
+                                    }
+                                });
+                            })
+                        </script>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="enddate" class="col-sm-2 control-label">Enddatum</label>
+                    <div class="col-xs-6">
+                        <input type="hidden" id="enddate" name="enddate" required="" />
+                        <div id="enddatecalendar" data-toggle="calendar"></div>
+                        <script type="text/javascript" th:inline="javascript">
+                            $(document).ready(function()
+                            {
+                                $('#enddatecalendar').calendar({
+                                    unavailable: [[${allDates}]],
+                                    onSelectDate: function(day, month, year) {
+                                        $('#enddatecalendar td.cur-month').each(function() {
+                                            $(this).removeClass('selected');
+                                        }).filter(function() {
+                                            return $(this).text() == day;
+                                        }).each(function() {
+                                            $(this).addClass('selected');
+                                        });
+                                        if (day < 10) day = '0' + day;
+                                        if (month < 10) month = '0' + month;
+                                        $('#enddate').val(year + '-' + month + '-' + day);
+                                        compare();
+                                    }
+                                });
+                            })
+                        </script>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="indexbtn" href="/" style="padding: 5px">Abbrechen</a>
+                    <button type="submit" class="indexbtn" style="padding: 5px" id="button" name="button">Anfragen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>

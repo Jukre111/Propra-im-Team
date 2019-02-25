@@ -1,6 +1,7 @@
 package de.hhu.sharing.model;
 
 import lombok.Data;
+import org.hibernate.annotations.IndexColumn;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -24,17 +25,65 @@ public class User {
     private String email;
     private LocalDate birthdate;
 
+    @OneToOne
+    private Image image;
+    
     @Embedded
     private Address address;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Item> borrowedItems = new ArrayList<>();
+    @JoinTable(name="borrowed")
+    @IndexColumn(base = 1, name = "bor")
+    private final List<BorrowingProcess> borrowed = new ArrayList<>();
 
-    public void addToBorrowedItem(Item item) {
-        borrowedItems.add(item);
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name="lend")
+    @IndexColumn(base = 1, name = "len")
+    private final List<BorrowingProcess> lend = new ArrayList<>();
+
+    public User(){
     }
 
-    //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    //private List<ItemNotFound> lendItems = new ArrayList<>();
+    public User(String username, String password, String role,
+                String lastname, String forename, String email,
+                LocalDate birthdate, Address address){
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.lastname = lastname;
+        this.forename = forename;
+        this.email = email;
+        this.birthdate = birthdate;
+        this.address = address;
+    }
+    
+    public User(String username, String password, String role,
+            String lastname, String forename, String email,
+            LocalDate birthdate, Address address, Image image){
+    	this.username = username;
+    	this.password = password;
+    	this.role = role;
+    	this.lastname = lastname;
+    	this.forename = forename;
+    	this.email = email;
+    	this.birthdate = birthdate;
+    	this.address = address;
+    	this.image = image;
+    }
 
+    public void addToBorrowed(BorrowingProcess process) {
+        this.borrowed.add(process);
+    }
+
+    public void removeFromBorrowed(BorrowingProcess process) {
+        this.borrowed.remove(process);
+    }
+
+    public void addToLend(BorrowingProcess process) {
+        this.lend.add(process);
+    }
+
+    public void removeFromLend(BorrowingProcess process) {
+        this.lend.remove(process);
+    }
 }
