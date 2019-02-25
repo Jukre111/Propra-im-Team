@@ -1,6 +1,5 @@
 package de.hhu.sharing.propay;
 
-import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import lombok.Data;
 
@@ -18,7 +17,7 @@ public class TransactionPurchase {
     private int price;
 
     //@ManyToOne
-    //private Item item;
+    //private lendableItem lendableItem;
 
     @ManyToOne
     private User sender;
@@ -31,7 +30,7 @@ public class TransactionPurchase {
 
     public TransactionPurchase(int price, User sender, User receiver) {
         this.price = price;
-        //this.item = item;
+        //this.lendableItem = lendableItem;
         this.sender = sender;
         this.receiver = receiver;
     }

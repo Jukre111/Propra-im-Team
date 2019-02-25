@@ -44,14 +44,14 @@ public class UserServiceTest {
 //    public void testAddToBorrowedItems(){
 //        User user = generateUser();
 //
-//        Item item = new Item("apfel", "lecker",1,1 ,user );
-//        Item item2 = new Item("apfel", "lecker",1,1 ,user );
-//        Item item3 = new Item("apfel", "lecker",1,1 ,user );
-//        ArrayList<Item> liste = new ArrayList<>();
-//        liste.add(item);
+//        lendableItem lendableItem = new lendableItem("apfel", "lecker",1,1 ,user );
+//        lendableItem item2 = new lendableItem("apfel", "lecker",1,1 ,user );
+//        lendableItem item3 = new lendableItem("apfel", "lecker",1,1 ,user );
+//        ArrayList<lendableItem> liste = new ArrayList<>();
+//        liste.add(lendableItem);
 //        liste.add(item2);
 //        liste.add(item3);
-//        userService.addToBorrowedItems(user,item);
+//        userService.addToBorrowedItems(user,lendableItem);
 //        userService.addToBorrowedItems(user,item2);
 //        userService.addToBorrowedItems(user,item3);
 //        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);

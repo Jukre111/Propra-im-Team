@@ -56,7 +56,7 @@ public class ConflictController {
             redirectAttributes.addFlashAttribute("conflictExistsAlready",true);
             return "redirect:/conflictDetails?id=" + conflict.getId();
         }
-        conflictService.create(process.getItem().getLender(), userService.getBorrowerFromBorrowingProcessId(id), process, user, problem);
+        conflictService.create(process.getLendableItem().getOwner(), userService.getBorrowerFromBorrowingProcessId(id), process, user, problem);
         return "redirect:/account";
     }
 

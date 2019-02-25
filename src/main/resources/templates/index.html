@@ -28,11 +28,11 @@
             <th width="70%">Beschreibung</th>
             <th width="10%">Details</th>
         </tr>
-        <tr th:each="item : ${items}">
-            <td th:text="${item.name}"></td>
-            <td th:text="${#strings.abbreviate(item.description,100)} "></td>
+        <tr th:each="lendableItem : ${lendableItems}">
+            <td th:text="${lendableItem.name}"></td>
+            <td th:text="${#strings.abbreviate(lendableItem.description,100)} "></td>
             <td>
-                <a type="button" th:href="@{'/detailsItem?id=' + ${item.Id}}" class="indexbtn">Details</a>
+                <a type="button" th:href="@{'/detailsItem?id=' + ${lendableItem.Id}}" class="indexbtn">Details</a>
             </td>
         </tr>
     </table>

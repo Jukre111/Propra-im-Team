@@ -3,7 +3,6 @@ package de.hhu.sharing.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Data
 @Entity
@@ -14,7 +13,7 @@ public class BorrowingProcess {
     private Long id;
 
     @ManyToOne
-    private Item item;
+    private lendableItem lendableItem;
 
     @Embedded
     private Period period;
@@ -22,8 +21,8 @@ public class BorrowingProcess {
     public BorrowingProcess(){
     }
 
-    public BorrowingProcess(Item item, Period period){
-        this.item = item;
+    public BorrowingProcess(lendableItem lendableItem, Period period){
+        this.lendableItem = lendableItem;
         this.period = period;
     }
 

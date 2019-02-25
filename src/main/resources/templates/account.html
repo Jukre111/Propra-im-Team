@@ -158,7 +158,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					<th width="10%">Konflikt</th>
 				</tr>
 				<tr th:each="borrow : ${user.borrowed}">
-					<td th:text="${borrow.item.name}"></td>
+					<td th:text="${borrow.lendableItem.name}"></td>
 					<td th:text="${borrow.period.startdate}"></td>
 					<td th:text="${borrow.period.enddate}"></td>
 					<td>
@@ -199,7 +199,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					<th width="10%">Konflikt</th>
 				</tr>
 				<tr th:each="process : ${user.lend}">
-					<td th:text="${process.item.name}"></td>
+					<td th:text="${process.lendableItem.name}"></td>
 					<td>
 						<a th:href="@{'/itemReturned?id=' + ${process.id}}" class="indexbtn">Erhalten</a>
 					</td>

@@ -37,8 +37,8 @@ public class RequestServiceTest {
     }
 
 
-    private Item generateItem(User user) {
-        return new Item("apfel", "lecker",1,1 ,user );
+    private lendableItem generateItem(User user) {
+        return new lendableItem("apfel", "lecker",1,1 ,user );
     }
 
     private Request generateRequest(User requester) {
@@ -57,8 +57,8 @@ public class RequestServiceTest {
     @Test
     public void testCreate(){
         User user = generateUser("Karl");
-        Item item = generateItem(user);
-        Mockito.when(itemService.get(1L)).thenReturn(item);
+        lendableItem lendableItem = generateItem(user);
+        Mockito.when(itemService.get(1L)).thenReturn(lendableItem);
 
         requestService.create(1L, LocalDate.of(2000,2,2),LocalDate.of(2000,2,3),user);
 
@@ -66,7 +66,7 @@ public class RequestServiceTest {
         Mockito.verify(requests, times(1)).save(captor.capture());
 
         Assert.assertEquals(captor.getAllValues().get(0).getRequester(), user);
-        Assert.assertEquals(item.getRequests().get(0).getRequester(), user);
+        Assert.assertEquals(lendableItem.getRequests().get(0).getRequester(), user);
     }
 
     @Test
@@ -75,10 +75,10 @@ public class RequestServiceTest {
         User user2 = generateUser("user");
         Request request = generateRequest(user1);
         request.setId(1L);
-        Item item = generateItem(user2);
-        item.addToRequests(request);
+        lendableItem lendableItem = generateItem(user2);
+        lendableItem.addToRequests(request);
         Mockito.when(requests.findById(1L)).thenReturn(Optional.of(request));
-        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
+        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(lendableItem);
 
         requestService.delete(1L);
 
@@ -86,30 +86,30 @@ public class RequestServiceTest {
         Mockito.verify(requests, times(1)).delete(captor.capture());
 
         Assert.assertEquals(captor.getAllValues().get(0), request);
-        Assert.assertTrue(item.getRequests().isEmpty());
+        Assert.assertTrue(lendableItem.getRequests().isEmpty());
     }
 
     @Test
     public void testDeleteOverlappingRequestsFromItem(){
         User requester = generateUser("requester");
-        User owner = generateUser("lender");
+        User owner = generateUser("owner");
         User otherRequester = generateUser("otherRequester");
 
         Request request = generateRequest(requester);
         request.setId(1L);
         Request otherRequest = generateRequest(otherRequester);
         otherRequest.setId(2L);
-        Item item = generateItem(owner);
-        item.addToRequests(otherRequest);
+        lendableItem lendableItem = generateItem(owner);
+        lendableItem.addToRequests(otherRequest);
 
         Mockito.when(requests.findById(1L)).thenReturn(Optional.of(request));
         Mockito.when(requests.findById(2L)).thenReturn(Optional.of(otherRequest));
-        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
-        Mockito.when(itemService.getFromRequestId(2L)).thenReturn(item);
+        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(lendableItem);
+        Mockito.when(itemService.getFromRequestId(2L)).thenReturn(lendableItem);
 
-        requestService.deleteOverlappingRequestsFromItem(request, item);
+        requestService.deleteOverlappingRequestsFromItem(request, lendableItem);
 
-        Assert.assertTrue(item.getRequests().isEmpty());
+        Assert.assertTrue(lendableItem.getRequests().isEmpty());
 
 
     }

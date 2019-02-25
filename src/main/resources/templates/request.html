@@ -49,10 +49,10 @@
 <div layout:fragment="body">
     <div class="alert alert-danger" role="alert" th:if="${notAvailable}" >Objekt zum angegebenen Zeitraum nicht verfügbar.</div>
     <div class="style textPosition" style="padding: 20px">
-        <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name" th:text="${item.name}"></span></h1>
+        <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name" th:text="${lendableItem.name}"></span></h1>
         <div class="form-horizontal" style="padding-top: 60px">
             <form th:action="@{/saveRequest}" method="post">
-                <input type="hidden" class="form-control" id="id" name="id" th:value="${item.id}" readonly/>
+                <input type="hidden" class="form-control" id="id" name="id" th:value="${lendableItem.id}" readonly/>
                 <div class="form-group">
                     <label for="startdate" class="col-sm-2 control-label">Startdatum</label>
                     <div class="col-xs-6">

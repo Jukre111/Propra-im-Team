@@ -10,7 +10,6 @@ import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -96,20 +95,20 @@ public class DatabaseInitializer implements ServletContextInitializer {
         byte[] byteArr = getDefaultUserImage();
         for(User user : users.findAll()){
             for(int j = 0; j < 3; j++){
-                Item item = new Item(faker.pokemon().name(),
+                lendableItem lendableItem = new lendableItem(faker.pokemon().name(),
                         String.join("\n", faker.lorem().paragraphs(3)),
                         faker.number().numberBetween(1,1000),
                         faker.number().numberBetween(1,1000),
                         user);
-                items.save(item);
-                fileService.storeItemInitalizer(byteArr, item);
+                items.save(lendableItem);
+                fileService.storeItemInitalizer(byteArr, lendableItem);
             }
         }
     }
 
     private void initRequests(Faker faker){
         for(User user : users.findAll()){
-            List<Item> itemList = items.findFirst2ByLenderNot(user);
+            List<lendableItem> lendableItemList = items.findFirst2ByLenderNot(user);
             LocalDate startdate = faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             Request request1 = new Request(
                     new Period(startdate,
@@ -121,9 +120,9 @@ public class DatabaseInitializer implements ServletContextInitializer {
                     user);
             requests.save(request1);
             requests.save(request2);
-            itemList.get(0).addToRequests(request1);
-            itemList.get(1).addToRequests(request2);
-            items.saveAll(itemList);
+            lendableItemList.get(0).addToRequests(request1);
+            lendableItemList.get(1).addToRequests(request2);
+            items.saveAll(lendableItemList);
         }
 
 

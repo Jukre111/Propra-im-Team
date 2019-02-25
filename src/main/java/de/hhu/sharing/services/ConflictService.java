@@ -2,7 +2,6 @@ package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.ConflictRepository;
 import de.hhu.sharing.model.*;
-import groovy.transform.AutoImplement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,8 +36,8 @@ public class ConflictService {
         conflicts.delete(conflict);
     }
 
-    public boolean noConflictWith(Item item) {
-        return conflicts.findAllByProcess_Item(item).isEmpty();
+    public boolean noConflictWith(lendableItem lendableItem) {
+        return conflicts.findAllByProcess_Item(lendableItem).isEmpty();
     }
 
     public void addToMessages(Conflict conflict, User user, String message) {

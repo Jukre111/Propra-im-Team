@@ -8,7 +8,7 @@ import de.hhu.sharing.data.ImageRepository;
 import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Image;
-import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.lendableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,15 +84,15 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void storeItemInitalizer(byte[] byteArr, Item item) {
+    public void storeItemInitalizer(byte[] byteArr, lendableItem lendableItem) {
         byte[] bytes = byteArr;
         Image image = new Image();
         String contentType = "image/gif";
         image.setMimeType(contentType);
         image.setImageData(bytes);
         imageRepo.save(image);
-        item.setImage(image);
-        itemRepo.save(item);
+        lendableItem.setImage(image);
+        itemRepo.save(lendableItem);
     }
 
     @Override
@@ -112,7 +112,7 @@ public class FileSystemStorageService implements StorageService {
     }
     
     @Override
-    public void storeItem(MultipartFile file, Item item){
+    public void storeItem(MultipartFile file, lendableItem lendableItem){
         byte[] byteArr = readFile(file);
         Image image = null;
         String contentType = null;
@@ -123,7 +123,7 @@ public class FileSystemStorageService implements StorageService {
             image = createImageVars("default");
         image.setImageData(byteArr);
         imageRepo.save(image);
-        item.setImage(image);
-        itemRepo.save(item);
+        lendableItem.setImage(image);
+        itemRepo.save(lendableItem);
     }
 }

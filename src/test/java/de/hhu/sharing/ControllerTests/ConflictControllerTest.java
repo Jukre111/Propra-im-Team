@@ -65,38 +65,38 @@ public class ConflictControllerTest {
         return user;
     }
 
-    private BorrowingProcess createProcess(User lender) {
+    private BorrowingProcess createProcess(User owner) {
         BorrowingProcess process = new BorrowingProcess();
         process.setPeriod(new Period(LocalDate.now(), LocalDate.now().plusDays(1)));
-        process.setItem(createItem(lender));
+        process.setLendableItem(createItem(owner));
         process.setId(1L);
         return process;
     }
 
-    private Item createItem(User lender) {
-        Item item = new Item();
-        item.setId(1L);
-        item.setLender(lender);
-        return item;
+    private lendableItem createItem(User owner) {
+        lendableItem lendableItem = new lendableItem();
+        lendableItem.setId(1L);
+        lendableItem.setOwner(owner);
+        return lendableItem;
     }
 
     private Conflict createConflict() {
-        Item item = createItem(createUser("Lender"));
+        lendableItem lendableItem = createItem(createUser("Lender"));
         Conflict conflict = new Conflict();
         conflict.setId(1L);
-        conflict.setItem(item);
-        conflict.setLender(item.getLender());
+        conflict.setLendableItem(lendableItem);
+        conflict.setOwner(lendableItem.getOwner());
         conflict.setBorrower(createUser("Borrower"));
-        conflict.setProcess(createProcess(conflict.getLender()));
+        conflict.setProcess(createProcess(conflict.getOwner()));
         return conflict;
     }
 
     @Test
     @WithMockUser
     public void retrieveStatusConflict() throws Exception {
-        User lender = createUser("Lender");
+        User owner = createUser("Lender");
         User borrower = createUser("Borrower");
-        BorrowingProcess process = createProcess(lender);
+        BorrowingProcess process = createProcess(owner);
 
         Mockito.when(userService.getBorrowerFromBorrowingProcessId(1L)).thenReturn(borrower);
         Mockito.when(borrowingProcessService.getBorrowingProcess(1L)).thenReturn(process);
@@ -108,11 +108,11 @@ public class ConflictControllerTest {
     @WithMockUser
     public void retrieveStatusPostSaveConflict() throws Exception {
         User borrower = createUser("Borrower");
-        User lender = createUser("Lender");
-        BorrowingProcess process = createProcess(lender);
+        User owner = createUser("Lender");
+        BorrowingProcess process = createProcess(owner);
 
         Mockito.when(borrowingProcessService.getBorrowingProcess(Mockito.anyLong())).thenReturn(process);
-        Mockito.when(borrowingProcessService.getItemFromProcess(process)).thenReturn(process.getItem());
+        Mockito.when(borrowingProcessService.getItemFromProcess(process)).thenReturn(process.getLendableItem());
         Mockito.when(userService.getBorrowerFromBorrowingProcessId(Mockito.anyLong())).thenReturn(borrower);
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
@@ -162,7 +162,7 @@ public class ConflictControllerTest {
         Mockito.when(transRepo.findByProcessId(1L)).thenReturn(transRen);
         Mockito.when(proService.punishDeposit("Borrower", transRen)).thenReturn(200);
 
-        mvc.perform(MockMvcRequestBuilders.get("/lender").param("id", "1"))
+        mvc.perform(MockMvcRequestBuilders.get("/owner").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/conflictView"));
     }*/
 }

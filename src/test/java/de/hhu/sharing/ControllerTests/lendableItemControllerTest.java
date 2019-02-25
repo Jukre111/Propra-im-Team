@@ -28,7 +28,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ItemController.class)
-public class ItemControllerTest {
+public class lendableItemControllerTest {
 
     @Autowired
     MockMvc mvc;
@@ -51,19 +51,19 @@ public class ItemControllerTest {
     @MockBean
     StorageService storeService;
 
-    public Item itemCreator(){
+    public lendableItem itemCreator(){
         LocalDate date = LocalDate.of(2000,1,1);
         Address address = new Address("unistrase","duesseldorf", 40233);
         User user = new User("user","password", "role", "lastnmae", "forname", "email",date,address);
-        Item item = new Item("apfel", "lecker",1,1 ,user );
-        return item;
+        lendableItem lendableItem = new lendableItem("apfel", "lecker",1,1 ,user );
+        return lendableItem;
     }
 
     @Test
     @WithMockUser
     public void retrieveStatusDetails() throws Exception{
-        Item item = itemCreator();
-        Mockito.when(itemService.get(1L)).thenReturn(item);
+        lendableItem lendableItem = itemCreator();
+        Mockito.when(itemService.get(1L)).thenReturn(lendableItem);
         mvc.perform(MockMvcRequestBuilders.get("/detailsItem").param("id","1"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
@@ -79,10 +79,10 @@ public class ItemControllerTest {
     @Test
     @WithMockUser
     public void retrieveStatusEditItem() throws Exception{
-        Item item = itemCreator();
+        lendableItem lendableItem = itemCreator();
         Mockito.when(itemService.isChangeable(1L)).thenReturn(true);
-        Mockito.when(userService.get("user")).thenReturn(item.getLender());
-        Mockito.when(itemService.get(1L)).thenReturn(item);
+        Mockito.when(userService.get("user")).thenReturn(lendableItem.getOwner());
+        Mockito.when(itemService.get(1L)).thenReturn(lendableItem);
         mvc.perform(MockMvcRequestBuilders.get("/editItem").param("id","1"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
@@ -114,9 +114,9 @@ public class ItemControllerTest {
     /*@Test
     @WithMockUser
     public void retrieveStatusReturnItem() throws Exception{
-        Item item = itemCreator();
-        Mockito.when(userService.get("user")).thenReturn(item.getLender());
-        BorrowingProcess process = new BorrowingProcess(item, new Period(LocalDate.now(), LocalDate.now().plusDays(2)));
+        lendableItem lendableItem = itemCreator();
+        Mockito.when(userService.get("user")).thenReturn(lendableItem.getOwner());
+        BorrowingProcess process = new BorrowingProcess(lendableItem, new Period(LocalDate.now(), LocalDate.now().plusDays(2)));
         process.setId(1L);
         Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
         mvc.perform(MockMvcRequestBuilders.get("/returnItem").param("id","1"))

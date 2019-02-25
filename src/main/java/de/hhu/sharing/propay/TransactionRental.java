@@ -1,11 +1,10 @@
 package de.hhu.sharing.propay;
 
-import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.lendableItem;
 import de.hhu.sharing.model.User;
 import lombok.Data;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
@@ -21,7 +20,7 @@ public class TransactionRental {
     private String depositRevoked = "offen";
 
     @ManyToOne
-    private Item item;
+    private lendableItem lendableItem;
 
     @ManyToOne
     private User sender;
@@ -32,11 +31,11 @@ public class TransactionRental {
     public TransactionRental() {
     }
 
-    public TransactionRental(int wholeRent, int deposit, Long processId, Item item, User sender, User receiver) {
+    public TransactionRental(int wholeRent, int deposit, Long processId, lendableItem lendableItem, User sender, User receiver) {
         this.wholeRent = wholeRent;
         this.deposit = deposit;
         this.processId = processId;
-        this.item = item;
+        this.lendableItem = lendableItem;
         this.sender = sender;
         this.receiver = receiver;
     }

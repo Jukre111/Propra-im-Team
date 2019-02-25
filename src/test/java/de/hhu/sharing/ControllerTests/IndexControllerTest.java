@@ -1,10 +1,8 @@
 package de.hhu.sharing.ControllerTests;
 
-import de.hhu.sharing.data.ItemRepository;
-import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
-import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.lendableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.RequestService;
@@ -22,8 +20,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.util.NestedServletException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -74,7 +70,7 @@ public class IndexControllerTest {
     @WithMockUser
     @Test
     public void retrieveStatusSearch()throws Exception{
-        mvc.perform(MockMvcRequestBuilders.get("/search?query=item"))
+        mvc.perform(MockMvcRequestBuilders.get("/search?query=lendableItem"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -85,9 +81,9 @@ public class IndexControllerTest {
         Address address = new Address("unistrase","duesseldorf", 40233);
         User user = new User("user","password", "role", "lastnmae", "forname", "email",date,address);
         Mockito.when(userService.get("user")).thenReturn(user);
-        List<Item> itemList = new ArrayList<>();
-        Mockito.when(itemService.getAllIPosted(user)).thenReturn(itemList);
-        Mockito.when(itemService.getAllIRequested(user)).thenReturn(itemList);
+        List<lendableItem> lendableItemList = new ArrayList<>();
+        Mockito.when(itemService.getAllIPosted(user)).thenReturn(lendableItemList);
+        Mockito.when(itemService.getAllIRequested(user)).thenReturn(lendableItemList);
         mvc.perform(MockMvcRequestBuilders.get("/messages"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

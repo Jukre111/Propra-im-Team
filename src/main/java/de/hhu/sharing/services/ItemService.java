@@ -1,22 +1,15 @@
 package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.ItemRepository;
-import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.lendableItem;
 import de.hhu.sharing.model.Period;
 import de.hhu.sharing.model.User;
-import org.apache.tomcat.jni.Local;
 import de.hhu.sharing.storage.StorageService;
-import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,78 +27,78 @@ public class ItemService{
 
 
     public void create(String name, String description, Integer rental, Integer deposit, User user, MultipartFile file) {
-        Item item = new Item(name, description, rental, deposit, user);
-        items.save(item);
+        lendableItem lendableItem = new lendableItem(name, description, rental, deposit, user);
+        items.save(lendableItem);
         if(file!=null) {
-        	storageService.storeItem(file, item);
+        	storageService.storeItem(file, lendableItem);
         }else {
         	System.out.println("No picture");
        }
     }
 
     public void edit(Long id, String name, String description, Integer rental, Integer deposit, User user) {
-        Item item = this.get(id);
-        item.setName(name);
-        item.setDescription(description);
-        item.setRental(rental);
-        item.setDeposit(deposit);
-        item.setLender(user);
-        items.save(item);
+        lendableItem lendableItem = this.get(id);
+        lendableItem.setName(name);
+        lendableItem.setDescription(description);
+        lendableItem.setRental(rental);
+        lendableItem.setDeposit(deposit);
+        lendableItem.setOwner(user);
+        items.save(lendableItem);
     }
 
     public void delete(Long id) {
-        Item item = this.get(id);
-        items.delete(item);
+        lendableItem lendableItem = this.get(id);
+        items.delete(lendableItem);
     }
 
-    public Item get(Long id) {
+    public lendableItem get(Long id) {
         return this.items.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException("Item not found!"));
+                        () -> new RuntimeException("lendableItem not found!"));
     }
 
-    public List<Item> getAll() {
+    public List<lendableItem> getAll() {
         return this.items.findAll();
     }
 
-    public Item getFromRequestId(Long requestId) {
+    public lendableItem getFromRequestId(Long requestId) {
         return this.items.findByRequests_id(requestId)
                 .orElseThrow(
-                        () -> new RuntimeException("Item not found!"));
+                        () -> new RuntimeException("lendableItem not found!"));
     }
 
-    public List<Item> getAllIPosted(User user) {
+    public List<lendableItem> getAllIPosted(User user) {
         return this.items.findAllByLender(user);
     }
 
 
-    public List<Item> getAllIRequested(User user) {
+    public List<lendableItem> getAllIRequested(User user) {
         return this.items.findAllByRequests_requester(user);
 
     }
 
-    public List<Item> searchFor(String query) {
+    public List<lendableItem> searchFor(String query) {
         return this.items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query,query);
     }
 
     public boolean isChangeable(Long id) {
-        Item item = this.get(id);
-        return item.noPeriodsAndRequests() && conflictService.noConflictWith(item);
+        lendableItem lendableItem = this.get(id);
+        return lendableItem.noPeriodsAndRequests() && conflictService.noConflictWith(lendableItem);
     }
 
-    public boolean isAvailableAt(Item item, LocalDate startdate, LocalDate enddate) {
-        return item.isAvailableAt(new Period(startdate, enddate));
+    public boolean isAvailableAt(lendableItem lendableItem, LocalDate startdate, LocalDate enddate) {
+        return lendableItem.isAvailableAt(new Period(startdate, enddate));
     }
 
     public boolean isOwner(Long id, User user) {
-        Item item = this.get(id);
-        return item.getLender() == user;
+        lendableItem lendableItem = this.get(id);
+        return lendableItem.getOwner() == user;
     }
 
 
-    public List allDatesInbetween(Item item){
+    public List allDatesInbetween(lendableItem lendableItem){
 
-        List <Period> allPeriods = item.getPeriods();
+        List <Period> allPeriods = lendableItem.getPeriods();
         List <LocalDate> allDates = new ArrayList<>();
         for(Period period : allPeriods){
             LocalDate current = period.getStartdate();

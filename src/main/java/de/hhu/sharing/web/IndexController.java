@@ -1,8 +1,5 @@
 package de.hhu.sharing.web;
 
-import de.hhu.sharing.data.ItemRepository;
-import de.hhu.sharing.data.UserRepository;
-import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.RequestService;
@@ -14,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
-import java.util.List;
 
 @Controller
 public class IndexController {

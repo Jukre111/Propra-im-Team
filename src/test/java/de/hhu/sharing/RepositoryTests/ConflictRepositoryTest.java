@@ -56,9 +56,9 @@ public class ConflictRepositoryTest {
         User userEntity1 = userRepo.findByUsername("user1").get();
         User userEntity2 = userRepo.findByUsername("user2").get();
 
-        Item item = new Item("apfel", "lecker",1,1 ,user1 );
-        itemRepo.save(item);
-        Item itemEntity = itemRepo.findById(item.getId()).get();
+        lendableItem lendableItem = new lendableItem("apfel", "lecker",1,1 ,user1 );
+        itemRepo.save(lendableItem);
+        lendableItem itemEntity = itemRepo.findById(lendableItem.getId()).get();
         BorrowingProcess borrowingProcess = new BorrowingProcess();
         bPRepo.save(borrowingProcess);
         BorrowingProcess borrowingProcessEntity = bPRepo.findById(borrowingProcess.getId()).get();

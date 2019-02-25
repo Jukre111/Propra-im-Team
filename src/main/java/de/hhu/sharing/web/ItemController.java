@@ -1,8 +1,7 @@
 package de.hhu.sharing.web;
 
 import de.hhu.sharing.model.Address;
-import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.Period;
+import de.hhu.sharing.model.lendableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.BorrowingProcessService;
 import de.hhu.sharing.services.ItemService;
@@ -18,7 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -35,11 +33,11 @@ public class ItemController {
 
     @GetMapping("/detailsItem")
     public String details(@RequestParam(name = "id") Long id, Model model){
-        Item item = itemService.get(id);
-        User user = item.getLender();
+        lendableItem lendableItem = itemService.get(id);
+        User user = lendableItem.getOwner();
         Address address = user.getAddress();
-        List <LocalDate> allDates = itemService.allDatesInbetween(item);
-        model.addAttribute("item", item);
+        List <LocalDate> allDates = itemService.allDatesInbetween(lendableItem);
+        model.addAttribute("item", lendableItem);
         model.addAttribute("user", user);
         model.addAttribute("address", address);
         model.addAttribute("allDates", allDates);
@@ -49,7 +47,7 @@ public class ItemController {
 
     @GetMapping("/newItem")
     public String newItem(Model model){
-        model.addAttribute("item", new Item());
+        model.addAttribute("item", new lendableItem());
         return "item";
     }
 
@@ -59,7 +57,7 @@ public class ItemController {
             redirectAttributes.addFlashAttribute("notChangeable", true);
             return "redirect:/account";
         }
-        if(itemService.get(id).getLender() != userService.get(p.getName())){
+        if(itemService.get(id).getOwner() != userService.get(p.getName())){
             redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/account";
         }
@@ -87,7 +85,7 @@ public class ItemController {
             redirectAttributes.addFlashAttribute("notChangeable", true);
             return "redirect:/account";
         }
-        if(itemService.get(id).getLender() != userService.get(p.getName())){
+        if(itemService.get(id).getOwner() != userService.get(p.getName())){
             redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/account";
         }
@@ -99,7 +97,7 @@ public class ItemController {
     @GetMapping("/itemReturned")
     public String itemReturned(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
-        if(processService.get(id).getItem().getLender() != user){
+        if(processService.get(id).getLendableItem().getOwner() != user){
             redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/account";
         }
