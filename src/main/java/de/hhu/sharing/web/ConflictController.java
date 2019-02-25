@@ -26,12 +26,6 @@ public class ConflictController {
     @Autowired
     private BorrowingProcessService borrowingProcessService;
 
-    @Autowired
-    private ProPayService proPayService;
-
-    @Autowired
-    private  TransactionService transactionService;
-
     @GetMapping("/conflict")
     public String conflict(Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
@@ -99,17 +93,15 @@ public class ConflictController {
 
     @GetMapping("admin/conflicts/lender")
     public String lender(@RequestParam("id") Long id){
-//        Conflict conflict = conflictService.get(id);
-//        conflictService.delete(conflict);
-//        proPayService.punishDeposit(conflict.getBorrower(), transactionService.getFromProcessId(conflict.getProcess().getId()));
-//        //to do
+        Conflict conflict = conflictService.get(id);
+        borrowingProcessService.itemReturned(conflict.getProcess().getId(), "bad");
         return "redirect:/admin/conflicts";
     }
 
     @GetMapping("admin/conflicts/borrower")
     public String borrower(@RequestParam("id") Long id){
         Conflict conflict = conflictService.get(id);
-        borrowingProcessService.itemReturned(conflict.getProcess().getId());
+        borrowingProcessService.itemReturned(conflict.getProcess().getId(), "good");
         return "redirect:/admin/conflicts";
     }
 }

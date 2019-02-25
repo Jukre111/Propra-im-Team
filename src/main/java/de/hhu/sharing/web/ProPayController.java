@@ -32,6 +32,15 @@ public class ProPayController {
         model.addAttribute("amount", proPayService.getAccount(user).getAmount());
         model.addAttribute("send", transactionService.getAllFromSender(user));
         model.addAttribute("received", transactionService.getAllFromReceiver(user));
+        System.out.println();
+        System.out.println(transactionService.getAllFromSender(user));
+        System.out.println();
+        System.out.println(transactionService.getAllFromReceiver(user));
+        // []
+        // [Transaction(id=10, wholeRent=66, deposit=382, processId=181, depositRevoked=false)]
+
+        // [Transaction(id=10, wholeRent=66, deposit=382, processId=181, depositRevoked=false)]
+        //
         return "propayAccount";
     }
 
