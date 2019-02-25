@@ -5,7 +5,9 @@ import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
+import de.hhu.sharing.services.ConflictService;
 import de.hhu.sharing.services.ItemService;
+import de.hhu.sharing.storage.StorageService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +24,12 @@ public class ItemServiceTest {
 
     @Mock
     private ItemRepository items;
+
+    @Mock
+    ConflictService conflictService;
+
+    @Mock
+    StorageService storageService;
 
     @InjectMocks
     private ItemService itemService;
