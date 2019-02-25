@@ -2,6 +2,7 @@ package de.hhu.sharing.web;
 
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.Period;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.BorrowingProcessService;
 import de.hhu.sharing.services.ItemService;
@@ -16,6 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class ItemController {
@@ -34,9 +38,16 @@ public class ItemController {
         Item item = itemService.get(id);
         User user = item.getLender();
         Address address = user.getAddress();
+        List <Period> allPeriods = item.getPeriods();
+        List <LocalDate> allDates = new ArrayList<>();
+        for(Period period : allPeriods){
+            allDates.addAll( itemService.allDatesInbetween(period));
+        }
         model.addAttribute("item", item);
         model.addAttribute("user", user);
         model.addAttribute("address", address);
+        model.addAttribute("allDates", allDates);
+
         return "details";
     }
 
