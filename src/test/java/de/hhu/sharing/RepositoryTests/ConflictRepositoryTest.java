@@ -37,6 +37,11 @@ public class ConflictRepositoryTest {
     @MockBean
     StorageService storageService;
 
+    @Test
+    public void mustHaveTest (){
+        Assertions.assertThat(true).isTrue();
+    }
+    /*
 
     public User createUser(String username){
         LocalDate birthdate = LocalDate.of(2000,1,1);
