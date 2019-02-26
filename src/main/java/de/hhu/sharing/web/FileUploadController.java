@@ -36,9 +36,6 @@ public class FileUploadController {
     
     @Autowired
     private LendableItemService lendableItemService;
-    
-    @Autowired
-    private ImageRepository imageRepo;
 
     @Autowired
     private SellableItemService sellableItemService;
@@ -89,7 +86,7 @@ public class FileUploadController {
     @PostMapping("/handleFileUploadItem")
     public String handleFileUploadItem(@RequestParam("file") MultipartFile file,
                                    RedirectAttributes redirectAttributes, LendableItem lendableItem) {
-        storageService.storeItem(file, lendableItem);
+        storageService.storeLendableItem(file, lendableItem);
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
         return "redirect:/";

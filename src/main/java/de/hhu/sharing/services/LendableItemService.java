@@ -30,7 +30,7 @@ public class LendableItemService {
         LendableItem lendableItem = new LendableItem(name, description, rental, deposit, user);
         items.save(lendableItem);
         if(file!=null) {
-        	storageService.storeItem(file, lendableItem);
+        	storageService.storeLendableItem(file, lendableItem);
         }else {
         	System.out.println("No picture");
        }

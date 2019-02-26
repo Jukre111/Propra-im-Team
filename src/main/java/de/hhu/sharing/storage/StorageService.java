@@ -10,13 +10,7 @@ public interface StorageService {
 
 	void storeUser(MultipartFile file, User user);
 	
-	void storeItem(MultipartFile file, LendableItem lendableItem);
-
-	void storeUserInitalizer(byte[] byteArr, User user);
-
-	void storeItemInitalizer(byte[] byteArr, LendableItem lendableItem);
+	void storeLendableItem(MultipartFile file, LendableItem lendableItem);
 
 	void storeSellableItem(MultipartFile file, SellableItem sellableItem);
-
-
 }

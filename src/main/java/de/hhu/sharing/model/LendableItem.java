@@ -10,8 +10,8 @@ import java.util.*;
 @Entity(name = "LendableItem")
 public class LendableItem extends Item{
 
-    private int rental;     //per Day
-    private int deposit;
+    private Integer rental;     //per Day
+    private Integer deposit;
 
     @ElementCollection
     private final List<Period> periods = new ArrayList<>();
@@ -22,7 +22,7 @@ public class LendableItem extends Item{
     public LendableItem(){
     }
 
-    public LendableItem(String name, String description, int rental, int deposit, User owner){
+    public LendableItem(String name, String description, Integer rental, Integer deposit, User owner){
         super.name = name;
         super.description = description;
         this.rental = rental;
@@ -30,7 +30,7 @@ public class LendableItem extends Item{
         super.owner = owner;
     }
 
-    public LendableItem(String name, String description, int rental, int deposit, User owner, Image image){
+    public LendableItem(String name, String description, Integer rental, Integer deposit, User owner, Image image){
         super.name = name;
         super.description = description;
         this.rental = rental;

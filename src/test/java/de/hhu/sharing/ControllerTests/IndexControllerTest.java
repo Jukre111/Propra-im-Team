@@ -4,6 +4,7 @@ import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.LendableItemService;
 import de.hhu.sharing.services.RequestService;
+import de.hhu.sharing.services.SellableItemService;
 import de.hhu.sharing.services.UserService;
 import de.hhu.sharing.web.IndexController;
 import org.junit.Test;
@@ -37,6 +38,9 @@ public class IndexControllerTest {
 
     @MockBean
     RequestService requestService;
+
+    @MockBean
+    SellableItemService sellableItemService;
 
     private User createUser(String username, String role) {
         return new User(username, "password", role,
