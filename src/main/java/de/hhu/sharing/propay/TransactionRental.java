@@ -5,7 +5,6 @@ import de.hhu.sharing.model.User;
 import lombok.Data;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
@@ -14,7 +13,7 @@ import javax.persistence.ManyToOne;
 public class TransactionRental {
 
     @Id
-    private Long id;
+    private Long id;        //id is a foreign key from ProPays reservation id
     private int wholeRent;
     private int deposit;
     private Long processId;

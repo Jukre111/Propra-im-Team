@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface TransactionRentalRepository extends CrudRepository<TransactionRental, Integer> {
+public interface TransactionRentalRepository extends CrudRepository<TransactionRental, Long> {
     List<TransactionRental> findAll();
     List<TransactionRental> findAllBySender(User user);
     List<TransactionRental> findAllByReceiver(User user);

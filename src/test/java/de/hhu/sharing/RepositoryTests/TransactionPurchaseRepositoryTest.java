@@ -1,10 +1,11 @@
 package de.hhu.sharing.RepositoryTests;
 
+import de.hhu.sharing.data.TransactionPurchaseRepository;
 import de.hhu.sharing.data.TransactionRentalRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
-import de.hhu.sharing.propay.TransactionRental;
 import de.hhu.sharing.model.User;
+import de.hhu.sharing.propay.TransactionPurchase;
 import de.hhu.sharing.storage.StorageService;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -16,10 +17,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class TransactionRentalRepositoryTest {
+public class TransactionPurchaseRepositoryTest {
 
     @Autowired
-    TransactionRentalRepository transRepo;
+    TransactionPurchaseRepository transRepo;
 
     @Autowired
     UserRepository userRepo;
@@ -30,8 +31,8 @@ public class TransactionRentalRepositoryTest {
 
     @Test
     public void testFindAll() {
-        TransactionRental trans1 = new TransactionRental();
-        TransactionRental trans2 = new TransactionRental();
+        TransactionPurchase trans1 = new TransactionPurchase();
+        TransactionPurchase trans2 = new TransactionPurchase();
         trans1.setId(1L);
         trans2.setId(2L);
         transRepo.save(trans1);
@@ -41,7 +42,7 @@ public class TransactionRentalRepositoryTest {
     }
 
     @Test
-    public void testFindTargetTransactionRental() {
+    public void testFindTargetTransactionPurchase() {
         Address sharedAdress = new Address("Gemeinsames", "Wohnhaus", 1234);
         User source = new User();
         User target = new User();
@@ -56,9 +57,9 @@ public class TransactionRentalRepositoryTest {
         source = userRepo.findByUsername("source").get();
         target = userRepo.findByUsername("target").get();
 
-        TransactionRental trans3 = new TransactionRental();
-        TransactionRental trans4 = new TransactionRental();
-        TransactionRental trans5 = new TransactionRental();
+        TransactionPurchase trans3 = new TransactionPurchase();
+        TransactionPurchase trans4 = new TransactionPurchase();
+        TransactionPurchase trans5 = new TransactionPurchase();
 
         trans3.setId(3L);
         trans4.setId(4L);
@@ -81,7 +82,7 @@ public class TransactionRentalRepositoryTest {
     }
 
     @Test
-    public void testFindSourceTransactionRental() {
+    public void testFindSourceTransactionPurchase() {
         Address sharedAdress = new Address("Gemeinsames", "Wohnhaus", 1234);
         User source = new User();
         User target = new User();
@@ -96,71 +97,27 @@ public class TransactionRentalRepositoryTest {
         source = userRepo.findByUsername("source").get();
         target = userRepo.findByUsername("target").get();
 
-        TransactionRental trans3 = new TransactionRental();
-        TransactionRental trans4 = new TransactionRental();
-        TransactionRental trans5 = new TransactionRental();
+        TransactionPurchase trans6 = new TransactionPurchase();
+        TransactionPurchase trans7 = new TransactionPurchase();
+        TransactionPurchase trans8 = new TransactionPurchase();
 
-        trans3.setId(3L);
-        trans4.setId(4L);
-        trans5.setId(5L);
+        trans6.setId(6L);
+        trans7.setId(7L);
+        trans8.setId(8L);
 
-        trans3.setSender(source);
-        trans3.setReceiver(target);
-        trans4.setSender(source);
-        trans4.setReceiver(target);
-        trans5.setSender(target);
-        trans5.setReceiver(source);
+        trans6.setSender(source);
+        trans6.setReceiver(target);
+        trans7.setSender(source);
+        trans7.setReceiver(target);
+        trans8.setSender(target);
+        trans8.setReceiver(source);
 
-        transRepo.save(trans3);
-        transRepo.save(trans4);
-        transRepo.save(trans5);
+        transRepo.save(trans6);
+        transRepo.save(trans7);
+        transRepo.save(trans8);
 
         Assertions.assertThat(transRepo.findAllBySender(source).size()).isEqualTo(2);
-        Assertions.assertThat(transRepo.findAllBySender(source).contains(trans3)).isTrue();
-        Assertions.assertThat(transRepo.findAllBySender(source).contains(trans4)).isTrue();
-    }
-
-    @Test
-    public void testFindByProcessId() {
-        Address sharedAdress = new Address("Gemeinsames", "Wohnhaus", 1234);
-        User source = new User();
-        User target = new User();
-        source.setUsername("source");
-        source.setAddress(sharedAdress);
-        target.setUsername("target");
-        target.setAddress(sharedAdress);
-
-        userRepo.save(source);
-        userRepo.save(target);
-
-        source = userRepo.findByUsername("source").get();
-        target = userRepo.findByUsername("target").get();
-
-        TransactionRental trans3 = new TransactionRental();
-        TransactionRental trans4 = new TransactionRental();
-        TransactionRental trans5 = new TransactionRental();
-
-        trans3.setId(3L);
-        trans4.setId(4L);
-        trans5.setId(5L);
-
-        trans3.setSender(source);
-        trans3.setReceiver(target);
-        trans4.setSender(source);
-        trans4.setReceiver(target);
-        trans5.setSender(target);
-        trans5.setReceiver(source);
-
-        trans3.setProcessId(3L);
-        trans4.setProcessId(4L);
-        trans5.setProcessId(5L);
-
-        transRepo.save(trans3);
-        transRepo.save(trans4);
-        transRepo.save(trans5);
-
-        Assertions.assertThat(transRepo.findByProcessId(3L)).isNotEqualTo(null);
-        Assertions.assertThat(transRepo.findByProcessId(4L)).isNotEqualTo(null);
-        Assertions.assertThat(transRepo.findByProcessId(5L)).isNotEqualTo(null);
+        Assertions.assertThat(transRepo.findAllBySender(source).contains(trans6)).isTrue();
+        Assertions.assertThat(transRepo.findAllBySender(source).contains(trans7)).isTrue();
     }
 }
