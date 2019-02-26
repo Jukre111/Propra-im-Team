@@ -41,7 +41,7 @@ public class IndexController {
     public String account(Model model, Principal p) {
         User user = userService.get(p.getName());
         model.addAttribute("user", user);
-        model.addAttribute("lendItems", lendableItemService.getAllIPosted(user));
+        model.addAttribute("lendLendableItems", lendableItemService.getAllIPosted(user));
         model.addAttribute("address", user.getAddress());
         return "account";
     }
@@ -51,8 +51,8 @@ public class IndexController {
         User user = userService.get(p.getName());
         requestService.deleteOutdatedRequests();
         model.addAttribute("user", user);
-        model.addAttribute("allMyItems", lendableItemService.getAllIPosted(user));
-        model.addAttribute("myRequestedItems", lendableItemService.getAllIRequested(user));
+        model.addAttribute("allMyLendableItems", lendableItemService.getAllIPosted(user));
+        model.addAttribute("myRequestedLendableItems", lendableItemService.getAllIRequested(user));
         return "messages";
     }
 }
