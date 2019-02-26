@@ -34,56 +34,57 @@ public class IndexControllerTest {
     MockMvc mvc;
 
     @MockBean
-    StorageService storeService;
+    UserService userService;
 
     @MockBean
     ItemService itemService;
-    @MockBean
-    UserService userService;
+
     @MockBean
     RequestService requestService;
 
-    @MockBean
-    UserRepository users;
+    private User createUser(String username, String role) {
+        return new User(username, "password", role,
+                "Nachname", "Vorname", "email@web.de", LocalDate.now(),
+                new Address("Strasse", "Stadt", 41460));
+    }
 
-
-    @WithMockUser
     @Test
-    public void retrieveStatusIndex()throws Exception{
+    @WithMockUser
+    public void retrieveStatusIndex() throws Exception{
+        Mockito.when(itemService.getAll()).thenReturn(new ArrayList<>());
+
         mvc.perform(MockMvcRequestBuilders.get("/"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    @WithMockUser
     @Test
-    public void retrieveStatusAccount()throws Exception{
-        LocalDate date = LocalDate.of(2000,1,1);
-        Address address = new Address("unistrase","duesseldorf", 40233);
-        User user = new User("user","password", "role", "lastnmae", "forname", "email",date,address);
+    @WithMockUser
+    public void retrieveStatusSearch() throws Exception{
+        Mockito.when(itemService.searchFor("test")).thenReturn(new ArrayList<>());
 
+        mvc.perform(MockMvcRequestBuilders.get("/search").param("query", "test"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    public void retrieveStatusAccount() throws Exception{
+        User user = createUser("User", "ROLE_USER");
         Mockito.when(userService.get("user")).thenReturn(user);
+        Mockito.when(itemService.getAllIPosted(user)).thenReturn(new ArrayList<>());
 
         mvc.perform(MockMvcRequestBuilders.get("/account"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    @WithMockUser
     @Test
-    public void retrieveStatusSearch()throws Exception{
-        mvc.perform(MockMvcRequestBuilders.get("/search?query=LendableItem"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
     @WithMockUser
-    @Test
     public void retrieveStatusMessages() throws Exception{
-        LocalDate date = LocalDate.of(2000,1,1);
-        Address address = new Address("unistrase","duesseldorf", 40233);
-        User user = new User("user","password", "role", "lastnmae", "forname", "email",date,address);
+        User user = createUser("User", "ROLE_USER");
         Mockito.when(userService.get("user")).thenReturn(user);
-        List<LendableItem> lendableItemList = new ArrayList<>();
-        Mockito.when(itemService.getAllIPosted(user)).thenReturn(lendableItemList);
-        Mockito.when(itemService.getAllIRequested(user)).thenReturn(lendableItemList);
+        Mockito.when(itemService.getAllIPosted(user)).thenReturn(new ArrayList<>());
+        Mockito.when(itemService.getAllIRequested(user)).thenReturn(new ArrayList<>());
+
         mvc.perform(MockMvcRequestBuilders.get("/messages"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

@@ -13,10 +13,10 @@ class TransactionRentalServiceTest {
     @InjectMocks
     TransactionRentalService transSevice;
 
-    @Before
-    public void initialize(){
-        MockitoAnnotations.initMocks(this);
-    }
+   // @Before
+    //public void initialize(){
+     //   MockitoAnnotations.initMocks(this);
+    //}
 
     @Test
     public void testCheckFinancesTrue() {
@@ -38,7 +38,7 @@ class TransactionRentalServiceTest {
         Assertions.assertThat(transSevice.checkFinances(request.getRequester(), LendableItem, request.getPeriod().getStartdate(), request.getPeriod().getEnddate())).isTrue();
     }
 
-    @Test
+   /* @Test
     public void testCheckFinances() {
         User borrower = new User();
         Request request = new Request();
@@ -57,5 +57,4 @@ class TransactionRentalServiceTest {
 
         Assertions.assertThat(transSevice.checkFinances(request.getRequester(), LendableItem, request.getPeriod().getStartdate(), request.getPeriod().getEnddate())).isFalse();
     }*/
-
 }

@@ -30,6 +30,13 @@ public class IndexController {
         return "index";
     }
 
+    @GetMapping("/search")
+    public String search(Model model, @RequestParam String query) {
+        model.addAttribute("items", itemService.searchFor(query));
+        model.addAttribute("query", query);
+        return "search";
+    }
+
     @GetMapping("/account")
     public String account(Model model, Principal p) {
         User user = userService.get(p.getName());
@@ -47,12 +54,5 @@ public class IndexController {
         model.addAttribute("allMyItems", itemService.getAllIPosted(user));
         model.addAttribute("myRequestedItems", itemService.getAllIRequested(user));
         return "messages";
-    }
-
-    @GetMapping("/search")
-    public String search(@RequestParam final String query, Model model) {
-        model.addAttribute("items", itemService.searchFor(query));
-        model.addAttribute("query", query);
-        return "search";
     }
 }

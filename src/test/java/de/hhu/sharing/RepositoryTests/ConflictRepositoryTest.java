@@ -38,29 +38,85 @@ public class ConflictRepositoryTest {
     }
     /*
 
-    @Test
-    public void testFindAll(){
-        LocalDate date = LocalDate.of(2000,1,1);
+    public User createUser(String username){
+        LocalDate birthdate = LocalDate.of(2000,1,1);
         Address address = new Address("unistrase","duesseldorf", 40233);
-        User user1 = new User("user1","password", "role", "lastnmae", "forname", "email",date,address);
-        User user2 = new User("user2","password", "role", "lastnmae", "forname", "email",date,address);
+        User user = new User(username,"password", "role", "lastnmae", "forname", "email",birthdate,address);
+        userRepo.save(user);
+        return userRepo.findByUsername(username).get();
+    }
 
-        userRepo.save(user1);
-        userRepo.save(user2);
+    public Item createItem(String name, String description){
+        User user = createUser("testman");
+        Item item = new Item(name, description,1,1 ,user );
+        itemRepo.save(item);
+        return itemRepo.findById(item.getId()).get();
+    }
 
-        User userEntity1 = userRepo.findByUsername("user1").get();
-        User userEntity2 = userRepo.findByUsername("user2").get();
+    public BorrowingProcess createProcess(Item item){
+        BorrowingProcess borrowingProcess = new BorrowingProcess();
+        borrowingProcess.setItem(item);
+        bPRepo.save(borrowingProcess);
+        return bPRepo.findById(borrowingProcess.getId()).get();
+    }
 
-        LendableItem LendableItem = new LendableItem("apfel", "lecker",1,1 ,user1 );
-        itemRepo.save(LendableItem);
-        LendableItem itemEntity = itemRepo.findById(LendableItem.getId()).get();
+    public BorrowingProcess createProcess(){
         BorrowingProcess borrowingProcess = new BorrowingProcess();
         bPRepo.save(borrowingProcess);
-        BorrowingProcess borrowingProcessEntity = bPRepo.findById(borrowingProcess.getId()).get();
-        Conflict conflict1 = new Conflict("problem", itemEntity, userEntity1, userEntity2, borrowingProcessEntity);
-        Conflict conflict2 = new Conflict("problem", itemEntity, userEntity2, userEntity1, borrowingProcessEntity);
-        conflictRepo.save(conflict1);
-        conflictRepo.save(conflict2);
+        return bPRepo.findById(borrowingProcess.getId()).get();
+    }
+
+    public Conflict createConflict(User lender, User borrower, BorrowingProcess process,String author){
+        Message message = new Message(author, "cool");
+        Conflict conflict = new Conflict(lender,borrower,process,message);
+        conflictRepo.save(conflict);
+        return conflictRepo.findById(conflict.getId()).get();
+    }
+
+
+    @Test
+    public void testFindAll(){
+        User user1 = createUser("testman1");
+        User user2 = createUser("testman2");
+
+        BorrowingProcess process = createProcess();
+
+        createConflict(user1,user2,process, "testman1");
+        createConflict(user2,user1,process, "testman2");
+
         Assertions.assertThat(conflictRepo.findAll().size()).isEqualTo(2);
+    }
+
+    @Test
+    public void testFindAllByProcess_Item(){
+
+        Item item = createItem("testItem","cool");
+        User user1 = createUser("testman1");
+        User user2 = createUser("testman2");
+
+        BorrowingProcess process1 = createProcess(item);
+        BorrowingProcess process2 = createProcess(item);
+
+        createConflict(user1,user2,process1, "testman1");
+        createConflict(user2,user1,process2, "testman2");
+
+        Assertions.assertThat(conflictRepo.findAllByProcess_Item(item).size()).isEqualTo(2);
+
+    }
+
+    @Test
+    public void testFindByProcess(){
+
+        User user1 = createUser("testman1");
+        User user2 = createUser("testman2");
+
+        BorrowingProcess process1 = createProcess();
+        BorrowingProcess process2 = createProcess();
+
+        Conflict conflict = createConflict(user1,user2,process1, "testman1");
+        createConflict(user2,user1,process2, "testman2");
+
+        Assertions.assertThat(conflictRepo.findByProcess(process1)).isEqualTo(conflict);
+
     }*/
 }
