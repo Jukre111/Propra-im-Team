@@ -1,12 +1,11 @@
 package de.hhu.sharing.RepositoryTests;
 
 import de.hhu.sharing.data.BorrowingProcessRepository;
-import de.hhu.sharing.data.ItemRepository;
+import de.hhu.sharing.data.LendableItemRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.*;
 import de.hhu.sharing.storage.StorageService;
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
@@ -29,7 +27,7 @@ public class UserRepositoryTest {
     BorrowingProcessRepository bPRepo;
 
     @Autowired
-    ItemRepository itemRepo;
+    LendableItemRepository itemRepo;
 
     @MockBean
     StorageService storageService;
@@ -50,11 +48,11 @@ public class UserRepositoryTest {
         LocalDate enddate = LocalDate.of(2010,2,2);
         Period period = new Period(startdate,enddate);
 
-        Item item = new Item("apfel", "lecker",1,1 ,user);
-        itemRepo.save(item);
-        itemRepo.findById(item.getId()).get();
+        LendableItem lendableItem = new LendableItem("apfel", "lecker",1,1 ,user);
+        itemRepo.save(lendableItem);
+        itemRepo.findById(lendableItem.getId()).get();
 
-        BorrowingProcess bP = new BorrowingProcess(item,period);
+        BorrowingProcess bP = new BorrowingProcess(lendableItem,period);
         bPRepo.save(bP);
         return bPRepo.findById(bP.getId()).get();
     }

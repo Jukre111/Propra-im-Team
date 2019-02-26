@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class BorrowingProcessServceTest {
 
@@ -17,7 +16,7 @@ public class BorrowingProcessServceTest {
     private RequestService requestService;
 
     @Mock
-    private ItemService itemService;
+    private LendableItemService lendableItemService;
 
     @Mock
     private UserService userService;

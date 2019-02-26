@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import de.hhu.sharing.data.ImageRepository;
-import de.hhu.sharing.data.ItemRepository;
+import de.hhu.sharing.data.LendableItemRepository;
+import de.hhu.sharing.data.SellableItemRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Image;
-import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.LendableItem;
+import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,10 @@ public class FileSystemStorageService implements StorageService {
     private UserRepository userRepo;   
     
     @Autowired
-    private ItemRepository itemRepo;
+    private LendableItemRepository itemRepo;
+
+    @Autowired
+    private SellableItemRepository sellableItemRepository;
 
     
     public Image createImageVars(String mimetype) {
@@ -84,15 +89,15 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void storeItemInitalizer(byte[] byteArr, Item item) {
+    public void storeItemInitalizer(byte[] byteArr, LendableItem lendableItem) {
         byte[] bytes = byteArr;
         Image image = new Image();
         String contentType = "image/gif";
         image.setMimeType(contentType);
         image.setImageData(bytes);
         imageRepo.save(image);
-        item.setImage(image);
-        itemRepo.save(item);
+        lendableItem.setImage(image);
+        itemRepo.save(lendableItem);
     }
 
     @Override
@@ -112,7 +117,7 @@ public class FileSystemStorageService implements StorageService {
     }
     
     @Override
-    public void storeItem(MultipartFile file, Item item){
+    public void storeItem(MultipartFile file, LendableItem lendableItem){
         byte[] byteArr = readFile(file);
         Image image = null;
         String contentType = null;
@@ -123,7 +128,23 @@ public class FileSystemStorageService implements StorageService {
             image = createImageVars("default");
         image.setImageData(byteArr);
         imageRepo.save(image);
-        item.setImage(image);
-        itemRepo.save(item);
+        lendableItem.setImage(image);
+        itemRepo.save(lendableItem);
+    }
+
+    @Override
+    public void storeSellableItem(MultipartFile file, SellableItem sellableItem){
+        byte[] byteArr = readFile(file);
+        Image image = null;
+        String contentType = null;
+        contentType = file.getContentType();
+        if(contentType!=null)
+            image = createImageVars(contentType);
+        else
+            image = createImageVars("default");
+        image.setImageData(byteArr);
+        imageRepo.save(image);
+        sellableItem.setImage(image);
+        sellableItemRepository.save(sellableItem);
     }
 }

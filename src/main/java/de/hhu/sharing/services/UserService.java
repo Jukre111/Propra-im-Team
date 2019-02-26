@@ -2,7 +2,6 @@ package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.BorrowingProcess;
-import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,7 +27,7 @@ public class UserService {
     }
 
     public void removeProcessFromProcessLists(BorrowingProcess process) {
-        User lender = process.getItem().getLender();
+        User lender = process.getItem().getOwner();
         lender.removeFromLend(process);
         users.save(lender);
         User borrower = this.getBorrowerFromBorrowingProcessId(process.getId());
@@ -38,7 +37,7 @@ public class UserService {
 
     public boolean userIsInvolvedToProcess(User user, BorrowingProcess process) {
         User borrower = this.getBorrowerFromBorrowingProcessId(process.getId());
-        User lender = process.getItem().getLender();
+        User lender = process.getItem().getOwner();
         return user == borrower || user == lender;
     }
 }

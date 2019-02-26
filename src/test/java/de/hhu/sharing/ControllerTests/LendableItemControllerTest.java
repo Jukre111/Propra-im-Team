@@ -3,11 +3,11 @@ package de.hhu.sharing.ControllerTests;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.*;
 import de.hhu.sharing.services.BorrowingProcessService;
-import de.hhu.sharing.services.ItemService;
+import de.hhu.sharing.services.LendableItemService;
 import de.hhu.sharing.services.RequestService;
 import de.hhu.sharing.services.UserService;
 import de.hhu.sharing.storage.StorageService;
-import de.hhu.sharing.web.ItemController;
+import de.hhu.sharing.web.LendableItemController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -27,14 +27,14 @@ import java.time.LocalDate;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(ItemController.class)
-public class ItemControllerTest {
+@WebMvcTest(LendableItemController.class)
+public class LendableItemControllerTest {
 
     @Autowired
     MockMvc mvc;
 
     @MockBean
-    ItemService itemService;
+    LendableItemService lendableItemService;
 
     @MockBean
     UserService userService;
@@ -51,19 +51,19 @@ public class ItemControllerTest {
     @MockBean
     StorageService storeService;
 
-    public Item itemCreator(){
+    public LendableItem itemCreator(){
         LocalDate date = LocalDate.of(2000,1,1);
         Address address = new Address("unistrase","duesseldorf", 40233);
         User user = new User("user","password", "role", "lastnmae", "forname", "email",date,address);
-        Item item = new Item("apfel", "lecker",1,1 ,user );
-        return item;
+        LendableItem lendableItem = new LendableItem("apfel", "lecker",1,1 ,user );
+        return lendableItem;
     }
 
     @Test
     @WithMockUser
     public void retrieveStatusDetails() throws Exception{
-        Item item = itemCreator();
-        Mockito.when(itemService.get(1L)).thenReturn(item);
+        LendableItem lendableItem = itemCreator();
+        Mockito.when(lendableItemService.get(1L)).thenReturn(lendableItem);
         mvc.perform(MockMvcRequestBuilders.get("/detailsItem").param("id","1"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
@@ -79,10 +79,10 @@ public class ItemControllerTest {
     @Test
     @WithMockUser
     public void retrieveStatusEditItem() throws Exception{
-        Item item = itemCreator();
-        Mockito.when(itemService.isChangeable(1L)).thenReturn(true);
-        Mockito.when(userService.get("user")).thenReturn(item.getLender());
-        Mockito.when(itemService.get(1L)).thenReturn(item);
+        LendableItem lendableItem = itemCreator();
+        Mockito.when(lendableItemService.isChangeable(1L)).thenReturn(true);
+        Mockito.when(userService.get("user")).thenReturn(lendableItem.getOwner());
+        Mockito.when(lendableItemService.get(1L)).thenReturn(lendableItem);
         mvc.perform(MockMvcRequestBuilders.get("/editItem").param("id","1"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
@@ -114,9 +114,9 @@ public class ItemControllerTest {
     /*@Test
     @WithMockUser
     public void retrieveStatusReturnItem() throws Exception{
-        Item item = itemCreator();
-        Mockito.when(userService.get("user")).thenReturn(item.getLender());
-        BorrowingProcess process = new BorrowingProcess(item, new Period(LocalDate.now(), LocalDate.now().plusDays(2)));
+        LendableItem LendableItem = itemCreator();
+        Mockito.when(userService.get("user")).thenReturn(LendableItem.getOwner());
+        BorrowingProcess process = new BorrowingProcess(LendableItem, new Period(LocalDate.now(), LocalDate.now().plusDays(2)));
         process.setId(1L);
         Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
         mvc.perform(MockMvcRequestBuilders.get("/returnItem").param("id","1"))

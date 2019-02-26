@@ -41,7 +41,7 @@
     <div class="alert alert-success" role="alert" th:if="${requested}" >Anfrage erfolgreich gestellt.</div>
     <div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${ownItem}" >Eigenes Objekt nicht an sich selbst verleihbar.</div>
     <div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${noCredit}" >Nicht genug ProPray-Guthaben.</div>
-    <section th:each="item : ${items}" class="media style textPosition" style="padding: 20px">
+    <section th:each="item : ${lendableItems}" class="media style textPosition" style="padding: 20px">
         <div class="media-left media-middle" style="padding-right: 40px">
             <a th:href="@{'/detailsItem?id=' + ${item.Id}}">
                 <img class="img" id="circular--landscape" th:src="@{'/getItemPic?id=' + ${item.id}}" style="width: 128px;height: 128px;" align="left">

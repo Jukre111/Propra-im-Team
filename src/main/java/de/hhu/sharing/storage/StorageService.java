@@ -1,21 +1,22 @@
 package de.hhu.sharing.storage;
 
-import org.springframework.core.io.Resource;
+import de.hhu.sharing.model.LendableItem;
+import de.hhu.sharing.model.SellableItem;
 import org.springframework.web.multipart.MultipartFile;
 
-import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
-
-import java.nio.file.Path;
-import java.util.stream.Stream;
 
 public interface StorageService {
 
 	void storeUser(MultipartFile file, User user);
 	
-	void storeItem(MultipartFile file, Item item);
+	void storeItem(MultipartFile file, LendableItem lendableItem);
 
 	void storeUserInitalizer(byte[] byteArr, User user);
 
-	void storeItemInitalizer(byte[] byteArr, Item item);
+	void storeItemInitalizer(byte[] byteArr, LendableItem lendableItem);
+
+	void storeSellableItem(MultipartFile file, SellableItem sellableItem);
+
+
 }

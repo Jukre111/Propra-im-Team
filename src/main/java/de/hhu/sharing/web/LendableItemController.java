@@ -1,11 +1,9 @@
 package de.hhu.sharing.web;
 
-import de.hhu.sharing.model.Address;
-import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.Period;
+import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.BorrowingProcessService;
-import de.hhu.sharing.services.ItemService;
+import de.hhu.sharing.services.LendableItemService;
 import de.hhu.sharing.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,65 +15,58 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
-public class ItemController {
+public class LendableItemController {
 
     @Autowired
     private UserService userService;
 
     @Autowired
-    private ItemService itemService;
+    private LendableItemService lendableItemService;
 
     @Autowired
     private BorrowingProcessService processService;
 
     @GetMapping("/detailsItem")
     public String details(@RequestParam(name = "id") Long id, Model model){
-        Item item = itemService.get(id);
-        User user = item.getLender();
-        Address address = user.getAddress();
-        List <LocalDate> allDates = itemService.allDatesInbetween(item);
-        model.addAttribute("item", item);
+        LendableItem lendableItem = lendableItemService.get(id);
+        User user = lendableItem.getOwner();
+        model.addAttribute("lendableItem", lendableItem);
         model.addAttribute("user", user);
-        model.addAttribute("address", address);
-        model.addAttribute("allDates", allDates);
-
-        return "details";
+        model.addAttribute("allDates", lendableItemService.allDatesInbetween(lendableItem));
+        return "lendableItemDetails";
     }
 
     @GetMapping("/newItem")
     public String newItem(Model model){
-        model.addAttribute("item", new Item());
-        return "item";
+        model.addAttribute("lendableItem", new LendableItem());
+        return "lendableItem";
     }
 
     @GetMapping("/editItem")
     public String editItem(Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
-        if(!itemService.isChangeable(id)){
+        if(!lendableItemService.isChangeable(id)){
             redirectAttributes.addFlashAttribute("notChangeable", true);
             return "redirect:/account";
         }
-        if(itemService.get(id).getLender() != userService.get(p.getName())){
+        if(lendableItemService.get(id).getOwner() != userService.get(p.getName())){
             redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/account";
         }
-        model.addAttribute("item", itemService.get(id));
-        return "item";
+        model.addAttribute("lendableItem", lendableItemService.get(id));
+        return "lendableItem";
     }
 
     @PostMapping("/saveItem")
     public String saveItem(Long id, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("rental") Integer rental, @RequestParam("deposit") Integer deposit, @RequestParam("file") MultipartFile file , Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         if(id == null){
-            itemService.create(name, description, rental, deposit, user, file);
+            lendableItemService.create(name, description, rental, deposit, user, file);
             redirectAttributes.addFlashAttribute("saved",true);
         }
         else {
-            itemService.edit(id,name, description, rental, deposit, user);
+            lendableItemService.edit(id,name, description, rental, deposit, user);
             redirectAttributes.addFlashAttribute("edited",true);
         }
         return "redirect:/account";
@@ -83,15 +74,15 @@ public class ItemController {
 
     @GetMapping("/deleteItem")
     public String deleteItem(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
-        if(!itemService.isChangeable(id)){
+        if(!lendableItemService.isChangeable(id)){
             redirectAttributes.addFlashAttribute("notChangeable", true);
             return "redirect:/account";
         }
-        if(itemService.get(id).getLender() != userService.get(p.getName())){
+        if(lendableItemService.get(id).getOwner() != userService.get(p.getName())){
             redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/account";
         }
-        itemService.delete(id);
+        lendableItemService.delete(id);
         redirectAttributes.addFlashAttribute("deleted",true);
         return "redirect:/account";
     }
@@ -99,7 +90,7 @@ public class ItemController {
     @GetMapping("/itemReturned")
     public String itemReturned(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
-        if(processService.get(id).getItem().getLender() != user){
+        if(processService.get(id).getItem().getOwner() != user){
             redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/account";
         }

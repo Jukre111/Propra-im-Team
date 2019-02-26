@@ -41,7 +41,7 @@
     <div>
         <h1><span style="font-size: 20pt">Suchergebnisse für</span> <span style="font-size: 30pt; color: #BD1D6F" th:text="|'${query}'|"></span></h1>
     </div>
-    <section th:each="item : ${items}" class="media style textPosition" style="padding: 20px">
+    <section th:each="item : ${lendableItems}" class="media style textPosition" style="padding: 20px">
         <div class="media-left media-middle" style="padding-right: 40px">
             <a th:href="@{'/detailsItem?id=' + ${item.Id}}">
                 <img class="img" id="circular--landscape" th:src="@{'/getItemPic?id=' + ${item.id}}" style="width: 128px;height: 128px;" align="left">

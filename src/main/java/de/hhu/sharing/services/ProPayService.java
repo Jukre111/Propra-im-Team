@@ -1,8 +1,7 @@
 package de.hhu.sharing.services;
 
 import com.google.gson.Gson;
-import de.hhu.sharing.data.TransactionRentalRepository;
-import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.propay.Account;
 import de.hhu.sharing.propay.TransactionRental;
@@ -34,11 +33,11 @@ public class ProPayService {
         return new Gson().fromJson(jsonAccount, Account.class);
     }
 
-    public boolean enoughCredit(User user, Item item, LocalDate startdate, LocalDate enddate){
+    public boolean enoughCredit(User user, LendableItem lendableItem, LocalDate startdate, LocalDate enddate){
         int days = (int) DAYS.between(startdate, enddate) + 1;
-        int rent = item.getRental() * days;
+        int rent = lendableItem.getRental() * days;
         int amount = this.getAccount(user).getAmount();
-        return amount >= (rent + item.getDeposit()+getDepositSum(this.getAccount(user)));
+        return amount >= (rent + lendableItem.getDeposit()+getDepositSum(this.getAccount(user)));
     }
 
     public void rechargeCredit(User user, int amount) {
