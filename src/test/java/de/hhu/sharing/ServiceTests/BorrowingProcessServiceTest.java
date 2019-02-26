@@ -123,4 +123,12 @@ public class BorrowingProcessServiceTest {
         Assert.assertEquals(requester.getBorrowed().get(0).getPeriod(), period);
     }
 
+    @Test
+    public void testItemReturned(){
+        User requester = generateUser("Karl");
+        Period period = generatePeriod(4,9);
+        Request request = new Request(period, requester);
+        Mockito.doReturn(request).when(requestService).get(1L);
+    }
+
 }
