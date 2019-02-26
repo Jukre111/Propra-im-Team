@@ -1,6 +1,7 @@
 package de.hhu.sharing.model;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Data
 @Entity
+@ToString(exclude = {"lender", "borrower", "process"})
 public class Conflict {
 
     @Id

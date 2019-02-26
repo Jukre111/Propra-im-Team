@@ -28,7 +28,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ItemController.class)
-public class lendableItemControllerTest {
+public class ItemControllerTest {
 
     @Autowired
     MockMvc mvc;

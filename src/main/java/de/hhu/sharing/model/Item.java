@@ -12,7 +12,6 @@ public abstract class Item {
     @GeneratedValue
     Long id;
 
-
     String name;
 
     @Column(columnDefinition = "TEXT")

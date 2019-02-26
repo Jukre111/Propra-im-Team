@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.time.LocalDate;
 
@@ -76,8 +77,11 @@ public class ProPayService {
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(method);
+            connection.setConnectTimeout(5000);
             connection.connect();
             connection.getResponseCode();
+        } catch (SocketTimeoutException e) {
+            throw new RuntimeException("ProPay timeout!");
         } catch (IOException e) {
             throw new RuntimeException("ProPay not reachable!");
         }

@@ -43,7 +43,7 @@ public class RequestController {
         }
         List<LocalDate> allDates = itemService.allDatesInbetween(itemService.get(id));
         model.addAttribute("allDates", allDates);
-        model.addAttribute("item", itemService.get(id));
+        model.addAttribute("lendableItem", itemService.get(id));
         return "request";
     }
 
