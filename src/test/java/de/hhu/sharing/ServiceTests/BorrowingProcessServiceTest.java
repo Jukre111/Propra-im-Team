@@ -18,10 +18,7 @@ import java.util.Optional;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class BorrowingProcessServiceTest {
-
-    @Mock
-    private UserRepository users;
-
+    
     @Mock
     private BorrowingProcessRepository processes;
 
@@ -91,10 +88,8 @@ public class BorrowingProcessServiceTest {
         User requester = generateUser("Karl");
         User lender = generateUser("Jos");
         Period period = generatePeriod(4,9);
-        Period periodOverlapping = generatePeriod(3,7);
         Request request = new Request(period, requester);
         Item item = generateItem(lender);
-        item.addToPeriods(periodOverlapping);
 
         Mockito.doReturn(request).when(requestService).get(1L);
         Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
@@ -111,6 +106,7 @@ public class BorrowingProcessServiceTest {
         ArgumentCaptor<User> captorLender = ArgumentCaptor.forClass(User.class);
         Mockito.verify(transactionService, times(1)).createTransactionRental(captorProcess.capture(), captorBorrower.capture(), captorLender.capture());
 
+        Mockito.verify(requestService, times(1)).deleteOverlappingRequestsFromItem(request, item);
         Assert.assertEquals(captor.getValue().getItem(), item);
         Assert.assertEquals(captor.getValue().getPeriod(), period);
         Assert.assertEquals(captorProcess.getValue().getItem(), item);
@@ -119,6 +115,8 @@ public class BorrowingProcessServiceTest {
         Assert.assertEquals(captorLender.getValue(), lender);
         Assert.assertEquals(requester.getBorrowed().get(0).getItem(), item);
         Assert.assertEquals(requester.getBorrowed().get(0).getPeriod(), period);
+        Assert.assertEquals(lender.getLend().get(0).getItem(), item);
+        Assert.assertEquals(lender.getLend().get(0).getPeriod(), period);
     }
 
     @Test
@@ -131,14 +129,15 @@ public class BorrowingProcessServiceTest {
         BorrowingProcess process = new BorrowingProcess(item, period);
         process.setId(1L);
         borrower.addToBorrowed(process);
+        lender.addToLend(process);
         Message message = new Message();
         Conflict conflict = new Conflict(borrower, lender, process, message);
-        TransactionRental rental = new TransactionRental();
+        TransactionRental transactionRental = new TransactionRental();
 
         Mockito.when(processes.findById(1L)).thenReturn(Optional.of(process));
         Mockito.when(conflictService.getFromBorrowingProcess(process)).thenReturn(conflict);
         Mockito.when(userService.getBorrowerFromBorrowingProcessId(1L)).thenReturn(borrower);
-        Mockito.when(transactionService.getFromProcessId(1L)).thenReturn(rental);
+        Mockito.when(transactionService.getFromProcessId(1L)).thenReturn(transactionRental);
 
         BPService.itemReturned(1L, "good");
 
@@ -148,7 +147,8 @@ public class BorrowingProcessServiceTest {
         ArgumentCaptor<BorrowingProcess> captorProcess = ArgumentCaptor.forClass(BorrowingProcess.class);
         Mockito.verify(processes, times(1)).delete(captorProcess.capture());
 
-        Mockito.verify(proPayService, times(1)).releaseDeposit(borrower, rental);
+        Mockito.verify(proPayService, times(1)).releaseDeposit(borrower, transactionRental);
+        Mockito.verify(proPayService, times(0)).punishDeposit(borrower, transactionRental);
         Mockito.verify(userService, times(1)).removeProcessFromProcessLists(process);
         Assert.assertEquals(captorConflict.getValue(), conflict);
         Assert.assertEquals(captorProcess.getValue(), process);
@@ -183,6 +183,7 @@ public class BorrowingProcessServiceTest {
         Mockito.verify(processes, times(1)).delete(captorProcess.capture());
 
         Mockito.verify(proPayService, times(1)).punishDeposit(borrower, rental);
+        Mockito.verify(proPayService, times(0)).releaseDeposit(borrower, rental);
         Mockito.verify(userService, times(1)).removeProcessFromProcessLists(process);
         Assert.assertEquals(captorConflict.getValue(), conflict);
         Assert.assertEquals(captorProcess.getValue(), process);
@@ -215,6 +216,7 @@ public class BorrowingProcessServiceTest {
         Mockito.verify(processes, times(1)).delete(captorProcess.capture());
 
         Mockito.verify(proPayService, times(1)).releaseDeposit(borrower, rental);
+        Mockito.verify(proPayService, times(0)).punishDeposit(borrower, rental);
         Mockito.verify(userService, times(1)).removeProcessFromProcessLists(process);
         Assert.assertEquals(captorProcess.getValue(), process);
         Assert.assertFalse(item.getPeriods().contains(period));
@@ -246,6 +248,7 @@ public class BorrowingProcessServiceTest {
         Mockito.verify(processes, times(1)).delete(captorProcess.capture());
 
         Mockito.verify(proPayService, times(1)).punishDeposit(borrower, rental);
+        Mockito.verify(proPayService, times(0)).releaseDeposit(borrower, rental);
         Mockito.verify(userService, times(1)).removeProcessFromProcessLists(process);
         Assert.assertEquals(captorProcess.getValue(), process);
         Assert.assertFalse(item.getPeriods().contains(period));
