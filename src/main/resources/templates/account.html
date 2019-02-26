@@ -170,7 +170,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 		<div style="padding: 20px">
 			<table>
 				<tr>
-					<th width="70%"><font size="4">Eigene Objekte</font></th>
+					<th width="70%"><font size="4">Eigener Verleih</font></th>
 					<th width="10%">Verfügbar</th>
 					<th width="10%">Bearbeiten</th>
 					<th width="10%">Entfernen</th>
@@ -187,6 +187,24 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					</td>
 					<td>
 						<a class="indexbtn" th:href="@{'/deleteItem?id=' + ${item.id}}">Entfernen</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="padding: 20px">
+			<table>
+				<tr>
+					<th width="80%"><font size="4">Eigener Verkauf</font></th>
+					<th width="10%">Bearbeiten</th>
+					<th width="10%">Entfernen</th>
+				</tr>
+				<tr th:each="sell : ${sellItems}">
+					<td th:text="${sell.name}"></td>
+					<td>
+						<a class="indexbtn" th:href="@{'/editSellItem?id=' + ${sell.id}}">Bearbeiten</a>
+					</td>
+					<td>
+						<a class="indexbtn" th:href="@{'/deleteSellItem?id=' + ${sell.id}}">Entfernen</a>
 					</td>
 				</tr>
 			</table>

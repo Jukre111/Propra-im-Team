@@ -3,6 +3,7 @@ package de.hhu.sharing.web;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.LendableItemService;
 import de.hhu.sharing.services.RequestService;
+import de.hhu.sharing.services.SellableItemService;
 import de.hhu.sharing.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,9 @@ public class IndexController {
     @Autowired
     private RequestService requestService;
 
+    @Autowired
+    private SellableItemService sellableItemService;
+
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("lendableItems", lendableItemService.getAll());
@@ -43,6 +47,7 @@ public class IndexController {
         model.addAttribute("user", user);
         model.addAttribute("lendLendableItems", lendableItemService.getAllIPosted(user));
         model.addAttribute("address", user.getAddress());
+        model.addAttribute("sellItems", sellableItemService.getMySellables(user));
         return "account";
     }
 

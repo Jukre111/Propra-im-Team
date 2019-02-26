@@ -82,7 +82,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
                     faker.lordOfTheRings().location(),
                     Integer.parseInt(faker.address().zipCode()));
             User user = new User("user" + i, encoder.encode("password" + i), "ROLE_USER",
-                    faker.gameOfThrones().house(),
+                    faker.lordOfTheRings().character(),
                     faker.pokemon().name(),
                     faker.internet().emailAddress(),
                     faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),

@@ -30,20 +30,45 @@ public class SellableItemController {
         return("sellItem");
     }
 
+
+    @GetMapping("/editSellItem")
+    public String editSellItem(Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
+
+        if(sellableItemService.get(id).getOwner() != userService.get(p.getName())){
+            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            return "redirect:/account";
+        }
+        model.addAttribute("sellableItem", sellableItemService.get(id));
+        return "sellItem";
+    }
+
+
+
     @PostMapping("/saveSellItem")
     private String saveSellItem(Model model , Long id, @RequestParam("name") String name, @RequestParam("price") Integer price, @RequestParam("description") String description,  @RequestParam("file") MultipartFile file , Principal p, RedirectAttributes redirectAttributes){
 
-            User user = userService.get(p.getName());
-            if(id == null){
-                sellableItemService.create(name, description, price, user, file);
-                redirectAttributes.addFlashAttribute("saved",true);
-            }
-            else {
-                sellableItemService.edit(id, name, description, price, user);
-                redirectAttributes.addFlashAttribute("edited",true);
-            }
-            return "redirect:/account";
+        User user = userService.get(p.getName());
+        if(id == null){
+            sellableItemService.create(name, description, price, user, file);
+            redirectAttributes.addFlashAttribute("saved",true);
+        }
+        else {
+            sellableItemService.edit(id, name, description, price, user);
+            redirectAttributes.addFlashAttribute("edited",true);
+        }
+        return "redirect:/account";
+    }
 
+    @GetMapping("/deleteSellItem")
+    public String deleteSellItem(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
+        
+        if(sellableItemService.get(id).getOwner() != userService.get(p.getName())){
+            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            return "redirect:/account";
+        }
+        sellableItemService.delete(id);
+        redirectAttributes.addFlashAttribute("deleted",true);
+        return "redirect:/account";
     }
 
 }
