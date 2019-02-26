@@ -43,10 +43,8 @@ public class UserServiceTest {
 
     @Test (expected = RuntimeException.class)
     public void testGetNoUserFound(){
-        User user = generateUser();
         Mockito.when(users.findByUsername("user")).thenReturn(Optional.empty());
-        User testUser = userService.get("user");
-
+        userService.get("user");
     }
 
     @Test
@@ -60,10 +58,8 @@ public class UserServiceTest {
 
     @Test (expected = RuntimeException.class)
     public void testGetBorrowerFromBorrowingProcessIdNoUserFound(){
-
-        User user = generateUser();
         Mockito.when(users.findByBorrowed_id(1L)).thenReturn(Optional.empty());
-        User testUser = userService.getBorrowerFromBorrowingProcessId(1L);
+        userService.getBorrowerFromBorrowingProcessId(1L);
     }
 
 

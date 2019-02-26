@@ -29,16 +29,11 @@ public class TransactionRentalRepositoryTest {
 
 
     @Test
-    public void mustHaveTest (){
-        Assertions.assertThat(true).isTrue();
-    }
-
-    /*@Test
     public void testFindAll() {
         TransactionRental trans1 = new TransactionRental();
         TransactionRental trans2 = new TransactionRental();
-        trans1.setReservationId(1);
-        trans2.setReservationId(2);
+        trans1.setId(1L);
+        trans2.setId(2L);
         transRepo.save(trans1);
         transRepo.save(trans2);
 
@@ -65,24 +60,24 @@ public class TransactionRentalRepositoryTest {
         TransactionRental trans4 = new TransactionRental();
         TransactionRental trans5 = new TransactionRental();
 
-        trans3.setReservationId(3);
-        trans4.setReservationId(4);
-        trans5.setReservationId(5);
+        trans3.setId(3L);
+        trans4.setId(4L);
+        trans5.setId(5L);
 
-        trans3.setSource(source);
-        trans3.setTarget(target);
-        trans4.setSource(source);
-        trans4.setTarget(target);
-        trans5.setSource(target);
-        trans5.setTarget(source);
+        trans3.setSender(source);
+        trans3.setReceiver(target);
+        trans4.setSender(source);
+        trans4.setReceiver(target);
+        trans5.setSender(target);
+        trans5.setReceiver(source);
 
         transRepo.save(trans3);
         transRepo.save(trans4);
         transRepo.save(trans5);
 
-        Assertions.assertThat(transRepo.findByTarget(target).size()).isEqualTo(2);
-        Assertions.assertThat(transRepo.findByTarget(target).contains(trans3)).isTrue();
-        Assertions.assertThat(transRepo.findByTarget(target).contains(trans4)).isTrue();
+        Assertions.assertThat(transRepo.findAllByReceiver(target).size()).isEqualTo(2);
+        Assertions.assertThat(transRepo.findAllByReceiver(target).contains(trans3)).isTrue();
+        Assertions.assertThat(transRepo.findAllByReceiver(target).contains(trans4)).isTrue();
     }
 
     @Test
@@ -105,24 +100,24 @@ public class TransactionRentalRepositoryTest {
         TransactionRental trans4 = new TransactionRental();
         TransactionRental trans5 = new TransactionRental();
 
-        trans3.setReservationId(3);
-        trans4.setReservationId(4);
-        trans5.setReservationId(5);
+        trans3.setId(3L);
+        trans4.setId(4L);
+        trans5.setId(5L);
 
-        trans3.setSource(source);
-        trans3.setTarget(target);
-        trans4.setSource(source);
-        trans4.setTarget(target);
-        trans5.setSource(target);
-        trans5.setTarget(source);
+        trans3.setSender(source);
+        trans3.setReceiver(target);
+        trans4.setSender(source);
+        trans4.setReceiver(target);
+        trans5.setSender(target);
+        trans5.setReceiver(source);
 
         transRepo.save(trans3);
         transRepo.save(trans4);
         transRepo.save(trans5);
 
-        Assertions.assertThat(transRepo.findBySource(source).size()).isEqualTo(2);
-        Assertions.assertThat(transRepo.findBySource(source).contains(trans3)).isTrue();
-        Assertions.assertThat(transRepo.findBySource(source).contains(trans4)).isTrue();
+        Assertions.assertThat(transRepo.findAllBySender(source).size()).isEqualTo(2);
+        Assertions.assertThat(transRepo.findAllBySender(source).contains(trans3)).isTrue();
+        Assertions.assertThat(transRepo.findAllBySender(source).contains(trans4)).isTrue();
     }
 
     @Test
@@ -145,16 +140,16 @@ public class TransactionRentalRepositoryTest {
         TransactionRental trans4 = new TransactionRental();
         TransactionRental trans5 = new TransactionRental();
 
-        trans3.setReservationId(3);
-        trans4.setReservationId(4);
-        trans5.setReservationId(5);
+        trans3.setId(3L);
+        trans4.setId(4L);
+        trans5.setId(5L);
 
-        trans3.setSource(source);
-        trans3.setTarget(target);
-        trans4.setSource(source);
-        trans4.setTarget(target);
-        trans5.setSource(target);
-        trans5.setTarget(source);
+        trans3.setSender(source);
+        trans3.setReceiver(target);
+        trans4.setSender(source);
+        trans4.setReceiver(target);
+        trans5.setSender(target);
+        trans5.setReceiver(source);
 
         trans3.setProcessId(3L);
         trans4.setProcessId(4L);
@@ -167,5 +162,5 @@ public class TransactionRentalRepositoryTest {
         Assertions.assertThat(transRepo.findByProcessId(3L)).isNotEqualTo(null);
         Assertions.assertThat(transRepo.findByProcessId(4L)).isNotEqualTo(null);
         Assertions.assertThat(transRepo.findByProcessId(5L)).isNotEqualTo(null);
-    }*/
+    }
 }
