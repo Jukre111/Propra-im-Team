@@ -54,6 +54,13 @@ public class RequestServiceTest {
         Assert.assertEquals(requestService.get(1L), request);
     }
 
+    @Test(expected = RuntimeException.class)
+    public void testGetNotExistent(){
+
+        Mockito.when(requests.findById(1L)).thenReturn(Optional.empty());
+        requestService.get(1L);
+    }
+
     @Test
     public void testCreate(){
         User user = generateUser("Karl");
@@ -87,6 +94,18 @@ public class RequestServiceTest {
 
         Assert.assertEquals(captor.getAllValues().get(0), request);
         Assert.assertTrue(item.getRequests().isEmpty());
+    }
+
+    @Test
+    public void testIsOverlappingWithAvailability(){
+        Item item = new Item();
+        Request request = new Request();
+        request.setId(1L);
+        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
+        Mockito.when(requests.findById(1L)).thenReturn(Optional.of(request));
+        requestService.isOverlappingWithAvailability(1L);
+
+        Assert.assert
     }
 
     @Test

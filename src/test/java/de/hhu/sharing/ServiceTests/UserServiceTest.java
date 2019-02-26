@@ -69,6 +69,7 @@ public class UserServiceTest {
     public void testGetBorrowerFromBorrowingProcessIdNoUserFound() {
         Mockito.when(users.findByBorrowed_id(1L)).thenReturn(Optional.empty());
         userService.getBorrowerFromBorrowingProcessId(1L);
+
     }
 
 
