@@ -1,5 +1,6 @@
 package de.hhu.sharing.web;
 
+import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.LendableItemService;
 import de.hhu.sharing.services.RequestService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class IndexController {
@@ -30,7 +32,10 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(Model model) {
+        List<SellableItem> sellItems = sellableItemService.getAll();
+        System.out.println(sellItems);
         model.addAttribute("lendableItems", lendableItemService.getAll());
+        model.addAttribute("sellItems", sellItems);
         return "index";
     }
 
