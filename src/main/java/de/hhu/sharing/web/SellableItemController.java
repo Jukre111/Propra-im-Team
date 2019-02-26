@@ -106,7 +106,8 @@ public class SellableItemController {
         // TODO something brilliant
 
         if(!proService.enoughCredit(buyer,sellableItem)){
-            return "buy";
+            //Popup-message that buyer has not enough money 
+            return ("redirect:/");
         }
 
         transPurService.createTransactionPurchase(sellableItem, owner, buyer);
