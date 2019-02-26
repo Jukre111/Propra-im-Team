@@ -36,7 +36,7 @@ public class ConflictService {
         conflicts.delete(conflict);
     }
 
-    public boolean noConflictWith(lendableItem lendableItem) {
+    public boolean noConflictWith(LendableItem lendableItem) {
         return conflicts.findAllByProcess_Item(lendableItem).isEmpty();
     }
 

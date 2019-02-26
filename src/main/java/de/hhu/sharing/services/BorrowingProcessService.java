@@ -37,13 +37,13 @@ public class BorrowingProcessService {
 
     public void accept(Long requestId) {
         Request request = requestService.get(requestId);
-        lendableItem lendableItem = itemService.getFromRequestId(requestId);
+        LendableItem lendableItem = itemService.getFromRequestId(requestId);
         lendableItem.addToPeriods(request.getPeriod());
         this.createProcess(lendableItem, request);
         requestService.deleteOverlappingRequestsFromItem(request, lendableItem);
     }
 
-    private void createProcess(lendableItem lendableItem, Request request) {
+    private void createProcess(LendableItem lendableItem, Request request) {
         BorrowingProcess process = new BorrowingProcess(lendableItem, request.getPeriod());
         processes.save(process);
         User borrower = request.getRequester();
@@ -67,7 +67,7 @@ public class BorrowingProcessService {
             proPayService.punishDeposit(borrower, transactionService.getFromProcessId(processId));
         }
         userService.removeProcessFromProcessLists(process);
-        process.getLendableItem().removeFromPeriods(process.getPeriod());
+        process.getItem().removeFromPeriods(process.getPeriod());
         processes.delete(process);
     }
 }

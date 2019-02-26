@@ -1,7 +1,7 @@
 package de.hhu.sharing.web;
 
 import de.hhu.sharing.model.Address;
-import de.hhu.sharing.model.lendableItem;
+import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.BorrowingProcessService;
 import de.hhu.sharing.services.ItemService;
@@ -33,7 +33,7 @@ public class ItemController {
 
     @GetMapping("/detailsItem")
     public String details(@RequestParam(name = "id") Long id, Model model){
-        lendableItem lendableItem = itemService.get(id);
+        LendableItem lendableItem = itemService.get(id);
         User user = lendableItem.getOwner();
         Address address = user.getAddress();
         List <LocalDate> allDates = itemService.allDatesInbetween(lendableItem);
@@ -47,7 +47,7 @@ public class ItemController {
 
     @GetMapping("/newItem")
     public String newItem(Model model){
-        model.addAttribute("item", new lendableItem());
+        model.addAttribute("item", new LendableItem());
         return "item";
     }
 
@@ -97,7 +97,7 @@ public class ItemController {
     @GetMapping("/itemReturned")
     public String itemReturned(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
-        if(processService.get(id).getLendableItem().getOwner() != user){
+        if(processService.get(id).getItem().getOwner() != user){
             redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/account";
         }

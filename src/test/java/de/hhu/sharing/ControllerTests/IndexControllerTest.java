@@ -2,7 +2,7 @@ package de.hhu.sharing.ControllerTests;
 
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
-import de.hhu.sharing.model.lendableItem;
+import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.RequestService;
@@ -70,7 +70,7 @@ public class IndexControllerTest {
     @WithMockUser
     @Test
     public void retrieveStatusSearch()throws Exception{
-        mvc.perform(MockMvcRequestBuilders.get("/search?query=lendableItem"))
+        mvc.perform(MockMvcRequestBuilders.get("/search?query=LendableItem"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -81,7 +81,7 @@ public class IndexControllerTest {
         Address address = new Address("unistrase","duesseldorf", 40233);
         User user = new User("user","password", "role", "lastnmae", "forname", "email",date,address);
         Mockito.when(userService.get("user")).thenReturn(user);
-        List<lendableItem> lendableItemList = new ArrayList<>();
+        List<LendableItem> lendableItemList = new ArrayList<>();
         Mockito.when(itemService.getAllIPosted(user)).thenReturn(lendableItemList);
         Mockito.when(itemService.getAllIRequested(user)).thenReturn(lendableItemList);
         mvc.perform(MockMvcRequestBuilders.get("/messages"))

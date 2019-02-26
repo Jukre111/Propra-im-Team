@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import de.hhu.sharing.data.ImageRepository;
-import de.hhu.sharing.data.ItemRepository;
+import de.hhu.sharing.data.LendableItemRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Image;
-import de.hhu.sharing.model.lendableItem;
+import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class FileSystemStorageService implements StorageService {
     private UserRepository userRepo;   
     
     @Autowired
-    private ItemRepository itemRepo;
+    private LendableItemRepository itemRepo;
 
     
     public Image createImageVars(String mimetype) {
@@ -84,7 +84,7 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void storeItemInitalizer(byte[] byteArr, lendableItem lendableItem) {
+    public void storeItemInitalizer(byte[] byteArr, LendableItem lendableItem) {
         byte[] bytes = byteArr;
         Image image = new Image();
         String contentType = "image/gif";
@@ -112,7 +112,7 @@ public class FileSystemStorageService implements StorageService {
     }
     
     @Override
-    public void storeItem(MultipartFile file, lendableItem lendableItem){
+    public void storeItem(MultipartFile file, LendableItem lendableItem){
         byte[] byteArr = readFile(file);
         Image image = null;
         String contentType = null;

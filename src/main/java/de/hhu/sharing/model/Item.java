@@ -1,19 +1,26 @@
 package de.hhu.sharing.model;
 
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import lombok.Data;
 
-public class Item {
+import javax.persistence.*;
+
+@Data
+@MappedSuperclass
+public abstract class Item {
+
+    @Id
+    @GeneratedValue
+    Long id;
 
 
-    private String name;
+    String name;
+
     @Column(columnDefinition = "TEXT")
-    private String description;
+    String description;
 
     @OneToOne
-    private Image image;
+    Image image;
 
     @ManyToOne
-    private User owner;
+    User owner;
 }

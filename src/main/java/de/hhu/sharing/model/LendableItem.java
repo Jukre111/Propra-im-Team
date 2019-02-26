@@ -7,12 +7,8 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 @Data
-@Entity
-public class lendableItem extends Item{
-
-    @Id
-    @GeneratedValue
-    private Long id;
+@Entity(name = "LendableItem")
+public class LendableItem extends Item{
 
     private int rental;     //per Day
     private int deposit;
@@ -23,24 +19,24 @@ public class lendableItem extends Item{
     @OneToMany(fetch = FetchType.EAGER)
     private final List<Request> requests = new ArrayList<>();
 
-    public lendableItem(){
+    public LendableItem(){
     }
 
-    public lendableItem(String name, String description, int rental, int deposit, User owner){
-        this.name = name;
-        this.description = description;
+    public LendableItem(String name, String description, int rental, int deposit, User owner){
+        super.name = name;
+        super.description = description;
         this.rental = rental;
         this.deposit = deposit;
-        this.owner = owner;
+        super.owner = owner;
     }
 
-    public lendableItem(String name, String description, int rental, int deposit, User owner, Image image){
-        this.name = name;
-        this.description = description;
+    public LendableItem(String name, String description, int rental, int deposit, User owner, Image image){
+        super.name = name;
+        super.description = description;
         this.rental = rental;
         this.deposit = deposit;
-        this.owner = owner;
-        this.image = image;
+        super.owner = owner;
+        super.image = image;
     }
     
     

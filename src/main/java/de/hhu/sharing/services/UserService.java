@@ -27,7 +27,7 @@ public class UserService {
     }
 
     public void removeProcessFromProcessLists(BorrowingProcess process) {
-        User lender = process.getLendableItem().getOwner();
+        User lender = process.getItem().getOwner();
         lender.removeFromLend(process);
         users.save(lender);
         User borrower = this.getBorrowerFromBorrowingProcessId(process.getId());
@@ -37,7 +37,7 @@ public class UserService {
 
     public boolean userIsInvolvedToProcess(User user, BorrowingProcess process) {
         User borrower = this.getBorrowerFromBorrowingProcessId(process.getId());
-        User lender = process.getLendableItem().getOwner();
+        User lender = process.getItem().getOwner();
         return user == borrower || user == lender;
     }
 }

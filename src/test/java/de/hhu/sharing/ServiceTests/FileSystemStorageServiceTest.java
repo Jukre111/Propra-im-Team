@@ -5,7 +5,8 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 
-import de.hhu.sharing.model.lendableItem;
+import de.hhu.sharing.data.LendableItemRepository;
+import de.hhu.sharing.model.LendableItem;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +18,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
 
 import de.hhu.sharing.data.ImageRepository;
-import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.Image;
@@ -28,7 +28,7 @@ public class FileSystemStorageServiceTest {
 
 
     @Mock
-    private ItemRepository items;
+    private LendableItemRepository items;
     
     @Mock
     private ImageRepository images;
@@ -50,8 +50,8 @@ public class FileSystemStorageServiceTest {
         return user;
     }
 
-    private lendableItem generateItem(User user) {
-        return new lendableItem("apfel", "lecker", 1, 1, user);
+    private LendableItem generateItem(User user) {
+        return new LendableItem("apfel", "lecker", 1, 1, user);
     }
     
     @Test
@@ -91,14 +91,14 @@ public class FileSystemStorageServiceTest {
     @Test
     public void testStoreItemInitalizer() throws Exception{
     	User user = generateUser("user");
-    	lendableItem lendableItem = generateItem(user);
+    	LendableItem lendableItem = generateItem(user);
     	MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));         
     	fileStorageService.storeItemInitalizer(jsonFile.getBytes(), lendableItem);
         ArgumentCaptor<Image> captor = ArgumentCaptor.forClass(Image.class);
         Mockito.verify(images, times(1)).save(captor.capture());
         Assert.assertEquals(captor.getAllValues().get(0).getMimeType(), "image/gif");
         Assert.assertEquals(captor.getAllValues().get(0).getImageData().length, jsonFile.getBytes().length);
-        ArgumentCaptor<lendableItem> captor2 = ArgumentCaptor.forClass(lendableItem.class);
+        ArgumentCaptor<LendableItem> captor2 = ArgumentCaptor.forClass(LendableItem.class);
         Mockito.verify(items, times(1)).save(captor2.capture());
         Assert.assertEquals(captor2.getAllValues().get(0).getName(), "apfel");
         Assert.assertEquals(captor2.getAllValues().get(0).getDescription(), "lecker");
@@ -122,14 +122,14 @@ public class FileSystemStorageServiceTest {
     @Test
     public void testStoreItem() throws Exception{
     	User user = generateUser("user");
-    	lendableItem lendableItem = generateItem(user);
+    	LendableItem lendableItem = generateItem(user);
     	MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));         
     	fileStorageService.storeItem(jsonFile, lendableItem);
         ArgumentCaptor<Image> captor = ArgumentCaptor.forClass(Image.class);
         Mockito.verify(images, times(1)).save(captor.capture());
         Assert.assertEquals(captor.getAllValues().get(0).getMimeType(), "image/gif");
         Assert.assertEquals(captor.getAllValues().get(0).getImageData().length, jsonFile.getBytes().length);
-        ArgumentCaptor<lendableItem> captor2 = ArgumentCaptor.forClass(lendableItem.class);
+        ArgumentCaptor<LendableItem> captor2 = ArgumentCaptor.forClass(LendableItem.class);
         Mockito.verify(items, times(1)).save(captor2.capture());
         Assert.assertEquals(captor2.getAllValues().get(0).getName(), "apfel");
         Assert.assertEquals(captor2.getAllValues().get(0).getDescription(), "lecker");

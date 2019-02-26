@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.security.Principal;
 
 import de.hhu.sharing.data.ImageRepository;
-import de.hhu.sharing.model.lendableItem;
+import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.UserService;
@@ -70,7 +70,7 @@ public class FileUploadController {
     @RequestMapping(value = "getItemPic", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<InputStreamResource> downloadItemImage(@RequestParam("id") Long id) {
-        lendableItem lendableItem = itemService.get(id);
+        LendableItem lendableItem = itemService.get(id);
     	if(lendableItem.getImage()==null) {
         	return ResponseEntity.badRequest().build();
         }else{
@@ -83,7 +83,7 @@ public class FileUploadController {
 
     @PostMapping("/handleFileUploadItem")
     public String handleFileUploadItem(@RequestParam("file") MultipartFile file,
-                                   RedirectAttributes redirectAttributes, lendableItem lendableItem) {
+                                   RedirectAttributes redirectAttributes, LendableItem lendableItem) {
         storageService.storeItem(file, lendableItem);
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");

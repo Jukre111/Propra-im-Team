@@ -1,7 +1,7 @@
 package de.hhu.sharing.RepositoryTests;
 
 import de.hhu.sharing.data.BorrowingProcessRepository;
-import de.hhu.sharing.data.ItemRepository;
+import de.hhu.sharing.data.LendableItemRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.*;
 import de.hhu.sharing.storage.StorageService;
@@ -27,7 +27,7 @@ public class UserRepositoryTest {
     BorrowingProcessRepository bPRepo;
 
     @Autowired
-    ItemRepository itemRepo;
+    LendableItemRepository itemRepo;
 
     @MockBean
     StorageService storageService;
@@ -48,7 +48,7 @@ public class UserRepositoryTest {
         LocalDate enddate = LocalDate.of(2010,2,2);
         Period period = new Period(startdate,enddate);
 
-        lendableItem lendableItem = new lendableItem("apfel", "lecker",1,1 ,user);
+        LendableItem lendableItem = new LendableItem("apfel", "lecker",1,1 ,user);
         itemRepo.save(lendableItem);
         itemRepo.findById(lendableItem.getId()).get();
 

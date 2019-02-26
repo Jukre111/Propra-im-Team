@@ -26,21 +26,21 @@ public class RequestService {
 
     public void create(Long itemId, LocalDate startdate, LocalDate enddate, User user) {
         Request request = new Request(new Period(startdate, enddate), user);
-        lendableItem lendableItem = itemService.get(itemId);
+        LendableItem lendableItem = itemService.get(itemId);
         lendableItem.addToRequests(request);
         requests.save(request);
     }
 
     public void delete(Long requestId) {
         Request request = this.get(requestId);
-        lendableItem lendableItem = itemService.getFromRequestId(request.getId());
+        LendableItem lendableItem = itemService.getFromRequestId(request.getId());
         lendableItem.removeFromRequests(request);
         requests.delete(request);
     }
 
     public boolean isOverlappingWithAvailability(Long requestId) {
         Request request = this.get(requestId);
-        lendableItem lendableItem = itemService.getFromRequestId(requestId);
+        LendableItem lendableItem = itemService.getFromRequestId(requestId);
         return !lendableItem.isAvailableAt(request.getPeriod());
     }
 
@@ -57,7 +57,7 @@ public class RequestService {
         return itemService.getFromRequestId(requestId).getOwner() == user;
     }
 
-    public void deleteOverlappingRequestsFromItem(Request request, lendableItem lendableItem) {
+    public void deleteOverlappingRequestsFromItem(Request request, LendableItem lendableItem) {
         List<Request> requests = new ArrayList<>(lendableItem.getRequests());
         for(Request req : requests){
             if(req.getPeriod().overlapsWith(request.getPeriod())){

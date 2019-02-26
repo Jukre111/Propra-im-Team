@@ -1,6 +1,6 @@
 package de.hhu.sharing.propay;
 
-import de.hhu.sharing.model.lendableItem;
+import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.User;
 import lombok.Data;
 
@@ -20,7 +20,7 @@ public class TransactionRental {
     private String depositRevoked = "offen";
 
     @ManyToOne
-    private lendableItem lendableItem;
+    private LendableItem lendableItem;
 
     @ManyToOne
     private User sender;
@@ -31,7 +31,7 @@ public class TransactionRental {
     public TransactionRental() {
     }
 
-    public TransactionRental(int wholeRent, int deposit, Long processId, lendableItem lendableItem, User sender, User receiver) {
+    public TransactionRental(int wholeRent, int deposit, Long processId, LendableItem lendableItem, User sender, User receiver) {
         this.wholeRent = wholeRent;
         this.deposit = deposit;
         this.processId = processId;

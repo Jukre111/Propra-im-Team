@@ -1,7 +1,7 @@
 package de.hhu.sharing.services;
 
-import de.hhu.sharing.data.ItemRepository;
-import de.hhu.sharing.model.lendableItem;
+import de.hhu.sharing.data.LendableItemRepository;
+import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.Period;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.storage.StorageService;
@@ -17,7 +17,7 @@ import java.util.List;
 public class ItemService{
 
     @Autowired
-    private ItemRepository items;
+    private LendableItemRepository items;
 
     @Autowired
     private ConflictService conflictService;
@@ -27,7 +27,7 @@ public class ItemService{
 
 
     public void create(String name, String description, Integer rental, Integer deposit, User user, MultipartFile file) {
-        lendableItem lendableItem = new lendableItem(name, description, rental, deposit, user);
+        LendableItem lendableItem = new LendableItem(name, description, rental, deposit, user);
         items.save(lendableItem);
         if(file!=null) {
         	storageService.storeItem(file, lendableItem);
@@ -37,7 +37,7 @@ public class ItemService{
     }
 
     public void edit(Long id, String name, String description, Integer rental, Integer deposit, User user) {
-        lendableItem lendableItem = this.get(id);
+        LendableItem lendableItem = this.get(id);
         lendableItem.setName(name);
         lendableItem.setDescription(description);
         lendableItem.setRental(rental);
@@ -47,56 +47,56 @@ public class ItemService{
     }
 
     public void delete(Long id) {
-        lendableItem lendableItem = this.get(id);
+        LendableItem lendableItem = this.get(id);
         items.delete(lendableItem);
     }
 
-    public lendableItem get(Long id) {
+    public LendableItem get(Long id) {
         return this.items.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException("lendableItem not found!"));
+                        () -> new RuntimeException("LendableItem not found!"));
     }
 
-    public List<lendableItem> getAll() {
+    public List<LendableItem> getAll() {
         return this.items.findAll();
     }
 
-    public lendableItem getFromRequestId(Long requestId) {
+    public LendableItem getFromRequestId(Long requestId) {
         return this.items.findByRequests_id(requestId)
                 .orElseThrow(
-                        () -> new RuntimeException("lendableItem not found!"));
+                        () -> new RuntimeException("LendableItem not found!"));
     }
 
-    public List<lendableItem> getAllIPosted(User user) {
-        return this.items.findAllByLender(user);
+    public List<LendableItem> getAllIPosted(User user) {
+        return this.items.findAllByOwner(user);
     }
 
 
-    public List<lendableItem> getAllIRequested(User user) {
+    public List<LendableItem> getAllIRequested(User user) {
         return this.items.findAllByRequests_requester(user);
 
     }
 
-    public List<lendableItem> searchFor(String query) {
+    public List<LendableItem> searchFor(String query) {
         return this.items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query,query);
     }
 
     public boolean isChangeable(Long id) {
-        lendableItem lendableItem = this.get(id);
+        LendableItem lendableItem = this.get(id);
         return lendableItem.noPeriodsAndRequests() && conflictService.noConflictWith(lendableItem);
     }
 
-    public boolean isAvailableAt(lendableItem lendableItem, LocalDate startdate, LocalDate enddate) {
+    public boolean isAvailableAt(LendableItem lendableItem, LocalDate startdate, LocalDate enddate) {
         return lendableItem.isAvailableAt(new Period(startdate, enddate));
     }
 
     public boolean isOwner(Long id, User user) {
-        lendableItem lendableItem = this.get(id);
+        LendableItem lendableItem = this.get(id);
         return lendableItem.getOwner() == user;
     }
 
 
-    public List allDatesInbetween(lendableItem lendableItem){
+    public List allDatesInbetween(LendableItem lendableItem){
 
         List <Period> allPeriods = lendableItem.getPeriods();
         List <LocalDate> allDates = new ArrayList<>();

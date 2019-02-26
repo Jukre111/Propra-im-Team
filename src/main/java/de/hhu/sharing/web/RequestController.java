@@ -1,6 +1,6 @@
 package de.hhu.sharing.web;
 
-import de.hhu.sharing.model.lendableItem;
+import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.Request;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.*;
@@ -50,7 +50,7 @@ public class RequestController {
     @PostMapping("/saveRequest")
     public String saveRequest(Long id, String startdate, String enddate, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
-        lendableItem lendableItem = itemService.get(id);
+        LendableItem lendableItem = itemService.get(id);
         if(itemService.isOwner(id, user)){
             redirectAttributes.addFlashAttribute("ownItem",true);
             return "redirect:/";
@@ -83,7 +83,7 @@ public class RequestController {
     @GetMapping("/acceptRequest")
     public String acceptRequest(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
-        lendableItem lendableItem = itemService.getFromRequestId(id);
+        LendableItem lendableItem = itemService.getFromRequestId(id);
         Request request = requestService.get(id);
         if(!requestService.isLender(id, user)){
             redirectAttributes.addFlashAttribute("notAuthorized",true);

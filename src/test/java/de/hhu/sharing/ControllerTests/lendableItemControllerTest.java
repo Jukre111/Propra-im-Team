@@ -51,18 +51,18 @@ public class lendableItemControllerTest {
     @MockBean
     StorageService storeService;
 
-    public lendableItem itemCreator(){
+    public LendableItem itemCreator(){
         LocalDate date = LocalDate.of(2000,1,1);
         Address address = new Address("unistrase","duesseldorf", 40233);
         User user = new User("user","password", "role", "lastnmae", "forname", "email",date,address);
-        lendableItem lendableItem = new lendableItem("apfel", "lecker",1,1 ,user );
+        LendableItem lendableItem = new LendableItem("apfel", "lecker",1,1 ,user );
         return lendableItem;
     }
 
     @Test
     @WithMockUser
     public void retrieveStatusDetails() throws Exception{
-        lendableItem lendableItem = itemCreator();
+        LendableItem lendableItem = itemCreator();
         Mockito.when(itemService.get(1L)).thenReturn(lendableItem);
         mvc.perform(MockMvcRequestBuilders.get("/detailsItem").param("id","1"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
@@ -79,7 +79,7 @@ public class lendableItemControllerTest {
     @Test
     @WithMockUser
     public void retrieveStatusEditItem() throws Exception{
-        lendableItem lendableItem = itemCreator();
+        LendableItem lendableItem = itemCreator();
         Mockito.when(itemService.isChangeable(1L)).thenReturn(true);
         Mockito.when(userService.get("user")).thenReturn(lendableItem.getOwner());
         Mockito.when(itemService.get(1L)).thenReturn(lendableItem);
@@ -114,9 +114,9 @@ public class lendableItemControllerTest {
     /*@Test
     @WithMockUser
     public void retrieveStatusReturnItem() throws Exception{
-        lendableItem lendableItem = itemCreator();
-        Mockito.when(userService.get("user")).thenReturn(lendableItem.getOwner());
-        BorrowingProcess process = new BorrowingProcess(lendableItem, new Period(LocalDate.now(), LocalDate.now().plusDays(2)));
+        LendableItem LendableItem = itemCreator();
+        Mockito.when(userService.get("user")).thenReturn(LendableItem.getOwner());
+        BorrowingProcess process = new BorrowingProcess(LendableItem, new Period(LocalDate.now(), LocalDate.now().plusDays(2)));
         process.setId(1L);
         Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
         mvc.perform(MockMvcRequestBuilders.get("/returnItem").param("id","1"))

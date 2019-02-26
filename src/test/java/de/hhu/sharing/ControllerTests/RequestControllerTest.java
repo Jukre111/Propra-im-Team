@@ -56,10 +56,10 @@ public class RequestControllerTest{
     @Test
     public void retrieveStatusRequest()throws Exception{
         User user = createUser();
-        lendableItem lendableItem = new lendableItem("name", "description", 42,42, new User());
+        LendableItem LendableItem = new LendableItem("name", "description", 42,42, new User());
 
         Mockito.when(userService.get("user")).thenReturn(user);
-        Mockito.when(itemService.get(1L)).thenReturn(lendableItem);
+        Mockito.when(itemService.get(1L)).thenReturn(LendableItem);
         mvc.perform(MockMvcRequestBuilders.get("/newRequest?id=1"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -69,10 +69,10 @@ public class RequestControllerTest{
     @Test
     public void retrieveStatusPostRequest()throws Exception{
         User user = createUser();
-        lendableItem lendableItem = new lendableItem("name", "description", 42,42, user);
+        LendableItem LendableItem = new LendableItem("name", "description", 42,42, user);
         Mockito.when(userService.get("user")).thenReturn(user);
-        Mockito.when(itemService.get(1L)).thenReturn(lendableItem);
-        Mockito.when(transService.checkFinances(user, lendableItem, LocalDate.parse("2000-01-01"), LocalDate.parse("2000-02-02"))).thenReturn(true);
+        Mockito.when(itemService.get(1L)).thenReturn(LendableItem);
+        Mockito.when(transService.checkFinances(user, LendableItem, LocalDate.parse("2000-01-01"), LocalDate.parse("2000-02-02"))).thenReturn(true);
         MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
         map.add("id", "1");
         map.add("startdate","2000-01-01");
@@ -100,10 +100,10 @@ public class RequestControllerTest{
     @Test
     public void retrieveStatusAcceptRequest()throws Exception{
         User owner = createUser();
-        lendableItem lendableItem = new lendableItem ("lendableItem","desc1", 10, 500, owner);
-        lendableItem.setId(2L);
+        LendableItem LendableItem = new LendableItem ("LendableItem","desc1", 10, 500, owner);
+        LendableItem.setId(2L);
         Mockito.when(userService.get("user")).thenReturn(owner);
-        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(lendableItem);
+        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(LendableItem);
         Mockito.when(transService.createTransactionRental(1L, 2L)).thenReturn(200);
         mvc.perform(MockMvcRequestBuilders.get("/acceptRequest?requestId=1&itemId=2").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
@@ -114,10 +114,10 @@ public class RequestControllerTest{
     @Test
     public void retrieveStatusDeclineRequest()throws Exception{
         User owner = createUser();
-        lendableItem lendableItem = new lendableItem ("lendableItem","desc1", 10, 500, owner);
-        lendableItem.setId(2L);
+        LendableItem LendableItem = new LendableItem ("LendableItem","desc1", 10, 500, owner);
+        LendableItem.setId(2L);
         Mockito.when(userService.get("user")).thenReturn(owner);
-        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(lendableItem);
+        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(LendableItem);
         mvc.perform(MockMvcRequestBuilders.get("/declineRequest?requestId=1&itemId=2").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"));
     }*/

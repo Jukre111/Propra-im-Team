@@ -68,24 +68,24 @@ public class ConflictControllerTest {
     private BorrowingProcess createProcess(User owner) {
         BorrowingProcess process = new BorrowingProcess();
         process.setPeriod(new Period(LocalDate.now(), LocalDate.now().plusDays(1)));
-        process.setLendableItem(createItem(owner));
+        process.setItem(createItem(owner));
         process.setId(1L);
         return process;
     }
 
-    private lendableItem createItem(User owner) {
-        lendableItem lendableItem = new lendableItem();
-        lendableItem.setId(1L);
-        lendableItem.setOwner(owner);
-        return lendableItem;
+    private LendableItem createItem(User owner) {
+        LendableItem LendableItem = new LendableItem();
+        LendableItem.setId(1L);
+        LendableItem.setOwner(owner);
+        return LendableItem;
     }
 
     private Conflict createConflict() {
-        lendableItem lendableItem = createItem(createUser("Lender"));
+        LendableItem LendableItem = createItem(createUser("Lender"));
         Conflict conflict = new Conflict();
         conflict.setId(1L);
-        conflict.setLendableItem(lendableItem);
-        conflict.setOwner(lendableItem.getOwner());
+        conflict.setItem(LendableItem);
+        conflict.setOwner(LendableItem.getOwner());
         conflict.setBorrower(createUser("Borrower"));
         conflict.setProcess(createProcess(conflict.getOwner()));
         return conflict;
@@ -112,7 +112,7 @@ public class ConflictControllerTest {
         BorrowingProcess process = createProcess(owner);
 
         Mockito.when(borrowingProcessService.getBorrowingProcess(Mockito.anyLong())).thenReturn(process);
-        Mockito.when(borrowingProcessService.getItemFromProcess(process)).thenReturn(process.getLendableItem());
+        Mockito.when(borrowingProcessService.getItemFromProcess(process)).thenReturn(process.getItem());
         Mockito.when(userService.getBorrowerFromBorrowingProcessId(Mockito.anyLong())).thenReturn(borrower);
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();

@@ -16,10 +16,8 @@ import javax.servlet.ServletException;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class DatabaseInitializer implements ServletContextInitializer {
@@ -28,7 +26,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
     private UserRepository users;
 
     @Autowired
-    private ItemRepository items;
+    private LendableItemRepository lendableItemRepository;
 
     @Autowired
     private RequestRepository requests;
@@ -52,8 +50,8 @@ public class DatabaseInitializer implements ServletContextInitializer {
     public void onStartup(ServletContext servletContext) throws ServletException{
         final Faker faker = new Faker(Locale.GERMAN);
         initUsers(faker);
-        initItems(faker);
-        initRequests(faker);
+        initLendableItems(faker);
+        //initRequests(faker);
     }
 
     private byte[] getDefaultUserImage(){
@@ -91,24 +89,24 @@ public class DatabaseInitializer implements ServletContextInitializer {
         }
     }
 
-    private void initItems(Faker faker){
+    private void initLendableItems(Faker faker){
         byte[] byteArr = getDefaultUserImage();
         for(User user : users.findAll()){
             for(int j = 0; j < 3; j++){
-                lendableItem lendableItem = new lendableItem(faker.pokemon().name(),
+                LendableItem lendableItem = new LendableItem(faker.pokemon().name(),
                         String.join("\n", faker.lorem().paragraphs(3)),
                         faker.number().numberBetween(1,1000),
                         faker.number().numberBetween(1,1000),
                         user);
-                items.save(lendableItem);
+                lendableItemRepository.save(lendableItem);
                 fileService.storeItemInitalizer(byteArr, lendableItem);
             }
         }
     }
 
-    private void initRequests(Faker faker){
+    /*private void initRequests(Faker faker){
         for(User user : users.findAll()){
-            List<lendableItem> lendableItemList = items.findFirst2ByLenderNot(user);
+            List<LendableItem> lendableItemList = LendableItemRepository.findFirst2ByOwnerNot(user);
             LocalDate startdate = faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             Request request1 = new Request(
                     new Period(startdate,
@@ -122,7 +120,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
             requests.save(request2);
             lendableItemList.get(0).addToRequests(request1);
             lendableItemList.get(1).addToRequests(request2);
-            items.saveAll(lendableItemList);
+            LendableItemRepository.saveAll(lendableItemList);
         }
 
 
@@ -131,6 +129,6 @@ public class DatabaseInitializer implements ServletContextInitializer {
                 faker.lordOfTheRings().character(), faker.internet().emailAddress(), faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), adminAddress);
         users.save(admin);
 
-    }
+    }*/
 
 }

@@ -1,7 +1,7 @@
 
 package de.hhu.sharing.RepositoryTests;
 
-import de.hhu.sharing.data.ItemRepository;
+import de.hhu.sharing.data.LendableItemRepository;
 import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.*;
@@ -22,10 +22,10 @@ import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class lendableItemRepositoryTest {
+public class lendableLendableItemRepositoryTest {
 
     @Autowired
-    ItemRepository itemRepo;
+    LendableItemRepository itemRepo;
 
     @Autowired
     UserRepository userRepo;
@@ -56,44 +56,44 @@ public class lendableItemRepositoryTest {
     }
 
 
-    public ArrayList<lendableItem> createItems(){
+    public ArrayList<LendableItem> createItems(){
         User user = createUser("testman");
-        lendableItem lendableItem1 = new lendableItem("apfel", "lecker",1,1 ,user );
-        lendableItem lendableItem2 = new lendableItem("granatapfel", "grosse Kerne",2,2 ,user );
-        lendableItem lendableItem3 = new lendableItem("banane", "kleine Kerne",3,3 ,user );
-        ArrayList<lendableItem> lendableItems = new ArrayList<>();
-        lendableItems.add(lendableItem1);
-        lendableItems.add(lendableItem2);
-        lendableItems.add(lendableItem3);
-        return lendableItems;
+        LendableItem lendableItem1 = new LendableItem("apfel", "lecker",1,1 ,user );
+        LendableItem lendableItem2 = new LendableItem("granatapfel", "grosse Kerne",2,2 ,user );
+        LendableItem lendableItem3 = new LendableItem("banane", "kleine Kerne",3,3 ,user );
+        ArrayList<LendableItem> LendableItems = new ArrayList<>();
+        LendableItems.add(lendableItem1);
+        LendableItems.add(lendableItem2);
+        LendableItems.add(lendableItem3);
+        return LendableItems;
     }
 
 
     @Test
     public void testFindAll() {
-        ArrayList<lendableItem> lendableItems = createItems();
-        itemRepo.save(lendableItems.get(0));
-        itemRepo.save(lendableItems.get(1));
+        ArrayList<LendableItem> LendableItems = createItems();
+        itemRepo.save(LendableItems.get(0));
+        itemRepo.save(LendableItems.get(1));
         Assertions.assertThat(itemRepo.findAll().size()).isEqualTo(2);
     }
 
     @Test
     public void testFindById(){
-        ArrayList<lendableItem> lendableItems = createItems();
-        itemRepo.save(lendableItems.get(0));
-        Optional<lendableItem> optionalItem = itemRepo.findById(lendableItems.get(0).getId());
+        ArrayList<LendableItem> LendableItems = createItems();
+        itemRepo.save(LendableItems.get(0));
+        Optional<LendableItem> optionalItem = itemRepo.findById(LendableItems.get(0).getId());
 
         Assert.assertTrue(optionalItem.isPresent());
-        Assertions.assertThat(optionalItem.get().getId()).isEqualTo(lendableItems.get(0).getId());
+        Assertions.assertThat(optionalItem.get().getId()).isEqualTo(LendableItems.get(0).getId());
     }
 
     @Test
     public void testFindAllByLender(){
-        ArrayList<lendableItem> lendableItems = createItems();
-        itemRepo.save(lendableItems.get(0));
-        itemRepo.save(lendableItems.get(1));
+        ArrayList<LendableItem> LendableItems = createItems();
+        itemRepo.save(LendableItems.get(0));
+        itemRepo.save(LendableItems.get(1));
 
-        List<lendableItem> lendableItemList = itemRepo.findAllByLender(lendableItems.get(0).getOwner());
+        List<LendableItem> lendableItemList = itemRepo.findAllByOwner(LendableItems.get(0).getOwner());
         Assertions.assertThat(lendableItemList.size()).isEqualTo(2);
         Assertions.assertThat(lendableItemList.get(0).getOwner().getUsername()).isEqualTo("testman");
 
@@ -101,13 +101,13 @@ public class lendableItemRepositoryTest {
 
     @Test
     public void  testFindAllByNameContainingOrDescriptionContaining(){
-        ArrayList<lendableItem> lendableItems = createItems();
-        itemRepo.save(lendableItems.get(0));
-        itemRepo.save(lendableItems.get(1));
-        itemRepo.save(lendableItems.get(2));
+        ArrayList<LendableItem> LendableItems = createItems();
+        itemRepo.save(LendableItems.get(0));
+        itemRepo.save(LendableItems.get(1));
+        itemRepo.save(LendableItems.get(2));
 
-        List<lendableItem> lendableItemList1 = itemRepo.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("apf", "egal");
-        List<lendableItem> lendableItemList2 = itemRepo.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("banane", "Kern");
+        List<LendableItem> lendableItemList1 = itemRepo.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("apf", "egal");
+        List<LendableItem> lendableItemList2 = itemRepo.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("banane", "Kern");
 
         Assertions.assertThat(lendableItemList1.size()).isEqualTo(2);
         Assertions.assertThat(lendableItemList2.size()).isEqualTo(2);
@@ -116,52 +116,52 @@ public class lendableItemRepositoryTest {
 
     @Test
     public void testFindFirst2ByLenderNot(){
-        ArrayList<lendableItem> lendableItems = createItems();
-        itemRepo.save(lendableItems.get(0));
-        itemRepo.save(lendableItems.get(1));
-        itemRepo.save(lendableItems.get(2));
+        ArrayList<LendableItem> LendableItems = createItems();
+        itemRepo.save(LendableItems.get(0));
+        itemRepo.save(LendableItems.get(1));
+        itemRepo.save(LendableItems.get(2));
 
         User user = createUser("superTestMan");
-        List<lendableItem> lendableItemList = itemRepo.findFirst2ByLenderNot(user);
+        List<LendableItem> lendableItemList = itemRepo.findFirst2ByOwnerNot(user);
         Assertions.assertThat(lendableItemList.size()).isEqualTo(2);
-        Assertions.assertThat(lendableItemList.get(0)).isEqualTo(lendableItems.get(0));
-        Assertions.assertThat(lendableItemList.get(1)).isEqualTo(lendableItems.get(1));
+        Assertions.assertThat(lendableItemList.get(0)).isEqualTo(LendableItems.get(0));
+        Assertions.assertThat(lendableItemList.get(1)).isEqualTo(LendableItems.get(1));
     }
 
     @Test
     public void tesFindByRequests_id(){
-        ArrayList<lendableItem> lendableItems = createItems();
-        lendableItem lendableItem = lendableItems.get(0);
+        ArrayList<LendableItem> LendableItems = createItems();
+        LendableItem lendableItem = LendableItems.get(0);
         User user = createUser("superTestMan");
         Request request = createRequest(user);
         lendableItem.addToRequests(request);
         itemRepo.save(lendableItem);
 
-        Optional<lendableItem> optionalItem = itemRepo.findByRequests_id(request.getId());
-        Assertions.assertThat(optionalItem.get()).isEqualTo(lendableItems.get(0));
+        Optional<LendableItem> optionalItem = itemRepo.findByRequests_id(request.getId());
+        Assertions.assertThat(optionalItem.get()).isEqualTo(LendableItems.get(0));
     }
 
     @Test
     public void testFindFirstByLender(){
-        ArrayList<lendableItem> lendableItems = createItems();
-        itemRepo.save(lendableItems.get(0));
-        itemRepo.save(lendableItems.get(1));
+        ArrayList<LendableItem> LendableItems = createItems();
+        itemRepo.save(LendableItems.get(0));
+        itemRepo.save(LendableItems.get(1));
 
-        Optional <lendableItem> optionalItem = itemRepo.findFirstByLender(lendableItems.get(0).getOwner());
-        Assertions.assertThat(optionalItem.get()).isEqualTo(lendableItems.get(0));
+        Optional <LendableItem> optionalItem = itemRepo.findFirstByOwner(LendableItems.get(0).getOwner());
+        Assertions.assertThat(optionalItem.get()).isEqualTo(LendableItems.get(0));
     }
 
     @Test
     public void TestFindAllByRequests_requester(){
-        ArrayList<lendableItem> lendableItems = createItems();
-        lendableItem lendableItem = lendableItems.get(0);
+        ArrayList<LendableItem> LendableItems = createItems();
+        LendableItem lendableItem = LendableItems.get(0);
         itemRepo.save(lendableItem);
         User user = createUser("superTestMan");
         Request request = createRequest(user);
         lendableItem.addToRequests(request);
         itemRepo.save(lendableItem);
 
-        List <lendableItem> lendableItemList = itemRepo.findAllByRequests_requester(user);
+        List <LendableItem> lendableItemList = itemRepo.findAllByRequests_requester(user);
         Assertions.assertThat(lendableItemList.size()).isEqualTo(1);
         Assertions.assertThat(lendableItemList.get(0)).isEqualTo(lendableItem);
     }

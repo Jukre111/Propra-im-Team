@@ -17,7 +17,7 @@ public class TransactionPurchase {
     private int price;
 
     //@ManyToOne
-    //private lendableItem lendableItem;
+    //private LendableItem LendableItem;
 
     @ManyToOne
     private User sender;
@@ -30,7 +30,7 @@ public class TransactionPurchase {
 
     public TransactionPurchase(int price, User sender, User receiver) {
         this.price = price;
-        //this.lendableItem = lendableItem;
+        //this.LendableItem = LendableItem;
         this.sender = sender;
         this.receiver = receiver;
     }

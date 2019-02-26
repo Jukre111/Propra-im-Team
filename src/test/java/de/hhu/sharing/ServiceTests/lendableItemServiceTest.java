@@ -1,9 +1,9 @@
 
 package de.hhu.sharing.ServiceTests;
 
-import de.hhu.sharing.data.ItemRepository;
+import de.hhu.sharing.data.LendableItemRepository;
 import de.hhu.sharing.model.Address;
-import de.hhu.sharing.model.lendableItem;
+import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.ItemService;
 import org.junit.Assert;
@@ -21,7 +21,7 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 public class lendableItemServiceTest {
 
     @Mock
-    private ItemRepository items;
+    private LendableItemRepository items;
 
     @InjectMocks
     private ItemService itemService;
@@ -37,15 +37,15 @@ public class lendableItemServiceTest {
         return user;
     }
 
-    private lendableItem generateItem(User user) {
-        return new lendableItem("apfel", "lecker", 1, 1, user);
+    private LendableItem generateItem(User user) {
+        return new LendableItem("apfel", "lecker", 1, 1, user);
     }
 
-    private List<lendableItem> generateItemList(User user){
-        lendableItem lendableItem = generateItem(user);
-        lendableItem lendableItem2 = generateItem(user);
-        lendableItem lendableItem3 = generateItem(user);
-        ArrayList<lendableItem> list = new ArrayList<>();
+    private List<LendableItem> generateItemList(User user){
+        LendableItem lendableItem = generateItem(user);
+        LendableItem lendableItem2 = generateItem(user);
+        LendableItem lendableItem3 = generateItem(user);
+        ArrayList<LendableItem> list = new ArrayList<>();
         list.add(lendableItem);
         list.add(lendableItem2);
         list.add(lendableItem3);
@@ -55,10 +55,10 @@ public class lendableItemServiceTest {
     public void testCreate(){
         MultipartFile file = null;
         User user = generateUser("dude");
-        itemService.create("lendableItem","description",1,1,user, file);
-        ArgumentCaptor<lendableItem> captor = ArgumentCaptor.forClass(lendableItem.class);
+        itemService.create("LendableItem","description",1,1,user, file);
+        ArgumentCaptor<LendableItem> captor = ArgumentCaptor.forClass(LendableItem.class);
         Mockito.verify(items, times(1)).save(captor.capture());
-        Assert.assertEquals(captor.getAllValues().get(0).getName(), "lendableItem");
+        Assert.assertEquals(captor.getAllValues().get(0).getName(), "LendableItem");
         Assert.assertEquals(captor.getAllValues().get(0).getOwner(), user);
     }
 
@@ -67,13 +67,13 @@ public class lendableItemServiceTest {
     public void testEdit(){
         User user1 = generateUser("user1");
         User user2 = generateUser("user2");
-        lendableItem lendableItem = generateItem(user1);
+        LendableItem lendableItem = generateItem(user1);
         Mockito.when(items.findById(1L)).thenReturn(Optional.of(lendableItem));
-        itemService.edit(1L,"lendableItem","description",1,1,user2);
-        ArgumentCaptor<lendableItem> captor = ArgumentCaptor.forClass(lendableItem.class);
+        itemService.edit(1L,"LendableItem","description",1,1,user2);
+        ArgumentCaptor<LendableItem> captor = ArgumentCaptor.forClass(LendableItem.class);
         Mockito.verify(items, times(1)).save(captor.capture());
 
-        Assert.assertEquals(captor.getAllValues().get(0).getName(), "lendableItem");
+        Assert.assertEquals(captor.getAllValues().get(0).getName(), "LendableItem");
         Assert.assertEquals(captor.getAllValues().get(0).getOwner(), user2);
         Assert.assertNotEquals(captor.getAllValues().get(0).getOwner(), user1);
     }
@@ -81,10 +81,10 @@ public class lendableItemServiceTest {
     @Test
     public void testDelete(){
         User user = generateUser("dude");
-        lendableItem lendableItem = generateItem(user);
+        LendableItem lendableItem = generateItem(user);
         Mockito.when(items.findById(1L)).thenReturn(Optional.of(lendableItem));
         itemService.delete(1L);
-        ArgumentCaptor<lendableItem> captor = ArgumentCaptor.forClass(lendableItem.class);
+        ArgumentCaptor<LendableItem> captor = ArgumentCaptor.forClass(LendableItem.class);
         Mockito.verify(items, times(1)).delete(captor.capture());
         Assert.assertEquals(captor.getAllValues().get(0).getName(), "apfel");
         Assert.assertEquals(captor.getAllValues().get(0).getOwner(), user);
@@ -94,7 +94,7 @@ public class lendableItemServiceTest {
     @Test
     public void testGet(){
         User user = generateUser("dude");
-        lendableItem lendableItem = generateItem(user);
+        LendableItem lendableItem = generateItem(user);
         Mockito.when(items.findById(1L)).thenReturn(Optional.of(lendableItem));
         Assert.assertTrue(itemService.get(1L).getName().equals("apfel"));
     }
@@ -102,10 +102,10 @@ public class lendableItemServiceTest {
     @Test
     public void testGetAll(){
         User user = generateUser("dude");
-        lendableItem lendableItem = generateItem(user);
-        lendableItem lendableItem2 = generateItem(user);
-        lendableItem lendableItem3 = generateItem(user);
-        ArrayList<lendableItem> liste = new ArrayList<>();
+        LendableItem lendableItem = generateItem(user);
+        LendableItem lendableItem2 = generateItem(user);
+        LendableItem lendableItem3 = generateItem(user);
+        ArrayList<LendableItem> liste = new ArrayList<>();
         liste.add(lendableItem);
         liste.add(lendableItem2);
         liste.add(lendableItem3);
@@ -116,7 +116,7 @@ public class lendableItemServiceTest {
     @Test
     public void testGetFromRequestId(){
         User user = generateUser("dude");
-        lendableItem lendableItem = generateItem(user);
+        LendableItem lendableItem = generateItem(user);
         Mockito.when(items.findByRequests_id(1L)).thenReturn(Optional.of(lendableItem));
         Assert.assertEquals(itemService.getFromRequestId(1L), lendableItem);
     }
@@ -124,15 +124,15 @@ public class lendableItemServiceTest {
     @Test
     public void testGetAllIPosted(){
         User user = generateUser("dude");
-        List<lendableItem> list = generateItemList(user);
-        Mockito.when(items.findAllByLender(user)).thenReturn(list);
+        List<LendableItem> list = generateItemList(user);
+        Mockito.when(items.findAllByOwner(user)).thenReturn(list);
         Assert.assertEquals(itemService.getAllIPosted(user), list);
     }
 
     @Test
     public void testGetAllIRequested(){
         User user = generateUser("dude");
-        List<lendableItem> list = generateItemList(user);
+        List<LendableItem> list = generateItemList(user);
         Mockito.when(items.findAllByRequests_requester(user)).thenReturn(list);
         Assert.assertEquals(itemService.getAllIRequested(user),list);
     }
@@ -141,7 +141,7 @@ public class lendableItemServiceTest {
     @Test
     public void testSearchFor(){
         User user = generateUser("dude");
-        List<lendableItem> list = generateItemList(user);
+        List<LendableItem> list = generateItemList(user);
         Mockito.when(items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("lecker", "lecker")).thenReturn(list);
         Assert.assertEquals(itemService.searchFor("lecker"), list);
     }

@@ -13,7 +13,7 @@ public class BorrowingProcess {
     private Long id;
 
     @ManyToOne
-    private lendableItem lendableItem;
+    private LendableItem item;
 
     @Embedded
     private Period period;
@@ -21,8 +21,8 @@ public class BorrowingProcess {
     public BorrowingProcess(){
     }
 
-    public BorrowingProcess(lendableItem lendableItem, Period period){
-        this.lendableItem = lendableItem;
+    public BorrowingProcess(LendableItem item, Period period){
+        this.item = item;
         this.period = period;
     }
 

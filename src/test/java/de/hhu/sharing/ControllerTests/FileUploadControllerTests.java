@@ -3,7 +3,8 @@ package de.hhu.sharing.ControllerTests;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 
-import de.hhu.sharing.model.lendableItem;
+import de.hhu.sharing.data.LendableItemRepository;
+import de.hhu.sharing.model.LendableItem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -18,7 +19,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import de.hhu.sharing.data.ImageRepository;
-import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.Image;
@@ -42,7 +42,7 @@ public class FileUploadControllerTests {
     @MockBean
     UserService userService;
     @MockBean
-    ItemRepository itemRepo;
+    LendableItemRepository itemRepo;
     @MockBean
     UserRepository userRepo;
     @MockBean
@@ -55,8 +55,8 @@ public class FileUploadControllerTests {
         return user;
     }
     
-    private lendableItem generateItem(User user) {
-        return new lendableItem("apfel", "lecker", 1, 1, user);
+    private LendableItem generateItem(User user) {
+        return new LendableItem("apfel", "lecker", 1, 1, user);
     }
     
 	@Test
@@ -98,7 +98,7 @@ public class FileUploadControllerTests {
 	public void downloadItemImage() throws Exception {
 		MockMultipartFile jsonFile = new MockMultipartFile("test.json", "", "application/json", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
 		User user = generateUser("user");
-		lendableItem lendableItem = generateItem(user);
+		LendableItem lendableItem = generateItem(user);
 		Image image = new Image();
 		image.setImageData(jsonFile.getBytes());
 		image.setMimeType("image/gif");
@@ -119,7 +119,7 @@ public class FileUploadControllerTests {
 	@Test
 	@WithMockUser(username = "user")
 	public void downloadItemImageNoImage() throws Exception {
-		lendableItem lendableItem = new lendableItem();
+		LendableItem lendableItem = new LendableItem();
         Mockito.when(itemService.get(1L)).thenReturn(lendableItem);
         mvc.perform(MockMvcRequestBuilders.get("/getItemPic?id=1"))
         .andExpect(MockMvcResultMatchers.status().is(400));

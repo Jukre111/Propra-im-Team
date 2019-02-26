@@ -37,8 +37,8 @@ public class RequestServiceTest {
     }
 
 
-    private lendableItem generateItem(User user) {
-        return new lendableItem("apfel", "lecker",1,1 ,user );
+    private LendableItem generateItem(User user) {
+        return new LendableItem("apfel", "lecker",1,1 ,user );
     }
 
     private Request generateRequest(User requester) {
@@ -57,7 +57,7 @@ public class RequestServiceTest {
     @Test
     public void testCreate(){
         User user = generateUser("Karl");
-        lendableItem lendableItem = generateItem(user);
+        LendableItem lendableItem = generateItem(user);
         Mockito.when(itemService.get(1L)).thenReturn(lendableItem);
 
         requestService.create(1L, LocalDate.of(2000,2,2),LocalDate.of(2000,2,3),user);
@@ -75,7 +75,7 @@ public class RequestServiceTest {
         User user2 = generateUser("user");
         Request request = generateRequest(user1);
         request.setId(1L);
-        lendableItem lendableItem = generateItem(user2);
+        LendableItem lendableItem = generateItem(user2);
         lendableItem.addToRequests(request);
         Mockito.when(requests.findById(1L)).thenReturn(Optional.of(request));
         Mockito.when(itemService.getFromRequestId(1L)).thenReturn(lendableItem);
@@ -99,7 +99,7 @@ public class RequestServiceTest {
         request.setId(1L);
         Request otherRequest = generateRequest(otherRequester);
         otherRequest.setId(2L);
-        lendableItem lendableItem = generateItem(owner);
+        LendableItem lendableItem = generateItem(owner);
         lendableItem.addToRequests(otherRequest);
 
         Mockito.when(requests.findById(1L)).thenReturn(Optional.of(request));

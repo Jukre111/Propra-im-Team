@@ -26,7 +26,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("items", itemService.getAll());
+        model.addAttribute("lendableItems", itemService.getAll());
         return "index";
     }
 
