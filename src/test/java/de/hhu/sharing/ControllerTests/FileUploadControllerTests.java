@@ -54,8 +54,6 @@ public class FileUploadControllerTests {
     UserRepository userRepo;
     @MockBean
     ImageRepository imageRepo;
-    @MockBean
-	SellableItemService sellItemService;
 
     @Test
 	public void mustHaveTest(){
