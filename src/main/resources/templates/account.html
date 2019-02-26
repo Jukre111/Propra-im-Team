@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+<html lang="en" layout:decorate="~{base}" xmlns:layout="http://www.w3.org/1999/xhtml"
 	  xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
 <meta charset = "utf-8"/>
@@ -157,12 +157,12 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					<th width="10%">bis</th>
 					<th width="10%">Konflikt</th>
 				</tr>
-				<tr th:each="borrow : ${user.borrowed}">
-					<td th:text="${borrow.lendableItem.name}"></td>
-					<td th:text="${borrow.period.startdate}"></td>
-					<td th:text="${borrow.period.enddate}"></td>
+				<tr th:each="process : ${user.borrowed}">
+					<td th:text="${process.item.name}"></td>
+					<td th:text="${process.period.startdate}"></td>
+					<td th:text="${process.period.enddate}"></td>
 					<td>
-						<a class="indexbtn" th:href="@{'/conflict?id=' + ${borrow.id}}">Konflikt</a>
+						<a class="indexbtn" th:href="@{'/conflict?id=' + ${process.id}}">Konflikt</a>
 					</td>
 				</tr>
 			</table>
@@ -170,23 +170,41 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 		<div style="padding: 20px">
 			<table>
 				<tr>
-					<th width="70%"><font size="4">Eigene Objekte</font></th>
+					<th width="70%"><font size="4">Eigener Verleih</font></th>
 					<th width="10%">Verfügbar</th>
 					<th width="10%">Bearbeiten</th>
 					<th width="10%">Entfernen</th>
 				</tr>
-				<tr th:each="lend : ${lendItems}">
-					<td th:text="${lend.name}"></td>
+				<tr th:each="item : ${lendLendableItems}">
+					<td th:text="${item.name}"></td>
 					<td>
 					<!--
 						<span th:if="${lend.available}" style="padding-left: 25px">&#10003;</--span>
 						<span th:unless="${lend.available}" style="padding-left: 25px">&#10007;</span>-->
 					</td>
 					<td>
-						<a class="indexbtn" th:href="@{'/editItem?id=' + ${lend.id}}">Bearbeiten</a>
+						<a class="indexbtn" th:href="@{'/editItem?id=' + ${item.id}}">Bearbeiten</a>
 					</td>
 					<td>
-						<a class="indexbtn" th:href="@{'/deleteItem?id=' + ${lend.id}}">Entfernen</a>
+						<a class="indexbtn" th:href="@{'/deleteItem?id=' + ${item.id}}">Entfernen</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="padding: 20px">
+			<table>
+				<tr>
+					<th width="80%"><font size="4">Eigener Verkauf</font></th>
+					<th width="10%">Bearbeiten</th>
+					<th width="10%">Entfernen</th>
+				</tr>
+				<tr th:each="sell : ${sellItems}">
+					<td th:text="${sell.name}"></td>
+					<td>
+						<a class="indexbtn" th:href="@{'/editSellItem?id=' + ${sell.id}}">Bearbeiten</a>
+					</td>
+					<td>
+						<a class="indexbtn" th:href="@{'/deleteSellItem?id=' + ${sell.id}}">Entfernen</a>
 					</td>
 				</tr>
 			</table>
@@ -199,7 +217,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					<th width="10%">Konflikt</th>
 				</tr>
 				<tr th:each="process : ${user.lend}">
-					<td th:text="${process.lendableItem.name}"></td>
+					<td th:text="${process.item.name}"></td>
 					<td>
 						<a th:href="@{'/itemReturned?id=' + ${process.id}}" class="indexbtn">Erhalten</a>
 					</td>

@@ -61,4 +61,8 @@ public class SellableItemService {
     public List<SellableItem> searchFor(String query) {
         return this.sellable.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query,query);
     }
+
+    public List<SellableItem> getMySellables(User owner){
+        return this.sellable.findAllByOwner(owner);
+    }
 }

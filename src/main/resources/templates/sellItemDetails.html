@@ -8,32 +8,32 @@
     <script type="text/javascript" src="scripts/dateTimePicker.min.js"></script>
     <title>Detailansicht</title>
     <style>
-.style {
-	border-radius: 5px;
-	background-color: #f2f2f2;
-	margin-top: 2%;
-	margin-left: 20%;
-	margin-right: 20%;
-}
+        .style {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            margin-top: 2%;
+            margin-left: 20%;
+            margin-right: 20%;
+        }
 
-.textPosition {
-	text-align: center;
-}
-        
-#circular--landscape {
-	display: inline-block;
-  	position: relative;
-  	width: 250px;
-  	height: 250px;
-  	overflow: hidden;
-  	border-radius: 50%;
-}
+        .textPosition {
+            text-align: center;
+        }
 
-#circular--landscape img {
-  	width: auto;
-  	height: 100%;
-  	margin-left: -50px;
-}
+        #circular--landscape {
+            display: inline-block;
+            position: relative;
+            width: 250px;
+            height: 250px;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+
+        #circular--landscape img {
+            width: auto;
+            height: 100%;
+            margin-left: -50px;
+        }
     </style>
 </head>
 <body>
@@ -42,34 +42,24 @@
     <div class="style textPosition" style="padding: 20px">
         <div class="media">
             <div class="media-left media-middle">
-                <img class="img" id="circular--landscape" th:src="@{'/getItemPic?id=' + ${lendableItem.id}}">
+                <img class="img" id="circular--landscape" th:src="@{'/getSellableItemPic?id=' + ${sellableItem.id}}">
             </div>
             <div class="media-body">
-                <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name" th:text="${lendableItem.name}"></span></h1>
+                <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name" th:text="${sellableItem.name}"></span></h1>
                 <div class="form-horizontal" style="padding-top: 60px">
-                    <input type="hidden" class="form-control" id="id" name="id" th:value="${lendableItem.id}" readonly/>
+                    <input type="hidden" class="form-control" id="id" name="id" th:value="${sellableItem.id}" readonly/>
                     <div class="form-group">
                         <label for="name" class="col-sm-2 control-label">Objektname</label>
                         <div class="col-xs-6">
-                            <input type="text" class="form-control" id="name" name="name" th:value="${lendableItem.name}" readonly/>
+                            <input type="text" class="form-control" id="name" name="name" th:value="${sellableItem.name}" readonly/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="rental" class="col-sm-2 control-label">Preis / Tag</label>
+                        <label for="price" class="col-sm-2 control-label">Preis</label>
                         <div class="col-xs-4">
                             <div class="input-group">
                                 <div class="input-group-addon">€</div>
-                                <input type="text" class="form-control" name="rental" th:value="${lendableItem.rental}" readonly/>
-                                <div class="input-group-addon">,00</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="deposit" class="col-sm-2 control-label">Kaution</label>
-                        <div class="col-xs-4">
-                            <div class="input-group">
-                                <div class="input-group-addon">€</div>
-                                <input type="text" class="form-control" name="deposit"  th:value="${lendableItem.deposit}" readonly/>
+                                <input type="text" class="form-control" name="price" th:value="${sellableItem.price}" readonly/>
                                 <div class="input-group-addon">,00</div>
                             </div>
                         </div>
@@ -93,27 +83,15 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div id="basic" data-toggle="calendar"></div>
-                        <script type="text/javascript" th:inline="javascript">
-                            $(document).ready(function()
-                            {
-                                $('#basic').calendar({
-                                    num_next_month: 1,
-                                    unavailable: [[${allDates}]]
-                                });
-                            })
-                        </script>
-                    </div>
-                    <div class="form-group">
                         <label for="description" class="col-sm-2 control-label">Beschreibung</label>
                         <div class="col-xs-7">
-                            <textarea class="form-control" id="description" name="description" th:inline="text" readonly>[[${lendableItem.description}]]</textarea>
+                            <textarea class="form-control" id="description" name="description" th:inline="text" readonly>[[${sellableItem.description}]]</textarea>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <a class="indexbtn" href="/" style="padding: 5px">Zurück</a>
-                    <a type="submit" class="indexbtn" style="padding: 5px" th:href="@{'/newRequest?id=' + ${lendableItem.id}}" name="button">Anfragen</a>
+                    <a type="submit" class="indexbtn" style="padding: 5px" th:href="@{'/buy?id=' + ${sellableItem.id}}" name="button">Kaufen</a>
                 </div>
             </div>
         </div>

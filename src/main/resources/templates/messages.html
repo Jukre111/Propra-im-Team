@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+<html lang="en" layout:decorate="~{base}" xmlns:layout="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <title>Nachrichten</title>
@@ -31,7 +31,7 @@
         <div class="col-sm-5" style="padding: 20px; margin-left: 30px">
             <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name">Anfragen</span></h1>
             <div class="form-horizontal" style="padding-top: 30px">
-                <div class="form-group" th:each="lendableItem : ${allMyItems}">
+                <div class="form-group" th:each="lendableItem : ${allMyLendableItems}">
                     <div class="form-group" th:each="request : ${lendableItem.requests}">
                         <table>
                             <tr>
@@ -63,7 +63,7 @@
         <div class="col-sm-5" style="padding: 20px; margin-right: 30px">
             <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name">Angefragt</span></h1>
             <div class="form-horizontal" style="padding-top: 30px">
-                <div class="form-group" th:each="myReqItem : ${myRequestedItems}">
+                <div class="form-group" th:each="myReqItem : ${myRequestedLendableItems}">
                     <div class="form-group" th:each="myRequest : ${myReqItem.requests}" th:if="${myRequest.requester == user}">
                         <div>
                             <table>

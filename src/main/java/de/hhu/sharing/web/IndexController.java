@@ -1,8 +1,10 @@
 package de.hhu.sharing.web;
 
+import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.LendableItemService;
 import de.hhu.sharing.services.RequestService;
+import de.hhu.sharing.services.SellableItemService;
 import de.hhu.sharing.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class IndexController {
@@ -24,9 +27,15 @@ public class IndexController {
     @Autowired
     private RequestService requestService;
 
+    @Autowired
+    private SellableItemService sellableItemService;
+
     @GetMapping("/")
     public String index(Model model) {
+        List<SellableItem> sellItems = sellableItemService.getAll();
+        System.out.println(sellItems);
         model.addAttribute("lendableItems", lendableItemService.getAll());
+        model.addAttribute("sellItems", sellItems);
         return "index";
     }
 
@@ -41,8 +50,9 @@ public class IndexController {
     public String account(Model model, Principal p) {
         User user = userService.get(p.getName());
         model.addAttribute("user", user);
-        model.addAttribute("lendItems", lendableItemService.getAllIPosted(user));
+        model.addAttribute("lendLendableItems", lendableItemService.getAllIPosted(user));
         model.addAttribute("address", user.getAddress());
+        model.addAttribute("sellItems", sellableItemService.getMySellables(user));
         return "account";
     }
 
@@ -51,8 +61,8 @@ public class IndexController {
         User user = userService.get(p.getName());
         requestService.deleteOutdatedRequests();
         model.addAttribute("user", user);
-        model.addAttribute("allMyItems", lendableItemService.getAllIPosted(user));
-        model.addAttribute("myRequestedItems", lendableItemService.getAllIRequested(user));
+        model.addAttribute("allMyLendableItems", lendableItemService.getAllIPosted(user));
+        model.addAttribute("myRequestedLendableItems", lendableItemService.getAllIRequested(user));
         return "messages";
     }
 }

@@ -16,8 +16,10 @@ import javax.servlet.ServletException;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class DatabaseInitializer implements ServletContextInitializer {
@@ -51,7 +53,8 @@ public class DatabaseInitializer implements ServletContextInitializer {
         final Faker faker = new Faker(Locale.GERMAN);
         initUsers(faker);
         initLendableItems(faker);
-        //initRequests(faker);
+        initRequests(faker);
+        initAdmin(faker);
     }
 
     private byte[] getDefaultUserImage(){
@@ -79,7 +82,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
                     faker.lordOfTheRings().location(),
                     Integer.parseInt(faker.address().zipCode()));
             User user = new User("user" + i, encoder.encode("password" + i), "ROLE_USER",
-                    faker.gameOfThrones().house(),
+                    faker.lordOfTheRings().character(),
                     faker.pokemon().name(),
                     faker.internet().emailAddress(),
                     faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
@@ -104,10 +107,10 @@ public class DatabaseInitializer implements ServletContextInitializer {
         }
     }
 
-    /*private void initRequests(Faker faker){
+    private void initRequests(Faker faker){
         for(User user : users.findAll()){
-            List<LendableItem> lendableItemList = LendableItemRepository.findFirst2ByOwnerNot(user);
-            LocalDate startdate = faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            List<LendableItem> lendableItemList = lendableItemRepository.findFirst2ByOwnerNot(user);
+            LocalDate startdate = faker.date().future(10, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             Request request1 = new Request(
                     new Period(startdate,
                             faker.date().future(10,TimeUnit.DAYS, Date.from(startdate.atStartOfDay(ZoneId.systemDefault()).toInstant())).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()),
@@ -120,15 +123,21 @@ public class DatabaseInitializer implements ServletContextInitializer {
             requests.save(request2);
             lendableItemList.get(0).addToRequests(request1);
             lendableItemList.get(1).addToRequests(request2);
-            LendableItemRepository.saveAll(lendableItemList);
+            lendableItemRepository.saveAll(lendableItemList);
         }
+    }
 
-
-        Address adminAddress = new Address(faker.address().streetAddress(),faker.pokemon().location(), Integer.parseInt(faker.address().zipCode()));
-        User admin = new User("admin", encoder.encode("admin") ,"ROLE_ADMIN", faker.gameOfThrones().house(),
-                faker.lordOfTheRings().character(), faker.internet().emailAddress(), faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), adminAddress);
+    private void initAdmin(Faker faker) {
+        Address address = new Address(
+                faker.address().streetAddress(),
+                faker.pokemon().location(),
+                Integer.parseInt(faker.address().zipCode()));
+        User admin = new User("admin", encoder.encode("admin"), "ROLE_ADMIN",
+                faker.gameOfThrones().house(),
+                faker.lordOfTheRings().character(),
+                faker.internet().emailAddress(),
+                faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                address);
         users.save(admin);
-
-    }*/
-
+    }
 }
