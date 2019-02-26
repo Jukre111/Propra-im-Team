@@ -1,8 +1,12 @@
 package de.hhu.sharing.web;
 
+import de.hhu.sharing.data.TransactionPurchaseRepository;
 import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
+import de.hhu.sharing.propay.TransactionPurchase;
+import de.hhu.sharing.services.ProPayService;
 import de.hhu.sharing.services.SellableItemService;
+import de.hhu.sharing.services.TransactionPurchaseService;
 import de.hhu.sharing.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +27,15 @@ public class SellableItemController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ProPayService proService;
+
+    @Autowired
+    private TransactionPurchaseService transPurService;
+
+    @Autowired
+    private TransactionPurchaseRepository transPurRepo;
 
     @GetMapping("/sellableItemDetails")
     private String sellableItemDetails(Model model, @RequestParam("id") Long id){
@@ -86,6 +99,15 @@ public class SellableItemController {
         SellableItem sellableItem = sellableItemService.get(id);
         User owner = sellableItem.getOwner();
         // TODO something brilliant
+
+        if(!proService.enoughCredit(buyer,sellableItem)){
+            //Popup-message that buyer has not enough money 
+            return ("redirect:/");
+        }
+
+        transPurService.createTransactionPurchase(sellableItem, owner, buyer);
+        TransactionPurchase transPur = transPurRepo.findByItemId(sellableItem.getId());
+        proService.initiateTransactionPurchase(transPur);
 
         sellableItemService.delete(id);
 
