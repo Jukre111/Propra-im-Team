@@ -1,11 +1,9 @@
 package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.SellableItemRepository;
-import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.storage.StorageService;
-import groovy.transform.AutoImplement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +13,7 @@ import java.util.List;
 @Component
 public class SellableItemService {
     @Autowired
-    private SellableItemRepository sellable;
+    private SellableItemRepository items;
 
     @Autowired
     private StorageService storageService;
@@ -23,7 +21,7 @@ public class SellableItemService {
 
     public void create(String name, String description, Integer price, User user, MultipartFile file) {
         SellableItem sellableItem = new SellableItem(name, description, price, user);
-        sellable.save(sellableItem);
+        items.save(sellableItem);
         if(file!=null) {
             storageService.storeSellableItem(file, sellableItem);
         }else {
@@ -37,32 +35,32 @@ public class SellableItemService {
         sellableItem.setDescription(description);
         sellableItem.setPrice(price);
         sellableItem.setOwner(user);
-        sellable.save(sellableItem);
+        items.save(sellableItem);
     }
 
     public SellableItem get(Long id){
-        return this.sellable.findById(id)
+        return this.items.findById(id)
                 .orElseThrow(
                         () -> new RuntimeException("SellableItem not found!"));
     }
 
     public void delete(Long id) {
         SellableItem sellableItem = this.get(id);
-        sellable.delete(sellableItem);
+        items.delete(sellableItem);
     }
 
 
     public List<SellableItem> getAll() {
-        return this.sellable.findAll();
+        return this.items.findAll();
     }
 
 
 
     public List<SellableItem> searchFor(String query) {
-        return this.sellable.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query,query);
+        return this.items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query,query);
     }
 
-    public List<SellableItem> getMySellables(User owner){
-        return this.sellable.findAllByOwner(owner);
+    public List<SellableItem> getAllIPosted(User owner){
+        return this.items.findAllByOwner(owner);
     }
 }

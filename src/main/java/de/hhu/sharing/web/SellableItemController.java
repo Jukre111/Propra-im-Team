@@ -24,42 +24,34 @@ public class SellableItemController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/sellItemDetails")
-    private String sellItemDetails(Model model, @RequestParam("id") Long id){
-        SellableItem sellItem = sellableItemService.get(id);
-        User user = sellItem.getOwner();
+    @GetMapping("/sellableItemDetails")
+    private String sellableItemDetails(Model model, @RequestParam("id") Long id){
+        SellableItem sellableItem = sellableItemService.get(id);
+        User user = sellableItem.getOwner();
         model.addAttribute("user", user);
-        model.addAttribute("sellableItem", sellItem);
+        model.addAttribute("sellableItem", sellableItem);
 
-        return ("sellItemDetails");
+        return ("sellableItemDetails");
     }
 
-
-
-
-    @GetMapping("/sellItem")
-    private String sellItem(Model model){
+    @GetMapping("/newSellableItem")
+    private String newSellableItem(Model model){
         model.addAttribute("sellableItem", new SellableItem());
-        return("sellItem");
+        return("sellableItem");
     }
 
-
-    @GetMapping("/editSellItem")
-    public String editSellItem(Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
-
+    @GetMapping("/editSellableItem")
+    public String editSellableItem(Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         if(sellableItemService.get(id).getOwner() != userService.get(p.getName())){
             redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/account";
         }
         model.addAttribute("sellableItem", sellableItemService.get(id));
-        return "sellItem";
+        return "sellableItem";
     }
 
-
-
-    @PostMapping("/saveSellItem")
-    private String saveSellItem(Model model , Long id, @RequestParam("name") String name, @RequestParam("price") Integer price, @RequestParam("description") String description,  @RequestParam("file") MultipartFile file , Principal p, RedirectAttributes redirectAttributes){
-
+    @PostMapping("/saveSellableItem")
+    private String saveSellableItem(Long id, @RequestParam("name") String name, @RequestParam("price") Integer price, @RequestParam("description") String description, @RequestParam("file") MultipartFile file , Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         if(id == null){
             sellableItemService.create(name, description, price, user, file);
@@ -72,9 +64,8 @@ public class SellableItemController {
         return "redirect:/account";
     }
 
-    @GetMapping("/deleteSellItem")
-    public String deleteSellItem(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
-
+    @GetMapping("/deleteSellableItem")
+    public String deleteSellableItem(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         if(sellableItemService.get(id).getOwner() != userService.get(p.getName())){
             redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/account";

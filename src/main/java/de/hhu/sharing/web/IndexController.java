@@ -57,9 +57,9 @@ public class IndexController {
     public String account(Model model, Principal p) {
         User user = userService.get(p.getName());
         model.addAttribute("user", user);
-        model.addAttribute("lendLendableItems", lendableItemService.getAllIPosted(user));
+        model.addAttribute("lendableItemsIPosted", lendableItemService.getAllIPosted(user));
         model.addAttribute("address", user.getAddress());
-        model.addAttribute("sellItems", sellableItemService.getMySellables(user));
+        model.addAttribute("sellableItemsIPosted", sellableItemService.getAllIPosted(user));
         return "account";
     }
 

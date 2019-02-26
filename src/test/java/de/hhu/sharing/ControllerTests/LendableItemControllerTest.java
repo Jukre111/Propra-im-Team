@@ -71,7 +71,7 @@ public class LendableItemControllerTest {
     @Test
     @WithMockUser
     public void retrieveStatusDetailsNewItem() throws Exception{
-        mvc.perform(MockMvcRequestBuilders.get("/newItem"))
+        mvc.perform(MockMvcRequestBuilders.get("/newLendableItem"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
@@ -83,7 +83,7 @@ public class LendableItemControllerTest {
         Mockito.when(lendableItemService.isChangeable(1L)).thenReturn(true);
         Mockito.when(userService.get("user")).thenReturn(lendableItem.getOwner());
         Mockito.when(lendableItemService.get(1L)).thenReturn(lendableItem);
-        mvc.perform(MockMvcRequestBuilders.get("/editItem").param("id","1"))
+        mvc.perform(MockMvcRequestBuilders.get("/editLendableItem").param("id","1"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
@@ -101,14 +101,14 @@ public class LendableItemControllerTest {
         map.add("rental","42");
         map.add("deposit","41");
 
-        mvc.perform(MockMvcRequestBuilders.post("/saveItem").with(csrf()).params(map))
+        mvc.perform(MockMvcRequestBuilders.post("/saveLendableItem").with(csrf()).params(map))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/account"));
     }
 
     @Test
     @WithMockUser
     public void retrieveStatusDeleteItem() throws Exception{
-        mvc.perform(MockMvcRequestBuilders.get("/deleteItem").param("id","1"));
+        mvc.perform(MockMvcRequestBuilders.get("/deleteLendableItem").param("id","1"));
     }
 
     /*@Test

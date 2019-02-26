@@ -174,13 +174,13 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					<th width="10%">Bearbeiten</th>
 					<th width="10%">Entfernen</th>
 				</tr>
-				<tr th:each="item : ${lendLendableItems}">
+				<tr th:each="item : ${lendableItemsIPosted}">
 					<td th:text="${item.name}"></td>
 					<td>
-						<a class="indexbtn" th:href="@{'/editItem?id=' + ${item.id}}">Bearbeiten</a>
+						<a class="indexbtn" th:href="@{'/editLendableItem?id=' + ${item.id}}">Bearbeiten</a>
 					</td>
 					<td>
-						<a class="indexbtn" th:href="@{'/deleteItem?id=' + ${item.id}}">Entfernen</a>
+						<a class="indexbtn" th:href="@{'/deleteLendableItem?id=' + ${item.id}}">Entfernen</a>
 					</td>
 				</tr>
 			</table>
@@ -192,13 +192,13 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					<th width="10%">Bearbeiten</th>
 					<th width="10%">Entfernen</th>
 				</tr>
-				<tr th:each="sell : ${sellItems}">
-					<td th:text="${sell.name}"></td>
+				<tr th:each="item : ${sellableItemsIPosted}">
+					<td th:text="${item.name}"></td>
 					<td>
-						<a class="indexbtn" th:href="@{'/editSellItem?id=' + ${sell.id}}">Bearbeiten</a>
+						<a class="indexbtn" th:href="@{'/editSellableItem?id=' + ${item.id}}">Bearbeiten</a>
 					</td>
 					<td>
-						<a class="indexbtn" th:href="@{'/deleteSellItem?id=' + ${sell.id}}">Entfernen</a>
+						<a class="indexbtn" th:href="@{'/deleteSellableItem?id=' + ${item.id}}">Entfernen</a>
 					</td>
 				</tr>
 			</table>

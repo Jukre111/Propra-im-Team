@@ -48,13 +48,13 @@
             <div class="form-horizontal" style="padding-top: 30px">
                 <section th:each="item : ${lendableItems}" class="media style textPosition" style="padding: 20px; height: 200px">
                     <div class="media-left media-middle" style="padding-right: 40px">
-                        <a th:href="@{'/detailsItem?id=' + ${item.Id}}">
+                        <a th:href="@{'/lendableItemDetails?id=' + ${item.Id}}">
                             <img class="img circular--landscape" th:src="@{'/getItemPic?id=' + ${item.id}}" style="width: 128px;height: 128px;" align="left">
                         </a>
                     </div>
                     <div class="media-body">
                         <h3 style="padding-bottom: 5px">
-                            <a th:href="@{'/detailsItem?id=' + ${item.Id}}" th:text="${item.name}" style="color: #BD1D6F; font-weight: bold"></a>
+                            <a th:href="@{'/lendableItemDetails?id=' + ${item.Id}}" th:text="${item.name}" style="color: #BD1D6F; font-weight: bold"></a>
                         </h3>
                         <div th:text="${#strings.abbreviate(item.description,100)}" style="padding-top: 10px; padding-bottom: 10px"></div>
                         <div style="font-weight:bold; font-size:20px">
@@ -76,13 +76,13 @@
             <div class="form-horizontal" style="padding-top: 30px">
                 <section th:each="item : ${sellableItems}" class="media style textPosition" style="padding: 20px; height: 200px">
                     <div class="media-left media-middle" style="padding-right: 40px">
-                        <a th:href="@{'/sellItemDetails?id=' + ${item.id}}">
+                        <a th:href="@{'/sellableItemDetails?id=' + ${item.id}}">
                             <img class="img circular--landscape" th:src="@{'/getSellableItemPic?id=' + ${item.id}}" style="width: 128px;height: 128px;" align="left">
                         </a>
                     </div>
                     <div class="media-body">
                         <h3 style="padding-bottom: 5px">
-                            <a th:href="@{'/sellItemDetails?id=' + ${item.Id}}" th:text="${item.name}" style="color: #BD1D6F; font-weight: bold"></a>
+                            <a th:href="@{'/sellableItemDetails?id=' + ${item.Id}}" th:text="${item.name}" style="color: #BD1D6F; font-weight: bold"></a>
                         </h3>
                         <div th:text="${#strings.abbreviate(item.description,100)}" style="padding-top: 10px; padding-bottom: 10px"></div>
                         <div style="font-weight:bold; font-size:20px">
