@@ -2,8 +2,10 @@ package de.hhu.sharing.services;
 
 import com.google.gson.Gson;
 import de.hhu.sharing.model.LendableItem;
+import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.propay.Account;
+import de.hhu.sharing.propay.TransactionPurchase;
 import de.hhu.sharing.propay.TransactionRental;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,12 @@ public class ProPayService {
         return amount >= (rent + lendableItem.getDeposit()+getDepositSum(this.getAccount(user)));
     }
 
+    public boolean enoughCredit(User user, SellableItem sellAbleItem){
+        int price = sellAbleItem.getPrice();
+        int amount = this.getAccount(user).getAmount();
+        return amount >= (price+getDepositSum(this.getAccount(user)));
+    }
+
     public void rechargeCredit(User user, int amount) {
         String URL = this.URL + "account/" + user.getUsername() + "?amount=" + amount;
         this.callURL(URL, "POST");
@@ -58,6 +66,14 @@ public class ProPayService {
         this.callURL(URL, "POST");
         Account account = this.getAccount(transRen.getSender());
         transRen.setId(account.getLastReservationId());
+    }
+
+    public void initiateTransactionPurchase(TransactionPurchase transPur) {
+        String URL = this.URL
+                + "account/" + transPur.getSender().getUsername()
+                + "/transfer/" + transPur.getReceiver().getUsername()
+                + "?amount=" + transPur.getPrice();
+        this.callURL(URL, "POST");
     }
 
     public void releaseDeposit(User sender, TransactionRental transRen) {

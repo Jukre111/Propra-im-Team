@@ -25,8 +25,8 @@ public class TransactionPurchaseService {
         return transactions.findAllByReceiver(user);
     }
 
-    public void createTransactionRental(SellableItem item, User borrower, User lender){
-        TransactionPurchase transPur = new TransactionPurchase(item.getPrice(), item, borrower, lender);
+    public void createTransactionPurchase(SellableItem item, User seller, User buyer){
+        TransactionPurchase transPur = new TransactionPurchase(item, buyer, seller);
         transactions.save(transPur);
     }
 

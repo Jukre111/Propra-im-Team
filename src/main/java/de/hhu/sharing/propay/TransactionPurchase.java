@@ -16,9 +16,11 @@ public class TransactionPurchase {
     @GeneratedValue
     private Long id;
     private int price;
+    private Long itemId;
+    String itemName;
 
-    @ManyToOne
-    private SellableItem sellItem;
+    //@ManyToOne
+    //private SellableItem sellItem;
 
     @ManyToOne
     private User sender;
@@ -29,9 +31,10 @@ public class TransactionPurchase {
     public TransactionPurchase() {
     }
 
-    public TransactionPurchase(int price, SellableItem sellItem, User sender, User receiver) {
-        this.price = price;
-        this.sellItem = sellItem;
+    public TransactionPurchase(SellableItem sellItem, User sender, User receiver) {
+        this.price = sellItem.getPrice();
+        this.itemId = sellItem.getId();
+        this.itemName = sellItem.getName();
         this.sender = sender;
         this.receiver = receiver;
     }
