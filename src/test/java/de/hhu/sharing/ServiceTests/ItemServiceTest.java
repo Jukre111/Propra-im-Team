@@ -9,6 +9,7 @@ import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.ConflictService;
 import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.storage.StorageService;
+import org.apache.tomcat.jni.Local;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -292,6 +293,22 @@ public class ItemServiceTest {
         Mockito.when(items.findById(1L)).thenReturn(Optional.of(item));
 
         Assert.assertFalse(itemService.isOwner(1L, user2));
+    }
+
+    @Test
+    public void testAllDatesInbetween(){
+        User user = generateUser("Karl");
+        Item item = generateItem(user);
+        Period period1 = new Period(LocalDate.of(2019, 4, 12), LocalDate.of(2019, 4, 20));
+        Period period2 = new Period(LocalDate.of(2018, 12, 9), LocalDate.of(2018, 12, 16));
+        item.addToPeriods(period1);
+        item.addToPeriods(period2);
+
+        List<LocalDate> allDates = itemService.allDatesInbetween(item);
+
+        Assert.assertEquals(allDates.size(),17 );
+        Assert.assertTrue(allDates.contains(LocalDate.of(2019, 4, 20)));
+        Assert.assertFalse(allDates.contains(LocalDate.of(2019, 1, 20)));
     }
 }
 

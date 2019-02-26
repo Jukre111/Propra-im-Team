@@ -101,8 +101,7 @@ public class ItemService{
     }
 
 
-    public List allDatesInbetween(Item item){
-
+    public List<LocalDate> allDatesInbetween(Item item){
         List <Period> allPeriods = item.getPeriods();
         List <LocalDate> allDates = new ArrayList<>();
         for(Period period : allPeriods){
@@ -113,11 +112,7 @@ public class ItemService{
                 current = current.plusDays(1);
             }
             allDates.addAll(periodDates);
-
-
         }
-
-
         return allDates;
     }
 }
