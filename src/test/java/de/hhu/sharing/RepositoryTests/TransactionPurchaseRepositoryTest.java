@@ -33,8 +33,6 @@ public class TransactionPurchaseRepositoryTest {
     public void testFindAll() {
         TransactionPurchase trans1 = new TransactionPurchase();
         TransactionPurchase trans2 = new TransactionPurchase();
-        trans1.setId(1L);
-        trans2.setId(2L);
         transRepo.save(trans1);
         transRepo.save(trans2);
 
@@ -60,10 +58,6 @@ public class TransactionPurchaseRepositoryTest {
         TransactionPurchase trans3 = new TransactionPurchase();
         TransactionPurchase trans4 = new TransactionPurchase();
         TransactionPurchase trans5 = new TransactionPurchase();
-
-        trans3.setId(3L);
-        trans4.setId(4L);
-        trans5.setId(5L);
 
         trans3.setSender(source);
         trans3.setReceiver(target);
@@ -100,10 +94,6 @@ public class TransactionPurchaseRepositoryTest {
         TransactionPurchase trans6 = new TransactionPurchase();
         TransactionPurchase trans7 = new TransactionPurchase();
         TransactionPurchase trans8 = new TransactionPurchase();
-
-        trans6.setId(6L);
-        trans7.setId(7L);
-        trans8.setId(8L);
 
         trans6.setSender(source);
         trans6.setReceiver(target);
