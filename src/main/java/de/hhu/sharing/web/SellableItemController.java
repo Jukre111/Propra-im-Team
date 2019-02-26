@@ -84,4 +84,11 @@ public class SellableItemController {
         return "redirect:/account";
     }
 
+    @GetMapping("/buy")
+    public String buy(@RequestParam("id") Long id){
+        
+
+        return ("redirect:/");
+    }
+
 }
