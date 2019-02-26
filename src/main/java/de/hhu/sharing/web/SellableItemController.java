@@ -76,11 +76,15 @@ public class SellableItemController {
     }
 
     @GetMapping("/buy")
-    public String buy(@RequestParam("id") Long id, Principal p){
+    public String buy(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User buyer = userService.get(p.getName());
+        if(sellableItemService.isOwner(id, buyer)){
+            redirectAttributes.addFlashAttribute("ownItem",true);
+            return "redirect:/";
+        }
+
         SellableItem sellableItem = sellableItemService.get(id);
         User owner = sellableItem.getOwner();
-
         // TODO something brilliant
 
         sellableItemService.delete(id);

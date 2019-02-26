@@ -1,6 +1,7 @@
 package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.SellableItemRepository;
+import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.storage.StorageService;
@@ -12,12 +13,12 @@ import java.util.List;
 
 @Component
 public class SellableItemService {
+
     @Autowired
     private SellableItemRepository items;
 
     @Autowired
     private StorageService storageService;
-
 
     public void create(String name, String description, Integer price, User user, MultipartFile file) {
         SellableItem sellableItem = new SellableItem(name, description, price, user);
@@ -49,18 +50,20 @@ public class SellableItemService {
         items.delete(sellableItem);
     }
 
-
     public List<SellableItem> getAll() {
         return this.items.findAll();
     }
 
-
+    public List<SellableItem> getAllIPosted(User owner){
+        return this.items.findAllByOwner(owner);
+    }
 
     public List<SellableItem> searchFor(String query) {
         return this.items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query,query);
     }
 
-    public List<SellableItem> getAllIPosted(User owner){
-        return this.items.findAllByOwner(owner);
+    public boolean isOwner(Long id, User user) {
+        SellableItem sellableItem = this.get(id);
+        return sellableItem.getOwner() == user;
     }
 }

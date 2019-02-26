@@ -64,7 +64,7 @@ public class LendableItemControllerTest {
     public void retrieveStatusDetails() throws Exception{
         LendableItem lendableItem = itemCreator();
         Mockito.when(lendableItemService.get(1L)).thenReturn(lendableItem);
-        mvc.perform(MockMvcRequestBuilders.get("/detailsItem").param("id","1"))
+        mvc.perform(MockMvcRequestBuilders.get("/lendableItemDetails").param("id","1"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 

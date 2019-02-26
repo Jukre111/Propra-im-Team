@@ -39,7 +39,7 @@
 <body>
 <div layout:fragment="body">
     <div class="alert alert-success" role="alert" th:if="${requested}" >Anfrage erfolgreich gestellt.</div>
-    <div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${ownItem}" >Eigenes Objekt nicht an sich selbst verleihbar.</div>
+    <div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${ownItem}" >Eigenes Objekt nicht an sich selbst verleihbar/verkaufbar.</div>
     <div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${noCredit}" >Nicht genug ProPray-Guthaben.</div>
     <div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${returnYourItems}" >Sie haben Items, die dringend zurück gegeben werden müssen!</div>
     <div class="row" style="padding: 20px">
