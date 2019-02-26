@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+<html lang="en" layout:decorate="~{base}" xmlns:layout="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.w3.org/1999/xhtml" xmlns:min="http://www.w3.org/1999/xhtml">
 <head>
     <link rel="stylesheet" href="assets/style.css"/>
@@ -14,7 +14,7 @@
             var endDt = document.getElementById("enddate").value;
             var button = document.getElementById("button");
 
-            if(startDt && new Date(startDt).getDay() < new Date().getDay()){
+            if(startDt && new Date(startDt).getDate() < new Date().getDate()){
                 console.log("failure");
                 button.disabled = true;
                 alert("Das Startdatum kann nicht vor heute liegen!");
@@ -49,14 +49,14 @@
 <div layout:fragment="body">
     <div class="alert alert-danger" role="alert" th:if="${notAvailable}" >Objekt zum angegebenen Zeitraum nicht verfügbar.</div>
     <div class="style textPosition" style="padding: 20px">
-        <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name" th:text="${item.name}"></span></h1>
+        <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name" th:text="${lendableItem.name}"></span></h1>
         <div class="form-horizontal" style="padding-top: 60px">
             <form th:action="@{/saveRequest}" method="post">
-                <input type="hidden" class="form-control" id="id" name="id" th:value="${item.id}" readonly/>
+                <input type="hidden" class="form-control" id="id" name="id" th:value="${lendableItem.id}" readonly/>
                 <div class="form-group">
                     <label for="startdate" class="col-sm-2 control-label">Startdatum</label>
                     <div class="col-xs-6">
-                        <input type="hidden" id="startdate" name="startdate" required="" />
+                        <input style="opacity: 0" id="startdate" name="startdate" required=""/>
                         <div id="startdatecalendar" data-toggle="calendar"></div>
                         <script type="text/javascript" th:inline="javascript">
                             $(document).ready(function()
@@ -84,7 +84,7 @@
                 <div class="form-group">
                     <label for="enddate" class="col-sm-2 control-label">Enddatum</label>
                     <div class="col-xs-6">
-                        <input type="hidden" id="enddate" name="enddate" required="" />
+                        <input style="opacity: 0" id="enddate" name="enddate" required=""/>
                         <div id="enddatecalendar" data-toggle="calendar"></div>
                         <script type="text/javascript" th:inline="javascript">
                             $(document).ready(function()

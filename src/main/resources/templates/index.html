@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+<html lang="en" layout:decorate="~{base}" xmlns:layout="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
 <title>Sharing</title>
@@ -16,7 +16,7 @@
         font-weight: normal;
     }
 
-    #circular--landscape {
+    .circular--landscape {
         display: inline-block;
         position: relative;
         width: 250px;
@@ -25,7 +25,7 @@
         border-radius: 50%;
     }
 
-    #circular--landscape img {
+    .circular--landscape img {
         width: auto;
         height: 100%;
         margin-left: -50px;
@@ -39,30 +39,61 @@
 <body>
 <div layout:fragment="body">
     <div class="alert alert-success" role="alert" th:if="${requested}" >Anfrage erfolgreich gestellt.</div>
-    <div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${ownItem}" >Eigenes Objekt nicht an sich selbst verleihbar.</div>
+    <div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${ownItem}" >Eigenes Objekt nicht an sich selbst verleihbar/verkaufbar.</div>
     <div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${noCredit}" >Nicht genug ProPray-Guthaben.</div>
-    <section th:each="item : ${items}" class="media style textPosition" style="padding: 20px">
-        <div class="media-left media-middle" style="padding-right: 40px">
-            <a th:href="@{'/detailsItem?id=' + ${item.Id}}">
-                <img class="img" id="circular--landscape" th:src="@{'/getItemPic?id=' + ${item.id}}" style="width: 128px;height: 128px;" align="left">
-            </a>
-        </div>
-        <div class="media-body">
-            <h3 style="padding-bottom: 5px">
-                <a th:href="@{'/detailsItem?id=' + ${item.Id}}" th:text="${item.name}" style="color: #BD1D6F; font-weight: bold"></a>
-            </h3>
-            <div th:text="${#strings.abbreviate(item.description,100)}" style="padding-top: 10px; padding-bottom: 10px"></div>
-            <div style="font-weight:bold; font-size:20px">
-                <span th:text="|EUR ${item.rental}|" style="margin-right:10px"></span>
-                <span>Miete</span>
-            </div>
+    <div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${returnYourItems}" >Sie haben Items, die dringend zurück gegeben werden müssen!</div>
+    <div class="row" style="padding: 20px">
+        <div class="col-sm-5" style="padding: 20px; margin-left: 30px">
+            <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name">Verleih</span></h1>
+            <div class="form-horizontal" style="padding-top: 30px">
+                <section th:each="item : ${lendableItems}" class="media style textPosition" style="padding: 20px; height: 200px">
+                    <div class="media-left media-middle" style="padding-right: 40px">
+                        <a th:href="@{'/lendableItemDetails?id=' + ${item.Id}}">
+                            <img class="img circular--landscape" th:src="@{'/getItemPic?id=' + ${item.id}}" style="width: 128px;height: 128px;" align="left">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h3 style="padding-bottom: 5px">
+                            <a th:href="@{'/lendableItemDetails?id=' + ${item.Id}}" th:text="${item.name}" style="color: #BD1D6F; font-weight: bold"></a>
+                        </h3>
+                        <div th:text="${#strings.abbreviate(item.description,100)}" style="padding-top: 10px; padding-bottom: 10px"></div>
+                        <div style="font-weight:bold; font-size:20px">
+                            <span th:text="|EUR ${item.rental}|" style="margin-right:10px"></span>
+                            <span>Miete</span>
+                        </div>
 
-            <div class="gray" style="font-size:12px">
-                <span th:text="|EUR ${item.deposit}|" style="margin-right:10px"></span>
-                <span>Kaution</span>
+                        <div class="gray" style="font-size:12px">
+                            <span th:text="|EUR ${item.deposit}|" style="margin-right:10px"></span>
+                            <span>Kaution</span>
+                        </div>
+                    </div>
+                </section>
             </div>
-
         </div>
-    </section>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-5" style="padding: 20px; margin-left: 30px">
+            <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" name="name">Verkauf</span></h1>
+            <div class="form-horizontal" style="padding-top: 30px">
+                <section th:each="item : ${sellableItems}" class="media style textPosition" style="padding: 20px; height: 200px">
+                    <div class="media-left media-middle" style="padding-right: 40px">
+                        <a th:href="@{'/sellableItemDetails?id=' + ${item.id}}">
+                            <img class="img circular--landscape" th:src="@{'/getSellableItemPic?id=' + ${item.id}}" style="width: 128px;height: 128px;" align="left">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h3 style="padding-bottom: 5px">
+                            <a th:href="@{'/sellableItemDetails?id=' + ${item.Id}}" th:text="${item.name}" style="color: #BD1D6F; font-weight: bold"></a>
+                        </h3>
+                        <div th:text="${#strings.abbreviate(item.description,100)}" style="padding-top: 10px; padding-bottom: 10px"></div>
+                        <div style="font-weight:bold; font-size:20px">
+                            <span th:text="|EUR ${item.price}|" style="margin-right:10px"></span>
+                        </div>
+                        <div class="gray" style="font-size:12px">
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
 </div>
 </body>

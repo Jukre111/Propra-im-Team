@@ -1,12 +1,16 @@
 package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.TransactionPurchaseRepository;
+import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.propay.TransactionPurchase;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Component
 public class TransactionPurchaseService {
 
     @Autowired
@@ -21,9 +25,9 @@ public class TransactionPurchaseService {
         return transactions.findAllByReceiver(user);
     }
 
-    /*public void createTransactionRental(Item item, User borrower, User lender){
-        TransactionPurchase transPur = new TransactionPurchase(item.getPrice(), item, borrower, lender);
+    public void createTransactionPurchase(SellableItem item, User seller, User buyer){
+        TransactionPurchase transPur = new TransactionPurchase(item, buyer, seller);
         transactions.save(transPur);
-    }*/
+    }
 
 }

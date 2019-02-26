@@ -2,7 +2,7 @@ package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.TransactionRentalRepository;
 import de.hhu.sharing.model.BorrowingProcess;
-import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.propay.TransactionRental;
 import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class TransactionRentalService {
     public TransactionRental getFromProcessId(Long processId){
         return transactions.findByProcessId(processId)
                 .orElseThrow(
-                    () -> new RuntimeException("Item not found!"));
+                    () -> new RuntimeException("LendableItem not found!"));
     }
 
     public List<TransactionRental> getAllFromSender(User user){
@@ -36,10 +36,10 @@ public class TransactionRentalService {
     }
 
     public void createTransactionRental(BorrowingProcess process, User borrower, User lender){
-        Item item = process.getItem();
+        LendableItem lendableItem = process.getItem();
         int days = (int) DAYS.between(process.getPeriod().getStartdate(),process.getPeriod().getEnddate()) + 1;
-        int rent = item.getRental() * days;
-        TransactionRental transRen = new TransactionRental(rent, item.getDeposit(),process.getId(), item, borrower, lender);
+        int rent = lendableItem.getRental() * days;
+        TransactionRental transRen = new TransactionRental(rent, lendableItem.getDeposit(),process.getId(), lendableItem, borrower, lender);
         proPayService.initiateTransactionRental(transRen);
         transactions.save(transRen);
     }

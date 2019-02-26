@@ -1,10 +1,11 @@
 package de.hhu.sharing.services;
 
 import com.google.gson.Gson;
-import de.hhu.sharing.data.TransactionRentalRepository;
-import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.LendableItem;
+import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.propay.Account;
+import de.hhu.sharing.propay.TransactionPurchase;
 import de.hhu.sharing.propay.TransactionRental;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,11 +35,17 @@ public class ProPayService {
         return new Gson().fromJson(jsonAccount, Account.class);
     }
 
-    public boolean enoughCredit(User user, Item item, LocalDate startdate, LocalDate enddate){
+    public boolean enoughCredit(User user, LendableItem lendableItem, LocalDate startdate, LocalDate enddate){
         int days = (int) DAYS.between(startdate, enddate) + 1;
-        int rent = item.getRental() * days;
+        int rent = lendableItem.getRental() * days;
         int amount = this.getAccount(user).getAmount();
-        return amount >= (rent + item.getDeposit()+getDepositSum(this.getAccount(user)));
+        return amount >= (rent + lendableItem.getDeposit()+getDepositSum(this.getAccount(user)));
+    }
+
+    public boolean enoughCredit(User user, SellableItem sellAbleItem){
+        int price = sellAbleItem.getPrice();
+        int amount = this.getAccount(user).getAmount();
+        return amount >= (price+getDepositSum(this.getAccount(user)));
     }
 
     public void rechargeCredit(User user, int amount) {
@@ -59,6 +66,14 @@ public class ProPayService {
         this.callURL(URL, "POST");
         Account account = this.getAccount(transRen.getSender());
         transRen.setId(account.getLastReservationId());
+    }
+
+    public void initiateTransactionPurchase(TransactionPurchase transPur) {
+        String URL = this.URL
+                + "account/" + transPur.getSender().getUsername()
+                + "/transfer/" + transPur.getReceiver().getUsername()
+                + "?amount=" + transPur.getPrice();
+        this.callURL(URL, "POST");
     }
 
     public void releaseDeposit(User sender, TransactionRental transRen) {

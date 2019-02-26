@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+<html lang="en" layout:decorate="~{base}" xmlns:layout="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset = "utf-8"/>
@@ -83,7 +83,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                         <td th:text="${transRen.wholeRent}"></td>
                         <td th:text="${transRen.deposit}"></td>
                         <td th:text="${transRen.depositRevoked}"></td>
-                        <td th:text="${transRen.item.getName()}"></td>
+                        <td th:text="${transRen.lendableItem.getName()}"></td>
                         <td th:text="${transRen.sender.getUsername()}"></td>
                     </tr>
                 </table>
@@ -96,7 +96,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                     </tr>
                     <tr th:each="transactionPurchase : ${receivedPurchase}">
                         <td th:text="${transactionPurchase.price}"></td>
-                        <td th:text="${transactionPurchase.item.getName()}"></td>
+                        <td th:text="${transactionPurchase.itemName}"></td>
                         <td th:text="${transactionPurchase.sender.getUsername()}"></td>
                     </tr>
                 </table>
@@ -115,7 +115,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                         <td th:text="${transRen.wholeRent}"></td>
                         <td th:text="${transRen.deposit}"></td>
                         <td th:text="${transRen.depositRevoked}"></td>
-                        <td th:text="${transRen.item.getName()}"></td>
+                        <td th:text="${transRen.lendableItem.getName()}"></td>
                         <td th:text="${transRen.receiver.getUsername()}"></td>
                     </tr>
                 </table>
@@ -128,7 +128,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                     </tr>
                     <tr th:each="transactionPurchase : ${sendPurchase}">
                         <td th:text="${transactionPurchase.price}"></td>
-                        <td th:text="${transactionPurchase.item.getName()}"></td>
+                        <td th:text="${transactionPurchase.itemName}"></td>
                         <td th:text="${transactionPurchase.receiver.getUsername()}"></td>
                     </tr>
                 </table>

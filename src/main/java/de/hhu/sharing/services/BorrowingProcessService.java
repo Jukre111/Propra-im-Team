@@ -15,7 +15,7 @@ public class BorrowingProcessService {
     private RequestService requestService;
 
     @Autowired
-    private ItemService itemService;
+    private LendableItemService lendableItemService;
 
     @Autowired
     private UserService userService;
@@ -37,17 +37,17 @@ public class BorrowingProcessService {
 
     public void accept(Long requestId) {
         Request request = requestService.get(requestId);
-        Item item = itemService.getFromRequestId(requestId);
-        item.addToPeriods(request.getPeriod());
-        this.createProcess(item, request);
-        requestService.deleteOverlappingRequestsFromItem(request, item);
+        LendableItem lendableItem = lendableItemService.getFromRequestId(requestId);
+        lendableItem.addToPeriods(request.getPeriod());
+        this.createProcess(lendableItem, request);
+        requestService.deleteOverlappingRequestsFromItem(request, lendableItem);
     }
 
-    private void createProcess(Item item, Request request) {
-        BorrowingProcess process = new BorrowingProcess(item, request.getPeriod());
+    private void createProcess(LendableItem lendableItem, Request request) {
+        BorrowingProcess process = new BorrowingProcess(lendableItem, request.getPeriod());
         processes.save(process);
         User borrower = request.getRequester();
-        User lender = item.getLender();
+        User lender = lendableItem.getOwner();
         transactionService.createTransactionRental(process, borrower, lender);
         borrower.addToBorrowed(process);
         lender.addToLend(process);

@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import de.hhu.sharing.data.ImageRepository;
-import de.hhu.sharing.data.ItemRepository;
+import de.hhu.sharing.data.LendableItemRepository;
+import de.hhu.sharing.data.SellableItemRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Image;
-import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.LendableItem;
+import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,10 @@ public class FileSystemStorageService implements StorageService {
     private UserRepository userRepo;   
     
     @Autowired
-    private ItemRepository itemRepo;
+    private LendableItemRepository lendableItemRepository;
+
+    @Autowired
+    private SellableItemRepository sellableItemRepository;
 
     
     public Image createImageVars(String mimetype) {
@@ -72,30 +77,6 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void storeUserInitalizer(byte[] byteArr, User user){
-        byte[] bytes = byteArr;
-        Image image = new Image();
-        String contentType = "image/gif";
-        image.setMimeType(contentType);
-        image.setImageData(bytes);
-        imageRepo.save(image);
-        user.setImage(image);
-        userRepo.save(user);
-    }
-
-    @Override
-    public void storeItemInitalizer(byte[] byteArr, Item item) {
-        byte[] bytes = byteArr;
-        Image image = new Image();
-        String contentType = "image/gif";
-        image.setMimeType(contentType);
-        image.setImageData(bytes);
-        imageRepo.save(image);
-        item.setImage(image);
-        itemRepo.save(item);
-    }
-
-    @Override
     public void storeUser(MultipartFile file, User user){
     	byte[] byteArr = readFile(file);
         Image image = null;
@@ -112,7 +93,7 @@ public class FileSystemStorageService implements StorageService {
     }
     
     @Override
-    public void storeItem(MultipartFile file, Item item){
+    public void storeLendableItem(MultipartFile file, LendableItem lendableItem){
         byte[] byteArr = readFile(file);
         Image image = null;
         String contentType = null;
@@ -123,7 +104,23 @@ public class FileSystemStorageService implements StorageService {
             image = createImageVars("default");
         image.setImageData(byteArr);
         imageRepo.save(image);
-        item.setImage(image);
-        itemRepo.save(item);
+        lendableItem.setImage(image);
+        lendableItemRepository.save(lendableItem);
+    }
+
+    @Override
+    public void storeSellableItem(MultipartFile file, SellableItem sellableItem){
+        byte[] byteArr = readFile(file);
+        Image image = null;
+        String contentType = null;
+        contentType = file.getContentType();
+        if(contentType!=null)
+            image = createImageVars(contentType);
+        else
+            image = createImageVars("default");
+        image.setImageData(byteArr);
+        imageRepo.save(image);
+        sellableItem.setImage(image);
+        sellableItemRepository.save(sellableItem);
     }
 }
