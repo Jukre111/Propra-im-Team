@@ -32,7 +32,7 @@ public class IndexController {
 
     @GetMapping("/search")
     public String search(Model model, @RequestParam String query) {
-        model.addAttribute("items", itemService.searchFor(query));
+        model.addAttribute("lendableItems", itemService.searchFor(query));
         model.addAttribute("query", query);
         return "search";
     }

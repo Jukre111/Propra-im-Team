@@ -1,12 +1,7 @@
 package de.hhu.sharing.ControllerTests;
 
-import de.hhu.sharing.data.ItemRepository;
-import de.hhu.sharing.data.RequestRepository;
-import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.*;
-import de.hhu.sharing.security.SecurityConfig;
 import de.hhu.sharing.services.*;
-import de.hhu.sharing.storage.StorageService;
 import de.hhu.sharing.web.RequestController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,8 +47,8 @@ public class RequestControllerTest{
                 new Address("Strasse", "Stadt", 41460));
     }
 
-    private Item createItem(User lender) {
-        return new Item("Item", "Beschreibung", 10, 100, lender);
+    private LendableItem createLendableItem(User lender) {
+        return new LendableItem("Item", "Beschreibung", 10, 100, lender);
     }
 
     private Request createRequest(User requester){
@@ -66,7 +61,7 @@ public class RequestControllerTest{
     public void retrieveStatusNewRequest() throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Mockito.when(userService.get("user")).thenReturn(requester);
         Mockito.when(itemService.isOwner(1L, requester)).thenReturn(false);
         Mockito.when(itemService.get(1L)).thenReturn(item);
@@ -94,7 +89,7 @@ public class RequestControllerTest{
     public void redirectSaveRequest() throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Mockito.when(userService.get("user")).thenReturn(requester);
         Mockito.when(itemService.get(1L)).thenReturn(item);
         Mockito.when(itemService.isOwner(1L, requester)).thenReturn(false);
@@ -117,7 +112,7 @@ public class RequestControllerTest{
     public void redirectSaveRequestWithOwnItem()throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Mockito.when(userService.get("user")).thenReturn(requester);
         Mockito.when(itemService.get(1L)).thenReturn(item);
         Mockito.when(itemService.isOwner(1L, requester)).thenReturn(true);
@@ -137,7 +132,7 @@ public class RequestControllerTest{
     public void redirectSaveRequestWithNoCredit()throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Mockito.when(userService.get("user")).thenReturn(requester);
         Mockito.when(itemService.get(1L)).thenReturn(item);
         Mockito.when(itemService.isOwner(1L, requester)).thenReturn(false);
@@ -158,7 +153,7 @@ public class RequestControllerTest{
     public void redirectSaveRequestWithNotAvailable()throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Mockito.when(userService.get("user")).thenReturn(requester);
         Mockito.when(itemService.get(1L)).thenReturn(item);
         Mockito.when(itemService.isOwner(1L, requester)).thenReturn(false);
@@ -206,7 +201,7 @@ public class RequestControllerTest{
     public void redirectAcceptRequest() throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Request request = createRequest(requester);
         Mockito.when(userService.get("user")).thenReturn(owner);
         Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
@@ -227,7 +222,7 @@ public class RequestControllerTest{
     public void redirectAcceptRequestWhenNotAuthorized() throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Request request = createRequest(requester);
         Mockito.when(userService.get("user")).thenReturn(owner);
         Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
@@ -245,7 +240,7 @@ public class RequestControllerTest{
     public void redirectAcceptRequestWhenOutdated() throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Request request = createRequest(requester);
         Mockito.when(userService.get("user")).thenReturn(owner);
         Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
@@ -264,7 +259,7 @@ public class RequestControllerTest{
     public void redirectAcceptRequestWhenOverlapping() throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Request request = createRequest(requester);
         Mockito.when(userService.get("user")).thenReturn(owner);
         Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
@@ -284,7 +279,7 @@ public class RequestControllerTest{
     public void redirectAcceptRequestNoCredit() throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Request request = createRequest(requester);
         Mockito.when(userService.get("user")).thenReturn(owner);
         Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
