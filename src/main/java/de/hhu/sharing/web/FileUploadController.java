@@ -5,8 +5,10 @@ import java.security.Principal;
 
 import de.hhu.sharing.data.ImageRepository;
 import de.hhu.sharing.model.LendableItem;
+import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.ItemService;
+import de.hhu.sharing.services.SellableItemService;
 import de.hhu.sharing.services.UserService;
 import de.hhu.sharing.storage.StorageFileNotFoundException;
 import de.hhu.sharing.storage.StorageService;
@@ -37,6 +39,9 @@ public class FileUploadController {
     
     @Autowired
     private ImageRepository imageRepo;
+
+    @Autowired
+    private SellableItemService sellableItemService;
     
     @Autowired
     public FileUploadController(StorageService storageService) {
@@ -89,6 +94,30 @@ public class FileUploadController {
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
         return "redirect:/";
     }
+
+    @RequestMapping(value = "getSellableItemPic", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<InputStreamResource> downloadSellableItemImage(@RequestParam("id") Long id) {
+        SellableItem sellableItem = sellableItemService.get(id);
+        if(sellableItem.getImage()==null) {
+            return ResponseEntity.badRequest().build();
+        }else{
+            return ResponseEntity.ok()
+                    .contentLength(sellableItem.getImage().getImageData().length)
+                    .contentType(MediaType.parseMediaType(sellableItem.getImage().getMimeType()))
+                    .body(new InputStreamResource(new ByteArrayInputStream(sellableItem.getImage().getImageData())));
+        }
+    }
+
+    @PostMapping("/handleFileUploadSellableItem")
+    public String handleFileUploadSellableItem(@RequestParam("file") MultipartFile file,
+                                       RedirectAttributes redirectAttributes, SellableItem sellableItem) {
+        storageService.storeSellableItem(file, sellableItem);
+        redirectAttributes.addFlashAttribute("message",
+                "You successfully uploaded " + file.getOriginalFilename() + "!");
+        return "redirect:/";
+    }
+
 
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
