@@ -34,32 +34,33 @@ class TransactionRentalServiceTest {
     @InjectMocks
     TransactionRentalService transSevice;
 
-    @Before
-    public void initialize(){
-        MockitoAnnotations.initMocks(this);
-    }
+   // @Before
+    //public void initialize(){
+     //   MockitoAnnotations.initMocks(this);
+    //}
 
-    @Test
-    public void testCheckFinancesTrue() {
-        User borrower = new User();
-        Request request = new Request();
-        Item item = new Item();
+   // @Test
+   // public void testCheckFinancesTrue() {
+  //      User borrower = new User();
+     //   Request request = new Request();
+  //      Item item = new Item();
 
-        borrower.setUsername("User");
-        item.setRental(10);
-        item.setDeposit(100);
+   //     borrower.setUsername("User");
+   //     item.setRental(10);
+   //     item.setDeposit(100);
 
-        ArrayList<Reservation> reservations = new ArrayList<>();
-        reservations.add(new Reservation(1, item.getDeposit()));
+  //      ArrayList<Reservation> reservations = new ArrayList<>();
+       /* reservations.add(new Reservation(1, item.getDeposit()));
 
         request.setPeriod(new Period(LocalDate.now(),LocalDate.now().plusDays(5)));
         request.setRequester(borrower);
         Mockito.when(proService.getAccount(borrower.getUsername())).thenReturn(new Account("User", 200, reservations));
 
         Assertions.assertThat(transSevice.checkFinances(request.getRequester(), item, request.getPeriod().getStartdate(), request.getPeriod().getEnddate())).isTrue();
-    }
+        */
+ //   }
 
-    @Test
+   /* @Test
     public void testCheckFinances() {
         User borrower = new User();
         Request request = new Request();
@@ -78,5 +79,4 @@ class TransactionRentalServiceTest {
 
         Assertions.assertThat(transSevice.checkFinances(request.getRequester(), item, request.getPeriod().getStartdate(), request.getPeriod().getEnddate())).isFalse();
     }*/
-
 }

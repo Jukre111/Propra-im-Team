@@ -8,6 +8,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
+import org.springframework.web.util.NestedServletException;
+
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -35,10 +37,39 @@ public class UserServiceTest {
     public void testGet(){
         User user = generateUser();
         Mockito.when(users.findByUsername("user")).thenReturn(Optional.of(user));
-        User user2 = userService.get("user");
-        Assert.assertTrue(user2.equals(user));
+        User testUser = userService.get("user");
+        Assert.assertTrue(testUser.equals(user));
     }
 
+    @Test (expected = RuntimeException.class)
+    public void testGetNoUserFound(){
+        Mockito.when(users.findByUsername("user")).thenReturn(Optional.empty());
+        userService.get("user");
+    }
+
+    @Test
+    public void testGetBorrowerFromBorrowingProcessId(){
+
+        User user = generateUser();
+        Mockito.when(users.findByBorrowed_id(1L)).thenReturn(Optional.of(user));
+        User testUser = userService.getBorrowerFromBorrowingProcessId(1L);
+        Assert.assertTrue(testUser.equals(user));
+    }
+
+    @Test (expected = RuntimeException.class)
+    public void testGetBorrowerFromBorrowingProcessIdNoUserFound(){
+        Mockito.when(users.findByBorrowed_id(1L)).thenReturn(Optional.empty());
+        userService.getBorrowerFromBorrowingProcessId(1L);
+    }
+
+
+   // @Test
+  //  public void testRemoveProcessFromProcessLists(){
+
+      //  User user = generateUser();
+      //  Mockito.when(users.findByBorrowed_id(1L)).thenReturn(Optional.of(user));
+
+   // }
 //    Method doesn't exist anymore
 //    @Test
 //    public void testAddToBorrowedItems(){

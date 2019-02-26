@@ -38,9 +38,7 @@ public class ItemService{
         items.save(item);
         if(file!=null) {
         	storageService.storeItem(file, item);
-        }else {
-        	System.out.println("No picture");
-       }
+        }
     }
 
     public void edit(Long id, String name, String description, Integer rental, Integer deposit, User user) {
