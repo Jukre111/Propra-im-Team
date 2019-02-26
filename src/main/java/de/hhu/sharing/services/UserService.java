@@ -1,6 +1,7 @@
 package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.UserRepository;
+import de.hhu.sharing.model.BorrowingProcess;
 import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,25 @@ public class UserService {
         return user;
     }
 
-    public void addToBorrowedItems(User user, Item item) {
-        user.addToBorrowedItems(item);
-        users.save(user);
+    public User getBorrowerFromBorrowingProcessId(Long processId) {
+        User user = this.users.findByBorrowed_id(processId)
+                .orElseThrow(
+                        () -> new RuntimeException("User not found!"));
+        return user;
+    }
+
+    public void removeProcessFromProcessLists(BorrowingProcess process) {
+        User lender = process.getItem().getLender();
+        lender.removeFromLend(process);
+        users.save(lender);
+        User borrower = this.getBorrowerFromBorrowingProcessId(process.getId());
+        borrower.removeFromBorrowed(process);
+        users.save(borrower);
+    }
+
+    public boolean userIsInvolvedToProcess(User user, BorrowingProcess process) {
+        User borrower = this.getBorrowerFromBorrowingProcessId(process.getId());
+        User lender = process.getItem().getLender();
+        return user == borrower || user == lender;
     }
 }
