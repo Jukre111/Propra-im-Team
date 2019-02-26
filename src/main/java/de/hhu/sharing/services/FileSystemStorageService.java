@@ -27,7 +27,7 @@ public class FileSystemStorageService implements StorageService {
     private UserRepository userRepo;   
     
     @Autowired
-    private LendableItemRepository itemRepo;
+    private LendableItemRepository lendableItemRepository;
 
     @Autowired
     private SellableItemRepository sellableItemRepository;
@@ -77,30 +77,6 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void storeUserInitalizer(byte[] byteArr, User user){
-        byte[] bytes = byteArr;
-        Image image = new Image();
-        String contentType = "image/gif";
-        image.setMimeType(contentType);
-        image.setImageData(bytes);
-        imageRepo.save(image);
-        user.setImage(image);
-        userRepo.save(user);
-    }
-
-    @Override
-    public void storeItemInitalizer(byte[] byteArr, LendableItem lendableItem) {
-        byte[] bytes = byteArr;
-        Image image = new Image();
-        String contentType = "image/gif";
-        image.setMimeType(contentType);
-        image.setImageData(bytes);
-        imageRepo.save(image);
-        lendableItem.setImage(image);
-        itemRepo.save(lendableItem);
-    }
-
-    @Override
     public void storeUser(MultipartFile file, User user){
     	byte[] byteArr = readFile(file);
         Image image = null;
@@ -117,7 +93,7 @@ public class FileSystemStorageService implements StorageService {
     }
     
     @Override
-    public void storeItem(MultipartFile file, LendableItem lendableItem){
+    public void storeLendableItem(MultipartFile file, LendableItem lendableItem){
         byte[] byteArr = readFile(file);
         Image image = null;
         String contentType = null;
@@ -129,7 +105,7 @@ public class FileSystemStorageService implements StorageService {
         image.setImageData(byteArr);
         imageRepo.save(image);
         lendableItem.setImage(image);
-        itemRepo.save(lendableItem);
+        lendableItemRepository.save(lendableItem);
     }
 
     @Override

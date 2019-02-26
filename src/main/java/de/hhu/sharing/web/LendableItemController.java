@@ -28,8 +28,8 @@ public class LendableItemController {
     @Autowired
     private BorrowingProcessService processService;
 
-    @GetMapping("/detailsItem")
-    public String details(@RequestParam(name = "id") Long id, Model model){
+    @GetMapping("/lendableItemDetails")
+    public String lendableItemDetails(@RequestParam(name = "id") Long id, Model model){
         LendableItem lendableItem = lendableItemService.get(id);
         User user = lendableItem.getOwner();
         model.addAttribute("lendableItem", lendableItem);
@@ -38,14 +38,14 @@ public class LendableItemController {
         return "lendableItemDetails";
     }
 
-    @GetMapping("/newItem")
-    public String newItem(Model model){
+    @GetMapping("/newLendableItem")
+    public String newLendableItem(Model model){
         model.addAttribute("lendableItem", new LendableItem());
         return "lendableItem";
     }
 
-    @GetMapping("/editItem")
-    public String editItem(Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
+    @GetMapping("/editLendableItem")
+    public String editLendableItem(Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         if(!lendableItemService.isChangeable(id)){
             redirectAttributes.addFlashAttribute("notChangeable", true);
             return "redirect:/account";
@@ -58,8 +58,8 @@ public class LendableItemController {
         return "lendableItem";
     }
 
-    @PostMapping("/saveItem")
-    public String saveItem(Long id, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("rental") Integer rental, @RequestParam("deposit") Integer deposit, @RequestParam("file") MultipartFile file , Principal p, RedirectAttributes redirectAttributes){
+    @PostMapping("/saveLendableItem")
+    public String saveLendableItem(Long id, @RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("rental") Integer rental, @RequestParam("deposit") Integer deposit, @RequestParam("file") MultipartFile file , Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         if(id == null){
             lendableItemService.create(name, description, rental, deposit, user, file);
@@ -72,8 +72,8 @@ public class LendableItemController {
         return "redirect:/account";
     }
 
-    @GetMapping("/deleteItem")
-    public String deleteItem(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
+    @GetMapping("/deleteLendableItem")
+    public String deleteLendableItem(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         if(!lendableItemService.isChangeable(id)){
             redirectAttributes.addFlashAttribute("notChangeable", true);
             return "redirect:/account";

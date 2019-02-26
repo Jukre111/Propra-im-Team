@@ -7,6 +7,8 @@ import de.hhu.sharing.data.LendableItemRepository;
 import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.services.SellableItemService;
 import org.assertj.core.api.Assertions;
+import de.hhu.sharing.model.SellableItem;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -27,6 +29,7 @@ import de.hhu.sharing.model.Image;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.FileSystemStorageService;
 import de.hhu.sharing.services.LendableItemService;
+import de.hhu.sharing.services.SellableItemService;
 import de.hhu.sharing.services.UserService;
 import de.hhu.sharing.web.FileUploadController;
 
@@ -41,6 +44,8 @@ public class FileUploadControllerTests {
     FileSystemStorageService fileStorageService;
     @MockBean
     LendableItemService lendableItemService;
+    @MockBean
+    SellableItemService sellableItemService;
     @MockBean
     UserService userService;
     @MockBean
@@ -67,6 +72,9 @@ public class FileUploadControllerTests {
     private LendableItem generateItem(User user) {
         return new LendableItem("apfel", "lecker", 1, 1, user);
     }
+    private SellableItem generateItem2(User user) {
+        return new SellableItem("apfel", "lecker", 1, user);
+    }
     
 	@Test
 	@WithMockUser(username = "user")
@@ -88,6 +96,18 @@ public class FileUploadControllerTests {
 	        	.andExpect(MockMvcResultMatchers.redirectedUrl("/"));
 		mvc.perform(MockMvcRequestBuilders.multipart("/handleFileUploadItem"));
 	}
+	
+	@Test
+	@WithMockUser(username = "user")
+	public void shouldUploadSellableItemPic() throws Exception {
+		MockMultipartFile jsonFile = new MockMultipartFile("test.json", "", "application/json", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
+		mvc.perform(MockMvcRequestBuilders.multipart("/handleFileUploadSellableItem")
+				.file("file", jsonFile.getBytes())
+				.characterEncoding("UTF-8"))
+	        	.andExpect(MockMvcResultMatchers.redirectedUrl("/"));
+		mvc.perform(MockMvcRequestBuilders.multipart("/handleFileUploadSellableItem"));
+	}
+	
 	@Test
 	@WithMockUser(username = "user")
 	public void downloadUserImage() throws Exception {
@@ -107,13 +127,28 @@ public class FileUploadControllerTests {
 	public void downloadItemImage() throws Exception {
 		MockMultipartFile jsonFile = new MockMultipartFile("test.json", "", "application/json", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
 		User user = generateUser("user");
-		LendableItem lendableItem = generateItem(user);
 		Image image = new Image();
+		LendableItem lendableItem = generateItem(user);
 		image.setImageData(jsonFile.getBytes());
 		image.setMimeType("image/gif");
 		lendableItem.setImage(image);
         Mockito.when(lendableItemService.get(1L)).thenReturn(lendableItem);
         mvc.perform(MockMvcRequestBuilders.get("/getItemPic?id=1"))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	@Test
+	@WithMockUser(username = "user")
+	public void downloadSellableItemImage() throws Exception {
+		MockMultipartFile jsonFile = new MockMultipartFile("test.json", "", "application/json", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
+		User user = generateUser("user");
+		SellableItem sellableItem = generateItem2(user);
+		Image image = new Image();
+		image.setImageData(jsonFile.getBytes());
+		image.setMimeType("image/gif");
+		sellableItem.setImage(image);
+        Mockito.when(sellableItemService.get(1L)).thenReturn(sellableItem);
+        mvc.perform(MockMvcRequestBuilders.get("/getSellableItemPic?id=1"))
         .andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
