@@ -136,7 +136,7 @@ public class BorrowingProcessServiceTest {
         TransactionRental rental = new TransactionRental();
 
         Mockito.when(processes.findById(1L)).thenReturn(Optional.of(process));
-        Mockito.when(conflictService.getFromBorrowindProcess(process)).thenReturn(conflict);
+        Mockito.when(conflictService.getFromBorrowingProcess(process)).thenReturn(conflict);
         Mockito.when(userService.getBorrowerFromBorrowingProcessId(1L)).thenReturn(borrower);
         Mockito.when(transactionService.getFromProcessId(1L)).thenReturn(rental);
 
@@ -170,7 +170,7 @@ public class BorrowingProcessServiceTest {
         TransactionRental rental = new TransactionRental();
 
         Mockito.when(processes.findById(1L)).thenReturn(Optional.of(process));
-        Mockito.when(conflictService.getFromBorrowindProcess(process)).thenReturn(conflict);
+        Mockito.when(conflictService.getFromBorrowingProcess(process)).thenReturn(conflict);
         Mockito.when(userService.getBorrowerFromBorrowingProcessId(1L)).thenReturn(borrower);
         Mockito.when(transactionService.getFromProcessId(1L)).thenReturn(rental);
 
@@ -203,7 +203,7 @@ public class BorrowingProcessServiceTest {
         TransactionRental rental = new TransactionRental();
 
         Mockito.when(processes.findById(1L)).thenReturn(Optional.of(process));
-        Mockito.when(conflictService.getFromBorrowindProcess(process)).thenReturn(conflict);
+        Mockito.when(conflictService.getFromBorrowingProcess(process)).thenReturn(conflict);
         Mockito.when(userService.getBorrowerFromBorrowingProcessId(1L)).thenReturn(borrower);
         Mockito.when(transactionService.getFromProcessId(1L)).thenReturn(rental);
 
@@ -234,7 +234,7 @@ public class BorrowingProcessServiceTest {
         TransactionRental rental = new TransactionRental();
 
         Mockito.when(processes.findById(1L)).thenReturn(Optional.of(process));
-        Mockito.when(conflictService.getFromBorrowindProcess(process)).thenReturn(conflict);
+        Mockito.when(conflictService.getFromBorrowingProcess(process)).thenReturn(conflict);
         Mockito.when(userService.getBorrowerFromBorrowingProcessId(1L)).thenReturn(borrower);
         Mockito.when(transactionService.getFromProcessId(1L)).thenReturn(rental);
 
