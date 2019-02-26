@@ -1,13 +1,10 @@
 package de.hhu.sharing.ControllerTests;
 
-import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
-import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.User;
-import de.hhu.sharing.services.ItemService;
+import de.hhu.sharing.services.LendableItemService;
 import de.hhu.sharing.services.RequestService;
 import de.hhu.sharing.services.UserService;
-import de.hhu.sharing.storage.StorageService;
 import de.hhu.sharing.web.IndexController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +20,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 
 @RunWith(SpringRunner.class)
@@ -37,7 +33,7 @@ public class IndexControllerTest {
     UserService userService;
 
     @MockBean
-    ItemService itemService;
+    LendableItemService lendableItemService;
 
     @MockBean
     RequestService requestService;
@@ -51,7 +47,7 @@ public class IndexControllerTest {
     @Test
     @WithMockUser
     public void retrieveStatusIndex() throws Exception{
-        Mockito.when(itemService.getAll()).thenReturn(new ArrayList<>());
+        Mockito.when(lendableItemService.getAll()).thenReturn(new ArrayList<>());
 
         mvc.perform(MockMvcRequestBuilders.get("/"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -60,7 +56,7 @@ public class IndexControllerTest {
     @Test
     @WithMockUser
     public void retrieveStatusSearch() throws Exception{
-        Mockito.when(itemService.searchFor("test")).thenReturn(new ArrayList<>());
+        Mockito.when(lendableItemService.searchFor("test")).thenReturn(new ArrayList<>());
 
         mvc.perform(MockMvcRequestBuilders.get("/search").param("query", "test"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -71,7 +67,7 @@ public class IndexControllerTest {
     public void retrieveStatusAccount() throws Exception{
         User user = createUser("User", "ROLE_USER");
         Mockito.when(userService.get("user")).thenReturn(user);
-        Mockito.when(itemService.getAllIPosted(user)).thenReturn(new ArrayList<>());
+        Mockito.when(lendableItemService.getAllIPosted(user)).thenReturn(new ArrayList<>());
 
         mvc.perform(MockMvcRequestBuilders.get("/account"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -82,8 +78,8 @@ public class IndexControllerTest {
     public void retrieveStatusMessages() throws Exception{
         User user = createUser("User", "ROLE_USER");
         Mockito.when(userService.get("user")).thenReturn(user);
-        Mockito.when(itemService.getAllIPosted(user)).thenReturn(new ArrayList<>());
-        Mockito.when(itemService.getAllIRequested(user)).thenReturn(new ArrayList<>());
+        Mockito.when(lendableItemService.getAllIPosted(user)).thenReturn(new ArrayList<>());
+        Mockito.when(lendableItemService.getAllIRequested(user)).thenReturn(new ArrayList<>());
 
         mvc.perform(MockMvcRequestBuilders.get("/messages"))
                 .andExpect(MockMvcResultMatchers.status().isOk());

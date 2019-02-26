@@ -7,8 +7,8 @@ import de.hhu.sharing.data.ImageRepository;
 import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
-import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.services.SellableItemService;
+import de.hhu.sharing.services.LendableItemService;
 import de.hhu.sharing.services.UserService;
 import de.hhu.sharing.storage.StorageFileNotFoundException;
 import de.hhu.sharing.storage.StorageService;
@@ -35,7 +35,7 @@ public class FileUploadController {
     private UserService userService;    
     
     @Autowired
-    private ItemService itemService;
+    private LendableItemService lendableItemService;
     
     @Autowired
     private ImageRepository imageRepo;
@@ -75,7 +75,7 @@ public class FileUploadController {
     @RequestMapping(value = "getItemPic", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<InputStreamResource> downloadItemImage(@RequestParam("id") Long id) {
-        LendableItem lendableItem = itemService.get(id);
+        LendableItem lendableItem = lendableItemService.get(id);
     	if(lendableItem.getImage()==null) {
         	return ResponseEntity.badRequest().build();
         }else{

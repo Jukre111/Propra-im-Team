@@ -15,7 +15,7 @@ public class BorrowingProcessService {
     private RequestService requestService;
 
     @Autowired
-    private ItemService itemService;
+    private LendableItemService lendableItemService;
 
     @Autowired
     private UserService userService;
@@ -37,7 +37,7 @@ public class BorrowingProcessService {
 
     public void accept(Long requestId) {
         Request request = requestService.get(requestId);
-        LendableItem lendableItem = itemService.getFromRequestId(requestId);
+        LendableItem lendableItem = lendableItemService.getFromRequestId(requestId);
         lendableItem.addToPeriods(request.getPeriod());
         this.createProcess(lendableItem, request);
         requestService.deleteOverlappingRequestsFromItem(request, lendableItem);

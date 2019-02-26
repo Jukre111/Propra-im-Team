@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ItemService{
+public class LendableItemService {
 
     @Autowired
     private LendableItemRepository items;

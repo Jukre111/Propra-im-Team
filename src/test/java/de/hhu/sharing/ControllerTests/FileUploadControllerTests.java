@@ -24,7 +24,7 @@ import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.Image;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.FileSystemStorageService;
-import de.hhu.sharing.services.ItemService;
+import de.hhu.sharing.services.LendableItemService;
 import de.hhu.sharing.services.UserService;
 import de.hhu.sharing.web.FileUploadController;
 
@@ -38,7 +38,7 @@ public class FileUploadControllerTests {
     @MockBean
     FileSystemStorageService fileStorageService;
     @MockBean
-    ItemService itemService;
+    LendableItemService lendableItemService;
     @MockBean
     UserService userService;
     @MockBean
@@ -103,7 +103,7 @@ public class FileUploadControllerTests {
 		image.setImageData(jsonFile.getBytes());
 		image.setMimeType("image/gif");
 		lendableItem.setImage(image);
-        Mockito.when(itemService.get(1L)).thenReturn(lendableItem);
+        Mockito.when(lendableItemService.get(1L)).thenReturn(lendableItem);
         mvc.perform(MockMvcRequestBuilders.get("/getItemPic?id=1"))
         .andExpect(MockMvcResultMatchers.status().isOk());
 	}
@@ -120,7 +120,7 @@ public class FileUploadControllerTests {
 	@WithMockUser(username = "user")
 	public void downloadItemImageNoImage() throws Exception {
 		LendableItem lendableItem = new LendableItem();
-        Mockito.when(itemService.get(1L)).thenReturn(lendableItem);
+        Mockito.when(lendableItemService.get(1L)).thenReturn(lendableItem);
         mvc.perform(MockMvcRequestBuilders.get("/getItemPic?id=1"))
         .andExpect(MockMvcResultMatchers.status().is(400));
 	}

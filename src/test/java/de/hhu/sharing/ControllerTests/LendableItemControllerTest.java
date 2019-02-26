@@ -3,11 +3,11 @@ package de.hhu.sharing.ControllerTests;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.*;
 import de.hhu.sharing.services.BorrowingProcessService;
-import de.hhu.sharing.services.ItemService;
+import de.hhu.sharing.services.LendableItemService;
 import de.hhu.sharing.services.RequestService;
 import de.hhu.sharing.services.UserService;
 import de.hhu.sharing.storage.StorageService;
-import de.hhu.sharing.web.ItemController;
+import de.hhu.sharing.web.LendableItemController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -27,14 +27,14 @@ import java.time.LocalDate;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(ItemController.class)
-public class ItemControllerTest {
+@WebMvcTest(LendableItemController.class)
+public class LendableItemControllerTest {
 
     @Autowired
     MockMvc mvc;
 
     @MockBean
-    ItemService itemService;
+    LendableItemService lendableItemService;
 
     @MockBean
     UserService userService;
@@ -63,7 +63,7 @@ public class ItemControllerTest {
     @WithMockUser
     public void retrieveStatusDetails() throws Exception{
         LendableItem lendableItem = itemCreator();
-        Mockito.when(itemService.get(1L)).thenReturn(lendableItem);
+        Mockito.when(lendableItemService.get(1L)).thenReturn(lendableItem);
         mvc.perform(MockMvcRequestBuilders.get("/detailsItem").param("id","1"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
@@ -80,9 +80,9 @@ public class ItemControllerTest {
     @WithMockUser
     public void retrieveStatusEditItem() throws Exception{
         LendableItem lendableItem = itemCreator();
-        Mockito.when(itemService.isChangeable(1L)).thenReturn(true);
+        Mockito.when(lendableItemService.isChangeable(1L)).thenReturn(true);
         Mockito.when(userService.get("user")).thenReturn(lendableItem.getOwner());
-        Mockito.when(itemService.get(1L)).thenReturn(lendableItem);
+        Mockito.when(lendableItemService.get(1L)).thenReturn(lendableItem);
         mvc.perform(MockMvcRequestBuilders.get("/editItem").param("id","1"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }

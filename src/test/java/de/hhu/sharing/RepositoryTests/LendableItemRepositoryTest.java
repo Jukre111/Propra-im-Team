@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class lendableLendableItemRepositoryTest {
+public class LendableItemRepositoryTest {
 
     @Autowired
     LendableItemRepository itemRepo;

@@ -1,7 +1,7 @@
 package de.hhu.sharing.ServiceTests;
 import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.model.*;
-import de.hhu.sharing.services.ItemService;
+import de.hhu.sharing.services.LendableItemService;
 import de.hhu.sharing.services.RequestService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,7 +19,7 @@ public class RequestServiceTest {
     private RequestRepository requests;
 
     @Mock
-    private ItemService itemService;
+    private LendableItemService lendableItemService;
 
     @InjectMocks
     private RequestService requestService;
@@ -58,7 +58,7 @@ public class RequestServiceTest {
     public void testCreate(){
         User user = generateUser("Karl");
         LendableItem lendableItem = generateItem(user);
-        Mockito.when(itemService.get(1L)).thenReturn(lendableItem);
+        Mockito.when(lendableItemService.get(1L)).thenReturn(lendableItem);
 
         requestService.create(1L, LocalDate.of(2000,2,2),LocalDate.of(2000,2,3),user);
 
@@ -78,7 +78,7 @@ public class RequestServiceTest {
         LendableItem lendableItem = generateItem(user2);
         lendableItem.addToRequests(request);
         Mockito.when(requests.findById(1L)).thenReturn(Optional.of(request));
-        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(lendableItem);
+        Mockito.when(lendableItemService.getFromRequestId(1L)).thenReturn(lendableItem);
 
         requestService.delete(1L);
 
@@ -104,8 +104,8 @@ public class RequestServiceTest {
 
         Mockito.when(requests.findById(1L)).thenReturn(Optional.of(request));
         Mockito.when(requests.findById(2L)).thenReturn(Optional.of(otherRequest));
-        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(lendableItem);
-        Mockito.when(itemService.getFromRequestId(2L)).thenReturn(lendableItem);
+        Mockito.when(lendableItemService.getFromRequestId(1L)).thenReturn(lendableItem);
+        Mockito.when(lendableItemService.getFromRequestId(2L)).thenReturn(lendableItem);
 
         requestService.deleteOverlappingRequestsFromItem(request, lendableItem);
 
