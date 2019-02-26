@@ -24,6 +24,19 @@ public class SellableItemController {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/sellItemDetails")
+    private String sellItemDetails(Model model, @RequestParam("id") Long id){
+        SellableItem sellItem = sellableItemService.get(id);
+        User user = sellItem.getOwner();
+        model.addAttribute("user", user);
+        model.addAttribute("sellableItem", sellItem);
+
+        return ("sellItemDetails");
+    }
+
+
+
+
     @GetMapping("/sellItem")
     private String sellItem(Model model){
         model.addAttribute("sellableItem", new SellableItem());
@@ -61,7 +74,7 @@ public class SellableItemController {
 
     @GetMapping("/deleteSellItem")
     public String deleteSellItem(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
-        
+
         if(sellableItemService.get(id).getOwner() != userService.get(p.getName())){
             redirectAttributes.addFlashAttribute("notAuthorized",true);
             return "redirect:/account";
@@ -69,6 +82,13 @@ public class SellableItemController {
         sellableItemService.delete(id);
         redirectAttributes.addFlashAttribute("deleted",true);
         return "redirect:/account";
+    }
+
+    @GetMapping("/buy")
+    public String buy(@RequestParam("id") Long id){
+        
+
+        return ("redirect:/");
     }
 
 }

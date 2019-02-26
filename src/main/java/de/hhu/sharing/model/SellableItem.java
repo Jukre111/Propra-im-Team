@@ -1,11 +1,10 @@
 package de.hhu.sharing.model;
-
 import lombok.Data;
-
 import javax.persistence.Entity;
 
-@Entity (name = "sellableItem")
+
 @Data
+@Entity (name = "SellableItem")
 public class SellableItem extends Item{
 
     private Integer price;
