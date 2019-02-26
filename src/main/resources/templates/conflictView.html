@@ -27,7 +27,7 @@
             <th width="10%">Details</th>
         </tr>
         <tr th:each="conflict : ${allConflicts}">
-            <td th:text="${conflict.process.lendableItem.name}"></td>
+            <td th:text="${conflict.process.item.name}"></td>
             <td th:text="${conflict.lender.username}"></td>
             <td></td>
             <td>
