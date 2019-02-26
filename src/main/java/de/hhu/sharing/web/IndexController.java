@@ -35,7 +35,7 @@ public class IndexController {
     public String index(Model model, RedirectAttributes redirectAttributes, Principal p) {
         List<SellableItem> sellItems = sellableItemService.getAll();
         model.addAttribute("lendableItems", lendableItemService.getAll());
-        model.addAttribute("sellItems", sellItems);
+        model.addAttribute("sellableItems", sellItems);
         User user = userService.get(p.getName());
         if(userService.userHasNotReturnedItems(user)){
             redirectAttributes.addFlashAttribute("returnYourItems", true);
@@ -48,6 +48,7 @@ public class IndexController {
     @GetMapping("/search")
     public String search(Model model, @RequestParam String query) {
         model.addAttribute("lendableItems", lendableItemService.searchFor(query));
+        model.addAttribute("sellableItems", sellableItemService.searchFor(query));
         model.addAttribute("query", query);
         return "search";
     }

@@ -74,7 +74,7 @@
         <div class="col-sm-5" style="padding: 20px; margin-left: 30px">
             <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" name="name">Verkauf</span></h1>
             <div class="form-horizontal" style="padding-top: 30px">
-                <section th:each="item : ${sellItems}" class="media style textPosition" style="padding: 20px; height: 200px">
+                <section th:each="item : ${sellableItems}" class="media style textPosition" style="padding: 20px; height: 200px">
                     <div class="media-left media-middle" style="padding-right: 40px">
                         <a th:href="@{'/sellItemDetails?id=' + ${item.id}}">
                             <img class="img circular--landscape" th:src="@{'/getSellableItemPic?id=' + ${item.id}}" style="width: 128px;height: 128px;" align="left">
