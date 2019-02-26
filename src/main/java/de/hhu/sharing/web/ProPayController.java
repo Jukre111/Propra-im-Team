@@ -1,8 +1,6 @@
 package de.hhu.sharing.web;
 
 import de.hhu.sharing.model.User;
-import de.hhu.sharing.propay.TransactionPurchase;
-import de.hhu.sharing.propay.TransactionRental;
 import de.hhu.sharing.services.TransactionPurchaseService;
 import de.hhu.sharing.services.TransactionRentalService;
 import de.hhu.sharing.services.UserService;
