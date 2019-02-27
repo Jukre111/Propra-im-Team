@@ -24,7 +24,7 @@ public class ProPayService {
 
     @Autowired
     private TransactionRentalService transRenService;
-
+    @Autowired
     private RestTemplate rt = new RestTemplate();
     private String URL = "http://localhost:8888/";
 
@@ -96,7 +96,7 @@ public class ProPayService {
         return depositSum;
     }
 
-    private void callURL(String urlString, String method) {
+    public void callURL(String urlString, String method) {
         try {
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
