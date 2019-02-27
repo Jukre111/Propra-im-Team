@@ -26,9 +26,6 @@ public class BorrowingProcessServiceTest {
     private RequestService requestService;
 
     @Mock
-    private ItemService itemService;
-
-    @Mock
     private UserService userService;
 
     @Mock

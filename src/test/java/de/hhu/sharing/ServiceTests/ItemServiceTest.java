@@ -7,16 +7,12 @@ import de.hhu.sharing.model.Item;
 import de.hhu.sharing.model.Period;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.ConflictService;
-import de.hhu.sharing.services.ItemService;
 import de.hhu.sharing.storage.StorageService;
-import org.apache.tomcat.jni.Local;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.NestedServletException;
 
 import java.nio.charset.Charset;
 import java.time.LocalDate;
