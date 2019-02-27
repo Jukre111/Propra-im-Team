@@ -32,10 +32,7 @@ public class SellableItemController {
     private ProPayService proService;
 
     @Autowired
-    private TransactionPurchaseService transPurService;
-
-    @Autowired
-    private TransactionPurchaseRepository transPurRepo;
+    private TransactionPurchaseService transactionPurchaseService;
 
     @GetMapping("/sellableItemDetails")
     private String sellableItemDetails(Model model, @RequestParam("id") Long id){
@@ -91,26 +88,19 @@ public class SellableItemController {
     @GetMapping("/buy")
     public String buy(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User buyer = userService.get(p.getName());
-        if(sellableItemService.isOwner(id, buyer)){
+        SellableItem sellableItem = sellableItemService.get(id);
+        User owner = sellableItem.getOwner();
+        if(buyer == owner){
             redirectAttributes.addFlashAttribute("ownItem",true);
             return "redirect:/";
         }
-
-        SellableItem sellableItem = sellableItemService.get(id);
-        User owner = sellableItem.getOwner();
-        // TODO something brilliant
-
         if(!proService.enoughCredit(buyer,sellableItem)){
-            //Popup-message that buyer has not enough money 
+            redirectAttributes.addFlashAttribute("noCredit",true);
             return ("redirect:/");
         }
-
-        transPurService.createTransactionPurchase(sellableItem, owner, buyer);
-        TransactionPurchase transPur = transPurRepo.findByItemId(sellableItem.getId());
-        proService.initiateTransactionPurchase(transPur);
-
+        transactionPurchaseService.createTransactionPurchase(sellableItem, buyer, owner);
         sellableItemService.delete(id);
-
+        redirectAttributes.addFlashAttribute("bought",true);
         return ("redirect:/");
     }
 

@@ -18,9 +18,7 @@ public class TransactionRental {
     private int deposit;
     private Long processId;
     private String depositRevoked = "offen";
-
-    @ManyToOne
-    private LendableItem lendableItem;
+    private String itemName;
 
     @ManyToOne
     private User sender;
@@ -35,7 +33,7 @@ public class TransactionRental {
         this.wholeRent = wholeRent;
         this.deposit = deposit;
         this.processId = processId;
-        this.lendableItem = lendableItem;
+        this.itemName = lendableItem.getName();
         this.sender = sender;
         this.receiver = receiver;
     }

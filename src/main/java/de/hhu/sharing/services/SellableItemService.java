@@ -61,9 +61,4 @@ public class SellableItemService {
     public List<SellableItem> searchFor(String query) {
         return this.items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query,query);
     }
-
-    public boolean isOwner(Long id, User user) {
-        SellableItem sellableItem = this.get(id);
-        return sellableItem.getOwner() == user;
-    }
 }

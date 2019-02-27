@@ -23,7 +23,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class ProPayService {
 
     @Autowired
-    TransactionRentalService transRenService;
+    private TransactionRentalService transRenService;
 
     private RestTemplate rt = new RestTemplate();
     private String URL = "http://localhost:8888/";
@@ -39,13 +39,13 @@ public class ProPayService {
         int days = (int) DAYS.between(startdate, enddate) + 1;
         int rent = lendableItem.getRental() * days;
         int amount = this.getAccount(user).getAmount();
-        return amount >= (rent + lendableItem.getDeposit()+getDepositSum(this.getAccount(user)));
+        return amount >= (rent + lendableItem.getDeposit() + getDepositSum(this.getAccount(user)));
     }
 
-    public boolean enoughCredit(User user, SellableItem sellAbleItem){
-        int price = sellAbleItem.getPrice();
+    public boolean enoughCredit(User user, SellableItem sellableItem){
+        int price = sellableItem.getPrice();
         int amount = this.getAccount(user).getAmount();
-        return amount >= (price+getDepositSum(this.getAccount(user)));
+        return amount >= (price + getDepositSum(this.getAccount(user)));
     }
 
     public void rechargeCredit(User user, int amount) {
@@ -88,6 +88,14 @@ public class ProPayService {
         transRenService.setDepositRevoked(transRen,"Ja");
     }
 
+    public int getDepositSum (Account account){
+        int depositSum = 0;
+        for(int i = 0; i < account.getReservations().size(); i++) {
+            depositSum += account.getReservations().get(i).getAmount();
+        }
+        return depositSum;
+    }
+
     private void callURL(String urlString, String method) {
         try {
             URL url = new URL(urlString);
@@ -101,13 +109,5 @@ public class ProPayService {
         } catch (IOException e) {
             throw new RuntimeException("ProPay not reachable!");
         }
-    }
-
-    public int getDepositSum (Account account){
-        int depositSum = 0;
-        for(int i = 0; i<account.getReservations().size(); i++) {
-            depositSum += account.getReservations().get(i).getAmount();
-        }
-        return depositSum;
     }
 }

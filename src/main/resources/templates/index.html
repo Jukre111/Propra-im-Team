@@ -39,6 +39,7 @@
 <body>
 <div layout:fragment="body">
     <div class="alert alert-success" role="alert" th:if="${requested}" >Anfrage erfolgreich gestellt.</div>
+    <div class="alert alert-success" role="alert" th:if="${bought}" >Objekt erfolgreich gekauft.</div>
     <div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${ownItem}" >Eigenes Objekt nicht an sich selbst verleihbar/verkaufbar.</div>
     <div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${noCredit}" >Nicht genug ProPray-Guthaben.</div>
     <div class="alert alert-danger" style="margin-top: 30px" role="alert" th:if="${returnYourItems}" >Sie haben Items, die dringend zurück gegeben werden müssen!</div>
@@ -46,7 +47,7 @@
         <div class="col-sm-5" style="padding: 20px; margin-left: 30px">
             <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name">Verleih</span></h1>
             <div class="form-horizontal" style="padding-top: 30px">
-                <section th:each="item : ${lendableItems}" class="media style textPosition" style="padding: 20px; height: 200px">
+                <section th:each="item : ${lendableItems}" class="media style textPosition" style="padding: 20px; height: 225px">
                     <div class="media-left media-middle" style="padding-right: 40px">
                         <a th:href="@{'/lendableItemDetails?id=' + ${item.Id}}">
                             <img class="img circular--landscape" th:src="@{'/getItemPic?id=' + ${item.id}}" style="width: 128px;height: 128px;" align="left">
@@ -74,7 +75,7 @@
         <div class="col-sm-5" style="padding: 20px; margin-left: 30px">
             <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" name="name">Verkauf</span></h1>
             <div class="form-horizontal" style="padding-top: 30px">
-                <section th:each="item : ${sellableItems}" class="media style textPosition" style="padding: 20px; height: 200px">
+                <section th:each="item : ${sellableItems}" class="media style textPosition" style="padding: 20px; height: 225px">
                     <div class="media-left media-middle" style="padding-right: 40px">
                         <a th:href="@{'/sellableItemDetails?id=' + ${item.id}}">
                             <img class="img circular--landscape" th:src="@{'/getSellableItemPic?id=' + ${item.id}}" style="width: 128px;height: 128px;" align="left">

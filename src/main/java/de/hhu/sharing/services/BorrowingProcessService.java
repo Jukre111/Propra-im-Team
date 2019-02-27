@@ -24,7 +24,7 @@ public class BorrowingProcessService {
     private ProPayService proPayService;
 
     @Autowired
-    private TransactionRentalService transactionService;
+    private TransactionRentalService transactionRentalService;
 
     @Autowired
     private  ConflictService conflictService;
@@ -48,7 +48,7 @@ public class BorrowingProcessService {
         processes.save(process);
         User borrower = request.getRequester();
         User lender = lendableItem.getOwner();
-        transactionService.createTransactionRental(process, borrower, lender);
+        transactionRentalService.createTransactionRental(process, borrower, lender);
         borrower.addToBorrowed(process);
         lender.addToLend(process);
     }
@@ -61,10 +61,10 @@ public class BorrowingProcessService {
         }
         User borrower = userService.getBorrowerFromBorrowingProcessId(processId);
         if(condition.equals("good")){
-            proPayService.releaseDeposit(borrower, transactionService.getFromProcessId(processId));
+            proPayService.releaseDeposit(borrower, transactionRentalService.getFromProcessId(processId));
         }
         else{
-            proPayService.punishDeposit(borrower, transactionService.getFromProcessId(processId));
+            proPayService.punishDeposit(borrower, transactionRentalService.getFromProcessId(processId));
         }
         userService.removeProcessFromProcessLists(process);
         process.getItem().removeFromPeriods(process.getPeriod());

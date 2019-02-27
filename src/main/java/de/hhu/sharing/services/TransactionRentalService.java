@@ -39,7 +39,7 @@ public class TransactionRentalService {
         LendableItem lendableItem = process.getItem();
         int days = (int) DAYS.between(process.getPeriod().getStartdate(),process.getPeriod().getEnddate()) + 1;
         int rent = lendableItem.getRental() * days;
-        TransactionRental transRen = new TransactionRental(rent, lendableItem.getDeposit(),process.getId(), lendableItem, borrower, lender);
+        TransactionRental transRen = new TransactionRental(rent, lendableItem.getDeposit(), process.getId(), lendableItem, borrower, lender);
         proPayService.initiateTransactionRental(transRen);
         transactions.save(transRen);
     }

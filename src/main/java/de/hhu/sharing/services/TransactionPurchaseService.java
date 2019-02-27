@@ -16,6 +16,9 @@ public class TransactionPurchaseService {
     @Autowired
     TransactionPurchaseRepository transactions;
 
+    @Autowired
+    private ProPayService proPayService;
+
 
     public List<TransactionPurchase> getAllFromSender(User user){
         return transactions.findAllBySender(user);
@@ -25,8 +28,9 @@ public class TransactionPurchaseService {
         return transactions.findAllByReceiver(user);
     }
 
-    public void createTransactionPurchase(SellableItem item, User seller, User buyer){
+    public void createTransactionPurchase(SellableItem item, User buyer, User seller){
         TransactionPurchase transPur = new TransactionPurchase(item, buyer, seller);
+        proPayService.initiateTransactionPurchase(transPur);
         transactions.save(transPur);
     }
 
