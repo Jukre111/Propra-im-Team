@@ -1,9 +1,7 @@
-package de.hhu.sharing.ControllerTests;
+package de.hhu.sharing.web;
 
 import de.hhu.sharing.model.*;
 import de.hhu.sharing.services.*;
-import de.hhu.sharing.web.ConflictController;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;

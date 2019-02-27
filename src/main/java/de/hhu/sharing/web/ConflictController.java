@@ -31,7 +31,7 @@ public class ConflictController {
         User user = userService.get(p.getName());
         BorrowingProcess process = borrowingProcessService.get(id);
         if(!userService.userIsInvolvedToProcess(user, process)){
-            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
         Conflict conflict = conflictService.getFromBorrowindProcess(process);
@@ -48,12 +48,12 @@ public class ConflictController {
         User user = userService.get(p.getName());
         BorrowingProcess process = borrowingProcessService.get(id);
         if(!userService.userIsInvolvedToProcess(user, process)){
-            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
         Conflict conflict = conflictService.getFromBorrowindProcess(process);
         if(conflict != null){
-            redirectAttributes.addFlashAttribute("conflictExistsAlready",true);
+            redirectAttributes.addFlashAttribute("errMessage","Konflikt existiert bereits.");
             return "redirect:/conflictDetails?id=" + conflict.getId();
         }
         conflictService.create(process.getItem().getOwner(), userService.getBorrowerFromBorrowingProcessId(id), process, user, problem);
@@ -65,7 +65,7 @@ public class ConflictController {
         User user = userService.get(p.getName());
         Conflict conflict = conflictService.get(id);
         if(!userService.userIsInvolvedToProcess(user, conflict.getProcess())){
-            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
         conflictService.addToMessages(conflict, user, message);
@@ -77,7 +77,7 @@ public class ConflictController {
         User user = userService.get(p.getName());
         Conflict conflict = conflictService.get(id);
         if(!userService.userIsInvolvedToProcess(user, conflict.getProcess()) && !user.getRole().equals("ROLE_ADMIN")){
-            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
         model.addAttribute("conflict", conflictService.get(id));

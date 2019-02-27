@@ -38,6 +38,8 @@
 </head>
 <body>
 <div layout:fragment="body" style="padding-left: 50px; padding-right: 50px">
+    <div class="alert alert-success" role="alert" th:if="${succMessage}" th:text="${succMessage}"></div>
+    <div class="alert alert-danger" role="alert" th:if="${errMessage}" th:text="${errMessage}"></div>
     <div>
         <h1><span style="font-size: 20pt">Suchergebnisse für</span> <span style="font-size: 30pt; color: #BD1D6F" th:text="|'${query}'|"></span></h1>
     </div>

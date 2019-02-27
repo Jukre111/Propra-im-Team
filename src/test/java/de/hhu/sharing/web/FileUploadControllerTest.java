@@ -1,41 +1,26 @@
-package de.hhu.sharing.ControllerTests;
-
-import java.nio.charset.Charset;
-import java.time.LocalDate;
+package de.hhu.sharing.web;
 
 import de.hhu.sharing.data.LendableItemRepository;
-import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.services.SellableItemService;
 import org.assertj.core.api.Assertions;
-import de.hhu.sharing.model.SellableItem;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import de.hhu.sharing.data.ImageRepository;
 import de.hhu.sharing.data.UserRepository;
-import de.hhu.sharing.model.Address;
-import de.hhu.sharing.model.Image;
-import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.FileSystemStorageService;
 import de.hhu.sharing.services.LendableItemService;
-import de.hhu.sharing.services.SellableItemService;
 import de.hhu.sharing.services.UserService;
-import de.hhu.sharing.web.FileUploadController;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(FileUploadController.class)
-public class FileUploadControllerTests {
+public class FileUploadControllerTest {
 
 	@Autowired
 	MockMvc mvc;

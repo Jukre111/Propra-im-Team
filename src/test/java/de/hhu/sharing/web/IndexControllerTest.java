@@ -1,4 +1,4 @@
-package de.hhu.sharing.ControllerTests;
+package de.hhu.sharing.web;
 
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.User;
@@ -6,7 +6,6 @@ import de.hhu.sharing.services.LendableItemService;
 import de.hhu.sharing.services.RequestService;
 import de.hhu.sharing.services.SellableItemService;
 import de.hhu.sharing.services.UserService;
-import de.hhu.sharing.web.IndexController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;

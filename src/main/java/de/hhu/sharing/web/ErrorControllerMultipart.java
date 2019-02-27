@@ -7,16 +7,19 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @ControllerAdvice
 public class ErrorControllerMultipart extends ResponseEntityExceptionHandler {
 
 
 @ExceptionHandler(MultipartException.class)
-String handleFileException(HttpServletRequest request, Throwable ex) {
-    if(request.getServletPath().equals("/handleFileUploadItem"))
+String handleFileException(HttpServletRequest request, Throwable ex, RedirectAttributes redirectAttributes) {
+    if(request.getServletPath().equals("/handleFileUploadItem")) {
+        redirectAttributes.addFlashAttribute("errMessage", ">Bild zu groß (über 150KB) oder falsches Format!");
         return "redirect:/";
-    else
-        return "redirect:/account";
+    }
+    redirectAttributes.addFlashAttribute("errMessage", ">Bild zu groß (über 150KB) oder falsches Format!");
+    return "redirect:/account";
   }
 }

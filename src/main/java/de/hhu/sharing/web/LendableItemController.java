@@ -47,11 +47,11 @@ public class LendableItemController {
     @GetMapping("/editLendableItem")
     public String editLendableItem(Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         if(!lendableItemService.isChangeable(id)){
-            redirectAttributes.addFlashAttribute("notChangeable", true);
+            redirectAttributes.addFlashAttribute("errMessage", "Objekt nicht veränderbar. Es sind noch Requests, Verleihungen oder Konflikte offen.");
             return "redirect:/account";
         }
         if(lendableItemService.get(id).getOwner() != userService.get(p.getName())){
-            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
         model.addAttribute("lendableItem", lendableItemService.get(id));
@@ -63,11 +63,11 @@ public class LendableItemController {
         User user = userService.get(p.getName());
         if(id == null){
             lendableItemService.create(name, description, rental, deposit, user, file);
-            redirectAttributes.addFlashAttribute("saved",true);
+            redirectAttributes.addFlashAttribute("succMessage","Objekt erstellt.");
         }
         else {
             lendableItemService.edit(id,name, description, rental, deposit, user);
-            redirectAttributes.addFlashAttribute("edited",true);
+            redirectAttributes.addFlashAttribute("succMessage","Objekt bearbeitet.");
         }
         return "redirect:/account";
     }
@@ -75,15 +75,15 @@ public class LendableItemController {
     @GetMapping("/deleteLendableItem")
     public String deleteLendableItem(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         if(!lendableItemService.isChangeable(id)){
-            redirectAttributes.addFlashAttribute("notChangeable", true);
+            redirectAttributes.addFlashAttribute("errMessage", "Objekt nicht löschbar. Es sind noch Requests, Verleihungen oder Konflikte offen.");
             return "redirect:/account";
         }
         if(lendableItemService.get(id).getOwner() != userService.get(p.getName())){
-            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
         lendableItemService.delete(id);
-        redirectAttributes.addFlashAttribute("deleted",true);
+        redirectAttributes.addFlashAttribute("succMessage","Objekt gelöscht.");
         return "redirect:/account";
     }
 
@@ -91,11 +91,11 @@ public class LendableItemController {
     public String itemReturned(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         if(processService.get(id).getItem().getOwner() != user){
-            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
         processService.itemReturned(id, "good");
-        redirectAttributes.addFlashAttribute("returned",true);
+        redirectAttributes.addFlashAttribute("succMessage","Objekt erhaten.");
         return "redirect:/account";
     }
 }
