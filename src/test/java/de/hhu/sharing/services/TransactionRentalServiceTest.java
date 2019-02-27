@@ -70,7 +70,6 @@ public class TransactionRentalServiceTest {
     public void testCreateTransactionRental() {
         Period period = generatePeriod(1,2);
         User borrower = generateUser("user");
-        Request request = new Request();
         User lender = generateUser("user");
         LendableItem item = generateItem(lender);
     	BorrowingProcess process = new BorrowingProcess(item, period);

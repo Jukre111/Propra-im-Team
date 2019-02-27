@@ -71,7 +71,6 @@ public class TransactionPurchaseServiceTest {
     
     @Test
     public void testCreateTransactionPurchase() {
-        Period period = generatePeriod(1,2);
         User buyer = generateUser("user");
         User seller = generateUser("user");
         SellableItem item = generateItem(seller);
