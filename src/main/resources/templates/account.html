@@ -70,15 +70,12 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 				<div class="media-left media-middle">
 					<img class="img" id="circular--landscape" th:src="@{/getUserPic}">
 				</div>
-				<div class="media-body">
+				<div class="media-body" style="margin-right: 50px">
 					<div class="form-group">
 						<label for="username" class="col-sm-2 control-label">Benutzername</label>
 						<div class="col-xs-6">
 							<input type="text" class="form-control" id="name" name="name" th:value="${user.username}" readonly/>
 						</div>
-					</div>
-					<div class="media-right media-top" style="float: right" th:if="${user.role == 'ROLE_ADMIN'}">
-						<a id="conflictbtn" th:href="@{/admin/conflicts}" style="margin-right: 150px">Konfliktlösestelle</a>
 					</div>
 					<div class="form-group">
 						<label for="forename" class="col-sm-2 control-label">Vorname</label>
@@ -140,6 +137,9 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 							<a class="indexbtn" href="/propayAccount">zum Account</a>
 						</div>
 					</div>
+				</div>
+				<div class="media-right media-middle" style="padding-top: 20px" th:if="${user.role == 'ROLE_ADMIN'}">
+					<a id="conflictbtn" th:href="@{/admin/conflicts}" style="margin-right: 50px">Konfliktlösestelle</a>
 				</div>
 			</div>
 		</div>

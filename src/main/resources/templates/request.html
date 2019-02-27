@@ -13,8 +13,23 @@
             var startDt = document.getElementById("startdate").value;
             var endDt = document.getElementById("enddate").value;
             var button = document.getElementById("button");
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1;
+            var yyyy= today.getFullYear();
+            today.setHours(0, 0, 0, 0);
 
-            if(startDt && new Date(startDt).getDate() < new Date().getDate()){
+            if(dd < 10) {
+                dd = '0' + dd;
+            }
+
+            if(mm < 10) {
+                mm ='0' + mm;
+            }
+
+            today = yyyy + '-' + mm + '-' + dd;
+
+            if(startDt < today){
                 console.log("failure");
                 button.disabled = true;
                 alert("Das Startdatum kann nicht vor heute liegen!");
@@ -56,7 +71,7 @@
                 <div class="form-group">
                     <label for="startdate" class="col-sm-2 control-label">Startdatum</label>
                     <div class="col-xs-6">
-                        <input style="opacity: 0" id="startdate" name="startdate" required=""/>
+                        <input type="date" style="opacity: 0" id="startdate" name="startdate" required=""/>
                         <div id="startdatecalendar" data-toggle="calendar"></div>
                         <script type="text/javascript" th:inline="javascript">
                             $(document).ready(function()
