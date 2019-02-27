@@ -139,7 +139,8 @@ public class UserServiceTest {
     @Test
     public void testUserHasNotReturnedItems(){
         User user = generateUser();
-        LendableItem item = generateItem(user);
+        User user2 = generateUser();
+        LendableItem item = generateItem(user2);
         Period period = new Period(LocalDate.of(2000,1,1),LocalDate.of(2000,2,2));
         BorrowingProcess process = new BorrowingProcess(item,period);
         user.addToBorrowed(process);
@@ -151,8 +152,9 @@ public class UserServiceTest {
     @Test
     public void testUserHasNotReturnedItemsButTimeIsNotOver(){
         User user = generateUser();
-        LendableItem item = generateItem(user);
-        Period period = new Period(LocalDate.of(2020,1,1),LocalDate.of(2020,2,2));
+        User user2 = generateUser();
+        LendableItem item = generateItem(user2);
+        Period period = new Period(LocalDate.now().plusDays(1),LocalDate.now().plusDays(2));
         BorrowingProcess process = new BorrowingProcess(item,period);
         user.addToBorrowed(process);
         userService.userHasNotReturnedItems(user);
@@ -160,6 +162,6 @@ public class UserServiceTest {
         Assert.assertTrue(userService.userHasNotReturnedItems(user) == false);
     }
 
-    
+
 
 }

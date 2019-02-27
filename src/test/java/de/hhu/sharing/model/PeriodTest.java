@@ -83,7 +83,7 @@ public class PeriodTest {
 
     @Test
     public void testIsNotOutdated(){
-        Period period = new Period (LocalDate.of(2020,1,1), LocalDate.of(2020,1,2));
+        Period period = new Period (LocalDate.now().plusDays(1), LocalDate.now().plusDays(2));
         Assert.assertTrue(period.isOutdated() == false);
     }
 }
