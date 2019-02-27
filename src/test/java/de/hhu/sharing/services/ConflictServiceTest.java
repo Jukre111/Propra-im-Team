@@ -64,6 +64,12 @@ public class ConflictServiceTest{
         Assert.assertEquals(conflict.getLender(), conflict2.getLender());
     }
 
+    @Test(expected = RuntimeException.class)
+    public void testGetNotExistent() {
+        Mockito.when(conflicts.findById(1L)).thenReturn(Optional.empty());
+        conflictService.get(1L);
+    }
+
     @Test
     public void testGetFromBorrowingProcess() {
         User lender = generateUser();
