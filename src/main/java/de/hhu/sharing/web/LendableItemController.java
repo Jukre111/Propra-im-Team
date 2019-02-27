@@ -67,7 +67,7 @@ public class LendableItemController {
             redirectAttributes.addFlashAttribute("succMessage","Objekt erstellt.");
             return "redirect:/account";
         }
-        lendableItemService.edit(id,name, description, rental, deposit, user);
+        lendableItemService.edit(id,name, description, rental, deposit, user, file);
         redirectAttributes.addFlashAttribute("succMessage","Objekt bearbeitet.");
         return "redirect:/account";
     }
