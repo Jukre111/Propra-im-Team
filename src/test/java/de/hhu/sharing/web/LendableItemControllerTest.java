@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.Charset;
@@ -33,6 +34,10 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 @RunWith(SpringRunner.class)
 @WebMvcTest(LendableItemController.class)
 public class LendableItemControllerTest {
+
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
 
     @Autowired
     MockMvc mvc;
@@ -136,24 +141,24 @@ public class LendableItemControllerTest {
     }
 
 
-//    @Test
-//    @WithMockUser
-//    public void retrieveStatusSaveLendableItem() throws Exception{
-//        User lender = createUser("User", "ROLE_USER");
-//        Mockito.when(userService.get("user")).thenReturn(lender);
-//
-//        MultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
-//        MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
-//        map.add("name","name");
-//        map.add("description","desc");
-//        map.add("rental","42");
-//        map.add("deposit","41");
-//
-//        mvc.perform(MockMvcRequestBuilders.post("/saveLendableItem").with(csrf()).params(map))
-//                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
-//                .andExpect(MockMvcResultMatchers.status().isFound())
-//                .andExpect(MockMvcResultMatchers.flash().attributeExists("succMessage"));
-//    }
+    @Test
+    @WithMockUser
+    public void retrieveStatusSaveLendableItem() throws Exception{
+        User lender = createUser("User", "ROLE_USER");
+        Mockito.when(userService.get("user")).thenReturn(lender);
+
+        MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
+        MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
+        map.add("name","name");
+        map.add("description","desc");
+        map.add("rental","42");
+        map.add("deposit","41");
+
+        mvc.perform(MockMvcRequestBuilders.multipart("/saveLendableItem").file("file",jsonFile.getBytes()).params(map))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("succMessage"));
+    }
 
     @Test
     @WithMockUser

@@ -11,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDate;
+
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class TransactionPurchaseRepositoryTest {
@@ -24,6 +26,11 @@ public class TransactionPurchaseRepositoryTest {
     @MockBean
     StorageService storageService;
 
+    private User generateUser(String username) {
+        LocalDate birthdate = LocalDate.of(2000, 1, 1);
+        Address address = new Address("unistrase", "duesseldorf", 40233);
+        return new User(username, "password", "role", "lastname", "forename", "email", birthdate, address);
+    }
 
     @Test
     public void testFindAll() {
@@ -38,8 +45,8 @@ public class TransactionPurchaseRepositoryTest {
     @Test
     public void testFindAllByReceiver() {
         Address sharedAdress = new Address("Gemeinsames", "Wohnhaus", 1234);
-        User source = new User();
-        User target = new User();
+        User source = generateUser("user1");
+        User target = generateUser("user2");
         source.setUsername("source");
         source.setAddress(sharedAdress);
         target.setUsername("target");
@@ -74,8 +81,8 @@ public class TransactionPurchaseRepositoryTest {
     @Test
     public void testFindAllBySender() {
         Address sharedAdress = new Address("Gemeinsames", "Wohnhaus", 1234);
-        User source = new User();
-        User target = new User();
+        User source = generateUser("user1");
+        User target = generateUser("user2");
         source.setUsername("source");
         source.setAddress(sharedAdress);
         target.setUsername("target");

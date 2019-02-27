@@ -4,6 +4,8 @@ import lombok.Data;
 import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
@@ -15,9 +17,13 @@ public class Request {
     private Long id;
 
     @Embedded
+    @NotNull
+    @Valid
     private Period period;
 
     @ManyToOne
+    @NotNull
+    @Valid
     private User requester;
 
 

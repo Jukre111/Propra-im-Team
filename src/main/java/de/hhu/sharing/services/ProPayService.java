@@ -24,7 +24,7 @@ public class ProPayService {
 
     @Autowired
     private TransactionRentalService transRenService;
-    @Autowired
+
     private RestTemplate rt = new RestTemplate();
     private String URL = "http://localhost:8888/";
 
