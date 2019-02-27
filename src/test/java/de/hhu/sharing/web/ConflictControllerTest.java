@@ -2,8 +2,6 @@ package de.hhu.sharing.web;
 
 import de.hhu.sharing.model.*;
 import de.hhu.sharing.services.*;
-import de.hhu.sharing.web.ConflictController;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -70,7 +68,7 @@ public class ConflictControllerTest {
         Mockito.when(userService.get("user")).thenReturn(borrower);
         Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
         Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(true);
-        Mockito.when(conflictService.getFromBorrowingProcess(process)).thenReturn(null);
+        Mockito.when(conflictService.getFromBorrowindProcess(process)).thenReturn(null);
         Mockito.when(userService.getBorrowerFromBorrowingProcessId(1L)).thenReturn(borrower);
 
         mvc.perform(MockMvcRequestBuilders.get("/conflict").param("id", "1"))
@@ -90,7 +88,7 @@ public class ConflictControllerTest {
         mvc.perform(MockMvcRequestBuilders.get("/conflict").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("notAuthorized", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test
@@ -103,7 +101,7 @@ public class ConflictControllerTest {
         Mockito.when(userService.get("user")).thenReturn(borrower);
         Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
         Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(true);
-        Mockito.when(conflictService.getFromBorrowingProcess(process)).thenReturn(conflict);
+        Mockito.when(conflictService.getFromBorrowindProcess(process)).thenReturn(conflict);
 
         mvc.perform(MockMvcRequestBuilders.get("/conflict").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/conflictDetails?id=1"))
@@ -119,7 +117,7 @@ public class ConflictControllerTest {
         Mockito.when(userService.get("user")).thenReturn(borrower);
         Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
         Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(true);
-        Mockito.when(conflictService.getFromBorrowingProcess(process)).thenReturn(null);
+        Mockito.when(conflictService.getFromBorrowindProcess(process)).thenReturn(null);
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("id", "1");
         map.add("problem", "This test.");
@@ -145,7 +143,7 @@ public class ConflictControllerTest {
         mvc.perform(MockMvcRequestBuilders.post("/saveConflict").params(map))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("notAuthorized", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test
@@ -158,7 +156,7 @@ public class ConflictControllerTest {
         Mockito.when(userService.get("user")).thenReturn(borrower);
         Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
         Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(true);
-        Mockito.when(conflictService.getFromBorrowingProcess(process)).thenReturn(conflict);
+        Mockito.when(conflictService.getFromBorrowindProcess(process)).thenReturn(conflict);
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("id", "1");
         map.add("problem", "This test.");
@@ -166,7 +164,7 @@ public class ConflictControllerTest {
         mvc.perform(MockMvcRequestBuilders.post("/saveConflict").params(map))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/conflictDetails?id=1"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("conflictExistsAlready", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test
@@ -205,7 +203,7 @@ public class ConflictControllerTest {
         mvc.perform(MockMvcRequestBuilders.post("/conflictNewMessage").params(map))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("notAuthorized", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test
@@ -252,7 +250,7 @@ public class ConflictControllerTest {
         mvc.perform(MockMvcRequestBuilders.get("/conflictDetails").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("notAuthorized", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test

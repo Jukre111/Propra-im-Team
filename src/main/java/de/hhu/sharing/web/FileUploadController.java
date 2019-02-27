@@ -64,7 +64,7 @@ public class FileUploadController {
                                    RedirectAttributes redirectAttributes, Principal p) {
     	User user = userService.get(p.getName());
         storageService.storeUser(file, user);
-        redirectAttributes.addFlashAttribute("message",
+        redirectAttributes.addFlashAttribute("succMessage",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
         return "redirect:/account";
     }
@@ -87,7 +87,7 @@ public class FileUploadController {
     public String handleFileUploadItem(@RequestParam("file") MultipartFile file,
                                    RedirectAttributes redirectAttributes, LendableItem lendableItem) {
         storageService.storeLendableItem(file, lendableItem);
-        redirectAttributes.addFlashAttribute("message",
+        redirectAttributes.addFlashAttribute("succMessage",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
         return "redirect:/";
     }
@@ -110,7 +110,7 @@ public class FileUploadController {
     public String handleFileUploadSellableItem(@RequestParam("file") MultipartFile file,
                                        RedirectAttributes redirectAttributes, SellableItem sellableItem) {
         storageService.storeSellableItem(file, sellableItem);
-        redirectAttributes.addFlashAttribute("message",
+        redirectAttributes.addFlashAttribute("succMessage",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
         return "redirect:/";
     }

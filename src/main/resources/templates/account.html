@@ -58,13 +58,8 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 </head>
 <body>
 	<div layout:fragment="body" style="padding: 20px; padding-left: 250px">
-		<div class="alert alert-success" role="alert" th:if="${deleted}" >Objekt gelöscht.</div>
-		<div class="alert alert-success" role="alert" th:if="${edited}" >Objekt bearbeitet.</div>
-		<div class="alert alert-success" role="alert" th:if="${saved}" >Objekt erstellt.</div>
-		<div class="alert alert-danger" role="alert" th:if="${notAvailable}" >Objekt nicht verfügbar.</div>
-		<div class="alert alert-danger" role="alert" th:if="${notChangeable}" >Objekt nicht veränderbar. Es sind noch Requests, Verleihungen oder Konflikte offen.</div>
-		<div class="alert alert-danger" role="alert" th:if="${noCredit}" >Der Anfragensteller hat nicht genug ProPray-Guthaben.</div>
-		<div class="alert alert-danger" role="alert" th:if="${notAuthorized}" >Keine Berechtigung.</div>
+		<div class="alert alert-success" role="alert" th:if="${succMessage}" th:text="${succMessage}"></div>
+		<div class="alert alert-danger" role="alert" th:if="${errMessage}" th:text="${errMessage}"></div>
 		<div style="padding: 20px" class="form-horizontal">
 			<div class="media">
 				<div class="media-left media-middle">

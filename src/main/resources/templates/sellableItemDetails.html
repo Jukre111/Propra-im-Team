@@ -39,6 +39,8 @@
 <body>
 
 <div layout:fragment="body">
+    <div class="alert alert-success" role="alert" th:if="${succMessage}" th:text="${succMessage}"></div>
+    <div class="alert alert-danger" role="alert" th:if="${errMessage}" th:text="${errMessage}"></div>
     <div class="style textPosition" style="padding: 20px">
         <div class="media">
             <div class="media-left media-middle">

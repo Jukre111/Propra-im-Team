@@ -38,7 +38,7 @@ public class RequestController {
     public String newRequest(@RequestParam("id") Long id, Model model, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         if(lendableItemService.isOwner(id, user)){
-            redirectAttributes.addFlashAttribute("ownItem",true);
+            redirectAttributes.addFlashAttribute("errMessage","Eigenes Objekt nicht an sich selbst verleihbar.");
             return "redirect:/";
         }
         List<LocalDate> allDates = lendableItemService.allDatesInbetween(lendableItemService.get(id));
@@ -52,19 +52,19 @@ public class RequestController {
         User user = userService.get(p.getName());
         LendableItem lendableItem = lendableItemService.get(id);
         if(lendableItemService.isOwner(id, user)){
-            redirectAttributes.addFlashAttribute("ownItem",true);
+            redirectAttributes.addFlashAttribute("errMessage","Eigenes Objekt nicht an sich selbst verleihbar.");
             return "redirect:/";
         }
         if(!proPayService.enoughCredit(user, lendableItem, LocalDate.parse(startdate), LocalDate.parse(enddate))){
-            redirectAttributes.addFlashAttribute("noCredit",true);
+            redirectAttributes.addFlashAttribute("errMessage","Nicht genug ProPay-Guthaben.");
             return "redirect:/";
         }
         if(!lendableItemService.isAvailableAt(lendableItem, LocalDate.parse(startdate), LocalDate.parse(enddate))){
-            redirectAttributes.addFlashAttribute("notAvailable",true);
+            redirectAttributes.addFlashAttribute("errMessage","Objekt zum angegebenen Zeitraum nicht verfügbar.");
             return "redirect:/newRequest?id=" + id;
         }
         requestService.create(id, LocalDate.parse(startdate), LocalDate.parse(enddate), user);
-        redirectAttributes.addFlashAttribute("requested",true);
+        redirectAttributes.addFlashAttribute("succMessage","Anfrage erfolgreich gestellt.");
         return "redirect:/";
     }
 
@@ -72,11 +72,11 @@ public class RequestController {
     public String deleteRequest(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         if(!requestService.isRequester(id, user)){
-            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung.");
             return "redirect:/messages";
         }
         requestService.delete(id);
-        redirectAttributes.addFlashAttribute("deleted",true);
+        redirectAttributes.addFlashAttribute("succMessage","Anfrage gelöscht.");
         return "redirect:/messages";
     }
 
@@ -86,23 +86,23 @@ public class RequestController {
         LendableItem lendableItem = lendableItemService.getFromRequestId(id);
         Request request = requestService.get(id);
         if(!requestService.isLender(id, user)){
-            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung.");
             return "redirect:/messages";
         }
         if(requestService.isOutdated(id)){
-            redirectAttributes.addFlashAttribute("outdatedRequest",true);
+            redirectAttributes.addFlashAttribute("errMessage","Anfrage-Zeitraum liegt in der Vergangenheit.");
             return "redirect:/messages";
         }
         if(requestService.isOverlappingWithAvailability(id)){
-            redirectAttributes.addFlashAttribute("overlappingRequest",true);
+            redirectAttributes.addFlashAttribute("errMessage", "Anfrage-Zeitraum überschneidet sich mit Objektverfügbarkeit.");
             return "redirect:/messages";
         }
         if(!proPayService.enoughCredit(request.getRequester(), lendableItem, request.getPeriod().getStartdate(), request.getPeriod().getEnddate())){
-            redirectAttributes.addFlashAttribute("noCredit",true);
+            redirectAttributes.addFlashAttribute("errMessage","Anfragensteller hat nicht genug ProPay-Guthaben.");
             return "redirect:/messages";
         }
         processService.accept(id);
-        redirectAttributes.addFlashAttribute("accepted",true);
+        redirectAttributes.addFlashAttribute("succMessage","Objekt verliehen. Überschneidende Anfragen wurden gelöscht.");
         return "redirect:/messages";
     }
 
@@ -110,11 +110,11 @@ public class RequestController {
     public String declineRequest(@RequestParam("id") Long id , Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         if(!requestService.isLender(id, user)){
-            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung.");
             return "redirect:/messages";
         }
         requestService.delete(id);
-        redirectAttributes.addFlashAttribute("declined",true);
+        redirectAttributes.addFlashAttribute("succMessage","Anfrage abgelehnt.");
         return "redirect:/messages";
     }
 }

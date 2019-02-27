@@ -32,16 +32,14 @@ public class IndexController {
 
 
     @GetMapping("/")
-    public String index(Model model, RedirectAttributes redirectAttributes, Principal p) {
+    public String index(Model model, Principal p) {
         List<SellableItem> sellItems = sellableItemService.getAll();
         model.addAttribute("lendableItems", lendableItemService.getAll());
         model.addAttribute("sellableItems", sellItems);
         User user = userService.get(p.getName());
-        if(userService.userHasNotReturnedItems(user)){
-            redirectAttributes.addFlashAttribute("returnYourItems", true);
-            return "redirect:/";
+        if(userService.userHasNotReturnedItems(user)) {
+            model.addAttribute("errMessage", "Sie haben Items, die dringend zurück gegeben werden müssen!");
         }
-
         return "index";
     }
 

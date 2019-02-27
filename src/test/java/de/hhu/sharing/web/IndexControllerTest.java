@@ -6,7 +6,6 @@ import de.hhu.sharing.services.LendableItemService;
 import de.hhu.sharing.services.RequestService;
 import de.hhu.sharing.services.SellableItemService;
 import de.hhu.sharing.services.UserService;
-import de.hhu.sharing.web.IndexController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -51,10 +50,26 @@ public class IndexControllerTest {
     @Test
     @WithMockUser
     public void retrieveStatusIndex() throws Exception{
+        User user = createUser("User", "ROLE_USER");
         Mockito.when(lendableItemService.getAll()).thenReturn(new ArrayList<>());
+        Mockito.when(userService.get("user")).thenReturn(user);
+        Mockito.when(userService.userHasNotReturnedItems(user)).thenReturn(false);
 
         mvc.perform(MockMvcRequestBuilders.get("/"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    public void retrieveStatusIndexItemsNotReturned() throws Exception{
+        User user = createUser("User", "ROLE_USER");
+        Mockito.when(lendableItemService.getAll()).thenReturn(new ArrayList<>());
+        Mockito.when(userService.get("user")).thenReturn(user);
+        Mockito.when(userService.userHasNotReturnedItems(user)).thenReturn(true);
+
+        mvc.perform(MockMvcRequestBuilders.get("/"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("errMessage"));
     }
 
     @Test

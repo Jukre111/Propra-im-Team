@@ -53,7 +53,7 @@ public class SellableItemController {
     @GetMapping("/editSellableItem")
     public String editSellableItem(Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         if(sellableItemService.get(id).getOwner() != userService.get(p.getName())){
-            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
         model.addAttribute("sellableItem", sellableItemService.get(id));
@@ -65,11 +65,11 @@ public class SellableItemController {
         User user = userService.get(p.getName());
         if(id == null){
             sellableItemService.create(name, description, price, user, file);
-            redirectAttributes.addFlashAttribute("saved",true);
+            redirectAttributes.addFlashAttribute("succMessage","Objekt erstellt.");
         }
         else {
             sellableItemService.edit(id, name, description, price, user);
-            redirectAttributes.addFlashAttribute("edited",true);
+            redirectAttributes.addFlashAttribute("succMessage","Objekt bearbeitet.");
         }
         return "redirect:/account";
     }
@@ -77,11 +77,11 @@ public class SellableItemController {
     @GetMapping("/deleteSellableItem")
     public String deleteSellableItem(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         if(sellableItemService.get(id).getOwner() != userService.get(p.getName())){
-            redirectAttributes.addFlashAttribute("notAuthorized",true);
+            redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
         sellableItemService.delete(id);
-        redirectAttributes.addFlashAttribute("deleted",true);
+        redirectAttributes.addFlashAttribute("succMessage","Objekt gelöscht.");
         return "redirect:/account";
     }
 
@@ -91,16 +91,16 @@ public class SellableItemController {
         SellableItem sellableItem = sellableItemService.get(id);
         User owner = sellableItem.getOwner();
         if(buyer == owner){
-            redirectAttributes.addFlashAttribute("ownItem",true);
+            redirectAttributes.addFlashAttribute("errMessage","Eigenes Objekt nicht an sich selbst verkaufbar.");
             return "redirect:/";
         }
         if(!proService.enoughCredit(buyer,sellableItem)){
-            redirectAttributes.addFlashAttribute("noCredit",true);
+            redirectAttributes.addFlashAttribute("errMessage","Nicht genug ProPray-Guthaben.");
             return ("redirect:/");
         }
         transactionPurchaseService.createTransactionPurchase(sellableItem, buyer, owner);
         sellableItemService.delete(id);
-        redirectAttributes.addFlashAttribute("bought",true);
+        redirectAttributes.addFlashAttribute("succMessage","Objekt erfolgreich gekauft.");
         return ("redirect:/");
     }
 

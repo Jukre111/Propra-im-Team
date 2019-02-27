@@ -37,6 +37,8 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 </head>
 <body>
 <div layout:fragment="body">
+    <div class="alert alert-success" role="alert" th:if="${succMessage}" th:text="${succMessage}"></div>
+    <div class="alert alert-danger" role="alert" th:if="${errMessage}" th:text="${errMessage}"></div>
     <div style="padding: 20px"  class="form-horizontal">
         <form th:action="@{/savePayIn}" method="post">
             <div class="media">
