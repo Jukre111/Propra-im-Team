@@ -62,7 +62,9 @@ public class LendableItemControllerTest {
     }
 
     private LendableItem createLendableItem(User lender) {
-        return new LendableItem("Item", "Beschreibung", 10, 100, lender);
+        LendableItem lendableItem = new LendableItem("Item", "Beschreibung", 10, 100, lender);
+        lendableItem.setId(1L);
+        return lendableItem;
     }
 
     public LendableItem itemCreator(){
@@ -140,7 +142,7 @@ public class LendableItemControllerTest {
 //        User lender = createUser("User", "ROLE_USER");
 //        Mockito.when(userService.get("user")).thenReturn(lender);
 //
-//        MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
+//        MultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
 //        MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
 //        map.add("name","name");
 //        map.add("description","desc");
@@ -155,20 +157,76 @@ public class LendableItemControllerTest {
 
     @Test
     @WithMockUser
-    public void retrieveStatusDeleteItem() throws Exception{
-        mvc.perform(MockMvcRequestBuilders.get("/deleteLendableItem").param("id","1"));
+    public void redirectDeleteLendableItem() throws Exception{
+        User lender = createUser("User", "ROLE_USER");
+        Mockito.when(userService.get("user")).thenReturn(lender);
+        Mockito.when(lendableItemService.isChangeable(1L)).thenReturn(true);
+        Mockito.when(lendableItemService.isOwner(1L, lender)).thenReturn(true);
+
+        mvc.perform(MockMvcRequestBuilders.get("/deleteLendableItem").param("id","1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("succMessage"));
     }
 
-    /*@Test
+    @Test
     @WithMockUser
-    public void retrieveStatusReturnItem() throws Exception{
-        LendableItem LendableItem = itemCreator();
-        Mockito.when(userService.get("user")).thenReturn(LendableItem.getOwner());
-        BorrowingProcess process = new BorrowingProcess(LendableItem, new Period(LocalDate.now(), LocalDate.now().plusDays(2)));
-        process.setId(1L);
-        Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
-        mvc.perform(MockMvcRequestBuilders.get("/returnItem").param("id","1"))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"));
-    }*/
+    public void redirectDeleteLendableItemWhenNotChangeable() throws Exception{
+        User lender = createUser("User", "ROLE_USER");
+        Mockito.when(userService.get("user")).thenReturn(lender);
+        Mockito.when(lendableItemService.isChangeable(1L)).thenReturn(false);
 
+        mvc.perform(MockMvcRequestBuilders.get("/deleteLendableItem").param("id","1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
+    }
+
+    @Test
+    @WithMockUser
+    public void redirectDeleteLendableItemNotAuthorized() throws Exception{
+        User lender = createUser("User", "ROLE_USER");
+        Mockito.when(userService.get("user")).thenReturn(lender);
+        Mockito.when(lendableItemService.isChangeable(1L)).thenReturn(true);
+        Mockito.when(lendableItemService.isOwner(1L, lender)).thenReturn(false);
+
+        mvc.perform(MockMvcRequestBuilders.get("/deleteLendableItem").param("id","1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
+    }
+
+    @Test
+    @WithMockUser
+    public void redirectItemReturned() throws Exception{
+        User lender = createUser("User", "ROLE_USER");
+        LendableItem lendableItem = createLendableItem(lender);
+        BorrowingProcess process = new BorrowingProcess();
+        process.setItem(lendableItem);
+        Mockito.when(userService.get("user")).thenReturn(lender);
+        Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
+        Mockito.when(lendableItemService.isOwner(1L, lender)).thenReturn(true);
+
+        mvc.perform(MockMvcRequestBuilders.get("/itemReturned").param("id","1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("succMessage"));
+    }
+
+    @Test
+    @WithMockUser
+    public void redirectItemReturnedWhenNotAuthorized() throws Exception{
+        User lender = createUser("User", "ROLE_USER");
+        LendableItem lendableItem = createLendableItem(lender);
+        BorrowingProcess process = new BorrowingProcess();
+        process.setItem(lendableItem);
+        Mockito.when(userService.get("user")).thenReturn(lender);
+        Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
+        Mockito.when(lendableItemService.isOwner(1L, lender)).thenReturn(false);
+
+        mvc.perform(MockMvcRequestBuilders.get("/itemReturned").param("id","1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
+    }
 }
