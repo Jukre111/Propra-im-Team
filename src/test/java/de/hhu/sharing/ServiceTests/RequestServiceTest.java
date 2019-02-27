@@ -98,13 +98,13 @@ public class RequestServiceTest {
 
     @Test
     public void testIsOverlappingWithAvailability(){
-        Item item = new Item();
+    	LendableItem item = new LendableItem();
         Request request = new Request();
         Period period = new Period(LocalDate.of(2000,1,1),LocalDate.of(2000,1,2));
         request.setId(1L);
         request.setPeriod(period);
         item.addToPeriods(period);
-        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
+        Mockito.when(lendableItemService.getFromRequestId(1L)).thenReturn(item);
         Mockito.when(requests.findById(1L)).thenReturn(Optional.of(request));
         boolean result = requestService.isOverlappingWithAvailability(1L);
         Assert.assertTrue(result);
@@ -112,14 +112,14 @@ public class RequestServiceTest {
 
     @Test
     public void testIsNotOverlappingWithAvailability(){
-        Item item = new Item();
+    	LendableItem item = new LendableItem();
         Request request = new Request();
         Period period = new Period(LocalDate.of(2000,1,1),LocalDate.of(2000,1,2));
         Period period2 = new Period(LocalDate.of(2000,1,3),LocalDate.of(2000,1,4));
         request.setId(1L);
         request.setPeriod(period);
         item.addToPeriods(period2);
-        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
+        Mockito.when(lendableItemService.getFromRequestId(1L)).thenReturn(item);
         Mockito.when(requests.findById(1L)).thenReturn(Optional.of(request));
         boolean result = requestService.isOverlappingWithAvailability(1L);
         Assert.assertFalse(result);
@@ -176,14 +176,14 @@ public class RequestServiceTest {
     @Test
     public void testIsLender(){
         User user = generateUser("user");
-        Item item = generateItem(user);
+        LendableItem item = generateItem(user);
         item.setId(1L);
         Request request = new Request();
         item.addToRequests(request);
         Period period = new Period(LocalDate.of(2000,1,1),LocalDate.of(2000,1,2));
         request.setId(1L);
         request.setPeriod(period);
-        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
+        Mockito.when(lendableItemService.getFromRequestId(1L)).thenReturn(item);
         boolean result = requestService.isLender(1L,user);
         Assert.assertTrue(result);
     }
@@ -191,14 +191,14 @@ public class RequestServiceTest {
     public void testIsNotLender(){
         User user = generateUser("user");
         User user2 = generateUser("user2");
-        Item item = generateItem(user);
+        LendableItem item = generateItem(user);
         item.setId(1L);
         Request request = new Request();
         item.addToRequests(request);
         Period period = new Period(LocalDate.of(2000,1,1),LocalDate.of(2000,1,2));
         request.setId(1L);
         request.setPeriod(period);
-        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
+        Mockito.when(lendableItemService.getFromRequestId(1L)).thenReturn(item);
         boolean result = requestService.isLender(1L,user2);
         Assert.assertFalse(result);
     }

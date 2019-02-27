@@ -25,8 +25,8 @@ public class ConflictServiceTest{
         MockitoAnnotations.initMocks(this);
     }
 
-    private Item generateItem(User user) {
-        return new Item("apfel", "lecker", 1, 1, user);
+    private LendableItem generateItem(User user) {
+        return new LendableItem("apfel", "lecker", 1, 1, user);
     }
 
     public User generateUser() {
@@ -39,7 +39,7 @@ public class ConflictServiceTest{
     public BorrowingProcess generateProcess(){
         User lender = generateUser();
         User borrower = generateUser();
-        Item item = generateItem(lender);
+        LendableItem item = generateItem(lender);
 
         BorrowingProcess process = new BorrowingProcess();
         process.setId(1L);

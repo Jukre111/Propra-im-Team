@@ -4,6 +4,7 @@ import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.BorrowingProcess;
 import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.UserService;
 import org.junit.Assert;
@@ -31,8 +32,8 @@ public class UserServiceTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    private Item generateItem(User user) {
-        return new Item("apfel", "lecker", 1, 1, user);
+    private LendableItem generateItem(User user) {
+        return new LendableItem("apfel", "lecker", 1, 1, user);
     }
 
     public User generateUser() {
@@ -79,7 +80,7 @@ public class UserServiceTest {
 
         User user1 = generateUser();
         User user2 = generateUser();
-        Item item = generateItem(user1);
+        LendableItem item = generateItem(user1);
 
         BorrowingProcess process = new BorrowingProcess();
         process.setId(1L);
@@ -101,7 +102,7 @@ public class UserServiceTest {
     public void testUserIsLender() {
         User user1 = generateUser();
         User user2 = generateUser();
-        Item item = generateItem(user1);
+        LendableItem item = generateItem(user1);
         BorrowingProcess process = new BorrowingProcess();
         process.setId(1L);
         process.setItem(item);
@@ -115,7 +116,7 @@ public class UserServiceTest {
         User user1 = generateUser();
         User user2 = generateUser();
 
-        Item item = generateItem(user1);
+        LendableItem item = generateItem(user1);
         BorrowingProcess process = new BorrowingProcess();
         process.setId(1L);
         process.setItem(item);
@@ -130,7 +131,7 @@ public class UserServiceTest {
         User user1 = generateUser();
         User user2 = generateUser();
 
-        Item item = generateItem(user1);
+        LendableItem item = generateItem(user1);
         BorrowingProcess process = new BorrowingProcess();
         process.setItem(item);
         process.setId(1L);

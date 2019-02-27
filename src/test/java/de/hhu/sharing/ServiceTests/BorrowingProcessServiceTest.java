@@ -36,10 +36,13 @@ public class BorrowingProcessServiceTest {
 
     @Mock
     private  ConflictService conflictService;
+    
+    @Mock
+    LendableItemService lendableItemService;
 
     @InjectMocks
     private BorrowingProcessService BPService;
-
+    
     @Before
     public void initialize(){
         MockitoAnnotations.initMocks(this);
@@ -52,8 +55,8 @@ public class BorrowingProcessServiceTest {
         return user;
     }
 
-    private Item generateItem(User user) {
-        return new Item("apfel", "lecker", 1, 1, user);
+    private LendableItem generateItem(User user) {
+        return new LendableItem("apfel", "lecker", 1, 1, user);
     }
 
     private Period generatePeriod(int startday, int endday){
@@ -66,7 +69,7 @@ public class BorrowingProcessServiceTest {
     @Test
     public void testGet(){
         User user = generateUser("userman");
-        Item item = generateItem(user);
+        LendableItem item = generateItem(user);
         Period period = generatePeriod(4,9);
         BorrowingProcess borrowingProcess = new BorrowingProcess(item, period);
         Mockito.when(processes.findById(1L)).thenReturn(Optional.of(borrowingProcess));
@@ -86,10 +89,10 @@ public class BorrowingProcessServiceTest {
         User lender = generateUser("Jos");
         Period period = generatePeriod(4,9);
         Request request = new Request(period, requester);
-        Item item = generateItem(lender);
+        LendableItem item = generateItem(lender);
 
         Mockito.doReturn(request).when(requestService).get(1L);
-        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
+        Mockito.when(lendableItemService.getFromRequestId(1L)).thenReturn(item);
 
         BPService.accept(1L);
 
@@ -120,7 +123,7 @@ public class BorrowingProcessServiceTest {
     public void testItemReturnedConflictNotNullConditionGood(){
         User borrower = generateUser("Karl");
         User lender = generateUser("Joe");
-        Item item = generateItem(lender);
+        LendableItem item = generateItem(lender);
         Period period = generatePeriod(4,9);
         item.addToPeriods(period);
         BorrowingProcess process = new BorrowingProcess(item, period);
@@ -156,7 +159,7 @@ public class BorrowingProcessServiceTest {
     public void testItemReturnedConflictNotNullConditionNotGood(){
         User borrower = generateUser("Karl");
         User lender = generateUser("Joe");
-        Item item = generateItem(lender);
+        LendableItem item = generateItem(lender);
         Period period = generatePeriod(4,9);
         item.addToPeriods(period);
         BorrowingProcess process = new BorrowingProcess(item, period);
@@ -191,7 +194,7 @@ public class BorrowingProcessServiceTest {
     public void testItemReturnedConflictNullConditionGood(){
         User borrower = generateUser("Karl");
         User lender = generateUser("Joe");
-        Item item = generateItem(lender);
+        LendableItem item = generateItem(lender);
         Period period = generatePeriod(4,9);
         item.addToPeriods(period);
         BorrowingProcess process = new BorrowingProcess(item, period);
@@ -223,7 +226,7 @@ public class BorrowingProcessServiceTest {
     public void testItemReturnedConflictNullConditionNotGood(){
         User borrower = generateUser("Karl");
         User lender = generateUser("Joe");
-        Item item = generateItem(lender);
+        LendableItem item = generateItem(lender);
         Period period = generatePeriod(4,9);
         item.addToPeriods(period);
         BorrowingProcess process = new BorrowingProcess(item, period);
