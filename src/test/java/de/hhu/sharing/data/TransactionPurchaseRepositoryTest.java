@@ -1,7 +1,4 @@
 package de.hhu.sharing.data;
-import de.hhu.sharing.data.TransactionPurchaseRepository;
-import de.hhu.sharing.data.TransactionRentalRepository;
-import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.propay.TransactionPurchase;
@@ -39,7 +36,7 @@ public class TransactionPurchaseRepositoryTest {
     }
 
     @Test
-    public void testFindTargetTransactionPurchase() {
+    public void testFindAllByReceiver() {
         Address sharedAdress = new Address("Gemeinsames", "Wohnhaus", 1234);
         User source = new User();
         User target = new User();
@@ -75,7 +72,7 @@ public class TransactionPurchaseRepositoryTest {
     }
 
     @Test
-    public void testFindSourceTransactionPurchase() {
+    public void testFindAllBySender() {
         Address sharedAdress = new Address("Gemeinsames", "Wohnhaus", 1234);
         User source = new User();
         User target = new User();

@@ -1,9 +1,6 @@
 
 package de.hhu.sharing.data;
 
-import de.hhu.sharing.data.LendableItemRepository;
-import de.hhu.sharing.data.RequestRepository;
-import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.*;
 import de.hhu.sharing.storage.StorageService;
 import org.assertj.core.api.Assertions;
@@ -88,7 +85,7 @@ public class LendableItemRepositoryTest {
     }
 
     @Test
-    public void testFindAllByLender(){
+    public void testFindAllByOwner(){
         ArrayList<LendableItem> LendableItems = createItems();
         itemRepo.save(LendableItems.get(0));
         itemRepo.save(LendableItems.get(1));
@@ -115,7 +112,7 @@ public class LendableItemRepositoryTest {
     }
 
     @Test
-    public void testFindFirst2ByLenderNot(){
+    public void testFindFirst2ByOwnerNot(){
         ArrayList<LendableItem> LendableItems = createItems();
         itemRepo.save(LendableItems.get(0));
         itemRepo.save(LendableItems.get(1));
@@ -142,7 +139,7 @@ public class LendableItemRepositoryTest {
     }
 
     @Test
-    public void testFindFirstByLender(){
+    public void testFindFirstByOwner(){
         ArrayList<LendableItem> LendableItems = createItems();
         itemRepo.save(LendableItems.get(0));
         itemRepo.save(LendableItems.get(1));

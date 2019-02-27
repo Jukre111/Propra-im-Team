@@ -1,8 +1,5 @@
 package de.hhu.sharing.data;
 
-import de.hhu.sharing.data.BorrowingProcessRepository;
-import de.hhu.sharing.data.LendableItemRepository;
-import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.*;
 import de.hhu.sharing.storage.StorageService;
 import org.assertj.core.api.Assertions;

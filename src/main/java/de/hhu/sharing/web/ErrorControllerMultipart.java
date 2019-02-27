@@ -14,7 +14,7 @@ public class ErrorControllerMultipart extends ResponseEntityExceptionHandler {
 
 @ExceptionHandler(MultipartException.class)
 String handleFileException(HttpServletRequest request, Throwable ex) {
-    if(request.getServletPath().equals("/handleFileUploadItem"))
+    if(request.getServletPath().equals("/handleFileUploadSellableItem") || request.getServletPath().equals("/handleFileUploadItem") )
         return "redirect:/";
     else
         return "redirect:/account";
