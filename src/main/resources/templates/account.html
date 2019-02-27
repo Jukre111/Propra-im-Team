@@ -57,7 +57,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 </style>
 </head>
 <body>
-	<div layout:fragment="body" style="padding: 20px; padding-left: 250px">
+	<div layout:fragment="body" style="padding: 20px">
 		<div class="alert alert-success" role="alert" th:if="${deleted}" >Objekt gelöscht.</div>
 		<div class="alert alert-success" role="alert" th:if="${edited}" >Objekt bearbeitet.</div>
 		<div class="alert alert-success" role="alert" th:if="${saved}" >Objekt erstellt.</div>
@@ -65,7 +65,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 		<div class="alert alert-danger" role="alert" th:if="${notChangeable}" >Objekt nicht veränderbar. Es sind noch Requests, Verleihungen oder Konflikte offen.</div>
 		<div class="alert alert-danger" role="alert" th:if="${noCredit}" >Der Anfragensteller hat nicht genug ProPray-Guthaben.</div>
 		<div class="alert alert-danger" role="alert" th:if="${notAuthorized}" >Keine Berechtigung.</div>
-		<div style="padding: 20px" class="form-horizontal">
+		<div style="padding: 20px; padding-left: 250px" class="form-horizontal">
 			<div class="media">
 				<div class="media-left media-middle">
 					<img class="img" id="circular--landscape" th:src="@{/getUserPic}">
@@ -113,24 +113,6 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 							<input type="number text" class="form-control" id="postcode city" name="postcode city" th:value="${address.postcode} + ' ' + ${address.city}" readonly/>
 						</div>
 					</div>
-					<div class="form-group">
-						<label for="postcode city" class="col-sm-2 control-label">ProPay</label>
-						<div class="col-xs-6">
-							<a class="indexbtn" href="/propayAccount">zum Account</a>
-						</div>
-					</div>
-
-					<!--<div class="form-group">
-						<label for="budget" class="col-sm-2 control-label">ProPay Guthaben</label>
-						<div class="col-xs-3">
-							<div class="input-group">
-								<div class="input-group-addon">€</div>
-								<input type="text" class="form-control" th:value="${user.budget}" placeholder="Budget">
-								<div class="input-group-addon">,00</div>
-							</div>
-						</div>
-					</div>-->
-
 					<div class="media-right media-middle" th:if="${user.role == 'ROLE_ADMIN'}">
 						<a id="conflictbtn" th:href="@{/admin/conflicts}" style="margin-right: 150px">Konfliktlösestelle</a>
 					</div>
@@ -152,10 +134,16 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                 			</script>
 						</div>
 					</div>
+					<div class="form-group" style="padding-top: 10px">
+						<label class="col-sm-2 control-label">ProPay</label>
+						<div class="col-xs-6">
+							<a class="indexbtn" href="/propayAccount">zum Account</a>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div style="padding: 20px">
+		<div style="padding: 20px; padding-top: 30px">
 			<table>
 				<tr>
 					<th width="70%"><font size="4">Ausgeliehene Objekte</font></th>
@@ -224,6 +212,16 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					<td>
 						<a class="indexbtn" th:href="@{'/deleteSellableItem?id=' + ${item.id}}">Entfernen</a>
 					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="padding: 20px">
+			<table>
+				<tr>
+					<th width="90%"><font size="4">Gekaufte Objekte</font></th>
+				</tr>
+				<tr th:each="bought : ${boughtItems}">
+					<td th:text="${bought}"></td>
 				</tr>
 			</table>
 		</div>

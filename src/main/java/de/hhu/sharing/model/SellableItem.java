@@ -9,6 +9,7 @@ public class SellableItem extends Item{
 
     private Integer price;
 
+
     public SellableItem(){}
 
     public SellableItem(String name, String description, Integer price, User owner){

@@ -99,6 +99,9 @@ public class SellableItemController {
             return ("redirect:/");
         }
         transactionPurchaseService.createTransactionPurchase(sellableItem, buyer, owner);
+        String itemInformation =  sellableItem.getName() +  " Abholort: " + sellableItem.getOwner().getAddress().getStreet() + sellableItem.getOwner().getAddress().getPostcode() + sellableItem.getOwner().getAddress().getCity();
+        buyer.getBoughtItems().add(itemInformation);
+        System.out.println(itemInformation);
         sellableItemService.delete(id);
         redirectAttributes.addFlashAttribute("bought",true);
         return ("redirect:/");

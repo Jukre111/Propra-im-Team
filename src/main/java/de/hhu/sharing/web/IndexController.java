@@ -60,6 +60,7 @@ public class IndexController {
         model.addAttribute("lendableItemsIPosted", lendableItemService.getAllIPosted(user));
         model.addAttribute("address", user.getAddress());
         model.addAttribute("sellableItemsIPosted", sellableItemService.getAllIPosted(user));
+        model.addAttribute("boughtItems", user.getBoughtItems());
         return "account";
     }
 
