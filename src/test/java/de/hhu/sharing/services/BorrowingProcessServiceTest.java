@@ -1,17 +1,12 @@
 package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.BorrowingProcessRepository;
-import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.*;
 import de.hhu.sharing.propay.TransactionRental;
-import de.hhu.sharing.services.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.theories.suppliers.TestedOn;
 import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -51,17 +46,16 @@ public class BorrowingProcessServiceTest {
     private User generateUser(String username) {
         LocalDate birthdate = LocalDate.of(2000, 1, 1);
         Address address = new Address("unistrase", "duesseldorf", 40233);
-        User user = new User(username, "password", "role", "lastname", "forename", "email", birthdate, address);
-        return user;
+        return new User(username, "password", "role", "lastname", "forename", "email", birthdate, address);
     }
 
     private LendableItem generateItem(User user) {
         return new LendableItem("apfel", "lecker", 1, 1, user);
     }
 
-    private Period generatePeriod(int startday, int endday){
-        LocalDate startdate = LocalDate.of(2019,4,startday);
-        LocalDate enddate = LocalDate.of(2019,4, endday);
+    private Period generatePeriod(){
+        LocalDate startdate = LocalDate.of(2019,4,4);
+        LocalDate enddate = LocalDate.of(2019,4, 9);
         return new Period(startdate, enddate);
     }
 
@@ -70,7 +64,7 @@ public class BorrowingProcessServiceTest {
     public void testGet(){
         User user = generateUser("userman");
         LendableItem item = generateItem(user);
-        Period period = generatePeriod(4,9);
+        Period period = generatePeriod();
         BorrowingProcess borrowingProcess = new BorrowingProcess(item, period);
         Mockito.when(processes.findById(1L)).thenReturn(Optional.of(borrowingProcess));
 
@@ -87,7 +81,7 @@ public class BorrowingProcessServiceTest {
     public void testAccept(){
         User requester = generateUser("Karl");
         User lender = generateUser("Jos");
-        Period period = generatePeriod(4,9);
+        Period period = generatePeriod();
         Request request = new Request(period, requester);
         LendableItem item = generateItem(lender);
 
@@ -124,7 +118,7 @@ public class BorrowingProcessServiceTest {
         User borrower = generateUser("Karl");
         User lender = generateUser("Joe");
         LendableItem item = generateItem(lender);
-        Period period = generatePeriod(4,9);
+        Period period = generatePeriod();
         item.addToPeriods(period);
         BorrowingProcess process = new BorrowingProcess(item, period);
         process.setId(1L);
@@ -160,7 +154,7 @@ public class BorrowingProcessServiceTest {
         User borrower = generateUser("Karl");
         User lender = generateUser("Joe");
         LendableItem item = generateItem(lender);
-        Period period = generatePeriod(4,9);
+        Period period = generatePeriod();
         item.addToPeriods(period);
         BorrowingProcess process = new BorrowingProcess(item, period);
         process.setId(1L);
@@ -195,7 +189,7 @@ public class BorrowingProcessServiceTest {
         User borrower = generateUser("Karl");
         User lender = generateUser("Joe");
         LendableItem item = generateItem(lender);
-        Period period = generatePeriod(4,9);
+        Period period = generatePeriod();
         item.addToPeriods(period);
         BorrowingProcess process = new BorrowingProcess(item, period);
         process.setId(1L);
@@ -227,7 +221,7 @@ public class BorrowingProcessServiceTest {
         User borrower = generateUser("Karl");
         User lender = generateUser("Joe");
         LendableItem item = generateItem(lender);
-        Period period = generatePeriod(4,9);
+        Period period = generatePeriod();
         item.addToPeriods(period);
         BorrowingProcess process = new BorrowingProcess(item, period);
         process.setId(1L);
