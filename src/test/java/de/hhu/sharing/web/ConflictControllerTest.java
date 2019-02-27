@@ -68,7 +68,7 @@ public class ConflictControllerTest {
         Mockito.when(userService.get("user")).thenReturn(borrower);
         Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
         Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(true);
-        Mockito.when(conflictService.getFromBorrowindProcess(process)).thenReturn(null);
+        Mockito.when(conflictService.getFromBorrowingProcess(process)).thenReturn(null);
         Mockito.when(userService.getBorrowerFromBorrowingProcessId(1L)).thenReturn(borrower);
 
         mvc.perform(MockMvcRequestBuilders.get("/conflict").param("id", "1"))
@@ -101,7 +101,7 @@ public class ConflictControllerTest {
         Mockito.when(userService.get("user")).thenReturn(borrower);
         Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
         Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(true);
-        Mockito.when(conflictService.getFromBorrowindProcess(process)).thenReturn(conflict);
+        Mockito.when(conflictService.getFromBorrowingProcess(process)).thenReturn(conflict);
 
         mvc.perform(MockMvcRequestBuilders.get("/conflict").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/conflictDetails?id=1"))
@@ -117,7 +117,7 @@ public class ConflictControllerTest {
         Mockito.when(userService.get("user")).thenReturn(borrower);
         Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
         Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(true);
-        Mockito.when(conflictService.getFromBorrowindProcess(process)).thenReturn(null);
+        Mockito.when(conflictService.getFromBorrowingProcess(process)).thenReturn(null);
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("id", "1");
         map.add("problem", "This test.");
@@ -156,7 +156,7 @@ public class ConflictControllerTest {
         Mockito.when(userService.get("user")).thenReturn(borrower);
         Mockito.when(borrowingProcessService.get(1L)).thenReturn(process);
         Mockito.when(userService.userIsInvolvedToProcess(borrower, process)).thenReturn(true);
-        Mockito.when(conflictService.getFromBorrowindProcess(process)).thenReturn(conflict);
+        Mockito.when(conflictService.getFromBorrowingProcess(process)).thenReturn(conflict);
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("id", "1");
         map.add("problem", "This test.");
