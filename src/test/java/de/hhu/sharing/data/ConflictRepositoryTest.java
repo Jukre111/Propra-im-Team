@@ -1,9 +1,6 @@
 package de.hhu.sharing.data;
 
-import de.hhu.sharing.data.BorrowingProcessRepository;
-import de.hhu.sharing.data.ConflictRepository;
-import de.hhu.sharing.data.LendableItemRepository;
-import de.hhu.sharing.data.UserRepository;
+import de.hhu.sharing.model.*;
 import de.hhu.sharing.storage.StorageService;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -12,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.time.LocalDate;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -32,11 +31,6 @@ public class ConflictRepositoryTest {
     @MockBean
     StorageService storageService;
 
-    @Test
-    public void mustHaveTest (){
-        Assertions.assertThat(true).isTrue();
-    }
-    /*
 
     public User createUser(String username){
         LocalDate birthdate = LocalDate.of(2000,1,1);
@@ -46,14 +40,14 @@ public class ConflictRepositoryTest {
         return userRepo.findByUsername(username).get();
     }
 
-    public Item createItem(String name, String description){
+    public LendableItem createItem(String name, String description){
         User user = createUser("testman");
-        Item item = new Item(name, description,1,1 ,user );
+        LendableItem item = new LendableItem(name, description,1,1 ,user );
         itemRepo.save(item);
         return itemRepo.findById(item.getId()).get();
     }
 
-    public BorrowingProcess createProcess(Item item){
+    public BorrowingProcess createProcess(LendableItem item){
         BorrowingProcess borrowingProcess = new BorrowingProcess();
         borrowingProcess.setItem(item);
         bPRepo.save(borrowingProcess);
@@ -66,7 +60,7 @@ public class ConflictRepositoryTest {
         return bPRepo.findById(borrowingProcess.getId()).get();
     }
 
-    public Conflict createConflict(User lender, User borrower, BorrowingProcess process,String author){
+    public Conflict createConflict(User lender, User borrower, BorrowingProcess process, String author){
         Message message = new Message(author, "cool");
         Conflict conflict = new Conflict(lender,borrower,process,message);
         conflictRepo.save(conflict);
@@ -90,7 +84,7 @@ public class ConflictRepositoryTest {
     @Test
     public void testFindAllByProcess_Item(){
 
-        Item item = createItem("testItem","cool");
+        LendableItem item = createItem("testItem","cool");
         User user1 = createUser("testman1");
         User user2 = createUser("testman2");
 
@@ -118,5 +112,5 @@ public class ConflictRepositoryTest {
 
         Assertions.assertThat(conflictRepo.findByProcess(process1)).isEqualTo(conflict);
 
-    }*/
+    }
 }
