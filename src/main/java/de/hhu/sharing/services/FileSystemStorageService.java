@@ -1,9 +1,6 @@
 package de.hhu.sharing.services;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-
 import de.hhu.sharing.data.ImageRepository;
 import de.hhu.sharing.data.LendableItemRepository;
 import de.hhu.sharing.data.SellableItemRepository;
