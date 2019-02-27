@@ -1,4 +1,4 @@
-package de.hhu.sharing.RepositoryTests;
+package de.hhu.sharing.data;
 
 import de.hhu.sharing.data.TransactionRentalRepository;
 import de.hhu.sharing.data.UserRepository;

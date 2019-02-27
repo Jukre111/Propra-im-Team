@@ -1,4 +1,4 @@
-package de.hhu.sharing.ServiceTests;
+package de.hhu.sharing.services;
 
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 

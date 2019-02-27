@@ -1,4 +1,4 @@
-package de.hhu.sharing.ControllerTests;
+package de.hhu.sharing.web;
 
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.User;

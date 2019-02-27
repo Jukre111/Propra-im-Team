@@ -1,4 +1,4 @@
-package de.hhu.sharing.ServiceTests;
+package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.BorrowingProcessRepository;
 import de.hhu.sharing.data.UserRepository;

@@ -1,4 +1,4 @@
-package de.hhu.sharing.ServiceTests;
+package de.hhu.sharing.services;
 
 class TransactionRentalServiceTest {
     /*@Mock

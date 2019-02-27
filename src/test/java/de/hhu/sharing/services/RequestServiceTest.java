@@ -1,4 +1,6 @@
-package de.hhu.sharing.ServiceTests;
+
+package de.hhu.sharing.services;
+
 import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.model.*;
 import de.hhu.sharing.services.LendableItemService;

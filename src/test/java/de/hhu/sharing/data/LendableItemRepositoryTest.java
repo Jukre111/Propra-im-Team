@@ -1,5 +1,5 @@
 
-package de.hhu.sharing.RepositoryTests;
+package de.hhu.sharing.data;
 
 import de.hhu.sharing.data.LendableItemRepository;
 import de.hhu.sharing.data.RequestRepository;

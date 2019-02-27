@@ -1,4 +1,4 @@
-package de.hhu.sharing.ControllerTests;
+package de.hhu.sharing.web;
 
 import java.nio.charset.Charset;
 import java.time.LocalDate;
