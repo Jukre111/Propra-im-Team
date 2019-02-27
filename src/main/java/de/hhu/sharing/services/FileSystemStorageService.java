@@ -57,10 +57,6 @@ public class FileSystemStorageService implements StorageService {
         byte[] byteArr = new byte[0];
         try {
             byteArr = file.getBytes();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        try {
             InputStream inputStream = new ByteArrayInputStream(byteArr);
             int eof = inputStream.read(byteArr);
             if(eof==byteArr.length){
