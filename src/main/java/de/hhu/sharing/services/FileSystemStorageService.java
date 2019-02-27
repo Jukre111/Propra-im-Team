@@ -49,7 +49,6 @@ public class FileSystemStorageService implements StorageService {
         	image.setMimeType("image/bmp");
             break;
         default:
-            System.out.println("No valid data");
         }
     	return image;
     }
