@@ -7,6 +7,7 @@ import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.propay.Account;
 import de.hhu.sharing.propay.Reservation;
+import de.hhu.sharing.propay.TransactionPurchase;
 import de.hhu.sharing.propay.TransactionRental;
 import org.apache.tomcat.jni.Local;
 import org.assertj.core.api.Assertions;
@@ -99,6 +100,35 @@ public class ProPayServiceTest {
     }
 
     @Test
+    public void testRechargeCredit() {
+        User user = this.createUser("user");
+        Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString());
+        pps.rechargeCredit(user,50);
+        Mockito.verify(pps, times(1)).rechargeCredit(user,50);
+
+    }
+
+    @Test
+    public void testInitiateTransactionPurchase() {
+        User source = this.createUser("Source");
+        User target = this.createUser("Target");
+        SellableItem item = new SellableItem("itemName", "desc",50,target);
+        TransactionPurchase transPur = new TransactionPurchase(item,source,target);
+        Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString());
+        pps.initiateTransactionPurchase(transPur);
+        Mockito.verify(pps, times(1)).initiateTransactionPurchase(transPur);
+    }
+
+    @Test
+    public void testCallURL() throws Exception {
+        String URL = "http://localhost:8888/account/" + "user" + "/";
+        Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString());
+        pps.callURL(URL,"POST");
+        Mockito.verify(pps, times(1)).callURL(URL,"POST");
+
+    }
+
+    @Test
     public void testReleaseDeposit() {
         User source = this.createUser("Source");
         User target = this.createUser("Target");
@@ -108,6 +138,7 @@ public class ProPayServiceTest {
         pps.releaseDeposit(source,transRen);
         Mockito.verify(transRenService, times(1)).setDepositRevoked(transRen,"Nein");
     }
+
     @Test
     public void testPunishDeposit() {
         User source = this.createUser("Source");
