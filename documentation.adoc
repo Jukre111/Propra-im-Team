@@ -81,7 +81,7 @@ vermerkt.
 
 * BorrowedItems
 . id : Long
-. item : Item
+. lendableItem : Item
 ** Item das ausgeliehen wird.
 . request : Request
 ** request der akzeptiert wurde, sodass das Item jetzt ausgeliehen ist.

@@ -2,10 +2,8 @@ package de.hhu.sharing.RepositoryTests;
 
 import de.hhu.sharing.data.BorrowingProcessRepository;
 import de.hhu.sharing.data.ConflictRepository;
-import de.hhu.sharing.data.ItemRepository;
+import de.hhu.sharing.data.LendableItemRepository;
 import de.hhu.sharing.data.UserRepository;
-import de.hhu.sharing.model.*;
-import de.hhu.sharing.services.BorrowingProcessService;
 import de.hhu.sharing.storage.StorageService;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -14,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -29,7 +24,7 @@ public class ConflictRepositoryTest {
     UserRepository userRepo;
 
     @Autowired
-    ItemRepository itemRepo;
+    LendableItemRepository itemRepo;
 
     @Autowired
     BorrowingProcessRepository bPRepo;

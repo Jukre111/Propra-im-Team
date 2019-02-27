@@ -1,10 +1,11 @@
 package de.hhu.sharing.services;
 
 import com.google.gson.Gson;
-import de.hhu.sharing.data.TransactionRentalRepository;
-import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.LendableItem;
+import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.propay.Account;
+import de.hhu.sharing.propay.TransactionPurchase;
 import de.hhu.sharing.propay.TransactionRental;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class ProPayService {
 
     @Autowired
-    TransactionRentalService transRenService;
+    private TransactionRentalService transRenService;
 
     private RestTemplate rt = new RestTemplate();
     private String URL = "http://localhost:8888/";
@@ -34,11 +35,17 @@ public class ProPayService {
         return new Gson().fromJson(jsonAccount, Account.class);
     }
 
-    public boolean enoughCredit(User user, Item item, LocalDate startdate, LocalDate enddate){
+    public boolean enoughCredit(User user, LendableItem lendableItem, LocalDate startdate, LocalDate enddate){
         int days = (int) DAYS.between(startdate, enddate) + 1;
-        int rent = item.getRental() * days;
+        int rent = lendableItem.getRental() * days;
         int amount = this.getAccount(user).getAmount();
-        return amount >= (rent + item.getDeposit()+getDepositSum(this.getAccount(user)));
+        return amount >= (rent + lendableItem.getDeposit() + getDepositSum(this.getAccount(user)));
+    }
+
+    public boolean enoughCredit(User user, SellableItem sellableItem){
+        int price = sellableItem.getPrice();
+        int amount = this.getAccount(user).getAmount();
+        return amount >= (price + getDepositSum(this.getAccount(user)));
     }
 
     public void rechargeCredit(User user, int amount) {
@@ -61,6 +68,14 @@ public class ProPayService {
         transRen.setId(account.getLastReservationId());
     }
 
+    public void initiateTransactionPurchase(TransactionPurchase transPur) {
+        String URL = this.URL
+                + "account/" + transPur.getSender().getUsername()
+                + "/transfer/" + transPur.getReceiver().getUsername()
+                + "?amount=" + transPur.getPrice();
+        this.callURL(URL, "POST");
+    }
+
     public void releaseDeposit(User sender, TransactionRental transRen) {
         String URL = this.URL + "reservation/release/" + sender.getUsername() + "?reservationId=" + transRen.getId();
         this.callURL(URL, "POST");
@@ -71,6 +86,14 @@ public class ProPayService {
         String URL = this.URL + "reservation/punish/" + sender.getUsername() + "?reservationId=" + transRen.getId();
         this.callURL(URL, "POST");
         transRenService.setDepositRevoked(transRen,"Ja");
+    }
+
+    public int getDepositSum (Account account){
+        int depositSum = 0;
+        for(int i = 0; i < account.getReservations().size(); i++) {
+            depositSum += account.getReservations().get(i).getAmount();
+        }
+        return depositSum;
     }
 
     private void callURL(String urlString, String method) {
@@ -86,13 +109,5 @@ public class ProPayService {
         } catch (IOException e) {
             throw new RuntimeException("ProPay not reachable!");
         }
-    }
-
-    public int getDepositSum (Account account){
-        int depositSum = 0;
-        for(int i = 0; i<account.getReservations().size(); i++) {
-            depositSum += account.getReservations().get(i).getAmount();
-        }
-        return depositSum;
     }
 }

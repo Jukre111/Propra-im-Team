@@ -43,12 +43,12 @@ public class ConflictControllerTest {
                 new Address("Strasse", "Stadt", 41460));
     }
 
-    private Item createItem(User lender) {
-        return new Item("Item", "Beschreibung", 10, 100, lender);
+    private LendableItem createLendableItem(User lender) {
+        return new LendableItem("Item", "Beschreibung", 10, 100, lender);
     }
 
     private BorrowingProcess createProcess(User borrower, User lender) {
-        BorrowingProcess process = new BorrowingProcess(createItem(lender),
+        BorrowingProcess process = new BorrowingProcess(createLendableItem(lender),
                 new Period(LocalDate.now(), LocalDate.now().plusDays(1)));
         borrower.addToBorrowed(process);
         lender.addToLend(process);

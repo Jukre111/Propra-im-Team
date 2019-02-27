@@ -1,6 +1,6 @@
 package de.hhu.sharing.web;
 
-import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.Request;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.*;
@@ -23,7 +23,7 @@ public class RequestController {
     private UserService userService;
 
     @Autowired
-    private ItemService itemService;
+    private LendableItemService lendableItemService;
 
     @Autowired
     private RequestService requestService;
@@ -37,29 +37,29 @@ public class RequestController {
     @GetMapping("/newRequest")
     public String newRequest(@RequestParam("id") Long id, Model model, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
-        if(itemService.isOwner(id, user)){
+        if(lendableItemService.isOwner(id, user)){
             redirectAttributes.addFlashAttribute("ownItem",true);
             return "redirect:/";
         }
-        List<LocalDate> allDates = itemService.allDatesInbetween(itemService.get(id));
+        List<LocalDate> allDates = lendableItemService.allDatesInbetween(lendableItemService.get(id));
         model.addAttribute("allDates", allDates);
-        model.addAttribute("item", itemService.get(id));
+        model.addAttribute("lendableItem", lendableItemService.get(id));
         return "request";
     }
 
     @PostMapping("/saveRequest")
     public String saveRequest(Long id, String startdate, String enddate, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
-        Item item = itemService.get(id);
-        if(itemService.isOwner(id, user)){
+        LendableItem lendableItem = lendableItemService.get(id);
+        if(lendableItemService.isOwner(id, user)){
             redirectAttributes.addFlashAttribute("ownItem",true);
             return "redirect:/";
         }
-        if(!proPayService.enoughCredit(user, item, LocalDate.parse(startdate), LocalDate.parse(enddate))){
+        if(!proPayService.enoughCredit(user, lendableItem, LocalDate.parse(startdate), LocalDate.parse(enddate))){
             redirectAttributes.addFlashAttribute("noCredit",true);
             return "redirect:/";
         }
-        if(!itemService.isAvailableAt(item, LocalDate.parse(startdate), LocalDate.parse(enddate))){
+        if(!lendableItemService.isAvailableAt(lendableItem, LocalDate.parse(startdate), LocalDate.parse(enddate))){
             redirectAttributes.addFlashAttribute("notAvailable",true);
             return "redirect:/newRequest?id=" + id;
         }
@@ -83,7 +83,7 @@ public class RequestController {
     @GetMapping("/acceptRequest")
     public String acceptRequest(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
-        Item item = itemService.getFromRequestId(id);
+        LendableItem lendableItem = lendableItemService.getFromRequestId(id);
         Request request = requestService.get(id);
         if(!requestService.isLender(id, user)){
             redirectAttributes.addFlashAttribute("notAuthorized",true);
@@ -97,7 +97,7 @@ public class RequestController {
             redirectAttributes.addFlashAttribute("overlappingRequest",true);
             return "redirect:/messages";
         }
-        if(!proPayService.enoughCredit(request.getRequester(), item, request.getPeriod().getStartdate(), request.getPeriod().getEnddate())){
+        if(!proPayService.enoughCredit(request.getRequester(), lendableItem, request.getPeriod().getStartdate(), request.getPeriod().getEnddate())){
             redirectAttributes.addFlashAttribute("noCredit",true);
             return "redirect:/messages";
         }

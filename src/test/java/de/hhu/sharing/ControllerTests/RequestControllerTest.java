@@ -1,12 +1,7 @@
 package de.hhu.sharing.ControllerTests;
 
-import de.hhu.sharing.data.ItemRepository;
-import de.hhu.sharing.data.RequestRepository;
-import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.*;
-import de.hhu.sharing.security.SecurityConfig;
 import de.hhu.sharing.services.*;
-import de.hhu.sharing.storage.StorageService;
 import de.hhu.sharing.web.RequestController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +30,7 @@ public class RequestControllerTest{
     UserService userService;
 
     @MockBean
-    ItemService itemService;
+    LendableItemService lendableItemService;
 
     @MockBean
     RequestService requestService;
@@ -52,8 +47,8 @@ public class RequestControllerTest{
                 new Address("Strasse", "Stadt", 41460));
     }
 
-    private Item createItem(User lender) {
-        return new Item("Item", "Beschreibung", 10, 100, lender);
+    private LendableItem createLendableItem(User lender) {
+        return new LendableItem("Item", "Beschreibung", 10, 100, lender);
     }
 
     private Request createRequest(User requester){
@@ -66,10 +61,10 @@ public class RequestControllerTest{
     public void retrieveStatusNewRequest() throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Mockito.when(userService.get("user")).thenReturn(requester);
-        Mockito.when(itemService.isOwner(1L, requester)).thenReturn(false);
-        Mockito.when(itemService.get(1L)).thenReturn(item);
+        Mockito.when(lendableItemService.isOwner(1L, requester)).thenReturn(false);
+        Mockito.when(lendableItemService.get(1L)).thenReturn(item);
 
         mvc.perform(MockMvcRequestBuilders.get("/newRequest").param("id","1"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -80,7 +75,7 @@ public class RequestControllerTest{
     public void redirectNewRequestWithOwnItem() throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         Mockito.when(userService.get("user")).thenReturn(requester);
-        Mockito.when(itemService.isOwner(1L, requester)).thenReturn(true);
+        Mockito.when(lendableItemService.isOwner(1L, requester)).thenReturn(true);
 
         mvc.perform(MockMvcRequestBuilders.get("/newRequest").param("id","1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
@@ -94,12 +89,12 @@ public class RequestControllerTest{
     public void redirectSaveRequest() throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Mockito.when(userService.get("user")).thenReturn(requester);
-        Mockito.when(itemService.get(1L)).thenReturn(item);
-        Mockito.when(itemService.isOwner(1L, requester)).thenReturn(false);
+        Mockito.when(lendableItemService.get(1L)).thenReturn(item);
+        Mockito.when(lendableItemService.isOwner(1L, requester)).thenReturn(false);
         Mockito.when(proPayService.enoughCredit(requester,item, LocalDate.parse("2000-01-01"), LocalDate.parse("2000-02-02"))).thenReturn(true);
-        Mockito.when(itemService.isAvailableAt(item, LocalDate.parse("2000-01-01"), LocalDate.parse("2000-02-02"))).thenReturn(true);
+        Mockito.when(lendableItemService.isAvailableAt(item, LocalDate.parse("2000-01-01"), LocalDate.parse("2000-02-02"))).thenReturn(true);
         MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
         map.add("id", "1");
         map.add("startdate","2000-01-01");
@@ -117,10 +112,10 @@ public class RequestControllerTest{
     public void redirectSaveRequestWithOwnItem()throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Mockito.when(userService.get("user")).thenReturn(requester);
-        Mockito.when(itemService.get(1L)).thenReturn(item);
-        Mockito.when(itemService.isOwner(1L, requester)).thenReturn(true);
+        Mockito.when(lendableItemService.get(1L)).thenReturn(item);
+        Mockito.when(lendableItemService.isOwner(1L, requester)).thenReturn(true);
         MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
         map.add("id", "1");
         map.add("startdate","2000-01-01");
@@ -137,10 +132,10 @@ public class RequestControllerTest{
     public void redirectSaveRequestWithNoCredit()throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Mockito.when(userService.get("user")).thenReturn(requester);
-        Mockito.when(itemService.get(1L)).thenReturn(item);
-        Mockito.when(itemService.isOwner(1L, requester)).thenReturn(false);
+        Mockito.when(lendableItemService.get(1L)).thenReturn(item);
+        Mockito.when(lendableItemService.isOwner(1L, requester)).thenReturn(false);
         Mockito.when(proPayService.enoughCredit(requester,item, LocalDate.parse("2000-01-01"), LocalDate.parse("2000-02-02"))).thenReturn(false);
         MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
         map.add("id", "1");
@@ -158,12 +153,12 @@ public class RequestControllerTest{
     public void redirectSaveRequestWithNotAvailable()throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Mockito.when(userService.get("user")).thenReturn(requester);
-        Mockito.when(itemService.get(1L)).thenReturn(item);
-        Mockito.when(itemService.isOwner(1L, requester)).thenReturn(false);
+        Mockito.when(lendableItemService.get(1L)).thenReturn(item);
+        Mockito.when(lendableItemService.isOwner(1L, requester)).thenReturn(false);
         Mockito.when(proPayService.enoughCredit(requester,item, LocalDate.parse("2000-01-01"), LocalDate.parse("2000-02-02"))).thenReturn(true);
-        Mockito.when(itemService.isAvailableAt(item, LocalDate.parse("2000-01-01"), LocalDate.parse("2000-02-02"))).thenReturn(false);
+        Mockito.when(lendableItemService.isAvailableAt(item, LocalDate.parse("2000-01-01"), LocalDate.parse("2000-02-02"))).thenReturn(false);
         MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
         map.add("id", "1");
         map.add("startdate","2000-01-01");
@@ -206,10 +201,10 @@ public class RequestControllerTest{
     public void redirectAcceptRequest() throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Request request = createRequest(requester);
         Mockito.when(userService.get("user")).thenReturn(owner);
-        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
+        Mockito.when(lendableItemService.getFromRequestId(1L)).thenReturn(item);
         Mockito.when(requestService.get(1L)).thenReturn(request);
         Mockito.when(requestService.isLender(1L, owner)).thenReturn(true);
         Mockito.when(requestService.isOutdated(1L)).thenReturn(false);
@@ -227,10 +222,10 @@ public class RequestControllerTest{
     public void redirectAcceptRequestWhenNotAuthorized() throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Request request = createRequest(requester);
         Mockito.when(userService.get("user")).thenReturn(owner);
-        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
+        Mockito.when(lendableItemService.getFromRequestId(1L)).thenReturn(item);
         Mockito.when(requestService.get(1L)).thenReturn(request);
         Mockito.when(requestService.isLender(1L, owner)).thenReturn(false);
 
@@ -245,10 +240,10 @@ public class RequestControllerTest{
     public void redirectAcceptRequestWhenOutdated() throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Request request = createRequest(requester);
         Mockito.when(userService.get("user")).thenReturn(owner);
-        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
+        Mockito.when(lendableItemService.getFromRequestId(1L)).thenReturn(item);
         Mockito.when(requestService.get(1L)).thenReturn(request);
         Mockito.when(requestService.isLender(1L, owner)).thenReturn(true);
         Mockito.when(requestService.isOutdated(1L)).thenReturn(true);
@@ -264,10 +259,10 @@ public class RequestControllerTest{
     public void redirectAcceptRequestWhenOverlapping() throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Request request = createRequest(requester);
         Mockito.when(userService.get("user")).thenReturn(owner);
-        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
+        Mockito.when(lendableItemService.getFromRequestId(1L)).thenReturn(item);
         Mockito.when(requestService.get(1L)).thenReturn(request);
         Mockito.when(requestService.isLender(1L, owner)).thenReturn(true);
         Mockito.when(requestService.isOutdated(1L)).thenReturn(false);
@@ -284,10 +279,10 @@ public class RequestControllerTest{
     public void redirectAcceptRequestNoCredit() throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
-        Item item = createItem(owner);
+        LendableItem item = createLendableItem(owner);
         Request request = createRequest(requester);
         Mockito.when(userService.get("user")).thenReturn(owner);
-        Mockito.when(itemService.getFromRequestId(1L)).thenReturn(item);
+        Mockito.when(lendableItemService.getFromRequestId(1L)).thenReturn(item);
         Mockito.when(requestService.get(1L)).thenReturn(request);
         Mockito.when(requestService.isLender(1L, owner)).thenReturn(true);
         Mockito.when(requestService.isOutdated(1L)).thenReturn(false);

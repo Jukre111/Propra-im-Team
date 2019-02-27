@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+<html lang="en" layout:decorate="~{base}" xmlns:layout="http://www.w3.org/1999/xhtml"
 	  xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
 <meta charset = "utf-8"/>
@@ -74,32 +74,31 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					<div class="form-group">
 						<label for="username" class="col-sm-2 control-label">Benutzername</label>
 						<div class="col-xs-6">
-						<input type="text" class="form-control" id="name" name="name" th:value="${user.username}" readonly/>
+							<input type="text" class="form-control" id="name" name="name" th:value="${user.username}" readonly/>
 						</div>
-						<a class="indexbtn" href="/propayAccount">ProPay Account</a>
 					</div>
 					<div class="form-group">
 						<label for="forename" class="col-sm-2 control-label">Vorname</label>
 						<div class="col-xs-6">
-						<input type="text" class="form-control" id="forename" name="forename" th:value="${user.forename}" readonly/>
+							<input type="text" class="form-control" id="forename" name="forename" th:value="${user.forename}" readonly/>
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="lastname" class="col-sm-2 control-label">Nachname</label>
 						<div class="col-xs-6">
-						<input type="text" class="form-control" id="lastname" name="lastname" th:value="${user.lastname}" readonly/>
+							<input type="text" class="form-control" id="lastname" name="lastname" th:value="${user.lastname}" readonly/>
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="email" class="col-sm-2 control-label">E-Mail</label>
 						<div class="col-xs-6">
-						<input type="text" class="form-control" id="email" name="email" th:value="${user.email}" readonly/>
+							<input type="text" class="form-control" id="email" name="email" th:value="${user.email}" readonly/>
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="birthdate" class="col-sm-2 control-label">Geburtstag</label>
 						<div class="col-xs-3">
-						<input type="text" class="form-control" id="birthdate" name="birthdate" th:value="${user.birthdate}" readonly/>
+							<input type="text" class="form-control" id="birthdate" name="birthdate" th:value="${user.birthdate}" readonly/>
 						</div>
 					</div>
 					<div class="form-group">
@@ -114,6 +113,13 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 							<input type="number text" class="form-control" id="postcode city" name="postcode city" th:value="${address.postcode} + ' ' + ${address.city}" readonly/>
 						</div>
 					</div>
+					<div class="form-group">
+						<label for="postcode city" class="col-sm-2 control-label">ProPay</label>
+						<div class="col-xs-6">
+							<a class="indexbtn" href="/propayAccount">zum Account</a>
+						</div>
+					</div>
+
 					<!--<div class="form-group">
 						<label for="budget" class="col-sm-2 control-label">ProPay Guthaben</label>
 						<div class="col-xs-3">
@@ -157,36 +163,12 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					<th width="10%">bis</th>
 					<th width="10%">Konflikt</th>
 				</tr>
-				<tr th:each="borrow : ${user.borrowed}">
-					<td th:text="${borrow.item.name}"></td>
-					<td th:text="${borrow.period.startdate}"></td>
-					<td th:text="${borrow.period.enddate}"></td>
+				<tr th:each="process : ${user.borrowed}">
+					<td th:text="${process.item.name}"></td>
+					<td th:text="${process.period.startdate}"></td>
+					<td th:text="${process.period.enddate}"></td>
 					<td>
-						<a class="indexbtn" th:href="@{'/conflict?id=' + ${borrow.id}}">Konflikt</a>
-					</td>
-				</tr>
-			</table>
-		</div>
-		<div style="padding: 20px">
-			<table>
-				<tr>
-					<th width="70%"><font size="4">Eigene Objekte</font></th>
-					<th width="10%">Verfügbar</th>
-					<th width="10%">Bearbeiten</th>
-					<th width="10%">Entfernen</th>
-				</tr>
-				<tr th:each="lend : ${lendItems}">
-					<td th:text="${lend.name}"></td>
-					<td>
-					<!--
-						<span th:if="${lend.available}" style="padding-left: 25px">&#10003;</--span>
-						<span th:unless="${lend.available}" style="padding-left: 25px">&#10007;</span>-->
-					</td>
-					<td>
-						<a class="indexbtn" th:href="@{'/editItem?id=' + ${lend.id}}">Bearbeiten</a>
-					</td>
-					<td>
-						<a class="indexbtn" th:href="@{'/deleteItem?id=' + ${lend.id}}">Entfernen</a>
+						<a class="indexbtn" th:href="@{'/conflict?id=' + ${process.id}}">Konflikt</a>
 					</td>
 				</tr>
 			</table>
@@ -205,6 +187,42 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					</td>
 					<td>
 						<a class="indexbtn" th:href="@{'/conflict?id=' + ${process.id}}">Konflikt</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="padding: 20px">
+			<table>
+				<tr>
+					<th width="80%"><font size="4">Objekte zum Verleih</font></th>
+					<th width="10%">Bearbeiten</th>
+					<th width="10%">Entfernen</th>
+				</tr>
+				<tr th:each="item : ${lendableItemsIPosted}">
+					<td th:text="${item.name}"></td>
+					<td>
+						<a class="indexbtn" th:href="@{'/editLendableItem?id=' + ${item.id}}">Bearbeiten</a>
+					</td>
+					<td>
+						<a class="indexbtn" th:href="@{'/deleteLendableItem?id=' + ${item.id}}">Entfernen</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="padding: 20px">
+			<table>
+				<tr>
+					<th width="80%"><font size="4">Objekte zum Verkauf</font></th>
+					<th width="10%">Bearbeiten</th>
+					<th width="10%">Entfernen</th>
+				</tr>
+				<tr th:each="item : ${sellableItemsIPosted}">
+					<td th:text="${item.name}"></td>
+					<td>
+						<a class="indexbtn" th:href="@{'/editSellableItem?id=' + ${item.id}}">Bearbeiten</a>
+					</td>
+					<td>
+						<a class="indexbtn" th:href="@{'/deleteSellableItem?id=' + ${item.id}}">Entfernen</a>
 					</td>
 				</tr>
 			</table>
