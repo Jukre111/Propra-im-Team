@@ -79,7 +79,7 @@ public class RequestControllerTest{
         mvc.perform(MockMvcRequestBuilders.get("/newRequest").param("id","1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("ownItem", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
 
@@ -102,7 +102,7 @@ public class RequestControllerTest{
         mvc.perform(MockMvcRequestBuilders.post("/saveRequest").params(map))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("requested", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("succMessage"));
 
     }
 
@@ -123,7 +123,7 @@ public class RequestControllerTest{
         mvc.perform(MockMvcRequestBuilders.post("/saveRequest").params(map))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("ownItem", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test
@@ -144,7 +144,7 @@ public class RequestControllerTest{
         mvc.perform(MockMvcRequestBuilders.post("/saveRequest").params(map))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("noCredit", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test
@@ -166,7 +166,7 @@ public class RequestControllerTest{
         mvc.perform(MockMvcRequestBuilders.post("/saveRequest").params(map))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/newRequest?id=1"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("notAvailable", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test
@@ -179,7 +179,7 @@ public class RequestControllerTest{
         mvc.perform(MockMvcRequestBuilders.get("/deleteRequest").param("id","1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("deleted", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("succMessage"));
     }
 
     @Test
@@ -192,7 +192,7 @@ public class RequestControllerTest{
         mvc.perform(MockMvcRequestBuilders.get("/deleteRequest").param("id","1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("notAuthorized", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test
@@ -213,7 +213,7 @@ public class RequestControllerTest{
         mvc.perform(MockMvcRequestBuilders.get("/acceptRequest").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("accepted", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("succMessage"));
     }
 
     @Test
@@ -231,7 +231,7 @@ public class RequestControllerTest{
         mvc.perform(MockMvcRequestBuilders.get("/acceptRequest").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("notAuthorized", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test
@@ -250,7 +250,7 @@ public class RequestControllerTest{
         mvc.perform(MockMvcRequestBuilders.get("/acceptRequest").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("outdatedRequest", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test
@@ -270,7 +270,7 @@ public class RequestControllerTest{
         mvc.perform(MockMvcRequestBuilders.get("/acceptRequest").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("overlappingRequest", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test
@@ -291,7 +291,7 @@ public class RequestControllerTest{
         mvc.perform(MockMvcRequestBuilders.get("/acceptRequest").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("noCredit", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test
@@ -304,7 +304,7 @@ public class RequestControllerTest{
         mvc.perform(MockMvcRequestBuilders.get("/declineRequest").param("id","1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("declined", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("succMessage"));
     }
 
     @Test
@@ -317,6 +317,6 @@ public class RequestControllerTest{
         mvc.perform(MockMvcRequestBuilders.get("/declineRequest").param("id","1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/messages"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("notAuthorized", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 }

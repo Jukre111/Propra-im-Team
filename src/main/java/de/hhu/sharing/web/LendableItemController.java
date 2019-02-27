@@ -1,5 +1,6 @@
 package de.hhu.sharing.web;
 
+import de.hhu.sharing.model.BorrowingProcess;
 import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.BorrowingProcessService;
@@ -31,9 +32,8 @@ public class LendableItemController {
     @GetMapping("/lendableItemDetails")
     public String lendableItemDetails(@RequestParam(name = "id") Long id, Model model){
         LendableItem lendableItem = lendableItemService.get(id);
-        User user = lendableItem.getOwner();
         model.addAttribute("lendableItem", lendableItem);
-        model.addAttribute("user", user);
+        model.addAttribute("user", lendableItem.getOwner());
         model.addAttribute("allDates", lendableItemService.allDatesInbetween(lendableItem));
         return "lendableItemDetails";
     }
@@ -46,11 +46,12 @@ public class LendableItemController {
 
     @GetMapping("/editLendableItem")
     public String editLendableItem(Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
+        User user = userService.get(p.getName());
         if(!lendableItemService.isChangeable(id)){
             redirectAttributes.addFlashAttribute("errMessage", "Objekt nicht veränderbar. Es sind noch Requests, Verleihungen oder Konflikte offen.");
             return "redirect:/account";
         }
-        if(lendableItemService.get(id).getOwner() != userService.get(p.getName())){
+        if(!lendableItemService.isOwner(id, user)){
             redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
@@ -64,21 +65,21 @@ public class LendableItemController {
         if(id == null){
             lendableItemService.create(name, description, rental, deposit, user, file);
             redirectAttributes.addFlashAttribute("succMessage","Objekt erstellt.");
+            return "redirect:/account";
         }
-        else {
-            lendableItemService.edit(id,name, description, rental, deposit, user);
-            redirectAttributes.addFlashAttribute("succMessage","Objekt bearbeitet.");
-        }
+        lendableItemService.edit(id,name, description, rental, deposit, user);
+        redirectAttributes.addFlashAttribute("succMessage","Objekt bearbeitet.");
         return "redirect:/account";
     }
 
     @GetMapping("/deleteLendableItem")
     public String deleteLendableItem(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
+        User user = userService.get(p.getName());
         if(!lendableItemService.isChangeable(id)){
             redirectAttributes.addFlashAttribute("errMessage", "Objekt nicht löschbar. Es sind noch Requests, Verleihungen oder Konflikte offen.");
             return "redirect:/account";
         }
-        if(lendableItemService.get(id).getOwner() != userService.get(p.getName())){
+        if(!lendableItemService.isOwner(id, user)){
             redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
@@ -90,7 +91,8 @@ public class LendableItemController {
     @GetMapping("/itemReturned")
     public String itemReturned(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
-        if(processService.get(id).getItem().getOwner() != user){
+        BorrowingProcess process = processService.get(id);
+        if(!lendableItemService.isOwner(process.getItem().getId(), user)){
             redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }

@@ -88,7 +88,7 @@ public class ConflictControllerTest {
         mvc.perform(MockMvcRequestBuilders.get("/conflict").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("notAuthorized", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test
@@ -143,7 +143,7 @@ public class ConflictControllerTest {
         mvc.perform(MockMvcRequestBuilders.post("/saveConflict").params(map))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("notAuthorized", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test
@@ -164,7 +164,7 @@ public class ConflictControllerTest {
         mvc.perform(MockMvcRequestBuilders.post("/saveConflict").params(map))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/conflictDetails?id=1"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("conflictExistsAlready", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test
@@ -203,7 +203,7 @@ public class ConflictControllerTest {
         mvc.perform(MockMvcRequestBuilders.post("/conflictNewMessage").params(map))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("notAuthorized", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test
@@ -250,7 +250,7 @@ public class ConflictControllerTest {
         mvc.perform(MockMvcRequestBuilders.get("/conflictDetails").param("id", "1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
-                .andExpect(MockMvcResultMatchers.flash().attribute("notAuthorized", true));
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
     @Test
