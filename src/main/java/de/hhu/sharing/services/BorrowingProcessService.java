@@ -32,7 +32,7 @@ public class BorrowingProcessService {
     public BorrowingProcess get(Long id) {
         return this.processes.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException("Process not found!"));
+                        () -> new RuntimeException("Ausleihprozess nicht gefunden!"));
     }
 
     public void accept(Long requestId) {
