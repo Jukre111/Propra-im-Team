@@ -1,11 +1,7 @@
 package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.UserRepository;
-import de.hhu.sharing.model.Address;
-import de.hhu.sharing.model.BorrowingProcess;
-import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.LendableItem;
-import de.hhu.sharing.model.User;
+import de.hhu.sharing.model.*;
 import de.hhu.sharing.services.UserService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -127,7 +123,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testUserIsNotInvoved() {
+    public void testUserIsNotInvolved() {
         User user1 = generateUser();
         User user2 = generateUser();
 
@@ -139,5 +135,31 @@ public class UserServiceTest {
 
         Assert.assertTrue(userService.userIsInvolvedToProcess(user2, process) == false);
     }
+
+    @Test
+    public void testUserHasNotReturnedItems(){
+        User user = generateUser();
+        LendableItem item = generateItem(user);
+        Period period = new Period(LocalDate.of(2000,1,1),LocalDate.of(2000,2,2));
+        BorrowingProcess process = new BorrowingProcess(item,period);
+        user.addToBorrowed(process);
+        userService.userHasNotReturnedItems(user);
+
+        Assert.assertTrue(userService.userHasNotReturnedItems(user) == true);
+    }
+
+    @Test
+    public void testUserHasNotReturnedItemsButTimeIsNotOver(){
+        User user = generateUser();
+        LendableItem item = generateItem(user);
+        Period period = new Period(LocalDate.of(2020,1,1),LocalDate.of(2020,2,2));
+        BorrowingProcess process = new BorrowingProcess(item,period);
+        user.addToBorrowed(process);
+        userService.userHasNotReturnedItems(user);
+
+        Assert.assertTrue(userService.userHasNotReturnedItems(user) == false);
+    }
+
+    
 
 }
