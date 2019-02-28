@@ -31,11 +31,11 @@ public class LendableItemService {
         LendableItem lendableItem = new LendableItem(name, description, rental, deposit, user);
         items.save(lendableItem);
         try {
-        	if(file!=null && !file.getContentType().equals("application/octet-stream")) {
-        		storageService.storeLendableItem(file, lendableItem);
-        	}
+            if(file!=null && !file.getContentType().equals("application/octet-stream")) {
+                storageService.storeLendableItem(file, lendableItem);
+            }
         }catch(NullPointerException ex) {
-        	ex.printStackTrace();
+            ex.printStackTrace();
         }
     }
 
@@ -48,11 +48,11 @@ public class LendableItemService {
         lendableItem.setOwner(user);
         items.save(lendableItem);
         try {
-        	if(file!=null && !file.getContentType().equals("application/octet-stream")) {
-        		storageService.storeLendableItem(file, lendableItem);
-        	}
+            if(file!=null && !file.getContentType().equals("application/octet-stream")) {
+                storageService.storeLendableItem(file, lendableItem);
+            }
         }catch(NullPointerException ex) {
-        	ex.printStackTrace();
+            ex.printStackTrace();
         }
     }
 

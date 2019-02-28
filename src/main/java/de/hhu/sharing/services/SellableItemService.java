@@ -29,7 +29,7 @@ public class SellableItemService {
                 storageService.storeSellableItem(file, sellableItem);
             }
         }catch(NullPointerException ex) {
-        	ex.printStackTrace();
+            ex.printStackTrace();
         }
     }
 
@@ -45,7 +45,7 @@ public class SellableItemService {
                 storageService.storeSellableItem(file, sellableItem);
             }
         }catch(NullPointerException ex) {
-        	ex.printStackTrace();
+            ex.printStackTrace();
         }
     }
 

@@ -27,7 +27,7 @@ public class ProPayService {
     private TransactionRentalService transRenService;
 
     private RestTemplate rt = new RestTemplate();
-    private String URL = "http://propay:8888/";
+    private String URL = "http://localhost:8888/";
 
     public Account getAccount(User user) {
         String URL = this.URL + "account/" + user.getUsername() + "/";
@@ -117,18 +117,4 @@ public class ProPayService {
             throw new NotFoundException("ProPay nicht erreichbar!");
         }
     }
-//            connection.setConnectTimeout(5);
-//            connection.setReadTimeout(5);
-//            connection.connect();
-//            BufferedReader rd  = null;
-//            StringBuilder sb = null;
-//            String line = null;
-//            rd  = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-//            sb = new StringBuilder();
-//
-//            while ((line = rd.readLine()) != null)
-//            {
-//                sb.append(line + '\n');
-//            }
-//            System.out.println(sb.toString());
 }

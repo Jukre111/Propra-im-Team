@@ -19,35 +19,35 @@ public class FileSystemStorageService implements StorageService {
 
     @Autowired
     private ImageRepository imageRepo;
-    
+
     @Autowired
-    private UserRepository userRepo;   
-    
+    private UserRepository userRepo;
+
     @Autowired
     private LendableItemRepository lendableItemRepository;
 
     @Autowired
     private SellableItemRepository sellableItemRepository;
 
-    
+
     public Image createImageVars(String mimetype) {
-    	Image image = new Image();
-    	switch(mimetype){
-        case "image/jpeg":
-        	image.setMimeType("image/jpeg");
-            break;
-        case "image/png":
-        	image.setMimeType("image/png");
-            break;
-        case "image/gif":
-        	image.setMimeType("image/gif");
-            break;
-        case "image/bmp":
-        	image.setMimeType("image/bmp");
-            break;
-        default:
+        Image image = new Image();
+        switch(mimetype){
+            case "image/jpeg":
+                image.setMimeType("image/jpeg");
+                break;
+            case "image/png":
+                image.setMimeType("image/png");
+                break;
+            case "image/gif":
+                image.setMimeType("image/gif");
+                break;
+            case "image/bmp":
+                image.setMimeType("image/bmp");
+                break;
+            default:
         }
-    	return image;
+        return image;
     }
 
     private byte[] readFile(MultipartFile file){
@@ -62,20 +62,20 @@ public class FileSystemStorageService implements StorageService {
 
     @Override
     public void storeUser(MultipartFile file, User user){
-    	byte[] byteArr = readFile(file);
+        byte[] byteArr = readFile(file);
         Image image = null;
         String contentType = null;
         contentType = file.getContentType();
         if(contentType!=null)
-    	    image = createImageVars(contentType);
-    	else
-    	    image = createImageVars("default");
+            image = createImageVars(contentType);
+        else
+            image = createImageVars("default");
         image.setImageData(byteArr);
         imageRepo.save(image);
         user.setImage(image);
         userRepo.save(user);
     }
-    
+
     @Override
     public void storeLendableItem(MultipartFile file, LendableItem lendableItem){
         byte[] byteArr = readFile(file);

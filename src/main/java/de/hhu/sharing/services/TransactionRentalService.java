@@ -25,7 +25,7 @@ public class TransactionRentalService {
     public TransactionRental getFromProcessId(Long processId){
         return transactions.findByProcessId(processId)
                 .orElseThrow(
-                    () -> new NotFoundException("Transaktion nicht gefunden!"));
+                        () -> new NotFoundException("Transaktion nicht gefunden!"));
     }
 
     public List<TransactionRental> getAllFromSender(User user){
