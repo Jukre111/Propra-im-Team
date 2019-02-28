@@ -3,6 +3,7 @@ package de.hhu.sharing.services;
 import de.hhu.sharing.data.TransactionRentalRepository;
 import de.hhu.sharing.model.BorrowingProcess;
 import de.hhu.sharing.model.LendableItem;
+import de.hhu.sharing.model.NotFoundException;
 import de.hhu.sharing.propay.TransactionRental;
 import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class TransactionRentalService {
     public TransactionRental getFromProcessId(Long processId){
         return transactions.findByProcessId(processId)
                 .orElseThrow(
-                    () -> new RuntimeException("Transaktion nicht gefunden!"));
+                    () -> new NotFoundException("Transaktion nicht gefunden!"));
     }
 
     public List<TransactionRental> getAllFromSender(User user){

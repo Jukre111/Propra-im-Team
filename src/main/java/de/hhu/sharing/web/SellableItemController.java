@@ -68,7 +68,7 @@ public class SellableItemController {
             redirectAttributes.addFlashAttribute("succMessage","Objekt erstellt.");
         }
         else {
-            sellableItemService.edit(id, name, description, price, user);
+            sellableItemService.edit(id, name, description, price, user ,file);
             redirectAttributes.addFlashAttribute("succMessage","Objekt bearbeitet.");
         }
         return "redirect:/account";

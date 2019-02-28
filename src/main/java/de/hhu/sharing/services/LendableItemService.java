@@ -2,6 +2,7 @@ package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.LendableItemRepository;
 import de.hhu.sharing.model.LendableItem;
+import de.hhu.sharing.model.NotFoundException;
 import de.hhu.sharing.model.Period;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.storage.StorageService;
@@ -36,7 +37,7 @@ public class LendableItemService {
        }
     }
 
-    public void edit(Long id, String name, String description, Integer rental, Integer deposit, User user) {
+    public void edit(Long id, String name, String description, Integer rental, Integer deposit, User user,MultipartFile file) {
         LendableItem lendableItem = this.get(id);
         lendableItem.setName(name);
         lendableItem.setDescription(description);
@@ -44,6 +45,9 @@ public class LendableItemService {
         lendableItem.setDeposit(deposit);
         lendableItem.setOwner(user);
         items.save(lendableItem);
+        if(file!=null) {
+            storageService.storeLendableItem(file, lendableItem);
+        }
     }
 
     public void delete(Long id) {
@@ -54,7 +58,7 @@ public class LendableItemService {
     public LendableItem get(Long id) {
         return this.items.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException("Objekt nicht gefunden!"));
+                        () -> new NotFoundException("Objekt nicht gefunden!"));
     }
 
     public List<LendableItem> getAll() {
@@ -64,7 +68,7 @@ public class LendableItemService {
     public LendableItem getFromRequestId(Long requestId) {
         return this.items.findByRequests_id(requestId)
                 .orElseThrow(
-                        () -> new RuntimeException("Objekt nicht gefunden!"));
+                        () -> new NotFoundException("Objekt nicht gefunden!"));
     }
 
     public List<LendableItem> getAllIPosted(User user) {

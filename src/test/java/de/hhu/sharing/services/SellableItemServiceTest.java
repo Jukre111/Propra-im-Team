@@ -111,8 +111,9 @@ public class SellableItemServiceTest {
         User user1 = generateUser("user1");
         User user2 = generateUser("user2");
         SellableItem item = generateItem(user1);
+        MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
         Mockito.when(items.findById(1L)).thenReturn(Optional.of(item));
-        sellableItemService.edit(1L, "item", "description", 1, user2);
+        sellableItemService.edit(1L, "item", "description", 1, user2, jsonFile);
         ArgumentCaptor<SellableItem> captor = ArgumentCaptor.forClass(SellableItem.class);
         Mockito.verify(items, times(1)).save(captor.capture());
 
