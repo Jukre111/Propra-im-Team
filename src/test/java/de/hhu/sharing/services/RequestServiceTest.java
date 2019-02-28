@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.mockito.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.times;
@@ -228,7 +230,38 @@ public class RequestServiceTest {
 
         Assert.assertTrue(lendableItem.getRequests().isEmpty());
 
+    }
 
+    @Test
+    public void testDeleteOutdatedRequests() {
+        User requester = generateUser("requester");
+        User owner = generateUser("owner");
+        User otherRequester = generateUser("otherRequester");
+
+        Request request = generateRequest(requester);
+        request.setId(1L);
+        Request otherRequest = generateRequest(otherRequester);
+        otherRequest.setId(2L);
+        LendableItem lendableItem = generateItem(owner);
+
+        otherRequest.setPeriod(new Period(LocalDate.now().minusDays(1),LocalDate.now().plusDays(1)));
+        request.setPeriod(new Period(LocalDate.now().plusDays(1),LocalDate.now().plusDays(3)));
+        lendableItem.addToRequests(otherRequest);
+        lendableItem.addToRequests(request);
+
+
+        Mockito.when(requests.findById(1L)).thenReturn(Optional.of(request));
+        Mockito.when(requests.findById(2L)).thenReturn(Optional.of(otherRequest));
+        Mockito.when(lendableItemService.getFromRequestId(1L)).thenReturn(lendableItem);
+        Mockito.when(lendableItemService.getFromRequestId(2L)).thenReturn(lendableItem);
+        ArrayList<Request> requestList = new ArrayList();
+        requestList.add(request);
+        requestList.add(otherRequest);
+        Mockito.when(requests.findAll()).thenReturn(requestList);
+
+        requestService.deleteOutdatedRequests();
+
+        Assert.assertTrue(lendableItem.getRequests().contains(request));
     }
 
 }
