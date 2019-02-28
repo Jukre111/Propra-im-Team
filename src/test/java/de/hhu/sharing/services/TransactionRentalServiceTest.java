@@ -4,6 +4,8 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
@@ -22,10 +24,7 @@ import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.BorrowingProcess;
 import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.model.Period;
-import de.hhu.sharing.model.Request;
 import de.hhu.sharing.model.User;
-import de.hhu.sharing.propay.Account;
-import de.hhu.sharing.propay.Reservation;
 import de.hhu.sharing.propay.TransactionRental;
 
 public class TransactionRentalServiceTest {
@@ -94,4 +93,52 @@ public class TransactionRentalServiceTest {
         Mockito.verify(transactions, times(1)).save(captorProcess.capture());
         Assert.assertTrue(captorProcess.getAllValues().get(0).getDepositRevoked().equals("ja"));
     }
+
+    @Test
+    public void testGetAllFromSender() {
+        User sender = generateUser("Sender");
+        User receiver = generateUser("Receiver");
+        TransactionRental rent1 = new TransactionRental(200, 20, 1L, this.generateItem(sender), sender, receiver);
+        TransactionRental rent2 = new TransactionRental(200, 20, 1L, this.generateItem(sender), sender, receiver);
+        List<TransactionRental> bySender = new ArrayList<>();
+        bySender.add(rent1);
+        bySender.add(rent2);
+        Mockito.when(transactions.findAllBySender(sender)).thenReturn(bySender);
+        List<TransactionRental> returnList = transService.getAllFromSender(sender);
+        Assertions.assertThat(returnList).isEqualTo(bySender);
+    }
+
+    @Test
+    public void testGetAllFromReceiver() {
+        User sender = generateUser("Sender");
+        User receiver = generateUser("Receiver");
+        TransactionRental rent1 = new TransactionRental(200, 20, 1L, this.generateItem(sender), sender, receiver);
+        TransactionRental rent2 = new TransactionRental(200, 20, 1L, this.generateItem(sender), sender, receiver);
+        List<TransactionRental> byReceiver = new ArrayList<>();
+        byReceiver.add(rent1);
+        byReceiver.add(rent2);
+        Mockito.when(transactions.findAllByReceiver(receiver)).thenReturn(byReceiver);
+        List<TransactionRental> returnList = transService.getAllFromReceiver(receiver);
+        Assertions.assertThat(returnList).isEqualTo(byReceiver);
+    }
+
+    @Test
+    public void testGetFromProcessId() {
+        User sender = generateUser("Sender");
+        User receiver = generateUser("Receiver");
+        TransactionRental rent1 = new TransactionRental(200, 20, 1L, this.generateItem(sender), sender, receiver);
+        Mockito.when(transactions.findByProcessId(1L)).thenReturn((Optional.of(rent1)));
+        TransactionRental returnTrans = transService.getFromProcessId(1L);
+        Assertions.assertThat(returnTrans).isEqualTo(rent1);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testGetFromProcessIdThrowsException() {
+        //User sender = generateUser("Sender");
+        //User receiver = generateUser("Receiver");
+        //TransactionRental rent1 = new TransactionRental(200, 20, 1L, this.generateItem(sender), sender, receiver);
+        Mockito.when(transactions.findByProcessId(1L)).thenReturn(Optional.empty());
+        transService.getFromProcessId(1L);
+    }
+
 }
