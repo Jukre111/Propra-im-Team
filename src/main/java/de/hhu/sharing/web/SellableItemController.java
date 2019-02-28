@@ -1,9 +1,7 @@
 package de.hhu.sharing.web;
 
-import de.hhu.sharing.data.TransactionPurchaseRepository;
 import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
-import de.hhu.sharing.propay.TransactionPurchase;
 import de.hhu.sharing.services.ProPayService;
 import de.hhu.sharing.services.SellableItemService;
 import de.hhu.sharing.services.TransactionPurchaseService;
@@ -39,7 +37,6 @@ public class SellableItemController {
         SellableItem sellableItem = sellableItemService.get(id);
         model.addAttribute("user", userService.get(p.getName()));
         model.addAttribute("sellableItem", sellableItem);
-
         return ("sellableItemDetails");
     }
 
@@ -51,7 +48,8 @@ public class SellableItemController {
 
     @GetMapping("/editSellableItem")
     public String editSellableItem(Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
-        if(sellableItemService.get(id).getOwner() != userService.get(p.getName())){
+        User user = userService.get(p.getName());
+        if(!sellableItemService.isOwner(id, user)){
             redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
@@ -75,7 +73,8 @@ public class SellableItemController {
 
     @GetMapping("/deleteSellableItem")
     public String deleteSellableItem(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
-        if(sellableItemService.get(id).getOwner() != userService.get(p.getName())){
+        User user = userService.get(p.getName());
+        if(!sellableItemService.isOwner(id, user)){
             redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
@@ -86,24 +85,20 @@ public class SellableItemController {
 
     @GetMapping("/buy")
     public String buy(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
-        User buyer = userService.get(p.getName());
+        User user = userService.get(p.getName());
         SellableItem sellableItem = sellableItemService.get(id);
-        User owner = sellableItem.getOwner();
-        if(buyer == owner){
+        if(sellableItemService.isOwner(id, user)){
             redirectAttributes.addFlashAttribute("errMessage","Eigenes Objekt nicht an sich selbst verkaufbar.");
             return "redirect:/";
         }
-        if(!proService.enoughCredit(buyer,sellableItem)){
+        if(!proService.enoughCredit(user,sellableItem)){
             redirectAttributes.addFlashAttribute("errMessage","Nicht genug ProPray-Guthaben.");
-            return ("redirect:/");
+            return "redirect:/";
         }
-        transactionPurchaseService.createTransactionPurchase(sellableItem, buyer, owner);
-        String itemInformation =  sellableItem.getName() + "  " +   " Abholort: " + sellableItem.getOwner().getAddress().getStreet() + sellableItem.getOwner().getAddress().getPostcode() + " " + sellableItem.getOwner().getAddress().getCity();
-        buyer.getBoughtItems().add(itemInformation);
-        System.out.println(itemInformation);
+        transactionPurchaseService.createTransactionPurchase(sellableItem, user);
         sellableItemService.delete(id);
         redirectAttributes.addFlashAttribute("succMessage","Objekt erfolgreich gekauft.");
-        return ("redirect:/");
+        return "redirect:/";
     }
 
 }
