@@ -3,21 +3,22 @@ package de.hhu.sharing.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Data
-@Entity
+@Embeddable
 public class Message {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    @NotNull
+    private String author;
+    @Column(columnDefinition = "TEXT")
+    private String content;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private User sender;
-    @ManyToOne(fetch = FetchType.EAGER)
-    private User receiver;
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Item item;
-    private String subject;
-    private String message;
+    public Message(){
+    }
+
+    public Message(String author, String content){
+        this.author = author;
+        this.content = content;
+    }
 }

@@ -1,6 +1,7 @@
 package de.hhu.sharing.model;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -9,7 +10,10 @@ import java.time.LocalDate;
 @Embeddable
 public class Period {
 
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startdate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate enddate;
 
     public Period(){
@@ -32,7 +36,6 @@ public class Period {
     }
 
     public boolean isOutdated() {
-        return startdate.isBefore(LocalDate.now())
-                || startdate.isEqual(LocalDate.now());
+        return startdate.isBefore(LocalDate.now());
     }
 }

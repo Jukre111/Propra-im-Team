@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+<html lang="en" layout:decorate="~{base}" xmlns:layout="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <title>Sharing</title>
@@ -27,8 +27,8 @@
             <th width="10%">Details</th>
         </tr>
         <tr th:each="conflict : ${allConflicts}">
-            <td th:text="${conflict.item.name}"></td>
-            <td th:text="${conflict.owner.username}"></td>
+            <td th:text="${conflict.process.item.name}"></td>
+            <td th:text="${conflict.lender.username}"></td>
             <td></td>
             <td>
                 <a type="button" th:href="@{'/conflictDetails?id=' + ${conflict.id}}" class="indexbtn">Details</a>

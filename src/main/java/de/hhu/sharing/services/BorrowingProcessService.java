@@ -1,17 +1,9 @@
 package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.BorrowingProcessRepository;
-import de.hhu.sharing.data.TransactionRepository;
-import de.hhu.sharing.model.BorrowingProcess;
-import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.Request;
-import de.hhu.sharing.model.User;
-import de.hhu.sharing.propay.Transaction;
+import de.hhu.sharing.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class BorrowingProcessService {
@@ -23,66 +15,59 @@ public class BorrowingProcessService {
     private RequestService requestService;
 
     @Autowired
-    private ItemService itemService;
+    private LendableItemService lendableItemService;
 
     @Autowired
     private UserService userService;
 
     @Autowired
-    private ProPayService proService;
+    private ProPayService proPayService;
 
     @Autowired
-    private TransactionRepository transRepo;
+    private TransactionRentalService transactionRentalService;
+
+    @Autowired
+    private  ConflictService conflictService;
 
     public BorrowingProcess get(Long id) {
-        BorrowingProcess process = this.processes.findById(id)
+        return this.processes.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException("Process not found!"));
-        return process;
-    }
-
-    public Item getItemFromProcess(BorrowingProcess process){
-        Item item = process.getItem();
-        return item;
+                        () -> new RuntimeException("Ausleihprozess nicht gefunden!"));
     }
 
     public void accept(Long requestId) {
         Request request = requestService.get(requestId);
-        Item item = itemService.getFromRequestId(requestId);
-        item.addToPeriods(request.getPeriod());
-        this.createProcessForUsers(item, request);
-        requestService.deleteOverlappingRequestsFromItem(request, item);
-
+        LendableItem lendableItem = lendableItemService.getFromRequestId(requestId);
+        lendableItem.addToPeriods(request.getPeriod());
+        this.createProcess(lendableItem, request);
+        requestService.deleteOverlappingRequestsFromItem(request, lendableItem);
     }
 
-    private void createProcessForUsers(Item item, Request request) {
-        BorrowingProcess process = new BorrowingProcess(item, request.getPeriod());
+    private void createProcess(LendableItem lendableItem, Request request) {
+        BorrowingProcess process = new BorrowingProcess(lendableItem, request.getPeriod());
         processes.save(process);
-
-        ArrayList <BorrowingProcess> listProcesses = (ArrayList<BorrowingProcess>) processes.findAll();
-        BorrowingProcess process1 = listProcesses.get(listProcesses.size()-1);
-        List<Transaction> list = transRepo.findAll();
-        Transaction trans = list.get(list.size()-1);
-        trans.setProcessId(process1.getId());
-        transRepo.save(trans);
-
-        request.getRequester().addToBorrowed(process);
-        item.getLender().addToLend(process);
+        User borrower = request.getRequester();
+        User lender = lendableItem.getOwner();
+        transactionRentalService.createTransactionRental(process, borrower, lender);
+        borrower.addToBorrowed(process);
+        lender.addToLend(process);
     }
 
-    public void returnItem(Long processId, User lender){
+    public void itemReturned(Long processId, String condition){
         BorrowingProcess process = this.get(processId);
-        String borrower = userService.getBorrowerFromBorrowingProcessId(processId).getUsername();
-
-        if(proService.cancelDeposit(borrower,transRepo.findByProcessId(processId))==200){
-            userService.removeProcessFromProcessLists(lender, process);
-            process.getItem().removeFromPeriods(process.getPeriod());
-            processes.delete(process);
+        Conflict conflict = conflictService.getFromBorrowingProcess(process);
+        if(conflict != null){
+            conflictService.delete(conflict);
         }
-    }
-
-    public BorrowingProcess getBorrowingProcess(Long id){
-    BorrowingProcess borrowingProcess = processes.findById(id).orElseThrow(()-> new RuntimeException("BorrowindProcess not found."));
-    return borrowingProcess;
+        User borrower = userService.getBorrowerFromBorrowingProcessId(processId);
+        if(condition.equals("good")){
+            proPayService.releaseDeposit(borrower, transactionRentalService.getFromProcessId(processId));
+        }
+        else{
+            proPayService.punishDeposit(borrower, transactionRentalService.getFromProcessId(processId));
+        }
+        userService.removeProcessFromProcessLists(process);
+        process.getItem().removeFromPeriods(process.getPeriod());
+        processes.delete(process);
     }
 }

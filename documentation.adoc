@@ -81,7 +81,7 @@ vermerkt.
 
 * BorrowedItems
 . id : Long
-. item : Item
+. lendableItem : Item
 ** Item das ausgeliehen wird.
 . request : Request
 ** request der akzeptiert wurde, sodass das Item jetzt ausgeliehen ist.
@@ -162,7 +162,7 @@ Bearbeiten:
 ** wird zum Empfangen von Json Daten verwendet)
 . id : int (speichert die Id der Kautionsreservierung)
 . amount : int (speichert die Höhe der Kaution/des Deposits)
-* Transaction (Model)
+* TransactionRental (Model)
 ** wird verwendet um die Transaktionen auf der Website darzustellen
 . reservationId : int (speichert die Id der dazugehörigen Kautionsreservierung)
 . wholeRent : int (speichert die summierte Miete fuer alle Tage)
@@ -177,7 +177,7 @@ Bearbeiten:
 ** bei -1 kam es zu internen Problemen, wie zum Beispiel Exceptions
 ** alle anderen Codes weisen auf fehlerhafte Kommunikation mit der ProPay Seite hin
 
-### TransactionService
+### TransactionRentalService
 * Stellt eine Methode zum erstellen und durchführen einer Transaktion zur Verfügung
 * Stellt eine Methode zur Verfügung, mit der sich prüfen lässt ob ein Guthaben für die komplette Miete und Kaution ausreicht.
 
