@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 
 @Data
 @Entity
@@ -15,9 +16,11 @@ public class BorrowingProcess {
     private Long id;
 
     @ManyToOne
+    @Valid
     private LendableItem item;
 
     @Embedded
+    @Valid
     private Period period;
 
     public BorrowingProcess(){

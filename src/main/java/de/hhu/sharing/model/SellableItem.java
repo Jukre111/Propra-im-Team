@@ -1,12 +1,16 @@
 package de.hhu.sharing.model;
 import lombok.Data;
 import javax.persistence.Entity;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 
 @Data
 @Entity (name = "SellableItem")
 public class SellableItem extends Item{
 
+    @NotNull
+    @Min(0)
     private Integer price;
 
 

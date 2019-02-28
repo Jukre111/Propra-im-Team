@@ -1,5 +1,5 @@
 
-package de.hhu.sharing.ServiceTests;
+package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.LendableItemRepository;
 import de.hhu.sharing.model.Address;

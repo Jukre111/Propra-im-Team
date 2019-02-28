@@ -55,7 +55,7 @@ public class BorrowingProcessService {
 
     public void itemReturned(Long processId, String condition){
         BorrowingProcess process = this.get(processId);
-        Conflict conflict = conflictService.getFromBorrowindProcess(process);
+        Conflict conflict = conflictService.getFromBorrowingProcess(process);
         if(conflict != null){
             conflictService.delete(conflict);
         }

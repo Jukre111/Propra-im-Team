@@ -34,7 +34,7 @@ public class ConflictController {
             redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
-        Conflict conflict = conflictService.getFromBorrowindProcess(process);
+        Conflict conflict = conflictService.getFromBorrowingProcess(process);
         if(conflict != null){
             return "redirect:/conflictDetails?id=" + conflict.getId();
         }
@@ -51,7 +51,7 @@ public class ConflictController {
             redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
-        Conflict conflict = conflictService.getFromBorrowindProcess(process);
+        Conflict conflict = conflictService.getFromBorrowingProcess(process);
         if(conflict != null){
             redirectAttributes.addFlashAttribute("errMessage","Konflikt existiert bereits.");
             return "redirect:/conflictDetails?id=" + conflict.getId();

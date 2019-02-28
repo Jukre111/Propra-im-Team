@@ -19,7 +19,7 @@ public class ConflictService {
                         ()-> new RuntimeException("Konflikt nicht gefunden!"));
     }
 
-    public Conflict getFromBorrowindProcess(BorrowingProcess process) {
+    public Conflict getFromBorrowingProcess(BorrowingProcess process) {
         return this.conflicts.findByProcess(process);
     }
 
