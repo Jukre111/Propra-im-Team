@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import de.hhu.sharing.data.LendableItemRepository;
 import de.hhu.sharing.model.LendableItem;
 import de.hhu.sharing.services.SellableItemService;
+import de.hhu.sharing.storage.StorageService;
 import org.assertj.core.api.Assertions;
 import de.hhu.sharing.model.SellableItem;
 
@@ -40,20 +41,17 @@ public class FileUploadControllerTests {
 	@Autowired
 	MockMvc mvc;
 
-    @MockBean
-    FileSystemStorageService fileStorageService;
-    @MockBean
-    LendableItemService lendableItemService;
-    @MockBean
-    SellableItemService sellableItemService;
-    @MockBean
-    UserService userService;
-    @MockBean
-    LendableItemRepository itemRepo;
-    @MockBean
-    UserRepository userRepo;
-    @MockBean
-    ImageRepository imageRepo;
+	@MockBean
+	StorageService storageService;
+
+	@MockBean
+	UserService userService;
+
+	@MockBean
+	LendableItemService lendableItemService;
+
+	@MockBean
+	SellableItemService sellableItemService;
 
     
     private User generateUser(String username) {
