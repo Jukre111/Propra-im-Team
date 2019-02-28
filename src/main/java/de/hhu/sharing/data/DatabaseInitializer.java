@@ -131,12 +131,9 @@ public class DatabaseInitializer implements ServletContextInitializer {
     private Image initImage(){
         byte[] byteArr = new byte[1];
         File file = new File("nyan_cat.gif");
-        try {
-            file = ResourceUtils.getFile(
-                    "classpath:nyan_cat.gif");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+
+        file = new File(this.getClass().getResource("/nyan_cat.gif").getFile());
+
         try {
             byteArr = Files.readAllBytes(file.toPath());
         } catch (IOException e) {
