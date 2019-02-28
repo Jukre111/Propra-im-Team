@@ -1,10 +1,7 @@
 package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.TransactionRentalRepository;
-import de.hhu.sharing.model.Address;
-import de.hhu.sharing.model.LendableItem;
-import de.hhu.sharing.model.SellableItem;
-import de.hhu.sharing.model.User;
+import de.hhu.sharing.model.*;
 import de.hhu.sharing.propay.Account;
 import de.hhu.sharing.propay.Reservation;
 import de.hhu.sharing.propay.TransactionPurchase;
@@ -19,8 +16,10 @@ import org.mockito.*;
 import de.hhu.sharing.services.ProPayService;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
@@ -120,15 +119,6 @@ public class ProPayServiceTest {
     }
 
     @Test
-    public void testCallURL() throws Exception {
-        String URL = "http://localhost:8888/account/" + "user" + "/";
-        Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
-        pps.callURL(URL,"POST", 3);
-        Mockito.verify(pps, times(1)).callURL(URL,"POST", 3);
-
-    }
-
-    @Test
     public void testReleaseDeposit() {
         User source = this.createUser("Source");
         User target = this.createUser("Target");
@@ -203,5 +193,11 @@ public class ProPayServiceTest {
         reservations.add(reservation3);
         Account account1 = new Account(source1.getUsername(), 515, reservations);
         Assertions.assertThat(pps.getDepositSum(account1)).isEqualTo(330);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testCallURL() throws Exception {
+        String URL = "http://localhost:8888/account/" + "user" + "/";
+        pps.callURL(URL,"POST", 3);
     }
 }
