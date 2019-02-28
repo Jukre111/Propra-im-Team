@@ -35,10 +35,9 @@ public class SellableItemController {
     private TransactionPurchaseService transactionPurchaseService;
 
     @GetMapping("/sellableItemDetails")
-    private String sellableItemDetails(Model model, @RequestParam("id") Long id){
+    private String sellableItemDetails(Model model, @RequestParam("id") Long id, Principal p){
         SellableItem sellableItem = sellableItemService.get(id);
-        User user = sellableItem.getOwner();
-        model.addAttribute("user", user);
+        model.addAttribute("user", userService.get(p.getName()));
         model.addAttribute("sellableItem", sellableItem);
 
         return ("sellableItemDetails");

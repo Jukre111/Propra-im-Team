@@ -30,10 +30,10 @@ public class LendableItemController {
     private BorrowingProcessService processService;
 
     @GetMapping("/lendableItemDetails")
-    public String lendableItemDetails(@RequestParam(name = "id") Long id, Model model){
+    public String lendableItemDetails(@RequestParam(name = "id") Long id, Model model, Principal p){
         LendableItem lendableItem = lendableItemService.get(id);
         model.addAttribute("lendableItem", lendableItem);
-        model.addAttribute("user", lendableItem.getOwner());
+        model.addAttribute("user", userService.get(p.getName()));
         model.addAttribute("allDates", lendableItemService.allDatesInbetween(lendableItem));
         return "lendableItemDetails";
     }

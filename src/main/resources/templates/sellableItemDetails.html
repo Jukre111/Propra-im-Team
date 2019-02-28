@@ -69,19 +69,19 @@
                     <div class="form-group">
                         <label for="street" class="col-sm-2 control-label">Verleiher</label>
                         <div class="col-xs-6">
-                            <input type="text" class="form-control" id="username" name="username" th:value="${user.username}" readonly/>
+                            <input type="text" class="form-control" id="username" name="username" th:value="${sellableItem.owner.username}" readonly/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="street" class="col-sm-2 control-label">Straße</label>
                         <div class="col-xs-6">
-                            <input type="text" class="form-control" id="street" name="street" th:value="${user.address.street}" readonly/>
+                            <input type="text" class="form-control" id="street" name="street" th:value="${sellableItem.owner.address.street}" readonly/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="postcode city" class="col-sm-2 control-label">PLZ / Stadt</label>
                         <div class="col-xs-6">
-                            <input type="number text" class="form-control" id="postcode city" name="postcode city" th:value="${user.address.postcode} + ' ' + ${user.address.city}" readonly/>
+                            <input type="number text" class="form-control" id="postcode city" name="postcode city" th:value="${sellableItem.owner.address.postcode} + ' ' + ${sellableItem.owner.address.city}" readonly/>
                         </div>
                     </div>
                     <div class="form-group">
@@ -93,7 +93,8 @@
                 </div>
                 <div class="modal-footer">
                     <a class="indexbtn" href="/" style="padding: 5px">Zurück</a>
-                    <a type="button" class="indexbtn" style="padding: 5px" th:href="@{'/buy?id=' + ${sellableItem.id}}" name="button">Kaufen</a>
+                    <a class="indexbtn" style="padding: 5px" th:href="@{'/editSellableItem?id=' + ${sellableItem.id}}" th:if="${user == sellableItem.owner}" name="button">Bearbeiten</a>
+                    <a class="indexbtn" style="padding: 5px" th:href="@{'/buy?id=' + ${sellableItem.id}}" th:unless="${user == sellableItem.owner}" name="button">Kaufen</a>
                 </div>
             </div>
         </div>
