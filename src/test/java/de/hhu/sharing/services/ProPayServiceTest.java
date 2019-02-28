@@ -1,26 +1,28 @@
 package de.hhu.sharing.services;
 
-import de.hhu.sharing.data.TransactionRentalRepository;
 import de.hhu.sharing.model.*;
 import de.hhu.sharing.propay.Account;
 import de.hhu.sharing.propay.Reservation;
 import de.hhu.sharing.propay.TransactionPurchase;
 import de.hhu.sharing.propay.TransactionRental;
-import org.apache.tomcat.jni.Local;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
 
-import de.hhu.sharing.services.ProPayService;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.net.URL;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
+import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Optional;
 
+import static org.junit.Assert.fail;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class ProPayServiceTest {
@@ -30,12 +32,14 @@ public class ProPayServiceTest {
     TransactionRentalService transRenService;
     @Mock
     RestTemplate rt;
+    @Mock
+    URL url;
     @Spy
     @InjectMocks
     ProPayService pps = new ProPayService();
 
     @Before
-    public void initialize(){
+    public void initialize() {
         MockitoAnnotations.initMocks(this);
     }
 
@@ -45,26 +49,26 @@ public class ProPayServiceTest {
     }
 
     private User createUser(String username) {
-        User user = new User(username,"pswd", "ROLE_USER", "last", "first", "mail",
-                LocalDate.now(),new Address("street", "city", 4000));
+        User user = new User(username, "pswd", "ROLE_USER", "last", "first", "mail",
+                LocalDate.now(), new Address("street", "city", 4000));
         return user;
     }
 
     @Test
     public void testGetAccount() {
         User userSrc = new User("Source", "pwd", "USER_ROLE", "Brand", "Feuer",
-                            "FeuerBrand@112.de", LocalDate.now(), new Address("strasse", "stadt", 4000));
+                "FeuerBrand@112.de", LocalDate.now(), new Address("strasse", "stadt", 4000));
 
         String URL = "http://localhost:8888/" + "account/" + userSrc.getUsername() + "/";
         String json = "{\"account\":\"Source\"," +
-                        "\"amount\":50.0," +
-                        "\"reservations\":[{" +
-                            "\"id\":1," +
-                            "\"amount\":30.0" +
-                        "},{" +
-                            "\"id\":2," +
-                            "\"amount\":15.0}" +
-                        "]}";
+                "\"amount\":50.0," +
+                "\"reservations\":[{" +
+                "\"id\":1," +
+                "\"amount\":30.0" +
+                "},{" +
+                "\"id\":2," +
+                "\"amount\":15.0}" +
+                "]}";
 
         prepareRestTemplate(URL, json);
         Account account = pps.getAccount(userSrc);
@@ -80,7 +84,7 @@ public class ProPayServiceTest {
         String URL = "http://localhost:8888/account/" + userSrc + "/";
         User source = this.createUser("Source");
         User target = this.createUser("Target");
-        TransactionRental transRen = new TransactionRental(50,15,0L,new LendableItem("itemName", "desc", 50, 15, target),source,target);
+        TransactionRental transRen = new TransactionRental(50, 15, 0L, new LendableItem("itemName", "desc", 50, 15, target), source, target);
 
         String json = "{\"account\":\"Source\"," +
                 "\"amount\":50.0," +
@@ -92,7 +96,7 @@ public class ProPayServiceTest {
                 "\"amount\":15.0}" +
                 "]}";
 
-        prepareRestTemplate(URL,json);
+        prepareRestTemplate(URL, json);
         pps.initiateTransactionRental(transRen);
 
         Assert.assertTrue(transRen.getId() == 4);
@@ -102,8 +106,8 @@ public class ProPayServiceTest {
     public void testRechargeCredit() {
         User user = this.createUser("user");
         Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
-        pps.rechargeCredit(user,50);
-        Mockito.verify(pps, times(1)).rechargeCredit(user,50);
+        pps.rechargeCredit(user, 50);
+        Mockito.verify(pps, times(1)).rechargeCredit(user, 50);
 
     }
 
@@ -111,8 +115,8 @@ public class ProPayServiceTest {
     public void testInitiateTransactionPurchase() {
         User source = this.createUser("Source");
         User target = this.createUser("Target");
-        SellableItem item = new SellableItem("itemName", "desc",50,target);
-        TransactionPurchase transPur = new TransactionPurchase(item,source,target);
+        SellableItem item = new SellableItem("itemName", "desc", 50, target);
+        TransactionPurchase transPur = new TransactionPurchase(item, source, target);
         Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
         pps.initiateTransactionPurchase(transPur);
         Mockito.verify(pps, times(1)).initiateTransactionPurchase(transPur);
@@ -122,22 +126,22 @@ public class ProPayServiceTest {
     public void testReleaseDeposit() {
         User source = this.createUser("Source");
         User target = this.createUser("Target");
-        TransactionRental transRen = new TransactionRental(50,15,0L,new LendableItem("itemName", "desc", 50, 15, target),source,target);
+        TransactionRental transRen = new TransactionRental(50, 15, 0L, new LendableItem("itemName", "desc", 50, 15, target), source, target);
 
         Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
-        pps.releaseDeposit(source,transRen);
-        Mockito.verify(transRenService, times(1)).setDepositRevoked(transRen,"Nein");
+        pps.releaseDeposit(source, transRen);
+        Mockito.verify(transRenService, times(1)).setDepositRevoked(transRen, "Nein");
     }
 
     @Test
     public void testPunishDeposit() {
         User source = this.createUser("Source");
         User target = this.createUser("Target");
-        TransactionRental transRen = new TransactionRental(50,15,0L,new LendableItem("itemName", "desc", 50, 15, target),source,target);
+        TransactionRental transRen = new TransactionRental(50, 15, 0L, new LendableItem("itemName", "desc", 50, 15, target), source, target);
 
         Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
-        pps.punishDeposit(source,transRen);
-        Mockito.verify(transRenService, times(1)).setDepositRevoked(transRen,"Ja");
+        pps.punishDeposit(source, transRen);
+        Mockito.verify(transRenService, times(1)).setDepositRevoked(transRen, "Ja");
     }
 
     @Test
@@ -185,9 +189,9 @@ public class ProPayServiceTest {
     public void testGetDepositSum() {
         User source1 = this.createUser("Source1");
         ArrayList<Reservation> reservations = new ArrayList<>();
-        Reservation reservation1 = new Reservation(1L,100);
-        Reservation reservation2 = new Reservation(2L,200);
-        Reservation reservation3 = new Reservation(3L,30);
+        Reservation reservation1 = new Reservation(1L, 100);
+        Reservation reservation2 = new Reservation(2L, 200);
+        Reservation reservation3 = new Reservation(3L, 30);
         reservations.add(reservation1);
         reservations.add(reservation2);
         reservations.add(reservation3);
@@ -196,8 +200,31 @@ public class ProPayServiceTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void testCallURL() throws Exception {
+    public void testCallURLIOException() {
         String URL = "http://localhost:8888/account/" + "user" + "/";
-        pps.callURL(URL,"POST", 3);
+        pps.callURL(URL, "POST", 3);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testCallURLRetriesSmallerZero() {
+        String URL = "http://localhost:8888/account/" + "user" + "/";
+        pps.callURL(URL, "POST", -1);
+    }
+
+    @Test
+    public void testCallURL() {
+//        try {
+//            HttpURLConnection connection = Mockito.mock(HttpURLConnection.class);
+//            //Mockito.(url.openConnection()).thenThrow(SocketTimeoutException.class);
+//            Mockito.doThrow(SocketTimeoutException.class).when(url).openConnection();
+//            //Mockito.when(url.openConnection()).thenReturn(connection);
+//        } catch (IOException e) {
+//            fail();
+//        }
+//        String URLString = "http://localhost:8888/account/" + "user" + "/";
+//        pps.callURL(URLString, "POST", 6);
+//
+//       // Mockito.verify(pps, times(100)).callURL(URLString, "POST", Mockito.anyInt());
+
     }
 }
