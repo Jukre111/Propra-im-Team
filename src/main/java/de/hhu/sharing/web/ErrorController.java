@@ -16,7 +16,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ErrorController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
-    @ResponseBody
     protected String handleNotFoundException(NotFoundException ex, RedirectAttributes redirectAttributes){
         redirectAttributes.addFlashAttribute("errMessage", ex.getMessage());
         return "redirect:/";
@@ -27,7 +26,6 @@ public class ErrorController extends ResponseEntityExceptionHandler {
         redirectAttributes.addFlashAttribute("errMessage", ex.getMessage());
         return "redirect:/";
     }
-
 
     @ExceptionHandler(MultipartException.class)
     protected String handleFileException(HttpServletRequest request, Throwable ex, RedirectAttributes redirectAttributes) {
