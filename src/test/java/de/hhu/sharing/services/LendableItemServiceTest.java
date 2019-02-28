@@ -8,6 +8,7 @@ import de.hhu.sharing.model.Period;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.LendableItemService;
 import de.hhu.sharing.storage.StorageService;
+import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -175,6 +176,35 @@ public class LendableItemServiceTest {
         Assert.assertTrue(lendableItemService.isAvailableAt(item,startDate,endDate));
     }
 
+   /* @Test
+    public void testIsNotAvailableAt(){
+        LendableItem item = new LendableItem();
+        Period period = new Period(LocalDate.of(2000,1,2),LocalDate.of(2000,1,3));
+        item.addToPeriods(period);
+        LocalDate startDate = LocalDate.of(2000,1,1);
+        LocalDate endDate = LocalDate.of(2000,2,2);
+        Assert.assertTrue(lendableItemService.isAvailableAt(item,startDate,endDate));
+    }*/
+
+    @Test
+    public void testIsOwner(){
+        User user = generateUser("testman");
+        LendableItem item = new LendableItem();
+        item.setId(1L);
+        item.setOwner(user);
+        Mockito.when(items.findById(1L)).thenReturn(Optional.of(item));
+        Assert.assertTrue(lendableItemService.isOwner(1L,user));
+    }
+
+    @Test
+    public void testIsNotOwner(){
+        User user = generateUser("testman");
+        LendableItem item = new LendableItem();
+        item.setId(1L);
+        Mockito.when(items.findById(1L)).thenReturn(Optional.of(item));
+        Assert.assertFalse(lendableItemService.isOwner(1L,user));
+    }
+
     @Test
     public void testGetFromRequestId(){
         User user = generateUser("dude");
@@ -212,5 +242,26 @@ public class LendableItemServiceTest {
         List<LendableItem> list = generateItemList(user);
         Mockito.when(items.findAllByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase("lecker", "lecker")).thenReturn(list);
         Assert.assertEquals(lendableItemService.searchFor("lecker"), list);
+    }
+
+    @Test
+    public void testAllDatesInbetween(){
+
+        LendableItem item = new LendableItem();
+        Period period = new Period(LocalDate.of(2000,1,1),LocalDate.of(2000,1,3));
+        item.addToPeriods(period);
+
+        LocalDate date1 = LocalDate.of(2000,1,1);
+        LocalDate date2 = LocalDate.of(2000,1,2);
+        LocalDate date3 = LocalDate.of(2000,1,3);
+
+        List <LocalDate> allDates = new ArrayList<>();
+        allDates.add(date1);
+        allDates.add(date2);
+        allDates.add(date3);
+
+        Assertions.assertThat(lendableItemService.allDatesInbetween(item)).isEqualTo(allDates);
+
+
     }
 }
