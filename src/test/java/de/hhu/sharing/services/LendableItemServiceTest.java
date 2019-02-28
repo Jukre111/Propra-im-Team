@@ -61,87 +61,161 @@ public class LendableItemServiceTest {
         list.add(lendableItem3);
         return list;
     }
+
     @Test
-    public void testCreateFileIsNull(){
-        MultipartFile file = null;
+    public void testCreateFileNotNullContentTypeNotOctetStream(){
+        MockMultipartFile file = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
         User user = generateUser("dude");
 
         lendableItemService.create("LendableItem","description",1,1,user, file);
 
-        ArgumentCaptor<LendableItem> captor = ArgumentCaptor.forClass(LendableItem.class);
-        Mockito.verify(items, times(1)).save(captor.capture());
+        ArgumentCaptor<LendableItem> captorLendableItemSave = ArgumentCaptor.forClass(LendableItem.class);
+        Mockito.verify(items, times(1)).save(captorLendableItemSave.capture());
 
-        Mockito.verify(storageService, times(0)).storeLendableItem(file ,captor.getValue());
-        Assert.assertEquals(captor.getAllValues().get(0).getName(), "LendableItem");
-        Assert.assertEquals(captor.getAllValues().get(0).getOwner(), user);
+        ArgumentCaptor<LendableItem> captorLendableItemStore = ArgumentCaptor.forClass(LendableItem.class);
+        ArgumentCaptor<MultipartFile> captorMultipartFile = ArgumentCaptor.forClass(MultipartFile.class);
+        Mockito.verify(storageService, times(1)).storeLendableItem(captorMultipartFile.capture(),captorLendableItemStore.capture());
+
+        Assert.assertEquals(captorLendableItemSave.getValue().getName(), "LendableItem");
+        Assert.assertEquals(captorLendableItemSave.getValue().getOwner(), user);
+        Assert.assertEquals(captorLendableItemStore.getValue().getName(), "LendableItem");
+        Assert.assertEquals(captorLendableItemStore.getValue().getOwner(), user);
+        Assert.assertEquals(captorMultipartFile.getValue().getName(), "test.gif");
+        Assert.assertEquals(captorMultipartFile.getValue(), file);
     }
 
     @Test
-    public void testCreate(){
-        MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
+    public void testCreateFileNullContentTypeOctetStream(){
+        MockMultipartFile file = new MockMultipartFile("test.gif", "", "application/octet-stream", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
         User user = generateUser("dude");
 
-        lendableItemService.create("LendableItem","description",1,1,user, jsonFile);
+        lendableItemService.create("LendableItem","description",1,1,user, file);
 
-        ArgumentCaptor<LendableItem> captorLendableItem1 = ArgumentCaptor.forClass(LendableItem.class);
-        ArgumentCaptor<MultipartFile> captorMultipartFile = ArgumentCaptor.forClass(MultipartFile.class);
-        Mockito.verify(storageService, times(1)).storeLendableItem(captorMultipartFile.capture(),captorLendableItem1.capture());
+        ArgumentCaptor<LendableItem> captorLendableItemSave = ArgumentCaptor.forClass(LendableItem.class);
+        Mockito.verify(items, times(1)).save(captorLendableItemSave.capture());
+        Mockito.verify(storageService, times(0)).storeLendableItem(file ,captorLendableItemSave.getValue());
 
-        ArgumentCaptor<LendableItem> captorLendableItem2 = ArgumentCaptor.forClass(LendableItem.class);
-        Mockito.verify(items, times(1)).save(captorLendableItem2.capture());
-
-        Assert.assertEquals(captorLendableItem2.getAllValues().get(0).getName(), "LendableItem");
-        Assert.assertEquals(captorLendableItem2.getAllValues().get(0).getOwner(), user);
-        Assert.assertEquals(captorLendableItem1.getAllValues().get(0).getName(), "LendableItem");
-        Assert.assertEquals(captorLendableItem1.getAllValues().get(0).getOwner(), user);
-        Assert.assertEquals(captorMultipartFile.getAllValues().get(0).getName(), "test.gif");
-
-
+        Assert.assertEquals(captorLendableItemSave.getValue().getName(), "LendableItem");
+        Assert.assertEquals(captorLendableItemSave.getValue().getOwner(), user);
     }
 
 
     @Test
-    public void testEdit(){
-        User user1 = generateUser("user1");
-        User user2 = generateUser("user2");
-        LendableItem lendableItem = generateItem(user1);
-        MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
-        Mockito.when(items.findById(1L)).thenReturn(Optional.of(lendableItem));
+    public void testCreateFileNull(){
+        MockMultipartFile file = null;
+        User user = generateUser("dude");
 
-        lendableItemService.edit(1L,"LendableItem","description",1,1,user2, jsonFile);
+        lendableItemService.create("LendableItem","description",1,1,user, file);
 
-        ArgumentCaptor<LendableItem> captorLendableItem = ArgumentCaptor.forClass(LendableItem.class);
-        Mockito.verify(items, times(1)).save(captorLendableItem.capture());
-        ArgumentCaptor<MultipartFile> captorMultipartFile = ArgumentCaptor.forClass(MultipartFile.class);
-        Mockito.verify(storageService, times(1)).storeLendableItem(captorMultipartFile.capture(),captorLendableItem.capture());
+        ArgumentCaptor<LendableItem> captorLendableItemSave = ArgumentCaptor.forClass(LendableItem.class);
+        Mockito.verify(items, times(1)).save(captorLendableItemSave.capture());
+        Mockito.verify(storageService, times(0)).storeLendableItem(file ,captorLendableItemSave.getValue());
 
-        Assert.assertEquals(captorMultipartFile.getAllValues().get(0).getName(), "test.gif");
-        Assert.assertEquals(captorLendableItem.getAllValues().get(0).getName(), "LendableItem");
-        Assert.assertEquals(captorLendableItem.getAllValues().get(0).getOwner(), user2);
-        Assert.assertNotEquals(captorLendableItem.getAllValues().get(0).getOwner(), user1);
+        Assert.assertEquals(captorLendableItemSave.getValue().getName(), "LendableItem");
+        Assert.assertEquals(captorLendableItemSave.getValue().getOwner(), user);
     }
 
     @Test
-    public void testEditNotExistent(){
-        User user1 = generateUser("user1");
-        User user2 = generateUser("user2");
-        LendableItem lendableItem = generateItem(user1);
-        MultipartFile file = null;
-        Mockito.when(items.findById(1L)).thenReturn(Optional.of(lendableItem));
+    public void testCreateExceptionThrown(){
+        MockMultipartFile file = new MockMultipartFile("test.gif", "", null, "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
 
-        lendableItemService.edit(1L,"LendableItem","description",1,1,user2, file);
+        User user = generateUser("dude");
 
-        ArgumentCaptor<LendableItem> captor = ArgumentCaptor.forClass(LendableItem.class);
-        Mockito.verify(items, times(1)).save(captor.capture());
+        lendableItemService.create("LendableItem","description",1,1,user, file);
 
-        Mockito.verify(storageService, times(0)).storeLendableItem(file, captor.getValue());
+        ArgumentCaptor<LendableItem> captorLendableItemSave = ArgumentCaptor.forClass(LendableItem.class);
+        Mockito.verify(items, times(1)).save(captorLendableItemSave.capture());
+        Mockito.verify(storageService, times(0)).storeLendableItem(file ,captorLendableItemSave.getValue());
 
-        Assert.assertEquals(captor.getAllValues().get(0).getName(), "LendableItem");
-        Assert.assertEquals(captor.getAllValues().get(0).getOwner(), user2);
-        Assert.assertNotEquals(captor.getAllValues().get(0).getOwner(), user1);
+        Assert.assertEquals(captorLendableItemSave.getValue().getName(), "LendableItem");
+        Assert.assertEquals(captorLendableItemSave.getValue().getOwner(), user);
     }
 
+    @Test
+    public void testEditFileNotNullContentTypeNotOctetStream(){
+        MockMultipartFile file = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
+        User firstOwner = generateUser("user1");
+        User secondOwner = generateUser("user2");
+        LendableItem lendableItem = generateItem(firstOwner);
+        Mockito.when(items.findById(1L)).thenReturn(Optional.of(lendableItem));
 
+        lendableItemService.edit(1L,"LendableItem","description",1,1, secondOwner, file);
+
+        ArgumentCaptor<LendableItem> captorLendableItemSave = ArgumentCaptor.forClass(LendableItem.class);
+        Mockito.verify(items, times(1)).save(captorLendableItemSave.capture());
+
+        ArgumentCaptor<LendableItem> captorLendableItemStore = ArgumentCaptor.forClass(LendableItem.class);
+        ArgumentCaptor<MultipartFile> captorMultipartFile = ArgumentCaptor.forClass(MultipartFile.class);
+        Mockito.verify(storageService, times(1)).storeLendableItem(captorMultipartFile.capture(),captorLendableItemStore.capture());
+
+        Assert.assertEquals(captorLendableItemSave.getValue().getName(), "LendableItem");
+        Assert.assertEquals(captorLendableItemSave.getValue().getOwner(), secondOwner);
+        Assert.assertNotEquals(captorLendableItemSave.getValue().getOwner(), firstOwner);
+        Assert.assertEquals(captorLendableItemStore.getValue().getName(), "LendableItem");
+        Assert.assertEquals(captorLendableItemStore.getValue().getOwner(), secondOwner);
+        Assert.assertNotEquals(captorLendableItemStore.getValue().getOwner(), firstOwner);
+        Assert.assertEquals(captorMultipartFile.getValue(), file);
+    }
+
+    @Test
+    public void testEditFileNotNullContentTypeOctetStream(){
+        MockMultipartFile file = new MockMultipartFile("test.gif", "", "application/octet-stream", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
+        User firstOwner = generateUser("user1");
+        User secondOwner = generateUser("user2");
+        LendableItem lendableItem = generateItem(firstOwner);
+        Mockito.when(items.findById(1L)).thenReturn(Optional.of(lendableItem));
+
+        lendableItemService.edit(1L,"LendableItem","description",1,1, secondOwner, file);
+
+        ArgumentCaptor<LendableItem> captorLendableItemSave = ArgumentCaptor.forClass(LendableItem.class);
+        Mockito.verify(items, times(1)).save(captorLendableItemSave.capture());
+
+        Mockito.verify(storageService, times(0)).storeLendableItem(file,captorLendableItemSave.getValue());
+
+        Assert.assertEquals(captorLendableItemSave.getValue().getName(), "LendableItem");
+        Assert.assertEquals(captorLendableItemSave.getValue().getOwner(), secondOwner);
+        Assert.assertNotEquals(captorLendableItemSave.getValue().getOwner(), firstOwner);
+    }
+
+    @Test
+    public void testEditFileNull(){
+        MockMultipartFile file = new MockMultipartFile("test.gif", "", null, "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
+        User firstOwner = generateUser("user1");
+        User secondOwner = generateUser("user2");
+        LendableItem lendableItem = generateItem(firstOwner);
+        Mockito.when(items.findById(1L)).thenReturn(Optional.of(lendableItem));
+
+        lendableItemService.edit(1L,"LendableItem","description",1,1, secondOwner, file);
+
+        ArgumentCaptor<LendableItem> captorLendableItemSave = ArgumentCaptor.forClass(LendableItem.class);
+        Mockito.verify(items, times(1)).save(captorLendableItemSave.capture());
+
+        Mockito.verify(storageService, times(0)).storeLendableItem(file,captorLendableItemSave.getValue());
+
+        Assert.assertEquals(captorLendableItemSave.getValue().getName(), "LendableItem");
+        Assert.assertEquals(captorLendableItemSave.getValue().getOwner(), secondOwner);
+        Assert.assertNotEquals(captorLendableItemSave.getValue().getOwner(), firstOwner);
+    }
+
+    @Test
+    public void testEditException(){
+        MockMultipartFile file =null;
+        User firstOwner = generateUser("user1");
+        User secondOwner = generateUser("user2");
+        LendableItem lendableItem = generateItem(firstOwner);
+        Mockito.when(items.findById(1L)).thenReturn(Optional.of(lendableItem));
+
+        lendableItemService.edit(1L,"LendableItem","description",1,1, secondOwner, file);
+
+        ArgumentCaptor<LendableItem> captorLendableItemSave = ArgumentCaptor.forClass(LendableItem.class);
+        Mockito.verify(items, times(1)).save(captorLendableItemSave.capture());
+
+        Mockito.verify(storageService, times(0)).storeLendableItem(file,captorLendableItemSave.getValue());
+
+        Assert.assertEquals(captorLendableItemSave.getValue().getName(), "LendableItem");
+        Assert.assertEquals(captorLendableItemSave.getValue().getOwner(), secondOwner);
+        Assert.assertNotEquals(captorLendableItemSave.getValue().getOwner(), firstOwner);
+    }
 
     @Test
     public void testDelete(){

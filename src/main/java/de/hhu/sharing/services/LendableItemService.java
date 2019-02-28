@@ -37,6 +37,7 @@ public class LendableItemService {
         }catch(NullPointerException ex) {
             ex.printStackTrace();
         }
+
     }
 
     public void edit(Long id, String name, String description, Integer rental, Integer deposit, User user,MultipartFile file) {
