@@ -24,7 +24,7 @@ public class TransactionRentalService {
     public TransactionRental getFromProcessId(Long processId){
         return transactions.findByProcessId(processId)
                 .orElseThrow(
-                    () -> new RuntimeException("LendableItem not found!"));
+                    () -> new RuntimeException("Transaktion nicht gefunden!"));
     }
 
     public List<TransactionRental> getAllFromSender(User user){

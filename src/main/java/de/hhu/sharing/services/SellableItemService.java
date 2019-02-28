@@ -42,7 +42,7 @@ public class SellableItemService {
     public SellableItem get(Long id){
         return this.items.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException("SellableItem not found!"));
+                        () -> new RuntimeException("Objekt nicht gefunden!"));
     }
 
     public void delete(Long id) {
