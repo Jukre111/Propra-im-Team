@@ -24,10 +24,8 @@ public class SellableItemService {
     public void create(String name, String description, Integer price, User user, MultipartFile file) {
         SellableItem sellableItem = new SellableItem(name, description, price, user);
         items.save(sellableItem);
-        if(file!=null) {
+        if(file!=null && !file.getContentType().equals("application/octet-stream")) {
             storageService.storeSellableItem(file, sellableItem);
-        }else {
-            System.out.println("No picture");
         }
     }
 
@@ -38,10 +36,8 @@ public class SellableItemService {
         sellableItem.setPrice(price);
         sellableItem.setOwner(user);
         items.save(sellableItem);
-        if(file!=null) {
+        if(file!=null && !file.getContentType().equals("application/octet-stream")) {
             storageService.storeSellableItem(file, sellableItem);
-        }else {
-            System.out.println("No picture");
         }
     }
 
