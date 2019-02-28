@@ -134,9 +134,6 @@ public class TransactionRentalServiceTest {
 
     @Test(expected = RuntimeException.class)
     public void testGetFromProcessIdThrowsException() {
-        //User sender = generateUser("Sender");
-        //User receiver = generateUser("Receiver");
-        //TransactionRental rent1 = new TransactionRental(200, 20, 1L, this.generateItem(sender), sender, receiver);
         Mockito.when(transactions.findByProcessId(1L)).thenReturn(Optional.empty());
         transService.getFromProcessId(1L);
     }
