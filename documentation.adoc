@@ -290,3 +290,25 @@ description, image im Item, im lendableItem die Deposit, Tagessatz und Requests
 und im sellableItem der Preis des items.
 In der Datenbank werden lendableItem und sellableItem in zwei unterschiedlichen
 Tabellen gespeichert.
+
+## Funktionsweise des Systems
+
+
+
+
+### Anfragen eines verleihbaren Objektes
+
+
+
+.Make a new Request
+image::./Diagram/request.png[Request]
+
+
+
+### Akzeptieren einer Ausleihanfrage
+
+.Accept a Request
+image::./Diagram/acceptRequest.png[AcceptRequest]
+
+
+### 
