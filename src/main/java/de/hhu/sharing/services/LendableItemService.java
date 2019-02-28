@@ -30,11 +30,9 @@ public class LendableItemService {
     public void create(String name, String description, Integer rental, Integer deposit, User user, MultipartFile file) {
         LendableItem lendableItem = new LendableItem(name, description, rental, deposit, user);
         items.save(lendableItem);
-        if(file!=null) {
+        if(file!=null && !file.getContentType().equals("application/octet-stream")) {
         	storageService.storeLendableItem(file, lendableItem);
-        }else {
-        	System.out.println("No picture");
-       }
+        }
     }
 
     public void edit(Long id, String name, String description, Integer rental, Integer deposit, User user,MultipartFile file) {
@@ -45,8 +43,8 @@ public class LendableItemService {
         lendableItem.setDeposit(deposit);
         lendableItem.setOwner(user);
         items.save(lendableItem);
-        if(file!=null) {
-            storageService.storeLendableItem(file, lendableItem);
+        if(file!=null && !file.getContentType().equals("application/octet-stream")) {
+        	storageService.storeLendableItem(file, lendableItem);
         }
     }
 

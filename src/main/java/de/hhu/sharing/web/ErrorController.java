@@ -1,5 +1,6 @@
 package de.hhu.sharing.web;
 
+import javax.persistence.RollbackException;
 import javax.servlet.http.HttpServletRequest;
 
 import de.hhu.sharing.model.NotFoundException;
@@ -15,10 +16,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ErrorController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
+    @ResponseBody
     protected String handleNotFoundException(NotFoundException ex, RedirectAttributes redirectAttributes){
         redirectAttributes.addFlashAttribute("errMessage", ex.getMessage());
         return "redirect:/";
     }
+    
+    @ExceptionHandler(RollbackException.class)
+    protected String handleRollbackException(RollbackException ex, RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("errMessage", ex.getMessage());
+        return "redirect:/";
+    }
+
 
     @ExceptionHandler(MultipartException.class)
     protected String handleFileException(HttpServletRequest request, Throwable ex, RedirectAttributes redirectAttributes) {

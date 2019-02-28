@@ -14,6 +14,7 @@ public class Image {
     @GeneratedValue
     private Long id;
 
+    @NotNull
     private String mimeType;
 
 

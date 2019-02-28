@@ -137,15 +137,33 @@ public class LendableItemControllerTest {
                 .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
 
-
     @Test
     @WithMockUser
     public void retrieveStatusSaveLendableItem() throws Exception{
         User lender = createUser("User", "ROLE_USER");
         Mockito.when(userService.get("user")).thenReturn(lender);
-
         MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
         MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
+        map.add("id", "1");
+        map.add("name","name");
+        map.add("description","desc");
+        map.add("rental","42");
+        map.add("deposit","41");
+
+        mvc.perform(MockMvcRequestBuilders.multipart("/saveLendableItem").file("file",jsonFile.getBytes()).params(map))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("succMessage"));
+    }
+
+    @Test
+    @WithMockUser
+    public void retrieveStatusSaveLendableItemWithIdNull() throws Exception{
+        User lender = createUser("User", "ROLE_USER");
+        Mockito.when(userService.get("user")).thenReturn(lender);
+        MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
+        MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
+        map.add("id", null);
         map.add("name","name");
         map.add("description","desc");
         map.add("rental","42");
