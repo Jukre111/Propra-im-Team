@@ -46,8 +46,6 @@ public class LendableItemService {
         items.save(lendableItem);
         if(file!=null) {
             storageService.storeLendableItem(file, lendableItem);
-        }else {
-            System.out.println("No picture");
         }
     }
 
