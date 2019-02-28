@@ -102,12 +102,30 @@ public class ProPayService {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(method);
             connection.setConnectTimeout(5000);
+            connection.setConnectTimeout(5000);
             connection.connect();
+//            connection.setConnectTimeout(5);
+//            connection.setReadTimeout(5);
+//            connection.connect();
+//            BufferedReader rd  = null;
+//            StringBuilder sb = null;
+//            String line = null;
+//            rd  = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//            sb = new StringBuilder();
+//
+//            while ((line = rd.readLine()) != null)
+//            {
+//                sb.append(line + '\n');
+//            }
+//            System.out.println(sb.toString());
             connection.getResponseCode();
+            connection.disconnect();
         } catch (SocketTimeoutException e) {
-            throw new RuntimeException("ProPay timeout!");
+            System.out.println("ProPay timeout!");
+            System.out.println("Retry...");
+            callURL(urlString, method);
         } catch (IOException e) {
-            throw new RuntimeException("ProPay not reachable!");
+            throw new RuntimeException("ProPay nicht erreichbar!");
         }
     }
 }

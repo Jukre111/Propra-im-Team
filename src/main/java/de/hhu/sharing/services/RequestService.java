@@ -21,7 +21,7 @@ public class RequestService {
     public Request get(Long id){
         return this.requests.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException("Request not found!"));
+                        () -> new RuntimeException("Anfrage nicht gefunden!"));
     }
 
     public void create(Long itemId, LocalDate startdate, LocalDate enddate, User user) {

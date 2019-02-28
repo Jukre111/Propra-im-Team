@@ -16,7 +16,7 @@ public class ConflictService {
     public Conflict get(Long id){
         return this.conflicts.findById(id)
                 .orElseThrow(
-                        ()-> new RuntimeException("Conflict not found"));
+                        ()-> new RuntimeException("Konflikt nicht gefunden!"));
     }
 
     public Conflict getFromBorrowingProcess(BorrowingProcess process) {

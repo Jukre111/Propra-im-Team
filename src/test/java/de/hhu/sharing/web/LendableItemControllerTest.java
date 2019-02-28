@@ -34,10 +34,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 @RunWith(SpringRunner.class)
 @WebMvcTest(LendableItemController.class)
 public class LendableItemControllerTest {
-
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
+    
 
     @Autowired
     MockMvc mvc;

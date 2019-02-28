@@ -57,7 +57,7 @@ public class LendableItemService {
     public LendableItem get(Long id) {
         return this.items.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException("LendableItem not found!"));
+                        () -> new RuntimeException("Objekt nicht gefunden!"));
     }
 
     public List<LendableItem> getAll() {
@@ -67,7 +67,7 @@ public class LendableItemService {
     public LendableItem getFromRequestId(Long requestId) {
         return this.items.findByRequests_id(requestId)
                 .orElseThrow(
-                        () -> new RuntimeException("LendableItem not found!"));
+                        () -> new RuntimeException("Objekt nicht gefunden!"));
     }
 
     public List<LendableItem> getAllIPosted(User user) {
