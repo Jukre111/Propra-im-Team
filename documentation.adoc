@@ -14,33 +14,124 @@ schreiben (mit Namen)
 
 ## Codeformatierung & Richtlinien
 
-* Commits im imperativ und auf Englisch.
+* Commits im Imperativ und auf Englisch.
 * Code auf Englisch, CamelCase verwenden.
-* Tabs werden verwendet.
+* Tabs werden zum Einrücken verwendet.
 * Checkstyle verwenden.
 * FindBugs wird benutzt und Fehler zeitnah korrigiert.
 
 
 
-## Aufgaben:
-* Login
-* Travis
-* FindBugs
-* Docker & Dockercompose
-* Datenbank (Postgres)
-* Benutzerkonto
-* Suche (optional)
-* Person anlegen
-* Person bearbeiten
-* Person löschen
-* Artikel anlegen
-* Artikel bearbeiten
-* Artikel löschen
-* Schnittstelle zu ProPay
+## Aufgabenstellung und Entscheidungen
+
+* funktionierende Travis-CI-Konfiguration [green big]#✔#
+* Anwendung startet mit docker-compose up [green big][green big]#✔#
+* unter Port 8080 erreichbar, keine anderen Ports sind erreichbar [green big]#✔#
+** die Propay-Anwendung ist unter dem Port 8888 erreichbar, da allerdings vorgegeben wurde,
+wie diese eingebunden werden soll nehmen wir an, dass das akzeptabel ist.
+* die Anwendung unterstützt unterschiedliche Benutzerkonten die parallel
+angemeldet sind. [green big]#✔#
+* Für alle Interaktionen mit der Anwendung muss der/die UserIn angemeldet sein. [green big]#✔#
+* Es gibt eine Übersichtsseite der eingestellten Artikel. [green big]#✔#
+** Diese ist unterteilt in Artikel, die zum Verkauf stehen und Artikel die zu
+Leihen sind und ermöglicht auch die explizite Suche nach einzelnen Artikeln.
+* Aus der Übersicht gelangt man zu einer Detailansicht jedes einzelnen
+Artikels, indem man auf dessen Namen oder Bild klickt. [green big]#✔#
+** Namen und Beschreibung des Artikels, Angaben zu Tagessatz und Kaution,
+Angaben zur Verfügbarkeit in Form
+eines Kalenders, in dem die Daten an denen der Artikel bereits verliehen ist,
+Angaben zur verleihenden Person(username), Angaben zum Standort des Artikel (die
+  Adresse des Besitzers), Link um eine Anfrage zu senden.
+  [green big]#✔#
+* Die Detailansicht der käuflichen Artikel enthält:
+** Name und Beschreibung des Artikels, Angaben zum Preis des Artikels, Angaben
+zur verleihenden Person(username), Angaben zum Standort des Artikel (die
+  Adresse des Besitzers), Link um den Artikel zu kaufen.
+  [green big]#✔#
+* verleihbare Artikel können neu eingestellt werden mit:
+** Name, Artikelbeschreibung, Foto des Artikels(muss nicht zwangsläufig
+  vorhanden sein), Kautionswert, Tagessatz
+[green big]#✔#
+* käufliche Artikel können neu eingestellt werden mit:
+** Name, Artikelbeschreibung, Foto des Artikels (muss nicht zwangsläufig vorhanden
+  sein), Preis
+[green big]#✔#
+* User können eine Anfrage schicken (nicht für Artikel die ihnen gehören -> Warnung)
+die dann dem Besitzer des Artikels angezeigt wird.
+** Hierbei wird eine Anfrage für einen bestimmten Zeitraum gestellt, ist dieser
+bereits vergeben, kann die Anfrage nicht gestellt werden.
+** Es können nur Daten gewählt werden, die in der Zukunft liegen und bei denen
+das Enddatum nicht vor dem Startdatum liegt (sonst -> Warnung und anfragen-Button disabled)
+** Auch in der Ansicht für Anfragen werden die Daten an denen der Gegenstand
+bereits verliehen ist rot markiert.
+[green big]#✔#
+* Verleihende Person kann Anfragen annehmen oder ablehnen.
+** Wird eine Anfrage angenommen, so werden alle Anfragen, die sich
+mit dem Zeitraum der akzeptierten Anfrage überschneiden automatisch gelöscht.
+** Wird eine Anfrage angenommen, so ist der Gegenstand automatisch für den
+Zeitraum ausgeliehen.
+** Hierbei haben wir uns dafür entschieden, die ausgeliehenen Artikel sofort
+in der Liste der geliehenen Artikel im Account anzuzeigen, wobei hier der
+tatsächliche Ausleihzeitraum vermerkt ist
+[green big]#✔#
+* Werden Artikel in gutem Zustand zurück gegeben, so kann die verleihende Person
+dies bestätigen, sodass die Kaution wieder freigegeben wird und der
+Ausleihprozess beendet wird.
+** Wir haben uns dagegen entschieden, dass die leihende Person dies im System
+beeinflussen kann, da hier die Wahrscheinlichkeit, dass nicht Wahrheitsgemäße
+Rückgaben erfolgen hoch ist.
+** Gibt die leihende Person den Artikel zurück, ohne dass die ausleihende Person
+dies im System angibt, so kann die leihende Person einen Konflikt auslösen.
+** Wird der Artikel zu spät, gar nicht, oder defekt zurück gegeben, so kann die
+verleihende Person einen Konflikt auslösen.
+** Bei vor dem vereinbarten Zeitpunkt zurück gegebenen Artikeln, werden die
+entsprechenden Tagessätze NICHT zurücküberwiesen.
+   [green big]#✔#
+* Vergisst eine Person einen Artikel zurückzugeben, so bekommt sie beim einloggen
+eine Erinnerungsnachricht. [green big]#✔#
+* Sobald die ausleihende Person auf akzeptieren klickt wird die Kaution geblockt
+und der Tagessatz überwiesen.
+[green big]#✔#
+* Anfragen können nur gestellt werden, wenn das Guthaben ausreicht (sonst -> PopUp Warnung).
+[green big]#✔#
+* Anfragen können nur akzeptiert werden, wenn das Guthaben der anfragenden Person
+ausreicht (sonst -> Pop-up Warnung). [green big]#✔#
+* Der Admin (username: admin, Passwort:admin) hat auf seiner account-Seite
+einen Button mit Konfliktlösung, der auf eine Seite führt, auf der alle Konflikte
+aufgelistet sind. Hier können die Details der Konflikte angesehen werden, in
+denen die Usernamen und Emailadressen der Beteiligten, das entsprechende Item
+und eine kurze Beschreibung des Konfliktes dargestellt werden.
+** sowohl verleihende, als auch ausleihende Person können eine Konfliktanfrage
+stellen, möchten beide einen Konflikt melden, so werden die einzelnen Nachrichten
+in einem Konflikt gespeichert. Es ist auch möglich, dass die beteiligten mehrere
+Nachrichten in einen Konflikt schreiben.
+** in der Detailansicht des Konfliktes kann der Admin die Kaution an die
+entsprechende Partei überweisen, die sie erhalten soll (der Konflikt wird inhaltlich
+  per Email gelöst)
+[green big]#✔#
+* Das Profil der angemeldeten Person kann von ihr eingesehen werden. [green big]#✔#
+* Der Propay-Kontostand der angemeldeten Person, sowie alle eigenen Transaktionen
+können auf der Propay-account-seite eingesehen werden (über die account-Seite
+  erreichbar.) [green big]#✔#
+* kauft eine Person einen Gegenstand, so wird dieser aus der Datenbanḱ entfernt
+und die Abholinformationen auf der account-seite in der Liste der gekauften
+Gegenstände angezeigt. [green big]#✔#
+* Items können vom Besitzer bearbeitet und gelöscht werden, solange keine akzeptierten
+Anfragen existieren (über account-ansicht). [green big]#✔#
+* Es gibt eine Suche für leihbare und käufliche Gegenstände zusammen. [green big]#✔#
+* Fotos für den Account und die Items können hochgeladen werden (auch nachträglich)
+[green big]#✔#
+* Es werden Passwörter verwendet (die user heißen user1, user2 usw und haben
+  das korrespondierende Passwort password1, password2 usw.) [green big]#✔#
+** werden im Databaseinitializer encryptet.
+* Mithilfe von Fakern werden User, Passwörter, Items und Anfragen erzeugt.
+[green big]#✔#
+* Es gibt zwei verschiedene Rollen (user und admin). Admins haben mehr Berechtigungen
+und können Konflikte einsehen und bearbeiten. [green big]#✔#
 
 
 
-## Model Datenstrukturen
+## Datenstrukturen
 * User bestehen aus:
 . username : String (id)
 ** user haben eindeutige Usernamen, die in der Datenbank als Id verwendet werden.
@@ -81,7 +172,7 @@ vermerkt.
 
 * BorrowedItems
 . id : Long
-. lendableItem : Item
+. item : Item
 ** Item das ausgeliehen wird.
 . request : Request
 ** request der akzeptiert wurde, sodass das Item jetzt ausgeliehen ist.
@@ -190,3 +281,34 @@ Bearbeiten:
 ## Architektur
 GUI <-> Controller <-> Logik <-> Model <-> Datenbank <- DatabaseInitializer
 
+
+## Notwendige Veränderungen bei Änderungen der Aufgabenstellung
+Um auch den Verkauf der Items zu ermöglichen, haben wir das Projekt insofern
+umstrukturiert, als das es nun eine Superklasse Item gibt, von der die
+Klassen lendableItem und sellableItem erben. Hierbei sind Id, Name, Owner,
+description, image im Item, im lendableItem die Deposit, Tagessatz und Requests
+und im sellableItem der Preis des items.
+In der Datenbank werden lendableItem und sellableItem in zwei unterschiedlichen
+Tabellen gespeichert.
+
+## Funktionsweise des Systems
+
+
+
+
+### Anfragen eines verleihbaren Objektes
+
+
+
+.Make a new Request
+image::./Diagram/request.png[Request]
+
+
+
+### Akzeptieren einer Ausleihanfrage
+
+.Accept a Request
+image::./Diagram/acceptRequest.png[AcceptRequest]
+
+
+### 

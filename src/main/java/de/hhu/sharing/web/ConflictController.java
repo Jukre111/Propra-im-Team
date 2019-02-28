@@ -30,7 +30,7 @@ public class ConflictController {
     public String conflict(Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         BorrowingProcess process = borrowingProcessService.get(id);
-        if(!userService.userIsInvolvedToProcess(user, process)){
+        if(!userService.userIsInvolvedToProcess(user, process) && !user.getRole().equals("ROLE_ADMIN")){
             redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
@@ -47,7 +47,7 @@ public class ConflictController {
     public String saveConflict(@RequestParam("id") Long id, String problem, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         BorrowingProcess process = borrowingProcessService.get(id);
-        if(!userService.userIsInvolvedToProcess(user, process)){
+        if(!userService.userIsInvolvedToProcess(user, process) && !user.getRole().equals("ROLE_ADMIN")){
             redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
@@ -64,7 +64,7 @@ public class ConflictController {
     public String addMessageToConflict(@RequestParam("id") Long id, String message, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
         Conflict conflict = conflictService.get(id);
-        if(!userService.userIsInvolvedToProcess(user, conflict.getProcess())){
+        if(!userService.userIsInvolvedToProcess(user, conflict.getProcess()) && !user.getRole().equals("ROLE_ADMIN")){
             redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
             return "redirect:/account";
         }
