@@ -110,11 +110,7 @@ public class LendableItemService {
                 current = current.plusDays(1);
             }
             allDates.addAll(periodDates);
-
-
         }
-
-
         return allDates;
     }
 }
