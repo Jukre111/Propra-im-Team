@@ -30,13 +30,18 @@ public class SellableItemService {
         }
     }
 
-    public void edit(Long id, String name, String description, Integer price, User user) {
+    public void edit(Long id, String name, String description, Integer price, User user,MultipartFile file) {
         SellableItem sellableItem = this.get(id);
         sellableItem.setName(name);
         sellableItem.setDescription(description);
         sellableItem.setPrice(price);
         sellableItem.setOwner(user);
         items.save(sellableItem);
+        if(file!=null) {
+            storageService.storeSellableItem(file, sellableItem);
+        }else {
+            System.out.println("No picture");
+        }
     }
 
     public SellableItem get(Long id){

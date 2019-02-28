@@ -4,14 +4,19 @@ package de.hhu.sharing.services;
 import de.hhu.sharing.data.LendableItemRepository;
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.LendableItem;
+import de.hhu.sharing.model.Period;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.LendableItemService;
+import de.hhu.sharing.storage.StorageService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.Null;
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +27,12 @@ public class LendableItemServiceTest {
 
     @Mock
     private LendableItemRepository items;
+
+    @Mock
+    private ConflictService conflictService;
+
+    @Mock
+    private StorageService storageService;
 
     @InjectMocks
     private LendableItemService lendableItemService;
@@ -52,7 +63,7 @@ public class LendableItemServiceTest {
         return list;
     }
     @Test
-    public void testCreate(){
+    public void testCreateFileIsNull(){
         MultipartFile file = null;
         User user = generateUser("dude");
         lendableItemService.create("LendableItem","description",1,1,user, file);
@@ -62,14 +73,30 @@ public class LendableItemServiceTest {
         Assert.assertEquals(captor.getAllValues().get(0).getOwner(), user);
     }
 
+    @Test
+    public void testCreate(){
+        MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
+        User user = generateUser("dude");
+        lendableItemService.create("LendableItem","description",1,1,user, jsonFile);
+        ArgumentCaptor<LendableItem> captor = ArgumentCaptor.forClass(LendableItem.class);
+        ArgumentCaptor<MultipartFile> captor1 = ArgumentCaptor.forClass(MultipartFile.class);
+        Mockito.verify(storageService, times(1)).storeLendableItem(captor1.capture(),captor.capture());
+
+        Assert.assertEquals(captor.getAllValues().get(0).getName(), "LendableItem");
+        Assert.assertEquals(captor1.getAllValues().get(0).getName(), "test.gif");
+
+
+    }
+
 
     @Test
     public void testEdit(){
         User user1 = generateUser("user1");
         User user2 = generateUser("user2");
         LendableItem lendableItem = generateItem(user1);
+        MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
         Mockito.when(items.findById(1L)).thenReturn(Optional.of(lendableItem));
-        lendableItemService.edit(1L,"LendableItem","description",1,1,user2);
+        lendableItemService.edit(1L,"LendableItem","description",1,1,user2, jsonFile);
         ArgumentCaptor<LendableItem> captor = ArgumentCaptor.forClass(LendableItem.class);
         Mockito.verify(items, times(1)).save(captor.capture());
 
@@ -77,6 +104,8 @@ public class LendableItemServiceTest {
         Assert.assertEquals(captor.getAllValues().get(0).getOwner(), user2);
         Assert.assertNotEquals(captor.getAllValues().get(0).getOwner(), user1);
     }
+
+
 
     @Test
     public void testDelete(){
@@ -99,6 +128,12 @@ public class LendableItemServiceTest {
         Assert.assertTrue(lendableItemService.get(1L).getName().equals("apfel"));
     }
 
+    @Test (expected = RuntimeException.class)
+    public void testGetNotExistent(){
+        Mockito.when(items.findById(1L)).thenReturn(Optional.empty());
+        lendableItemService.get(1L).getName();
+    }
+
     @Test
     public void testGetAll(){
         User user = generateUser("dude");
@@ -114,11 +149,44 @@ public class LendableItemServiceTest {
     }
 
     @Test
+    public void testIsChangeable() {
+        LendableItem item = new LendableItem();
+        item.setId(1L);
+        Mockito.when(items.findById(1L)).thenReturn(Optional.of(item));
+        Mockito.when(conflictService.noConflictWith(item)).thenReturn(true);
+        Assert.assertTrue(lendableItemService.isChangeable(1L));
+    }
+
+    @Test
+    public void testIsChangeableWithPeriod() {
+        LendableItem item = new LendableItem();
+        item.setId(1L);
+        item.addToPeriods(new Period(LocalDate.of(2000,1,1),LocalDate.of(2000,2,2)));
+        Mockito.when(items.findById(1L)).thenReturn(Optional.of(item));
+        Mockito.when(conflictService.noConflictWith(item)).thenReturn(true);
+        Assert.assertFalse(lendableItemService.isChangeable(1L));
+    }
+
+    @Test
+    public void testIsAvailableAt(){
+        LendableItem item = new LendableItem();
+        LocalDate startDate = LocalDate.of(2000,1,1);
+        LocalDate endDate = LocalDate.of(2000,2,2);
+        Assert.assertTrue(lendableItemService.isAvailableAt(item,startDate,endDate));
+    }
+
+    @Test
     public void testGetFromRequestId(){
         User user = generateUser("dude");
         LendableItem lendableItem = generateItem(user);
         Mockito.when(items.findByRequests_id(1L)).thenReturn(Optional.of(lendableItem));
         Assert.assertEquals(lendableItemService.getFromRequestId(1L), lendableItem);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testGetFromRequestIdNotExistent(){
+        Mockito.when(items.findByRequests_id(1L)).thenReturn(Optional.empty());
+        lendableItemService.getFromRequestId(1L);
     }
 
     @Test

@@ -36,7 +36,7 @@ public class LendableItemService {
        }
     }
 
-    public void edit(Long id, String name, String description, Integer rental, Integer deposit, User user) {
+    public void edit(Long id, String name, String description, Integer rental, Integer deposit, User user,MultipartFile file) {
         LendableItem lendableItem = this.get(id);
         lendableItem.setName(name);
         lendableItem.setDescription(description);
@@ -44,6 +44,9 @@ public class LendableItemService {
         lendableItem.setDeposit(deposit);
         lendableItem.setOwner(user);
         items.save(lendableItem);
+        if(file!=null) {
+            storageService.storeLendableItem(file, lendableItem);
+        }
     }
 
     public void delete(Long id) {
