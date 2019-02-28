@@ -30,8 +30,12 @@ public class LendableItemService {
     public void create(String name, String description, Integer rental, Integer deposit, User user, MultipartFile file) {
         LendableItem lendableItem = new LendableItem(name, description, rental, deposit, user);
         items.save(lendableItem);
-        if(file!=null && !file.getContentType().equals("application/octet-stream")) {
-        	storageService.storeLendableItem(file, lendableItem);
+        try {
+        	if(file!=null && !file.getContentType().equals("application/octet-stream")) {
+        		storageService.storeLendableItem(file, lendableItem);
+        	}
+        }catch(NullPointerException ex) {
+        	ex.printStackTrace();
         }
     }
 
@@ -43,8 +47,12 @@ public class LendableItemService {
         lendableItem.setDeposit(deposit);
         lendableItem.setOwner(user);
         items.save(lendableItem);
-        if(file!=null && !file.getContentType().equals("application/octet-stream")) {
-        	storageService.storeLendableItem(file, lendableItem);
+        try {
+        	if(file!=null && !file.getContentType().equals("application/octet-stream")) {
+        		storageService.storeLendableItem(file, lendableItem);
+        	}
+        }catch(NullPointerException ex) {
+        	ex.printStackTrace();
         }
     }
 
