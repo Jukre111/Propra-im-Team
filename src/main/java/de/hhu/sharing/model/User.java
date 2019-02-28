@@ -52,6 +52,9 @@ public class User {
     @IndexColumn(base = 1, name = "len")
     private final List<@Valid BorrowingProcess> lend = new ArrayList<>();
 
+    @ElementCollection
+    private List<String> boughtItems;
+
     public User(){
     }
 
