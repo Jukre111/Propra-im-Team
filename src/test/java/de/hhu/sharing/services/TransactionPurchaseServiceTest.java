@@ -4,6 +4,7 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
@@ -78,6 +79,35 @@ public class TransactionPurchaseServiceTest {
         ArgumentCaptor<TransactionPurchase> captorProcess = ArgumentCaptor.forClass(TransactionPurchase.class);
         Mockito.verify(transactions, times(1)).save(captorProcess.capture());
         Assert.assertTrue(captorProcess.getAllValues().get(0).getItemName().equals("apfel"));
+    }
+
+    @Test
+    public void testGetAllFromSender() {
+        User sender = generateUser("Sender");
+        User receiver = generateUser("Receiver");
+        TransactionPurchase buy1 = new TransactionPurchase(this.generateItem(sender), sender, receiver);
+        TransactionPurchase buy2 = new TransactionPurchase(this.generateItem(sender), sender, receiver);
+        List<TransactionPurchase> bySender = new ArrayList<>();
+        bySender.add(buy1);
+        bySender.add(buy2);
+        Mockito.when(transactions.findAllBySender(sender)).thenReturn(bySender);
+        List<TransactionPurchase> returnList = transService.getAllFromSender(sender);
+        Assertions.assertThat(returnList).isEqualTo(bySender);
+    }
+
+    @Test
+    public void testGetAllFromReceiver() {
+        User sender = generateUser("Sender");
+        User receiver = generateUser("Receiver");
+
+        TransactionPurchase buy1 = new TransactionPurchase(this.generateItem(sender), sender, receiver);
+        TransactionPurchase buy2 = new TransactionPurchase(this.generateItem(sender), sender, receiver);
+        List<TransactionPurchase> byReceiver = new ArrayList<>();
+        byReceiver.add(buy1);
+        byReceiver.add(buy2);
+        Mockito.when(transactions.findAllByReceiver(receiver)).thenReturn(byReceiver);
+        List<TransactionPurchase> returnList = transService.getAllFromReceiver(receiver);
+        Assertions.assertThat(returnList).isEqualTo(byReceiver);
     }
 
 }

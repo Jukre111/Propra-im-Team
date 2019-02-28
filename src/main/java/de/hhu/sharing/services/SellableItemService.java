@@ -2,6 +2,7 @@ package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.SellableItemRepository;
 import de.hhu.sharing.model.LendableItem;
+import de.hhu.sharing.model.NotFoundException;
 import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.storage.StorageService;
@@ -47,7 +48,7 @@ public class SellableItemService {
     public SellableItem get(Long id){
         return this.items.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException("Objekt nicht gefunden!"));
+                        () -> new NotFoundException("Objekt nicht gefunden!"));
     }
 
     public void delete(Long id) {

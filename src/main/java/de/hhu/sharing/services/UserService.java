@@ -2,6 +2,7 @@ package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.BorrowingProcess;
+import de.hhu.sharing.model.NotFoundException;
 import de.hhu.sharing.model.Period;
 import de.hhu.sharing.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,20 +17,17 @@ public class UserService {
     @Autowired
     private UserRepository users;
 
-    @Autowired
-    private BorrowingProcessService borrowing;
-
     public User get(String username) {
         User user = this.users.findByUsername(username)
                 .orElseThrow(
-                        () -> new RuntimeException("Benutzer nicht gefunden!"));
+                        () -> new NotFoundException("Benutzer nicht gefunden!"));
         return user;
     }
 
     public User getBorrowerFromBorrowingProcessId(Long processId) {
         User user = this.users.findByBorrowed_id(processId)
                 .orElseThrow(
-                        () -> new RuntimeException("Benutzer nicht gefunden!"));
+                        () -> new NotFoundException("Benutzer nicht gefunden!"));
         return user;
     }
 
