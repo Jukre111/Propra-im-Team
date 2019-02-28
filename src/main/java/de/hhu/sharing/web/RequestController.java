@@ -55,6 +55,10 @@ public class RequestController {
             redirectAttributes.addFlashAttribute("errMessage","Eigenes Objekt nicht an sich selbst verleihbar.");
             return "redirect:/";
         }
+        if(!LocalDate.parse(startdate).isBefore(LocalDate.parse(enddate)) && !LocalDate.parse(startdate).equals(LocalDate.parse(enddate))) {
+            redirectAttributes.addFlashAttribute("errMessage", "Startdatum muss vor dem Enddatum sein");
+            return "redirect:/newRequest?=" + id;
+        }
         if(!proPayService.enoughCredit(user, lendableItem, LocalDate.parse(startdate), LocalDate.parse(enddate))){
             redirectAttributes.addFlashAttribute("errMessage","Nicht genug ProPay-Guthaben.");
             return "redirect:/";
