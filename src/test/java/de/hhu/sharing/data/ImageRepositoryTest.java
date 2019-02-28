@@ -22,6 +22,9 @@ public class ImageRepositoryTest {
         Image image1 = new Image();
         Image image2 = new Image();
 
+        image1.setMimeType("jpg");
+        image2.setMimeType("jpg");
+
         imageRepo.save(image1);
         imageRepo.save(image2);
 
