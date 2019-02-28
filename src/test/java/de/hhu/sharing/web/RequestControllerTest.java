@@ -108,6 +108,29 @@ public class RequestControllerTest{
 
     @Test
     @WithMockUser
+    public void redirectSaveRequestWithEnddateBeforeStartdate() throws Exception{
+        User requester = createUser("Requester", "ROLE_USER");
+        User owner = createUser("Owner", "ROLE_USER");
+        LendableItem item = createLendableItem(owner);
+        Mockito.when(userService.get("user")).thenReturn(requester);
+        Mockito.when(lendableItemService.get(1L)).thenReturn(item);
+        Mockito.when(lendableItemService.isOwner(1L, requester)).thenReturn(false);
+        Mockito.when(proPayService.enoughCredit(requester,item, LocalDate.parse("2000-01-02"), LocalDate.parse("2000-01-01"))).thenReturn(true);
+        Mockito.when(lendableItemService.isAvailableAt(item, LocalDate.parse("2000-01-02"), LocalDate.parse("2000-01-01"))).thenReturn(true);
+        MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
+        map.add("id", "1");
+        map.add("startdate","2000-01-02");
+        map.add("enddate","2000-01-01");
+
+        mvc.perform(MockMvcRequestBuilders.post("/saveRequest").params(map))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/newRequest?=" + 1L))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
+
+    }
+
+    @Test
+    @WithMockUser
     public void redirectSaveRequestWithOwnItem()throws Exception{
         User requester = createUser("Requester", "ROLE_USER");
         User owner = createUser("Owner", "ROLE_USER");
