@@ -4,20 +4,27 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @Data
 @Entity(name = "LendableItem")
 public class LendableItem extends Item{
 
+    @NotNull
+    @Min(0)
     private Integer rental;     //per Day
+    @NotNull
+    @Min(0)
     private Integer deposit;
 
     @ElementCollection
-    private final List<Period> periods = new ArrayList<>();
+    private final List<@Valid Period> periods = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER)
-    private final List<Request> requests = new ArrayList<>();
+    private final List<@Valid Request> requests = new ArrayList<>();
 
     public LendableItem(){
     }

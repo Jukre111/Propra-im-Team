@@ -91,9 +91,9 @@ public class FileSystemStorageServiceTest {
     }
     
     @Test
-    public void testStoreUserContentTypeNotNull() throws Exception{
+    public void testStoreUserContentTypeNotNullNoException() throws Exception{
     	User user = generateUser("user");
-    	MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));         
+    	MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
 
     	fileStorageService.storeUser(jsonFile, user);
 
@@ -110,7 +110,17 @@ public class FileSystemStorageServiceTest {
     }
 
     @Test
-    public void testStoreUserContentTypeNull() throws Exception{
+    public void testStoreUserWithException() throws Exception{
+//        User user = generateUser("user");
+//        MockMultipartFile jsonFile = new MockMultipartFile(null, "", "image/gif", "".getBytes(Charset.forName("UTF-8")));
+//
+//
+//        fileStorageService.storeUser(jsonFile, user);
+
+    }
+
+    @Test
+    public void testStoreUserContentTypeNullNoException() throws Exception{
         User user = generateUser("user");
         MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", null, "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
 
@@ -130,7 +140,7 @@ public class FileSystemStorageServiceTest {
 
 
     @Test
-    public void testStoreLendableItemContentTypeNotNull() throws Exception{
+    public void testStoreLendableItemContentTypeNotNullNoException() throws Exception{
     	User user = generateUser("user");
     	LendableItem lendableItem = generateLendableItem(user);
     	MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
@@ -151,7 +161,7 @@ public class FileSystemStorageServiceTest {
     }
 
     @Test
-    public void testStoreLendableItemContentTypeNull() throws Exception{
+    public void testStoreLendableItemContentTypeNullNoException() throws Exception{
         User user = generateUser("user");
         LendableItem lendableItem = generateLendableItem(user);
         MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", null, "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
@@ -172,7 +182,7 @@ public class FileSystemStorageServiceTest {
     }
 
     @Test
-    public void testStoreSellableItemContentTypeNotNull() throws Exception{
+    public void testStoreSellableItemContentTypeNotNullNoException() throws Exception{
         User user = generateUser("user");
         SellableItem sellableItem = generateSellableItem(user);
         MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", "image/gif", "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));
@@ -193,7 +203,7 @@ public class FileSystemStorageServiceTest {
     }
 
     @Test
-    public void testStoreSellableItemContentTypeNull() throws Exception{
+    public void testStoreSellableItemContentTypeNullNoException() throws Exception{
         User user = generateUser("user");
         SellableItem sellableItem = generateSellableItem(user);
         MockMultipartFile jsonFile = new MockMultipartFile("test.gif", "", null, "{\"key1\": \"value1\"}".getBytes(Charset.forName("UTF-8")));

@@ -1,9 +1,6 @@
 package de.hhu.sharing.services;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-
 import de.hhu.sharing.data.ImageRepository;
 import de.hhu.sharing.data.LendableItemRepository;
 import de.hhu.sharing.data.SellableItemRepository;
@@ -57,19 +54,7 @@ public class FileSystemStorageService implements StorageService {
         byte[] byteArr = new byte[0];
         try {
             byteArr = file.getBytes();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        try {
-            InputStream inputStream = new ByteArrayInputStream(byteArr);
-            int eof = inputStream.read(byteArr);
-            if(eof==byteArr.length){
-                inputStream.close();
-            }else{
-                inputStream.close();
-                throw new Exception();
-            }
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return byteArr;
