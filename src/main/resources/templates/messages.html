@@ -65,7 +65,7 @@
             <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name">Angefragt</span></h1>
             <div class="form-horizontal" style="padding-top: 30px">
                 <div class="form-group" th:each="lendableItem : ${myRequestedLendableItems}">
-                    <section th:each="request : ${lendableItem.requests}" class="media" style="padding: 20px; height: 115px">
+                    <section th:each="request : ${lendableItem.requests}" th:if="${request.requester == user}" class="media" style="padding: 20px; height: 115px">
                         <div class="media-left" style="padding-right: 80px">
                             <p style="font-size: 24px">
                                 <a th:href="@{'/lendableItemDetails?id=' + ${lendableItem.Id}}" th:text="${lendableItem.name}" style="color: #BD1D6F"></a>

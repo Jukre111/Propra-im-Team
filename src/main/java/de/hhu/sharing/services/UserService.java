@@ -22,14 +22,14 @@ public class UserService {
     public User get(String username) {
         User user = this.users.findByUsername(username)
                 .orElseThrow(
-                        () -> new RuntimeException("User not found!"));
+                        () -> new RuntimeException("Benutzer nicht gefunden!"));
         return user;
     }
 
     public User getBorrowerFromBorrowingProcessId(Long processId) {
         User user = this.users.findByBorrowed_id(processId)
                 .orElseThrow(
-                        () -> new RuntimeException("User not found!"));
+                        () -> new RuntimeException("Benutzer nicht gefunden!"));
         return user;
     }
 

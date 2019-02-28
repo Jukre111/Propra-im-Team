@@ -57,15 +57,15 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 </style>
 </head>
 <body>
-	<div layout:fragment="body" style="padding: 20px; padding-left: 250px">
+	<div layout:fragment="body" style="padding: 20px">
 		<div class="alert alert-success" role="alert" th:if="${succMessage}" th:text="${succMessage}"></div>
 		<div class="alert alert-danger" role="alert" th:if="${errMessage}" th:text="${errMessage}"></div>
-		<div style="padding: 20px" class="form-horizontal">
+		<div style="padding: 20px; padding-left: 250px" class="form-horizontal">
 			<div class="media">
 				<div class="media-left media-middle">
 					<img class="img" id="circular--landscape" th:src="@{/getUserPic}">
 				</div>
-				<div class="media-body">
+				<div class="media-body" style="margin-right: 50px">
 					<div class="form-group">
 						<label for="username" class="col-sm-2 control-label">Benutzername</label>
 						<div class="col-xs-6">
@@ -109,27 +109,6 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="postcode city" class="col-sm-2 control-label">ProPay</label>
-						<div class="col-xs-6">
-							<a class="indexbtn" href="/propayAccount">zum Account</a>
-						</div>
-					</div>
-
-					<!--<div class="form-group">
-						<label for="budget" class="col-sm-2 control-label">ProPay Guthaben</label>
-						<div class="col-xs-3">
-							<div class="input-group">
-								<div class="input-group-addon">€</div>
-								<input type="text" class="form-control" th:value="${user.budget}" placeholder="Budget">
-								<div class="input-group-addon">,00</div>
-							</div>
-						</div>
-					</div>-->
-
-					<div class="media-right media-middle" th:if="${user.role == 'ROLE_ADMIN'}">
-						<a id="conflictbtn" th:href="@{/admin/conflicts}" style="margin-right: 150px">Konfliktlösestelle</a>
-					</div>
-					<div class="form-group">
 						<label class="col-sm-2 control-label">Profilbild hochladen</label>
 						<div class="col-xs-6">
 							<form method="post" enctype="multipart/form-data" th:action="@{/handleFileUploadAvatar}">
@@ -147,10 +126,19 @@ tr:nth-child(even) {background-color: #f2f2f2;}
                 			</script>
 						</div>
 					</div>
+					<div class="form-group" style="padding-top: 5px">
+						<label class="col-sm-2 control-label">ProPay</label>
+						<div class="col-xs-6">
+							<a class="indexbtn" href="/propayAccount">zum Account</a>
+						</div>
+					</div>
+				</div>
+				<div class="media-right media-middle" style="padding-top: 20px" th:if="${user.role == 'ROLE_ADMIN'}">
+					<a id="conflictbtn" th:href="@{/admin/conflicts}" style="margin-right: 50px">Konfliktlösestelle</a>
 				</div>
 			</div>
 		</div>
-		<div style="padding: 20px">
+		<div style="padding: 20px; padding-top: 150px">
 			<table>
 				<tr>
 					<th width="70%"><font size="4">Ausgeliehene Objekte</font></th>
@@ -219,6 +207,16 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 					<td>
 						<a class="indexbtn" th:href="@{'/deleteSellableItem?id=' + ${item.id}}">Entfernen</a>
 					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="padding: 20px">
+			<table>
+				<tr>
+					<th width="90%"><font size="4">Gekaufte Objekte</font></th>
+				</tr>
+				<tr th:each="bought : ${boughtItems}">
+					<td th:text="${bought}"></td>
 				</tr>
 			</table>
 		</div>
