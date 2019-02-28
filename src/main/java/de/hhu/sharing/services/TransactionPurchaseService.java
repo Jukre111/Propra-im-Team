@@ -28,10 +28,16 @@ public class TransactionPurchaseService {
         return transactions.findAllByReceiver(user);
     }
 
-    public void createTransactionPurchase(SellableItem item, User buyer, User seller){
-        TransactionPurchase transPur = new TransactionPurchase(item, buyer, seller);
+    public void createTransactionPurchase(SellableItem item, User buyer){
+        TransactionPurchase transPur = new TransactionPurchase(item, buyer, item.getOwner());
         proPayService.initiateTransactionPurchase(transPur);
         transactions.save(transPur);
+        buyer.addToPurchaseinformations(item.getName() + ", "
+                + "Abholort: " + item.getOwner().getAddress().getStreet() + " "
+                + item.getOwner().getAddress().getPostcode() + " "
+                + item.getOwner().getAddress().getCity());
+        item.getOwner().addToSaleinformations(item.getName() + ", "
+                + "Käufer: " + buyer.getUsername());
     }
 
 }

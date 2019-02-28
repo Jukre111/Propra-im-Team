@@ -75,7 +75,7 @@ public class TransactionPurchaseServiceTest {
         User buyer = generateUser("user");
         User seller = generateUser("user");
         SellableItem item = generateItem(seller);
-        transService.createTransactionPurchase(item,buyer,seller);
+        transService.createTransactionPurchase(item,buyer);
         ArgumentCaptor<TransactionPurchase> captorProcess = ArgumentCaptor.forClass(TransactionPurchase.class);
         Mockito.verify(transactions, times(1)).save(captorProcess.capture());
         Assert.assertTrue(captorProcess.getAllValues().get(0).getItemName().equals("apfel"));

@@ -69,20 +69,13 @@ public class LendableItemControllerTest {
         return lendableItem;
     }
 
-    public LendableItem itemCreator(){
-        LocalDate date = LocalDate.of(2000,1,1);
-        Address address = new Address("unistrase","duesseldorf", 40233);
-        User user = new User("user","password", "role", "lastnmae", "forname", "email",date,address);
-        LendableItem lendableItem = new LendableItem("apfel", "lecker",1,1 ,user );
-        return lendableItem;
-    }
-
     @Test
     @WithMockUser
     public void retrieveStatusLendableItemDetails() throws Exception{
         User lender = createUser("User", "ROLE_USER");
         LendableItem lendableItem = createLendableItem(lender);
         Mockito.when(lendableItemService.get(1L)).thenReturn(lendableItem);
+        Mockito.when(userService.get("user")).thenReturn(lender);
         Mockito.when(lendableItemService.allDatesInbetween(lendableItem)).thenReturn(new ArrayList());
 
         mvc.perform(MockMvcRequestBuilders.get("/lendableItemDetails").param("id","1"))
@@ -102,8 +95,8 @@ public class LendableItemControllerTest {
         User lender = createUser("User", "ROLE_USER");
         LendableItem lendableItem = createLendableItem(lender);
         Mockito.when(userService.get("user")).thenReturn(lender);
-        Mockito.when(lendableItemService.isChangeable(1L)).thenReturn(true);
         Mockito.when(lendableItemService.isOwner(1L, lender)).thenReturn(true);
+        Mockito.when(lendableItemService.isChangeable(1L)).thenReturn(true);
         Mockito.when(lendableItemService.get(1L)).thenReturn(lendableItem);
 
         mvc.perform(MockMvcRequestBuilders.get("/editLendableItem").param("id","1"))
@@ -112,10 +105,10 @@ public class LendableItemControllerTest {
 
     @Test
     @WithMockUser
-    public void redirectEditLendableItemWhenNotChangeable() throws Exception{
+    public void redirectEditLendableItemWhenNotAuthorized() throws Exception{
         User lender = createUser("User", "ROLE_USER");
         Mockito.when(userService.get("user")).thenReturn(lender);
-        Mockito.when(lendableItemService.isChangeable(1L)).thenReturn(false);
+        Mockito.when(lendableItemService.isOwner(1L, lender)).thenReturn(false);
 
         mvc.perform(MockMvcRequestBuilders.get("/editLendableItem").param("id","1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
@@ -125,11 +118,12 @@ public class LendableItemControllerTest {
 
     @Test
     @WithMockUser
-    public void redirectEditLendableItemWhenNotAuthorized() throws Exception{
+    public void redirectEditLendableItemWhenNotChangeable() throws Exception{
         User lender = createUser("User", "ROLE_USER");
         Mockito.when(userService.get("user")).thenReturn(lender);
-        Mockito.when(lendableItemService.isChangeable(1L)).thenReturn(true);
-        Mockito.when(lendableItemService.isOwner(1L, lender)).thenReturn(false);
+        Mockito.when(lendableItemService.isOwner(1L, lender)).thenReturn(true);
+        Mockito.when(lendableItemService.isChangeable(1L)).thenReturn(false);
+
 
         mvc.perform(MockMvcRequestBuilders.get("/editLendableItem").param("id","1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
@@ -180,8 +174,9 @@ public class LendableItemControllerTest {
     public void redirectDeleteLendableItem() throws Exception{
         User lender = createUser("User", "ROLE_USER");
         Mockito.when(userService.get("user")).thenReturn(lender);
-        Mockito.when(lendableItemService.isChangeable(1L)).thenReturn(true);
         Mockito.when(lendableItemService.isOwner(1L, lender)).thenReturn(true);
+        Mockito.when(lendableItemService.isChangeable(1L)).thenReturn(true);
+
 
         mvc.perform(MockMvcRequestBuilders.get("/deleteLendableItem").param("id","1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
@@ -191,10 +186,10 @@ public class LendableItemControllerTest {
 
     @Test
     @WithMockUser
-    public void redirectDeleteLendableItemWhenNotChangeable() throws Exception{
+    public void redirectDeleteLendableItemWhenNotAuthorized() throws Exception{
         User lender = createUser("User", "ROLE_USER");
         Mockito.when(userService.get("user")).thenReturn(lender);
-        Mockito.when(lendableItemService.isChangeable(1L)).thenReturn(false);
+        Mockito.when(lendableItemService.isOwner(1L, lender)).thenReturn(false);
 
         mvc.perform(MockMvcRequestBuilders.get("/deleteLendableItem").param("id","1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))
@@ -204,11 +199,11 @@ public class LendableItemControllerTest {
 
     @Test
     @WithMockUser
-    public void redirectDeleteLendableItemNotAuthorized() throws Exception{
+    public void redirectDeleteLendableItemNotChangeable() throws Exception{
         User lender = createUser("User", "ROLE_USER");
         Mockito.when(userService.get("user")).thenReturn(lender);
-        Mockito.when(lendableItemService.isChangeable(1L)).thenReturn(true);
-        Mockito.when(lendableItemService.isOwner(1L, lender)).thenReturn(false);
+        Mockito.when(lendableItemService.isOwner(1L, lender)).thenReturn(true);
+        Mockito.when(lendableItemService.isChangeable(1L)).thenReturn(false);
 
         mvc.perform(MockMvcRequestBuilders.get("/deleteLendableItem").param("id","1"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/account"))

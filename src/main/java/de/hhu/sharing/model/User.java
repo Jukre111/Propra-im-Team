@@ -5,6 +5,7 @@ import org.hibernate.annotations.IndexColumn;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -53,7 +54,10 @@ public class User {
     private final List<@Valid BorrowingProcess> lend = new ArrayList<>();
 
     @ElementCollection
-    private List<String> boughtItems;
+    private List<String> purchaseinformations = new ArrayList<>();
+
+    @ElementCollection
+    private List<String> saleinformations = new ArrayList<>();
 
     public User(){
     }
@@ -99,5 +103,15 @@ public class User {
 
     public void removeFromLend(BorrowingProcess process) {
         this.lend.remove(process);
+    }
+
+    @Transactional
+    public void addToPurchaseinformations(String information) {
+        this.purchaseinformations.add(information);
+    }
+
+    @Transactional
+    public void addToSaleinformations(String information) {
+        this.saleinformations.add(information);
     }
 }

@@ -47,12 +47,12 @@ public class LendableItemController {
     @GetMapping("/editLendableItem")
     public String editLendableItem(Model model, @RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
-        if(!lendableItemService.isChangeable(id)){
-            redirectAttributes.addFlashAttribute("errMessage", "Objekt nicht veränderbar. Es sind noch Requests, Verleihungen oder Konflikte offen.");
-            return "redirect:/account";
-        }
         if(!lendableItemService.isOwner(id, user)){
             redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
+            return "redirect:/account";
+        }
+        if(!lendableItemService.isChangeable(id)){
+            redirectAttributes.addFlashAttribute("errMessage", "Objekt nicht veränderbar. Es sind noch Requests, Verleihungen oder Konflikte offen.");
             return "redirect:/account";
         }
         model.addAttribute("lendableItem", lendableItemService.get(id));
@@ -75,12 +75,12 @@ public class LendableItemController {
     @GetMapping("/deleteLendableItem")
     public String deleteLendableItem(@RequestParam("id") Long id, Principal p, RedirectAttributes redirectAttributes){
         User user = userService.get(p.getName());
-        if(!lendableItemService.isChangeable(id)){
-            redirectAttributes.addFlashAttribute("errMessage", "Objekt nicht löschbar. Es sind noch Requests, Verleihungen oder Konflikte offen.");
-            return "redirect:/account";
-        }
         if(!lendableItemService.isOwner(id, user)){
             redirectAttributes.addFlashAttribute("errMessage","Keine Berechtigung!");
+            return "redirect:/account";
+        }
+        if(!lendableItemService.isChangeable(id)){
+            redirectAttributes.addFlashAttribute("errMessage", "Objekt nicht löschbar. Es sind noch Requests, Verleihungen oder Konflikte offen.");
             return "redirect:/account";
         }
         lendableItemService.delete(id);
