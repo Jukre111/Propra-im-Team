@@ -26,7 +26,7 @@ public class ProPayService {
     private TransactionRentalService transRenService;
 
     private RestTemplate rt = new RestTemplate();
-    private String URL = "http://localhost:8888/";
+    private String URL = "http://propay:8888/";
 
     public Account getAccount(User user) {
         String URL = this.URL + "account/" + user.getUsername() + "/";
