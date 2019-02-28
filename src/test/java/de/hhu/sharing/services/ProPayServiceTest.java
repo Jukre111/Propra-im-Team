@@ -41,7 +41,7 @@ public class ProPayServiceTest {
     }
 
     private void prepareRestTemplate(String URL, String json) {
-        Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString(), 3);
+        Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
         Mockito.when(rt.getForObject(URL, String.class)).thenReturn(json);
     }
 
@@ -102,7 +102,7 @@ public class ProPayServiceTest {
     @Test
     public void testRechargeCredit() {
         User user = this.createUser("user");
-        Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString(), 3);
+        Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
         pps.rechargeCredit(user,50);
         Mockito.verify(pps, times(1)).rechargeCredit(user,50);
 
@@ -114,7 +114,7 @@ public class ProPayServiceTest {
         User target = this.createUser("Target");
         SellableItem item = new SellableItem("itemName", "desc",50,target);
         TransactionPurchase transPur = new TransactionPurchase(item,source,target);
-        Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString(), 3);
+        Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
         pps.initiateTransactionPurchase(transPur);
         Mockito.verify(pps, times(1)).initiateTransactionPurchase(transPur);
     }
@@ -122,7 +122,7 @@ public class ProPayServiceTest {
     @Test
     public void testCallURL() throws Exception {
         String URL = "http://localhost:8888/account/" + "user" + "/";
-        Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString(), 3);
+        Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
         pps.callURL(URL,"POST", 3);
         Mockito.verify(pps, times(1)).callURL(URL,"POST", 3);
 
@@ -134,7 +134,7 @@ public class ProPayServiceTest {
         User target = this.createUser("Target");
         TransactionRental transRen = new TransactionRental(50,15,0L,new LendableItem("itemName", "desc", 50, 15, target),source,target);
 
-        Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString(), 3);
+        Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
         pps.releaseDeposit(source,transRen);
         Mockito.verify(transRenService, times(1)).setDepositRevoked(transRen,"Nein");
     }
@@ -145,7 +145,7 @@ public class ProPayServiceTest {
         User target = this.createUser("Target");
         TransactionRental transRen = new TransactionRental(50,15,0L,new LendableItem("itemName", "desc", 50, 15, target),source,target);
 
-        Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString(), 3);
+        Mockito.doNothing().when(pps).callURL(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
         pps.punishDeposit(source,transRen);
         Mockito.verify(transRenService, times(1)).setDepositRevoked(transRen,"Ja");
     }
