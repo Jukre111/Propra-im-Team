@@ -100,6 +100,8 @@ public class FileUploadControllerTests {
 		mvc.perform(MockMvcRequestBuilders.multipart("/handleFileUploadSellableItem"));
 	}
 	
+
+	
 	@Test
 	@WithMockUser(username = "user")
 	public void downloadUserImage() throws Exception {
@@ -142,6 +144,15 @@ public class FileUploadControllerTests {
         Mockito.when(sellableItemService.get(1L)).thenReturn(sellableItem);
         mvc.perform(MockMvcRequestBuilders.get("/getSellableItemPic?id=1"))
         .andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	@Test
+	@WithMockUser(username = "user")
+	public void downloadSellableItemImageNoImage() throws Exception {
+		SellableItem sellableItem = new SellableItem();
+        Mockito.when(sellableItemService.get(1L)).thenReturn(sellableItem);
+        mvc.perform(MockMvcRequestBuilders.get("/getSellableItemPic?id=1"))
+        .andExpect(MockMvcResultMatchers.status().is(400));
 	}
 	
 	@Test
