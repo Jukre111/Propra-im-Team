@@ -2,6 +2,7 @@ package de.hhu.sharing.services;
 
 import com.google.gson.Gson;
 import de.hhu.sharing.model.LendableItem;
+import de.hhu.sharing.model.NotFoundException;
 import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.propay.Account;
@@ -125,7 +126,7 @@ public class ProPayService {
             System.out.println("Retry...");
             callURL(urlString, method);
         } catch (IOException e) {
-            throw new RuntimeException("ProPay nicht erreichbar!");
+            throw new NotFoundException("ProPay nicht erreichbar!");
         }
     }
 }
