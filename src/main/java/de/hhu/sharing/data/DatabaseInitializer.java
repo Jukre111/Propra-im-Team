@@ -4,11 +4,13 @@ import com.github.javafaker.Faker;
 import de.hhu.sharing.model.*;
 
 import de.hhu.sharing.services.ProPayService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
+import org.springframework.util.StreamUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -130,12 +132,9 @@ public class DatabaseInitializer implements ServletContextInitializer {
 
     private Image initImage(){
         byte[] byteArr = new byte[1];
-        File file = new File("nyan_cat.gif");
-
-        file = new File(this.getClass().getResource("/nyan_cat.gif").getFile());
-
         try {
-            byteArr = Files.readAllBytes(file.toPath());
+        	InputStream in = this.getClass().getResourceAsStream("/nyan_cat.gif");
+           byteArr = StreamUtils.copyToByteArray(in);
         } catch (IOException e) {
             e.printStackTrace();
         }
