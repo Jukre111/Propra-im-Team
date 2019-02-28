@@ -31,7 +31,7 @@ public class ProPayService {
 
     public Account getAccount(User user) {
         String URL = this.URL + "account/" + user.getUsername() + "/";
-        this.callURL(URL, "GET");
+        this.callURL(URL, "GET", 3);
         String jsonAccount = rt.getForObject(URL, String.class);
         return new Gson().fromJson(jsonAccount, Account.class);
     }
@@ -51,7 +51,7 @@ public class ProPayService {
 
     public void rechargeCredit(User user, int amount) {
         String URL = this.URL + "account/" + user.getUsername() + "?amount=" + amount;
-        this.callURL(URL, "POST");
+        this.callURL(URL, "POST", 3);
     }
 
     public void initiateTransactionRental(TransactionRental transRen) {
@@ -59,12 +59,12 @@ public class ProPayService {
                 + "account/" + transRen.getSender().getUsername()
                 + "/transfer/" + transRen.getReceiver().getUsername()
                 + "?amount=" + transRen.getWholeRent();
-        this.callURL(URL, "POST");
+        this.callURL(URL, "POST", 3);
         URL = this.URL
                 + "reservation/reserve/" + transRen.getSender().getUsername()
                 + "/" + transRen.getReceiver().getUsername()
                 + "?amount=" + transRen.getDeposit();
-        this.callURL(URL, "POST");
+        this.callURL(URL, "POST", 3);
         Account account = this.getAccount(transRen.getSender());
         transRen.setId(account.getLastReservationId());
     }
@@ -74,18 +74,18 @@ public class ProPayService {
                 + "account/" + transPur.getSender().getUsername()
                 + "/transfer/" + transPur.getReceiver().getUsername()
                 + "?amount=" + transPur.getPrice();
-        this.callURL(URL, "POST");
+        this.callURL(URL, "POST", 3);
     }
 
     public void releaseDeposit(User sender, TransactionRental transRen) {
         String URL = this.URL + "reservation/release/" + sender.getUsername() + "?reservationId=" + transRen.getId();
-        this.callURL(URL, "POST");
+        this.callURL(URL, "POST", 3);
         transRenService.setDepositRevoked(transRen,"Nein");
     }
 
     public void punishDeposit(User sender, TransactionRental transRen) {
         String URL = this.URL + "reservation/punish/" + sender.getUsername() + "?reservationId=" + transRen.getId();
-        this.callURL(URL, "POST");
+        this.callURL(URL, "POST", 3);
         transRenService.setDepositRevoked(transRen,"Ja");
     }
 
@@ -97,14 +97,26 @@ public class ProPayService {
         return depositSum;
     }
 
-    public void callURL(String urlString, String method) {
+    public void callURL(String urlString, String method, int retries) {
+        if(retries < 0){
+            throw new NotFoundException("ProPay nicht erreichbar! (timeout)");
+        }
         try {
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(method);
             connection.setConnectTimeout(5000);
-            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
             connection.connect();
+            connection.getResponseCode();
+            connection.disconnect();
+        } catch (SocketTimeoutException e) {
+            retries -= 1;
+            callURL(urlString, method, retries);
+        } catch (IOException e) {
+            throw new NotFoundException("ProPay nicht erreichbar!");
+        }
+    }
 //            connection.setConnectTimeout(5);
 //            connection.setReadTimeout(5);
 //            connection.connect();
@@ -119,14 +131,4 @@ public class ProPayService {
 //                sb.append(line + '\n');
 //            }
 //            System.out.println(sb.toString());
-            connection.getResponseCode();
-            connection.disconnect();
-        } catch (SocketTimeoutException e) {
-            System.out.println("ProPay timeout!");
-            System.out.println("Retry...");
-            callURL(urlString, method);
-        } catch (IOException e) {
-            throw new NotFoundException("ProPay nicht erreichbar!");
-        }
-    }
 }
