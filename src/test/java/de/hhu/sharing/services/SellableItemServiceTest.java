@@ -173,5 +173,24 @@ public class SellableItemServiceTest {
         Assert.assertEquals(sellableItemService.searchFor("lecker"), list);
     }
 
+    @Test
+    public void testIsOwner(){
+        User user = generateUser("testman");
+        SellableItem item = new SellableItem();
+        item.setId(1L);
+        item.setOwner(user);
+        Mockito.when(items.findById(1L)).thenReturn(Optional.of(item));
+        Assert.assertTrue(sellableItemService.isOwner(1L,user));
+    }
+
+    @Test
+    public void testIsNotOwner(){
+        User user = generateUser("testman");
+        SellableItem item = new SellableItem();
+        item.setId(1L);
+        Mockito.when(items.findById(1L)).thenReturn(Optional.of(item));
+        Assert.assertFalse(sellableItemService.isOwner(1L,user));
+    }
+
 }
 
