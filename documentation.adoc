@@ -123,7 +123,7 @@ denen die Usernamen und Emailadressen der Beteiligten, das entsprechende Item
 und eine kurze Beschreibung des Konfliktes dargestellt werden.
 ** sowohl verleihende, als auch ausleihende Person können eine Konfliktanfrage
 stellen, möchten beide einen Konflikt melden, so werden die einzelnen Nachrichten
-in einem Konflikt gespeichert. Es ist auch möglich, dass die beteiligten mehrere
+in einem Konflikt gespeichert. Es ist auch möglich, dass die Beteiligten mehrere
 Nachrichten in einen Konflikt schreiben.
 ** Der Admin kann auch Nachrichten in den Konflikt schreiben, sodass
 der Konflikt prinzipiell über das System gelöst werden könnte.
