@@ -406,18 +406,22 @@ Parteien zu überweisen und den Konflikt somit zu lösen.
 . wholeRent : int (speichert die summierte Miete fuer alle Tage)
 . deposit : int (speichert die Höhe der Kaution)
 . processId : long (speichert die Id des dazu gehörigen Ausleihprozess)
-. depositRevoked : boolean (ist standardmäßig auf false gesetzt, wird auf true geändert, wenn die Kaution eingezogen wurde)
+. depositRevoked : boolean (ist standardmäßig auf false gesetzt, wird auf true
+  geändert, wenn die Kaution eingezogen wurde)
 
 ### ProPayService
 * Regelt die Kommunikation mit der ProPay Scs
-* Gibt bei (fast) allen Methoden den HTML (Fehler-)Code zurrück um bei Aufruf individuell auf die Fehler reagieren zu können.
+* Gibt bei (fast) allen Methoden den HTML (Fehler-)Code zurrück um bei Aufruf
+individuell auf die Fehler reagieren zu können.
 ** bei einer Rückgabe von 200 kam es zu keinen Problemen
 ** bei -1 kam es zu internen Problemen, wie zum Beispiel Exceptions
 ** alle anderen Codes weisen auf fehlerhafte Kommunikation mit der ProPay Seite hin
 
 ### TransactionRentalService
-* Stellt eine Methode zum erstellen und durchführen einer Transaktion zur Verfügung
-* Stellt eine Methode zur Verfügung, mit der sich prüfen lässt ob ein Guthaben für die komplette Miete und Kaution ausreicht.
+* Stellt eine Methode zum erstellen und durchführen einer Transaktion zur
+Verfügung
+* Stellt eine Methode zur Verfügung, mit der sich prüfen lässt ob ein Guthaben
+für die komplette Miete und Kaution ausreicht.
 
 ### ProPayController
 * Verwaltet die ProPay Account Website
@@ -437,25 +441,122 @@ description, image im Item, im lendableItem die Deposit, Tagessatz und Requests
 und im sellableItem der Preis des items.
 In der Datenbank werden lendableItem und sellableItem in zwei unterschiedlichen
 Tabellen gespeichert.
+Analog zu den lendableItems und sellableItems wurden die entsprechenden
+Transaktionen auch in zwei Kategorien aufgeteilt.
 
 
 
 ## Funktionsweise des Systems
 
+_Die internen Prozesse des Systems werden hier in Diagrammform dargestellt, da
+dies unserer Meinung nach übersichtlicher und einfacher zu verstehen ist._
+
+
+
+
+### Anlegen eines verleihbaren Items
+
+----
+----
+
+.new LendableItem
+image::./Diagram/newLendableItem.png[newLendableItem]
+
+----
+----
+
+
+### Anlegen eines verkaufbaren Items
+----
+----
+
+.new SellableItem
+image::./Diagram/newSellableItem.png[newSellableItem]
+
+----
+----
+
+### Kaufen eines Items
+
+----
+----
+
+.purchase Item
+image::./Diagram/purchaseItem.png[purchaseItem]
+
+----
+----
+
+
 
 ### Anfragen eines verleihbaren Objektes
 
-
+----
+----
 
 .Make a new Request
 image::./Diagram/request.png[Request]
+
+----
+----
 
 
 
 ### Akzeptieren einer Ausleihanfrage
 
+----
+----
+
 .Accept a Request
 image::./Diagram/acceptRequest.png[AcceptRequest]
 
+----
+----
 
-###
+
+### Löschen eines Requests
+
+----
+----
+
+.delete a Request
+image::./Diagram/deleteRequest.png[deleteRequest]
+
+----
+----
+
+
+### Bestätigung der Rückgabe eines Items
+
+----
+----
+
+.confirm Item was returned
+image::./Diagram/ItemReturned.png[itemReturned]
+
+----
+----
+
+
+
+### Anlegen eines Konfliktes
+
+----
+----
+
+.newConflict
+image::./Diagram/newConflict.png[newConflict]
+
+----
+----
+
+### Auflösen eines Konfliktes
+
+----
+----
+
+.settle Conflict
+image::./Diagram/settleConflict.png[settleConflict]
+
+----
+----
