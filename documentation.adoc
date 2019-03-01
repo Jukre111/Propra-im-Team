@@ -273,6 +273,8 @@ Listen aus.
 SellableItem angelegt werden kann.
 * Der Button Verleihen linkt auf die Seite newLendableItem.html, wo ein neues
 LendableItem erzeugt werden kann.
+* Der Button account linkt auf die Seite account.html, wo das eigene Profil
+eingesehen werden kann.
 
 
 .Index.html:
@@ -282,18 +284,26 @@ lendableItemdetails.html bzw. sellableItem.html führt, wobei die Id des
 entsprechenden Items mitgegeben wird.
 
 
-* Details.html
-** Es wird eine Detailansicht des entsprechenden Items dargestellt.
-** Darunter steht ein Ausleihbutton und ein Zurückbutton.
-** Der Ausleihbutton linkt auf Request.html und gibt dieser die Id des entsprechenden Items
+.Details.html
+* Es wird eine Detailansicht des entsprechenden Items dargestellt.
+* Darunter steht ein Ausleihbutton und ein Zurückbutton.
+* Der Ausleihbutton linkt auf Request.html und gibt dieser die Id des entsprechenden Items
 mit.
-** Der Zurückbutton linkt auf Index.html.
+* In dem dargestellten Kalender werden die Daten, an denen das Item bereits
+verliehen ist rot markiert.
+* Der Zurückbutton linkt auf Index.html.
 
-* messages.html:
-** Enthält zwei Tabellen:
-** Die erste Tabelle enthält eine Liste aller Requests, die an den angemeldeten User gestellt
-wurden (Zu Items, die mir gehören.)
-** Diese Requests kann die angemeldete Person akzeptieren oder ablehnen.
+.messages.html:
+* Enthält zwei Tabellen:
+* Die erste Tabelle enthält alle Requests, die an den angemeldeten User gestellt
+wurden (Zu Items, die dem angemeldeten User gehören.)
+** Diese Requests kann die angemeldete Person akzeptieren oder ablehnen. Wird ein
+Request akzeptiert, so werden alle Request mit Ausleihzeiträumen, die sich mit dem
+des akzeptierten Requests überschneiden automatisch gelöscht.
+** Ein Request kann nur dann akzeptiert werden, wenn die anfragende Person
+über ausreichendes Guthaben verfügt, sonst wird eine Warnung (PopUp) ausgegeben.
+* Die zweite Tabelle enthält alle Requests 
+
 
 * propayAccount.html:
 ** Zeigt den ProPay Account Namen eines Nutzers
