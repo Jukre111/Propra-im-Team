@@ -267,12 +267,14 @@ wie Suche, Verkaufen, Verleihen, Nachrichten, Account und Logout immer verfügba
 * Die Suche sucht in dem Titel und der Beschreibung der Items und gibt die
 Ergebnisse dann sortiert nach sellableItems und lendableItems wieder in zwei
 Listen aus.
-* Der Button Verkaufen linkt auf die Seite sellableItem.html, wo ein neues
+* Der Button "Verkaufen" linkt auf die Seite sellableItem.html, wo ein neues
 SellableItem angelegt werden kann.
-* Der Button Verleihen linkt auf die Seite newLendableItem.html, wo ein neues
+* Der Button "Verleihen" linkt auf die Seite newLendableItem.html, wo ein neues
 LendableItem erzeugt werden kann.
-* Der Button account linkt auf die Seite account.html, wo das eigene Profil
+* Der Button "account" linkt auf die Seite account.html, wo das eigene Profil
 eingesehen werden kann.
+* Der Button "Nachrichten" linkt auf die Seite messages.html, wo alle, die angemeldete
+Person betreffenden, Requests dargestellt werden.
 
 
 .Index.html:
@@ -315,12 +317,76 @@ es gibt eine Liste in den eingegangene Zahlungen für verliehene und verkaufte
 Gegenstände aufgeführt werden und eine Liste in der Zahlunge an andere Personen
 für gekaufte und geliehene Gegenstände aufgeführt werden.
 
-Bearbeiten:
-** -> Wird akzeptiert
-** -> Wird abgelehnt, so wird der Request gelöscht.
+.account.html
+* Hier ist eine Übersicht über die Daten der angemeldeten Person einsehbar,
+wobei hier neue Accountbilder hochgeladen werden und der eigene PropayAccount
+eingesehen werden können.
+* Ist der Admin angemeldet, so wird ein großer Button auf dem "Konfliktlösestelle"
+steht dargestellt. Dieser linkt zur Seite conflictView.html.
+* Unter der Übersicht sind verschiedene Tabellen:
+** ausgeliehene Objekte
+*** Hier werden alle BorrowingProcesses dargestellt, die Items betreffen, die
+die angemeldete Person ausgeliehen hat.
+** Hier kann ein Konflikt gemeldet werden, falls die Kaution nicht rechtzeitig von
+dem Besitzer des Gegenstandes freigegeben wurde. Der Button "Konflikt" linkt auf
+die Seite conflictNew.html.
+** verliehene Objekte
+** Hier werden alle BorrowingProcesses dargestellt, die Items betreffen, die der
+angemeldeten Person gehören.
+*** Hier können Konflikte gemeldet werden, falls Gegenstände nicht rechtzeitig
+oder unversehrt zurück gegeben wurden. Der Button "Konflikt" linkt auf
+die Seite conflictNew.html.
+Des Weiteren kann an dieser Stelle über den Button "erhalten"
+bestätigt auch werden, dass der entsprechende Gegenstand rechtzeitig und unversehrt
+zurückgegeben wurde, sodass der BorrowingProcess gelöscht wird, und die Kaution
+freigegeben wird.
+** Objekte zum Verkauf
+*** Hier kann eingesehen werden, welche Gegenstände die angemeldete Person
+zum Verkauf anbietet. Die einzelnen Objekte können hier bearbeitet und gelöscht
+werden.
+** Objekte zum Verleih
+*** Hier kann eingesehen werden, welche Gegenstände die angemeldete Person
+zum Verleih anbietet. Die einzelnen Objekte können hier bearbeitet und gelöscht
+werden. Bearbeiten und Löschen ist nur möglich, wenn kein aktueller
+BorrowingProcess existiert.
+** gekaufte Objekte
+*** Da gekaufte Objekte aus dem System entfernt werden, wird hier die
+Abholinformation des Items dargestellt.
+** verkaufte Objekte
+*** Da verkaufte Objekte aus dem System entfernt werden, wird hier eine
+Übersicht über die Gegenstände gegeben, die die angemeldete Person
+verkauft hat.
 
-** Die zweite Tabelle enthält eine Liste aller Requests, die der angemeldete User gestellt hat.
-** ->
+.LendableItem.html
+* An dieser Stelle wird ein neues Item zum Verleih erstellt.
+* Die entsprechenden Angaben, wie Name, Beschreibung, Preis/Tag und Kaution
+müssen gemacht werden, wobei das Hochladen eines Bildes optional ist.
+* Für das bearbeiten der Angaben wird das selbe Template verwendet.
+
+.SellableItem.html
+* An dieser Stelle wird ein neues Item zum Verkauf erstellt.
+* Die entsprechenden Angeben wie Name, Beschreibung und Preis müssen gemacht werden,
+der Upload eines Bildes ist optional.
+* Für das bearbeiten der Angaben wird das selbe Template verwendet.
+
+.ConflictNew.html
+* Hier wird ein neuer Konflikt erzeugt.
+** Die angemeldete Person kann hier einen Freitext mit der Problembeschreibung
+eingeben. Alle anderen relevanten Daten werden von dem System eingefügt.
+
+.ConflictView.html
+* Diese Seite ist nur für den angemeldeten Admin einsehbar.
+* Hier wird eine Liste aller gemeldeten Konflikte dargestellt.
+* Jeder Button hat einen Button "Details", der zu der Seite conflictDetails.html
+linkt.
+
+.conflictDetails.html
+* Hier werden alle relevanten Angaben eines Konfliktes dargestellt.
+* Außerdem können hier neue Nachrichten zum bestehenden Konflikt hinzugefügt werden.
+* Der Admin bekommt an dieser Stelle die Möglichkeit, die Kaution an eine der beiden
+Parteien zu überweisen und den Konflikt somit zu lösen.
+
+
 
 
 
@@ -372,9 +438,9 @@ und im sellableItem der Preis des items.
 In der Datenbank werden lendableItem und sellableItem in zwei unterschiedlichen
 Tabellen gespeichert.
 
+
+
 ## Funktionsweise des Systems
-
-
 
 
 ### Anfragen eines verleihbaren Objektes
