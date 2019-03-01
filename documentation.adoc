@@ -440,7 +440,11 @@ für die komplette Miete und Kaution ausreicht.
 
 
 ## Architektur
-GUI <-> Controller <-> Logik <-> Model <-> Datenbank <- DatabaseInitializer
+
+.architektur
+image::./Diagram/Architektur.png[architektur]
+
+
 
 
 ## Notwendige Veränderungen bei Änderungen der Aufgabenstellung
