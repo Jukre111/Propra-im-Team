@@ -560,7 +560,7 @@ image::./Diagram/newConflict.png[newConflict]
 ----
 ----
 
-### Auflösen eines Konfliktes
+### Auflösen eines Konfliktes zugunsten des Ausleihers
 
 ----
 ----
@@ -570,3 +570,16 @@ image::./Diagram/settleConflict.png[settleConflict]
 
 ----
 ----
+
+### Legende
+
+----
+----
+
+.legende
+image::./Diagram/Legende.png[legende]
+
+----
+----
+
+## Quellen
