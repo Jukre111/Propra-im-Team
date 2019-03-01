@@ -35,8 +35,6 @@ schreiben (mit Namen)
 * funktionierende Travis-CI-Konfiguration [green big]#✔#
 * Anwendung startet mit docker-compose up [green big][green big]#✔#
 * unter Port 8080 erreichbar, keine anderen Ports sind erreichbar [green big]#✔#
-** die Propay-Anwendung ist unter dem Port 8888 erreichbar, da allerdings vorgegeben wurde,
-wie diese eingebunden werden soll nehmen wir an, dass das akzeptabel ist.
 * die Anwendung unterstützt unterschiedliche Benutzerkonten die parallel
 angemeldet sind. [green big]#✔#
 * Für alle Interaktionen mit der Anwendung muss der/die UserIn angemeldet sein. [green big]#✔#
@@ -302,14 +300,20 @@ Request akzeptiert, so werden alle Request mit Ausleihzeiträumen, die sich mit 
 des akzeptierten Requests überschneiden automatisch gelöscht.
 ** Ein Request kann nur dann akzeptiert werden, wenn die anfragende Person
 über ausreichendes Guthaben verfügt, sonst wird eine Warnung (PopUp) ausgegeben.
-* Die zweite Tabelle enthält alle Requests 
+* Die zweite Tabelle enthält alle Requests, die der angemeldete User selbst
+gestellt hat.
+** Die eigenen Requests können an dieser Stelle gelöscht werden.
 
 
-* propayAccount.html:
-** Zeigt den ProPay Account Namen eines Nutzers
-** Zeigt das aktuelle Guthaben des Accounts
-** Darunter befindet sich die Möglichkeit durch ein Feld und einen Button "Aufladen" sein Guthaben zu erhöhen
-** Es werden zwei Tabellen (mit aus- und eingehenden Transaktionen) angezeigt
+.propayAccount.html:
+* Zeigt das aktuelle Guthaben der angemeldeten Person an und wieviel von
+dem aktuellen Guthaben aktuell durch Kautionen blockiert ist.
+* Darunter befindet sich die Möglichkeit durch ein Feld und einen
+Button "Aufladen" sein Guthaben um den eingegebenen Betrag aufzuladen.
+* An dieser Stelle werden auch die vergangenen Transaktionen aufgezeichnet,
+es gibt eine Liste in den eingegangene Zahlungen für verliehene und verkaufte
+Gegenstände aufgeführt werden und eine Liste in der Zahlunge an andere Personen
+für gekaufte und geliehene Gegenstände aufgeführt werden.
 
 Bearbeiten:
 ** -> Wird akzeptiert
