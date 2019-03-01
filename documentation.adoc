@@ -97,18 +97,18 @@ leihende Person, die Rückgabe bestätigen muss. Er reicht, wenn der Besitzer
 bestätigt, wenn er sein Eigentum zurückerhält.
 ** Gibt die leihende Person den Artikel zurück, ohne dass die ausleihende Person
 dies im System angibt, so kann die leihende Person einen Konflikt auslösen.
-Hiermit umgehen die Notwendigkeit, dass die leihende Person die Rückgabe
+Hiermit umgehen wir die Notwendigkeit, dass die leihende Person die Rückgabe
 bestätigt.
 ** Wird der Artikel zu spät, gar nicht, oder defekt zurück gegeben, so kann die
 verleihende Person einen Konflikt auslösen. Dies kann sie nur tun, bevor sie die
-Rückgabe bestätigt. Wir haben uns entschieden, dass das Bestätigen der Rückgabe
+Rückgabe bestätigt. Wir haben uns dafür entschieden, dass das Bestätigen der Rückgabe
 beinhaltet, dass der Artikel in zufriedenstellendem Zustand zurückgegeben wurde.
 ** Bei vor dem vereinbarten Zeitpunkt zurück gegebenen Artikeln, werden die
 entsprechenden Tagessätze NICHT zurücküberwiesen.
    [green big]#✔#
 * Vergisst eine Person einen Artikel zurückzugeben, so bekommt sie beim Einloggen
 eine Erinnerungsnachricht. [green big]#✔#
-#
+
 * Sobald die ausleihende Person auf akzeptieren klickt wird die Kaution geblockt
 und der Tagessatz überwiesen.
 [green big]#✔#
@@ -125,6 +125,8 @@ und eine kurze Beschreibung des Konfliktes dargestellt werden.
 stellen, möchten beide einen Konflikt melden, so werden die einzelnen Nachrichten
 in einem Konflikt gespeichert. Es ist auch möglich, dass die beteiligten mehrere
 Nachrichten in einen Konflikt schreiben.
+** Der Admin kann auch Nachrichten in den Konflikt schreiben, sodass
+der Konflikt prinzipiell über das System gelöst werden könnte.
 ** in der Detailansicht des Konfliktes kann der Admin die Kaution an die
 entsprechende Partei überweisen, die sie erhalten soll (der Konflikt wird inhaltlich
   per Email gelöst)
