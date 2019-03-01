@@ -198,33 +198,16 @@ public class ProPayServiceTest {
         Account account1 = new Account(source1.getUsername(), 515, reservations);
         Assertions.assertThat(pps.getDepositSum(account1)).isEqualTo(330);
     }
-    /* Fails with: java.lang.AssertionError: Expected exception: de.hhu.sharing.model.NotFoundException
+
     @Test(expected = NotFoundException.class)
     public void testCallURLIOException() {
-        String URL = "http://localhost:8888/account/" + "user" + "/";
+        String URL = "URLFail";
         pps.callURL(URL, "POST", 3);
-    }*/
+    }
 
     @Test(expected = NotFoundException.class)
     public void testCallURLRetriesSmallerZero() {
-        String URL = "http://localhost:8888/account/" + "user" + "/";
+        String URL = "http://localhost:1234";
         pps.callURL(URL, "POST", -1);
-    }
-
-    @Test
-    public void testCallURL() {
-//        try {
-//            HttpURLConnection connection = Mockito.mock(HttpURLConnection.class);
-//            //Mockito.(url.openConnection()).thenThrow(SocketTimeoutException.class);
-//            Mockito.doThrow(SocketTimeoutException.class).when(url).openConnection();
-//            //Mockito.when(url.openConnection()).thenReturn(connection);
-//        } catch (IOException e) {
-//            fail();
-//        }
-//        String URLString = "http://localhost:8888/account/" + "user" + "/";
-//        pps.callURL(URLString, "POST", 6);
-//
-//       // Mockito.verify(pps, times(100)).callURL(URLString, "POST", Mockito.anyInt());
-
     }
 }
