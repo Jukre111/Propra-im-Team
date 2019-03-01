@@ -59,7 +59,7 @@ public class ProPayServiceTest {
         User userSrc = new User("Source", "pwd", "USER_ROLE", "Brand", "Feuer",
                 "FeuerBrand@112.de", LocalDate.now(), new Address("strasse", "stadt", 4000));
 
-        String URL = "http://localhost:8888/" + "account/" + userSrc.getUsername() + "/";
+        String URL = "http://propay:8888/" + "account/" + userSrc.getUsername() + "/";
         String json = "{\"account\":\"Source\"," +
                 "\"amount\":50.0," +
                 "\"reservations\":[{" +
@@ -81,7 +81,7 @@ public class ProPayServiceTest {
     @Test
     public void testInitiateTransactionRental() {
         String userSrc = "Source";
-        String URL = "http://localhost:8888/account/" + userSrc + "/";
+        String URL = "http://propay:8888/account/" + userSrc + "/";
         User source = this.createUser("Source");
         User target = this.createUser("Target");
         TransactionRental transRen = new TransactionRental(50, 15, 0L, new LendableItem("itemName", "desc", 50, 15, target), source, target);
