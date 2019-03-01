@@ -1,7 +1,7 @@
 # Abschlussprojekt
 
-_Bei Start der Anwendung werden mithilfe des Databaseinitializer User erzeugt.
-Die User heißen user1, user2 usw. mit dem korrespondierenden Passwort password1,
+_Bei Start der Anwendung werden mit Hilfe des Databaseinitializer User erzeugt.
+Die User heißen user1, user2 usw. mit den korrespondierenden Passwörtern password1,
 password2 usw.. Außerdem werden Items und Anfragen an verschiedene User
 bezüglich des Ausleihens von Gegenständen (die akzeptiert und abgelehnt werden
   können) generiert. Des Weiteren gibt es einen admin, der das Passwort admin
@@ -32,69 +32,83 @@ schreiben (mit Namen)
 
 ## Aufgabenstellung und Entscheidungen
 
-* funktionierende Travis-CI-Konfiguration [green big]#✔#
-* Anwendung startet mit docker-compose up [green big][green big]#✔#
-* unter Port 8080 erreichbar, keine anderen Ports sind erreichbar [green big]#✔#
-* die Anwendung unterstützt unterschiedliche Benutzerkonten die parallel
+* Funktionierende Travis-CI-Konfiguration [green big]#✔#
+* Anwendung startet mit docker-compose up [green big]#✔#
+* Anwendung ist unter Port 8080 erreichbar, keine anderen Ports sind erreichbar [green big]#✔#
+** Die Propay-Anwendung ist unter dem Port 8888 erreichbar. Da allerdings vorgegeben wurde,
+wie diese eingebunden werden soll, nehmen wir an, dass das akzeptabel ist.
+* Die Anwendung unterstützt unterschiedliche Benutzerkonten, die parallel
 angemeldet sind. [green big]#✔#
 * Für alle Interaktionen mit der Anwendung muss der/die UserIn angemeldet sein. [green big]#✔#
 * Es gibt eine Übersichtsseite der eingestellten Artikel. [green big]#✔#
-** Diese ist unterteilt in Artikel, die zum Verkauf stehen und Artikel die zu
-Leihen sind und ermöglicht auch die explizite Suche nach einzelnen Artikeln.
+** Diese ist unterteilt in Artikel, die zum Verkauf stehen und Artikel, die zu
+Leihen sind, und ermöglicht auch die explizite Suche nach einzelnen Artikeln.
 * Aus der Übersicht gelangt man zu einer Detailansicht jedes einzelnen
 Artikels, indem man auf dessen Namen oder Bild klickt. [green big]#✔#
-** Namen und Beschreibung des Artikels, Angaben zu Tagessatz und Kaution,
+** Die Detailansicht der ausleihbaren Artikel enthält:
+Namen und Beschreibung des Artikels, Angaben zu Tagessatz und Kaution,
 Angaben zur Verfügbarkeit in Form
 eines Kalenders, in dem die Daten an denen der Artikel bereits verliehen ist,
 Angaben zur verleihenden Person(username), Angaben zum Standort des Artikel (die
   Adresse des Besitzers), Link um eine Anfrage zu senden.
   [green big]#✔#
-* Die Detailansicht der käuflichen Artikel enthält:
-** Name und Beschreibung des Artikels, Angaben zum Preis des Artikels, Angaben
+** Die Detailansicht der käuflichen Artikel enthält:
+ Name und Beschreibung des Artikels, Angaben zum Preis des Artikels, Angaben
 zur verleihenden Person(username), Angaben zum Standort des Artikel (die
   Adresse des Besitzers), Link um den Artikel zu kaufen.
   [green big]#✔#
-* verleihbare Artikel können neu eingestellt werden mit:
+* Verleihbare Artikel können neu eingestellt werden mit (Button "Verleihen" auf
+Startseite):
 ** Name, Artikelbeschreibung, Foto des Artikels(muss nicht zwangsläufig
   vorhanden sein), Kautionswert, Tagessatz
 [green big]#✔#
-* käufliche Artikel können neu eingestellt werden mit:
+* Käufliche Artikel können neu eingestellt werden mit (Button "Verkaufen" auf
+Startseite"):
 ** Name, Artikelbeschreibung, Foto des Artikels (muss nicht zwangsläufig vorhanden
   sein), Preis
 [green big]#✔#
-* User können eine Anfrage schicken (nicht für Artikel die ihnen gehören -> Warnung)
-die dann dem Besitzer des Artikels angezeigt wird.
-** Hierbei wird eine Anfrage für einen bestimmten Zeitraum gestellt, ist dieser
+* User können eine Anfrage schicken, die dann dem Besitzer des Artikels angezeigt
+ wird. Dies gilt nicht für Artikel, die ihnen gehören. -> Warnung wird angezeigt.
+** Hierbei wird eine Anfrage für einen bestimmten Zeitraum gestellt. Ist dieser
 bereits vergeben, kann die Anfrage nicht gestellt werden.
 ** Es können nur Daten gewählt werden, die in der Zukunft liegen und bei denen
-das Enddatum nicht vor dem Startdatum liegt (sonst -> Warnung und anfragen-Button disabled)
-** Auch in der Ansicht für Anfragen werden die Daten an denen der Gegenstand
-bereits verliehen ist rot markiert.
+das Enddatum nicht vor dem Startdatum liegt (sonst -> Warnung und anfragen-Button
+  disabled)
+** Auch in der Ansicht für Anfragen werden die Daten, an denen der Gegenstand
+bereits verliehen ist, rot markiert.
 [green big]#✔#
-* Verleihende Person kann Anfragen annehmen oder ablehnen.
+* Die verleihende Person kann Anfragen annehmen oder ablehnen.
 ** Wird eine Anfrage angenommen, so werden alle Anfragen, die sich
-mit dem Zeitraum der akzeptierten Anfrage überschneiden automatisch gelöscht.
+mit dem Zeitraum der akzeptierten Anfrage überschneiden, automatisch gelöscht.
 ** Wird eine Anfrage angenommen, so ist der Gegenstand automatisch für den
 Zeitraum ausgeliehen.
 ** Hierbei haben wir uns dafür entschieden, die ausgeliehenen Artikel sofort
 in der Liste der geliehenen Artikel im Account anzuzeigen, wobei hier der
-tatsächliche Ausleihzeitraum vermerkt ist
+tatsächliche Ausleihzeitraum vermerkt ist. Die Liste der ausgeliehenen Artikel
+umfasst somit alle anstehenden und laufenden Ausleihen.
 [green big]#✔#
 * Werden Artikel in gutem Zustand zurück gegeben, so kann die verleihende Person
 dies bestätigen, sodass die Kaution wieder freigegeben wird und der
 Ausleihprozess beendet wird.
 ** Wir haben uns dagegen entschieden, dass die leihende Person dies im System
-beeinflussen kann, da hier die Wahrscheinlichkeit, dass nicht Wahrheitsgemäße
-Rückgaben erfolgen hoch ist.
+beeinflussen kann, da hier die Wahrscheinlichkeit, dass nicht wahrheitsgemäße
+Rückgaben erfolgen hoch ist. Weiterhin schien es uns nicht sinnvoll, dass die
+leihende Person, die Rückgabe bestätigen muss. Er reicht, wenn der Besitzer
+bestätigt, wenn er sein Eigentum zurückerhält.
 ** Gibt die leihende Person den Artikel zurück, ohne dass die ausleihende Person
 dies im System angibt, so kann die leihende Person einen Konflikt auslösen.
+Hiermit umgehen die Notwendigkeit, dass die leihende Person die Rückgabe
+bestätigt.
 ** Wird der Artikel zu spät, gar nicht, oder defekt zurück gegeben, so kann die
-verleihende Person einen Konflikt auslösen.
+verleihende Person einen Konflikt auslösen. Dies kann sie nur tun, bevor sie die
+Rückgabe bestätigt. Wir haben uns entschieden, dass das Bestätigen der Rückgabe
+beinhaltet, dass der Artikel in zufriedenstellendem Zustand zurückgegeben wurde.
 ** Bei vor dem vereinbarten Zeitpunkt zurück gegebenen Artikeln, werden die
 entsprechenden Tagessätze NICHT zurücküberwiesen.
    [green big]#✔#
-* Vergisst eine Person einen Artikel zurückzugeben, so bekommt sie beim einloggen
+* Vergisst eine Person einen Artikel zurückzugeben, so bekommt sie beim Einloggen
 eine Erinnerungsnachricht. [green big]#✔#
+#
 * Sobald die ausleihende Person auf akzeptieren klickt wird die Kaution geblockt
 und der Tagessatz überwiesen.
 [green big]#✔#
@@ -284,28 +298,24 @@ lendableItemdetails.html bzw. sellableItem.html führt, wobei die Id des
 entsprechenden Items mitgegeben wird.
 
 
-.Details.html
-* Es wird eine Detailansicht des entsprechenden Items dargestellt.
-* Darunter steht ein Ausleihbutton und ein Zurückbutton.
-* Der Ausleihbutton linkt auf Request.html und gibt dieser die Id des entsprechenden Items
+* Details.html
+** Es wird eine Detailansicht des entsprechenden Items dargestellt.
+** Darunter steht ein Ausleihbutton und ein Zurückbutton.
+** Der Ausleihbutton linkt auf Request.html und gibt dieser die Id des entsprechenden Items
 mit.
-* In dem dargestellten Kalender werden die Daten, an denen das Item bereits
-verliehen ist rot markiert.
-* Der Zurückbutton linkt auf Index.html.
+** Der Zurückbutton linkt auf Index.html.
 
-.messages.html:
-* Enthält zwei Tabellen:
-* Die erste Tabelle enthält alle Requests, die an den angemeldeten User gestellt
-wurden (Zu Items, die dem angemeldeten User gehören.)
-** Diese Requests kann die angemeldete Person akzeptieren oder ablehnen. Wird ein
-Request akzeptiert, so werden alle Request mit Ausleihzeiträumen, die sich mit dem
-des akzeptierten Requests überschneiden automatisch gelöscht.
-** Ein Request kann nur dann akzeptiert werden, wenn die anfragende Person
-über ausreichendes Guthaben verfügt, sonst wird eine Warnung (PopUp) ausgegeben.
-* Die zweite Tabelle enthält alle Requests, die der angemeldete User selbst
-gestellt hat.
-** Die eigenen Requests können an dieser Stelle gelöscht werden.
+* messages.html:
+** Enthält zwei Tabellen:
+** Die erste Tabelle enthält eine Liste aller Requests, die an den angemeldeten User gestellt
+wurden (Zu Items, die mir gehören.)
+** Diese Requests kann die angemeldete Person akzeptieren oder ablehnen.
 
+* propayAccount.html:
+** Zeigt den ProPay Account Namen eines Nutzers
+** Zeigt das aktuelle Guthaben des Accounts
+** Darunter befindet sich die Möglichkeit durch ein Feld und einen Button "Aufladen" sein Guthaben zu erhöhen
+** Es werden zwei Tabellen (mit aus- und eingehenden Transaktionen) angezeigt
 
 .propayAccount.html:
 * Zeigt das aktuelle Guthaben der angemeldeten Person an und wieviel von
