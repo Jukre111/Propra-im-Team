@@ -1,5 +1,13 @@
 # Abschlussprojekt
 
+_Bei Start der Anwendung werden mithilfe des Databaseinitializer User erzeugt.
+Die User heißen user1, user2 usw. mit dem korrespondierenden Passwort password1,
+password2 usw.. Außerdem werden Items und Anfragen an verschiedene User
+bezüglich des Ausleihens von Gegenständen (die akzeptiert und abgelehnt werden
+  können) generiert. Des Weiteren gibt es einen admin, der das Passwort admin
+  hat. Nur der Admin kann die Konflikte einsehen und lösen._
+
+
 ## Grundsätzliches
 
 * Pair-programming.
@@ -132,88 +140,147 @@ und können Konflikte einsehen und bearbeiten. [green big]#✔#
 
 
 ## Datenstrukturen
-* User bestehen aus:
-. username : String (id)
+.User:
+* username : String (id)
 ** user haben eindeutige Usernamen, die in der Datenbank als Id verwendet werden.
-. password : String
-. role : String
+* password : String
+* role : String
 ** Es gibt die Rollen Admin und User.
 *** Admins können die Konfliktlösestelle in ihrem Account aufrufen, für User wird der entsprechende
 Button nicht dargestellt.
-. lastname : String
-. forename : String
-. email : String
-. birthdate : LocalDate
-. address : Address
-. borrowedItems :
+* lastname : String
+* forename : String
+* email : String
+* birthdate : LocalDate
+* address : Address
+* borrowedItems : List<BorrowingProcess>
+* lendItems . List <BorrowinProcess>
+* Image image
 
+** Jeder Benutzer der Website wird als User Objekt gespeichert.
+** Die User werden vom DatabaseInitializer mithilfe von Fakern autogeneriert.
+** Die Regestrierung neuer User ist nicht möglich.
+** Die Items, die dem User gehoeren werden hier nicht gespeichert, stattdessen
+ wird in jedem Item der Besitzer vermerkt.
 
-
- Die Items, die dem User gehoeren werden hier nicht gespeichert, stattdessen wird in jedem Item der Besitzer
-vermerkt.
-
-* Item
-. id : Long
-** ids werden von der Datenbank generiert.
-. name : String
-. description : String
-. rental : int
-. deposit : int
-. Availability : List periods
-** Hier werden alle Zeiträume gespeichert, in denen das Item verliehen ist.
-. lender : User
-
-* Request
-. id : Long
-** ids werden von Datenbank generiert.
-. Zeitraum : period
-. requester : User
-** User der ausleihen möchte.
-
-* BorrowedItems
-. id : Long
-. item : Item
-** Item das ausgeliehen wird.
-. request : Request
-** request der akzeptiert wurde, sodass das Item jetzt ausgeliehen ist.
--> Das BorrowedItem repräsentiert den Ausleihprozess. Jeder User hat eine Liste ausgeliehener
-BorrowedItems und verliehener BorrowedItems.
-
-
-
-
-## Erläuterung der Datenstruktur
-* User:
-. Jeder Benutzer der Website wird als User Objekt gespeichert.
-. Die User werden vom DatabaseInitializer mithilfe von Fakern autogeneriert.
-. Die Regestrierung neuer usern ist nicht möglich.
-
-
+.Adress
+* street : String
+* city : String
+* postcode : int
 * Address:
-. Jede Adresse eines Benutzers wird als Objekt der Klasse Address im User gespeichert.
-. Address ist embeddable, damit Benutzer mit derselben Adresse diese speichern können.
+** Jede Adresse eines Benutzers wird als Objekt der Klasse Address im User gespeichert.
+** Address ist embeddable, damit Benutzer mit derselben Adresse diese speichern können.
 
-* Item:
-. Jeder zur Vermietung eingestellte Artikel wird als Objekt der Klasse Item gespeichert.
-. Die ID wird automatisch generiert, um die Artikel eindeutig voneinannder unterscheiden zu können.
-. In jedem Item wird gespeichert, wem es gehört.
 
-* Request:
-. Ein Request wird generiert, wenn ein User ein Item eines anderen Users ausleihen möchte.
+
+.Item
+* Item ist als MappedSuperclass annotiert und die Klassen lendableItem und
+sellableItem erben von ihr
+* id : Long
+** ids werden von der Datenbank generiert.
+* name : String
+* description : String
+* owner : User
+
+.LendableItem
+* Die Klasse LendableItem erbt von Item und ergänzt dieses um folgende Aspekte:
+* rental: Integer
+* deposit: Integer
+* periods : List<Period>
+** Hier werden die Zeitabstände vermerkt zu denen das Item bereits verliehen
+wurde. Wird ein Request akzeptiert, so wird dessen
+period zu dieser Liste hinzugefügt.
+* requests : List<Request>
+** Hier werden alle Requests die zu einem lendableItem gestellt werden
+hinzugefügt.
+
+.SellableItem
+* Die Klasse SellableItem erbt von Item und ergänzt dieses um folgenden Aspekt:
+* price : Integer
+** SellableÌtems und LendableItems werden in zwei separaten Tabellen gespeichert
+und haben somit auch separate Repositories, Controller und Services.
+
+
+.Request
+* id : Long
+** ids werden von Datenbank generiert.
+* period : Period
+* requester : User
+** User der ausleihen möchte.
+* Ein neuer Request wird erzeugt, wenn ein User ein Item ausleihen möchte und es
+zu diesem Zeitraum verfügbar ist
+
+
+.Period
+* startdate : LocalDate
+* enddate : LocalDate
+
+
+.BorrowingProcess
+* id : Long
+** Generated Value
+* lendableItem : LendableItem
+** LendableItem das ausgeliehen wird.
+* period : Period
+** Zeitraum zu dem das Item ausgeliehen wird.
+** request der akzeptiert wurde, sodass das Item jetzt ausgeliehen ist.
+-> Der BorrowingProcess repräsentiert den Ausleihprozess. Jeder User hat eine
+Liste von laufenden BorrowingProcesses, die Items betreffen, die er verleiht
+und eine Liste laufender BorrowingProcesses, die Items betreffen, die er geliehen
+hat.
+
+
+.Conflict
+* id: Long
+** Generated Value
+* lender : User
+* borrower : User
+* process : BorrowingProcess
+* messages : List <messages>
+** Conflicts können von der ausleihenden und der verleihenden Person gestellt
+werden. Da in jedem Conflict eine List von Messages gespeichert wird, können zum
+zum Einen beide Parteien ihre Version des Konfliktes darstellen und diese Nachrichten
+werden beide in demselben Konflikt gespeichert, zum anderen kann der Konflikt
+ über das System selbst geklärt werden, indem Admin und
+beide User Messages austauschen. Falls das Problem doch außerhalb des
+Systems (per Email) geklärt werden soll, werden dem Admin die Emailadressen der
+Beteiligten Parteien auf der Detailseite des Konfliktes angezeigt.
+
+.Message
+* author : String
+* content : String
+** Messages werden für die Konflikte verwendet, damit alle beteiligten Parteien
+Nachrichten zu einem Konflikt schreiben können.
+
+
+.Image
+* id : Long
+** Generated Value
+* mimeType : String
 
 
 
 
 ## Webstruktur
 
-* Alle Html-Dateien benutzen das Layout der baseWithSearchBar.html, sodass grundlegende Funktionen,
-wie Suche, Nachrichten, Account und Logout immer verfügbar sind.
+.Base.html
+* Alle Html-Dateien benutzen das Layout der base.html, sodass grundlegende Funktionen,
+wie Suche, Verkaufen, Verleihen, Nachrichten, Account und Logout immer verfügbar sind.
+* Die Suche sucht in dem Titel und der Beschreibung der Items und gibt die
+Ergebnisse dann sortiert nach sellableItems und lendableItems wieder in zwei
+Listen aus.
+* Der Button Verkaufen linkt auf die Seite sellableItem.html, wo ein neues
+SellableItem angelegt werden kann.
+* Der Button Verleihen linkt auf die Seite newLendableItem.html, wo ein neues
+LendableItem erzeugt werden kann.
 
 
-* Index.html:
-** Enthält Liste alles vorhandenen Items.
-** Jedes Item hat einen Detail-Button, der zu der Seite Details.html führt, wobei die Id des
+.Index.html:
+* Enthält zwei Listen jeweils mit den kaufbaren und ausleihbaren Items.
+* Der Name und das Bild des Items sind Links, der zu der Seite
+lendableItemdetails.html bzw. sellableItem.html führt, wobei die Id des
 entsprechenden Items mitgegeben wird.
+
 
 * Details.html
 ** Es wird eine Detailansicht des entsprechenden Items dargestellt.
@@ -311,4 +378,4 @@ image::./Diagram/request.png[Request]
 image::./Diagram/acceptRequest.png[AcceptRequest]
 
 
-### 
+###
