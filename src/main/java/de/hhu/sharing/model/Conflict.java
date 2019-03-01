@@ -5,6 +5,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,16 +19,19 @@ public class Conflict {
     private Long id;
 
     @ManyToOne
+    @Valid
     private User lender;
 
     @ManyToOne
+    @Valid
     private User borrower;
 
     @OneToOne
+    @Valid
     private BorrowingProcess process;
 
     @ElementCollection
-    private List<Message> messages = new ArrayList<>();
+    private List<@Valid Message> messages = new ArrayList<>();
 
     public Conflict(){
     }

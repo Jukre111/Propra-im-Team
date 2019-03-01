@@ -2,15 +2,15 @@ package de.hhu.sharing.data;
 
 import com.github.javafaker.Faker;
 import de.hhu.sharing.model.*;
-import de.hhu.sharing.services.FileSystemStorageService;
 
 import de.hhu.sharing.services.ProPayService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.util.StreamUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -26,91 +26,70 @@ import java.util.concurrent.TimeUnit;
 public class DatabaseInitializer implements ServletContextInitializer {
 
     @Autowired
+    private PasswordEncoder encoder;
+
+    @Autowired
     private UserRepository users;
 
     @Autowired
-    private ItemRepository items;
+    private LendableItemRepository lendableItems;
 
     @Autowired
     private RequestRepository requests;
 
     @Autowired
-    private PasswordEncoder encoder;
+    private SellableItemRepository sellableItems;
 
     @Autowired
-    private ConflictRepository conflicts;
-
-    @Autowired
-    private ProPayService proPayService;
-
-    @Autowired
-    ImageRepository imageRepo;
-    
-    @Autowired
-    FileSystemStorageService fileService;
+    private ImageRepository images;
     
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException{
-        final Faker faker = new Faker(Locale.GERMAN);
-        initUsers(faker);
-        initItems(faker);
-        initRequests(faker);
-    }
-
-    private byte[] getDefaultUserImage(){
-        byte[] byteArr = new byte[1];
-        File file = new File("nyan_cat.gif");
-        try {
-            file = ResourceUtils.getFile(
-                    "classpath:nyan_cat.gif");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        if(users.findAll().isEmpty()) {
+            final Faker faker = new Faker(Locale.GERMAN);
+            initUsers(faker);
+            initLendableItems(faker);
+            initRequests(faker);
+            initSellableItems(faker);
+            initAdmin(faker);
         }
-		try {
-            byteArr = Files.readAllBytes(file.toPath());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return byteArr;
     }
     
     private void initUsers(Faker faker){
-        byte[] byteArr = getDefaultUserImage();
+        Image image = initImage();
         for(int i = 1; i < 21; i++){
             Address address = new Address(
                     faker.address().streetAddress(),
                     faker.lordOfTheRings().location(),
                     Integer.parseInt(faker.address().zipCode()));
             User user = new User("user" + i, encoder.encode("password" + i), "ROLE_USER",
-                    faker.gameOfThrones().house(),
+                    faker.lordOfTheRings().character(),
                     faker.pokemon().name(),
                     faker.internet().emailAddress(),
                     faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                    address);
+                    address, image);
             users.save(user);
-        	fileService.storeUserInitalizer(byteArr, user);
         }
     }
 
-    private void initItems(Faker faker){
-        byte[] byteArr = getDefaultUserImage();
+    private void initLendableItems(Faker faker){
+        Image image = initImage();
         for(User user : users.findAll()){
             for(int j = 0; j < 3; j++){
-                Item item = new Item(faker.pokemon().name(),
+                LendableItem lendableItem = new LendableItem(faker.pokemon().name(),
                         String.join("\n", faker.lorem().paragraphs(3)),
                         faker.number().numberBetween(1,1000),
                         faker.number().numberBetween(1,1000),
-                        user);
-                items.save(item);
-                fileService.storeItemInitalizer(byteArr, item);
+                        user, image);
+                lendableItems.save(lendableItem);
             }
         }
     }
 
     private void initRequests(Faker faker){
         for(User user : users.findAll()){
-            List<Item> itemList = items.findFirst2ByLenderNot(user);
-            LocalDate startdate = faker.date().future(10,TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            List<LendableItem> lendableItemList = lendableItems.findFirst2ByOwnerNot(user);
+            LocalDate startdate = faker.date().future(10, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             Request request1 = new Request(
                     new Period(startdate,
                             faker.date().future(10,TimeUnit.DAYS, Date.from(startdate.atStartOfDay(ZoneId.systemDefault()).toInstant())).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()),
@@ -121,17 +100,52 @@ public class DatabaseInitializer implements ServletContextInitializer {
                     user);
             requests.save(request1);
             requests.save(request2);
-            itemList.get(0).addToRequests(request1);
-            itemList.get(1).addToRequests(request2);
-            items.saveAll(itemList);
+            lendableItemList.get(0).addToRequests(request1);
+            lendableItemList.get(1).addToRequests(request2);
+            lendableItems.saveAll(lendableItemList);
         }
-
-
-        Address adminAddress = new Address(faker.address().streetAddress(),faker.pokemon().location(), Integer.parseInt(faker.address().zipCode()));
-        User admin = new User("admin", encoder.encode("admin") ,"ROLE_ADMIN", faker.gameOfThrones().house(),
-                faker.lordOfTheRings().character(), faker.internet().emailAddress(), faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), adminAddress);
-        users.save(admin);
-
     }
 
+    private void initSellableItems(Faker faker) {
+        Image image = initImage();
+        for(User user : users.findAll()){
+            SellableItem sellableItem = new SellableItem(faker.hacker().abbreviation(),
+                    String.join("\n", faker.lorem().paragraphs(3)),
+                    faker.number().numberBetween(1,1000),
+                    user, image);
+            sellableItems.save(sellableItem);
+        }
+    }
+
+    private void initAdmin(Faker faker) {
+        Image image = initImage();
+        Address address = new Address(
+                faker.address().streetAddress(),
+                faker.pokemon().location(),
+                Integer.parseInt(faker.address().zipCode()));
+        User admin = new User("admin", encoder.encode("admin"), "ROLE_ADMIN",
+                faker.gameOfThrones().house(),
+                faker.lordOfTheRings().character(),
+                faker.internet().emailAddress(),
+                faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                address, image);
+        users.save(admin);
+    }
+
+    private Image initImage(){
+        byte[] byteArr = new byte[1];
+        try {
+        	InputStream in = this.getClass().getResourceAsStream("/nyan_cat.gif");
+           byteArr = StreamUtils.copyToByteArray(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Image image = new Image();
+        String contentType = "image/gif";
+        image.setMimeType(contentType);
+        image.setImageData(byteArr);
+        images.save(image);
+        return image;
+    }
 }

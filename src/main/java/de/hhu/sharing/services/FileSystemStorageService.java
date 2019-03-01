@@ -1,14 +1,13 @@
 package de.hhu.sharing.services;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-
 import de.hhu.sharing.data.ImageRepository;
-import de.hhu.sharing.data.ItemRepository;
+import de.hhu.sharing.data.LendableItemRepository;
+import de.hhu.sharing.data.SellableItemRepository;
 import de.hhu.sharing.data.UserRepository;
 import de.hhu.sharing.model.Image;
-import de.hhu.sharing.model.Item;
+import de.hhu.sharing.model.LendableItem;
+import de.hhu.sharing.model.SellableItem;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,99 +19,49 @@ public class FileSystemStorageService implements StorageService {
 
     @Autowired
     private ImageRepository imageRepo;
-    
-    @Autowired
-    private UserRepository userRepo;   
-    
-    @Autowired
-    private ItemRepository itemRepo;
 
-    
+    @Autowired
+    private UserRepository userRepo;
+
+    @Autowired
+    private LendableItemRepository lendableItemRepository;
+
+    @Autowired
+    private SellableItemRepository sellableItemRepository;
+
+
     public Image createImageVars(String mimetype) {
-    	Image image = new Image();
-    	switch(mimetype){
-        case "image/jpeg":
-        	image.setMimeType("image/jpeg");
-            break;
-        case "image/png":
-        	image.setMimeType("image/png");
-            break;
-        case "image/gif":
-        	image.setMimeType("image/gif");
-            break;
-        case "image/bmp":
-        	image.setMimeType("image/bmp");
-            break;
-        default:
-            System.out.println("No valid data");
+        Image image = new Image();
+        switch(mimetype){
+            case "image/jpeg":
+                image.setMimeType("image/jpeg");
+                break;
+            case "image/png":
+                image.setMimeType("image/png");
+                break;
+            case "image/gif":
+                image.setMimeType("image/gif");
+                break;
+            case "image/bmp":
+                image.setMimeType("image/bmp");
+                break;
+            default:
         }
-    	return image;
+        return image;
     }
 
     private byte[] readFile(MultipartFile file){
         byte[] byteArr = new byte[0];
         try {
             byteArr = file.getBytes();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        try {
-            InputStream inputStream = new ByteArrayInputStream(byteArr);
-            int eof = inputStream.read(byteArr);
-            if(eof==byteArr.length){
-                inputStream.close();
-            }else{
-                inputStream.close();
-                throw new Exception();
-            }
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return byteArr;
     }
 
     @Override
-    public void storeUserInitalizer(byte[] byteArr, User user){
-        byte[] bytes = byteArr;
-        Image image = new Image();
-        String contentType = "image/gif";
-        image.setMimeType(contentType);
-        image.setImageData(bytes);
-        imageRepo.save(image);
-        user.setImage(image);
-        userRepo.save(user);
-    }
-
-    @Override
-    public void storeItemInitalizer(byte[] byteArr, Item item) {
-        byte[] bytes = byteArr;
-        Image image = new Image();
-        String contentType = "image/gif";
-        image.setMimeType(contentType);
-        image.setImageData(bytes);
-        imageRepo.save(image);
-        item.setImage(image);
-        itemRepo.save(item);
-    }
-
-    @Override
     public void storeUser(MultipartFile file, User user){
-    	byte[] byteArr = readFile(file);
-        Image image = null;
-        String contentType = null;
-        contentType = file.getContentType();
-        if(contentType!=null)
-    	    image = createImageVars(contentType);
-    	else
-    	    image = createImageVars("default");
-        image.setImageData(byteArr);
-        imageRepo.save(image);
-        user.setImage(image);
-        userRepo.save(user);
-    }
-    
-    @Override
-    public void storeItem(MultipartFile file, Item item){
         byte[] byteArr = readFile(file);
         Image image = null;
         String contentType = null;
@@ -123,7 +72,39 @@ public class FileSystemStorageService implements StorageService {
             image = createImageVars("default");
         image.setImageData(byteArr);
         imageRepo.save(image);
-        item.setImage(image);
-        itemRepo.save(item);
+        user.setImage(image);
+        userRepo.save(user);
+    }
+
+    @Override
+    public void storeLendableItem(MultipartFile file, LendableItem lendableItem){
+        byte[] byteArr = readFile(file);
+        Image image = null;
+        String contentType = null;
+        contentType = file.getContentType();
+        if(contentType!=null)
+            image = createImageVars(contentType);
+        else
+            image = createImageVars("default");
+        image.setImageData(byteArr);
+        imageRepo.save(image);
+        lendableItem.setImage(image);
+        lendableItemRepository.save(lendableItem);
+    }
+
+    @Override
+    public void storeSellableItem(MultipartFile file, SellableItem sellableItem){
+        byte[] byteArr = readFile(file);
+        Image image = null;
+        String contentType = null;
+        contentType = file.getContentType();
+        if(contentType!=null)
+            image = createImageVars(contentType);
+        else
+            image = createImageVars("default");
+        image.setImageData(byteArr);
+        imageRepo.save(image);
+        sellableItem.setImage(image);
+        sellableItemRepository.save(sellableItem);
     }
 }

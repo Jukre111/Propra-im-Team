@@ -3,11 +3,13 @@ package de.hhu.sharing.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Embeddable
 public class Message {
 
+    @NotNull
     private String author;
     @Column(columnDefinition = "TEXT")
     private String content;

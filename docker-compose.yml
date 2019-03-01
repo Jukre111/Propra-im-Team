@@ -1,0 +1,21 @@
+version: "3.1"
+services:
+
+  sharing:
+    build: .
+    ports:
+      - "8080:8080"
+
+  sharingDB:
+    image: postgres
+    environment:
+      - POSTGRES_DB=propra
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - ./data/sharingDB:/var/lib/postgresql/data
+
+  propay:
+    image: propra/propay
+    volumes:
+      - ./data/propay:/code/data
+

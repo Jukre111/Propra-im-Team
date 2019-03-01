@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{baseWithSearchBar}" xmlns:layout="http://www.w3.org/1999/xhtml"
+<html lang="en" layout:decorate="~{base}" xmlns:layout="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <title>Konfliktmeldung</title>
@@ -20,7 +20,8 @@
 <body>
 
 <div layout:fragment="body">
-    <div class="alert alert-danger" role="alert" th:if="${conflictExistsAlready}" >Konflikt existiert bereits.</div>
+    <div class="alert alert-success" role="alert" th:if="${succMessage}" th:text="${succMessage}"></div>
+    <div class="alert alert-danger" role="alert" th:if="${errMessage}" th:text="${errMessage}"></div>
     <div class="style textPosition" style="padding: 20px">
         <h1><span type="text" style="font-size: 30pt; color: #BD1D6F" id="name" name="name" th:text="${conflict.process.item.name}"></span></h1>
         <form th:action="@{'/conflictNewMessage?id=' + ${conflict.id}}" action="./index.html" method="post">
@@ -57,26 +58,28 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Problembeschreibung</label>
+                    <label class="col-sm-2 control-label">Problem</label>
                 </div>
                 <div class="form-group" th:each="message : ${conflict.messages}">
                     <label class="col-sm-2 control-label" th:text="${message.author}"></label>
-                    <textarea class="form-control" th:inline="text" readonly>[[${message.content}]]</textarea>
+                    <div class="col-xs-7">
+                        <textarea class="form-control" th:inline="text" readonly>[[${message.content}]]</textarea>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="message" class="col-sm-2 control-label">Neue Nachricht</label>
                     <div class="col-xs-7">
                         <textarea class="form-control" id="message" name="message" th:inline="text" required=""></textarea>
                     </div>
-                    <button type="submit" class="indexbtn" style="padding: 5px" name="button">Senden</button>
                 </div>
             </div>
+            <div class="modal-footer">
+                <a class="indexbtn" href="/account" style="padding: 5px">Zurück</a>
+                <button type="submit" class="indexbtn" style="padding: 5px" name="button">Senden</button>
+                <a type="submit" class="indexbtn" th:if="${user.role == 'ROLE_ADMIN'}" th:href="@{'/admin/conflicts/lender?id=' + ${conflict.id}}" style="padding: 5px; float: left" name="button">Kaution Besitzer</a>
+                <a type="submit" class="indexbtn" th:if="${user.role == 'ROLE_ADMIN'}" th:href="@{'/admin/conflicts/borrower?id=' + ${conflict.id}}" style="padding: 5px; margin-left: 5px; float: left" name="button">Kaution Ausleiher</a>
+            </div>
         </form>
-        <div class="modal-footer">
-            <a class="indexbtn" href="/account" style="padding: 5px">Zurück</a>
-            <a type="submit" class="indexbtn" th:if="${user.role == 'ROLE_ADMIN'}" th:href="@{'/admin/conflicts/lender?id=' + ${conflict.id}}" style="padding: 5px" name="button">Kaution Besitzer</a>
-            <a type="submit" class="indexbtn" th:if="${user.role == 'ROLE_ADMIN'}" th:href="@{'/admin/conflicts/borrower?id=' + ${conflict.id}}" style="padding: 5px" name="button">Kaution Ausleiher</a>
-        </div>
     </div>
 </div>
 </body>

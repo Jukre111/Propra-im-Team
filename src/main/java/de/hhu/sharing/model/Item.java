@@ -3,87 +3,29 @@ package de.hhu.sharing.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
-import java.util.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Data
-@Entity
-public class Item {
+@MappedSuperclass
+public abstract class Item {
 
     @Id
     @GeneratedValue
-    private Long id;
+    Long id;
 
-    private String name;
+    @NotNull
+    String name;
+
     @Column(columnDefinition = "TEXT")
-    private String description;
-    private int rental;     //per Day
-    private int deposit;
-    
+    @NotNull
+    String description;
+
     @OneToOne
-    private Image image;
-    
+    @Valid
+    Image image;
+
     @ManyToOne
-    private User lender;
-
-    @ElementCollection
-    private final List<Period> periods = new ArrayList<>();
-
-    @OneToMany(fetch = FetchType.EAGER)
-    private final List<Request> requests = new ArrayList<>();
-
-    public Item(){
-    }
-
-    public Item(String name, String description, int rental, int deposit, User lender){
-        this.name = name;
-        this.description = description;
-        this.rental = rental;
-        this.deposit = deposit;
-        this.lender = lender;
-    }
-
-    public Item(String name, String description, int rental, int deposit, User lender, Image image){
-        this.name = name;
-        this.description = description;
-        this.rental = rental;
-        this.deposit = deposit;
-        this.lender = lender;
-        this.image = image;
-    }
-    
-    
-    public void addToRequests(Request request) {
-        requests.add(request);
-    }
-
-    public void removeFromRequests(Request request) {
-        requests.remove(request);
-    }
-
-    @Transactional
-    public void addToPeriods(Period period){
-        this.periods.add(period);
-    }
-
-    @Transactional
-    public void removeFromPeriods(Period period){
-        this.periods.remove(period);
-    }
-
-    @Transactional
-    public boolean noPeriodsAndRequests() {
-        return periods.isEmpty() && requests.isEmpty();
-    }
-
-    @Transactional
-    public boolean isAvailableAt(Period period) {
-        for(Period per : periods){
-            if(per.overlapsWith(period)){
-                return false;
-            }
-        }
-        return true;
-
-    }
+    @Valid
+    User owner;
 }

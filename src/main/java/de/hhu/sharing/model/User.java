@@ -2,8 +2,12 @@ package de.hhu.sharing.model;
 
 import lombok.Data;
 import org.hibernate.annotations.IndexColumn;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,31 +19,45 @@ import java.util.List;
 public class User {
 
     @Id
+    @NotNull
     private String username;
-    
+    @NotNull
     private String password;
+    @NotNull
     private String role;
-
+    @NotNull
     private String lastname;
+    @NotNull
     private String forename;
+    @NotNull
     private String email;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthdate;
 
     @OneToOne
+    @Valid
     private Image image;
     
     @Embedded
+    @NotNull
+    @Valid
     private Address address;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name="borrowed")
     @IndexColumn(base = 1, name = "bor")
-    private final List<BorrowingProcess> borrowed = new ArrayList<>();
+    private final List<@Valid BorrowingProcess> borrowed = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name="lend")
     @IndexColumn(base = 1, name = "len")
-    private final List<BorrowingProcess> lend = new ArrayList<>();
+    private final List<@Valid BorrowingProcess> lend = new ArrayList<>();
+
+    @ElementCollection
+    private List<String> purchaseinformations = new ArrayList<>();
+
+    @ElementCollection
+    private List<String> saleinformations = new ArrayList<>();
 
     public User(){
     }
@@ -85,5 +103,15 @@ public class User {
 
     public void removeFromLend(BorrowingProcess process) {
         this.lend.remove(process);
+    }
+
+    @Transactional
+    public void addToPurchaseinformations(String information) {
+        this.purchaseinformations.add(information);
+    }
+
+    @Transactional
+    public void addToSaleinformations(String information) {
+        this.saleinformations.add(information);
     }
 }

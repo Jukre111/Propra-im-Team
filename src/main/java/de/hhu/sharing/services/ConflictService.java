@@ -2,7 +2,6 @@ package de.hhu.sharing.services;
 
 import de.hhu.sharing.data.ConflictRepository;
 import de.hhu.sharing.model.*;
-import groovy.transform.AutoImplement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +16,10 @@ public class ConflictService {
     public Conflict get(Long id){
         return this.conflicts.findById(id)
                 .orElseThrow(
-                        ()-> new RuntimeException("Conflict not found"));
+                        ()-> new NotFoundException("Konflikt nicht gefunden!"));
     }
 
-    public Conflict getFromBorrowindProcess(BorrowingProcess process) {
+    public Conflict getFromBorrowingProcess(BorrowingProcess process) {
         return this.conflicts.findByProcess(process);
     }
 
@@ -37,8 +36,8 @@ public class ConflictService {
         conflicts.delete(conflict);
     }
 
-    public boolean noConflictWith(Item item) {
-        return conflicts.findAllByProcess_Item(item).isEmpty();
+    public boolean noConflictWith(LendableItem lendableItem) {
+        return conflicts.findAllByProcess_Item(lendableItem).isEmpty();
     }
 
     public void addToMessages(Conflict conflict, User user, String message) {

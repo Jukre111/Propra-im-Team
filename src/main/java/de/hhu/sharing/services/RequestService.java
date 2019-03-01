@@ -1,6 +1,5 @@
 package de.hhu.sharing.services;
 
-import de.hhu.sharing.data.ItemRepository;
 import de.hhu.sharing.data.RequestRepository;
 import de.hhu.sharing.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,32 +16,32 @@ public class RequestService {
     private RequestRepository requests;
 
     @Autowired
-    private ItemService itemService;
+    private LendableItemService lendableItemService;
 
     public Request get(Long id){
         return this.requests.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException("Request not found!"));
+                        () -> new NotFoundException("Anfrage nicht gefunden!"));
     }
 
     public void create(Long itemId, LocalDate startdate, LocalDate enddate, User user) {
         Request request = new Request(new Period(startdate, enddate), user);
-        Item item = itemService.get(itemId);
-        item.addToRequests(request);
+        LendableItem lendableItem = lendableItemService.get(itemId);
+        lendableItem.addToRequests(request);
         requests.save(request);
     }
 
     public void delete(Long requestId) {
         Request request = this.get(requestId);
-        Item item = itemService.getFromRequestId(request.getId());
-        item.removeFromRequests(request);
+        LendableItem lendableItem = lendableItemService.getFromRequestId(request.getId());
+        lendableItem.removeFromRequests(request);
         requests.delete(request);
     }
 
     public boolean isOverlappingWithAvailability(Long requestId) {
         Request request = this.get(requestId);
-        Item item = itemService.getFromRequestId(requestId);
-        return !item.isAvailableAt(request.getPeriod());
+        LendableItem lendableItem = lendableItemService.getFromRequestId(requestId);
+        return !lendableItem.isAvailableAt(request.getPeriod());
     }
 
     public boolean isOutdated(Long requestId) {
@@ -55,11 +54,11 @@ public class RequestService {
     }
 
     public boolean isLender(Long requestId, User user) {
-        return itemService.getFromRequestId(requestId).getLender() == user;
+        return lendableItemService.getFromRequestId(requestId).getOwner() == user;
     }
 
-    public void deleteOverlappingRequestsFromItem(Request request, Item item) {
-        List<Request> requests = new ArrayList<>(item.getRequests());
+    public void deleteOverlappingRequestsFromItem(Request request, LendableItem lendableItem) {
+        List<Request> requests = new ArrayList<>(lendableItem.getRequests());
         for(Request req : requests){
             if(req.getPeriod().overlapsWith(request.getPeriod())){
                 this.delete(req.getId());

@@ -1,11 +1,9 @@
 package de.hhu.sharing.web;
 
-import de.hhu.sharing.data.ItemRepository;
-import de.hhu.sharing.data.UserRepository;
-import de.hhu.sharing.model.Item;
-import de.hhu.sharing.model.User;
-import de.hhu.sharing.services.ItemService;
+import de.hhu.sharing.model.*;
+import de.hhu.sharing.services.LendableItemService;
 import de.hhu.sharing.services.RequestService;
+import de.hhu.sharing.services.SellableItemService;
 import de.hhu.sharing.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,20 +21,31 @@ public class IndexController {
     private UserService userService;
 
     @Autowired
-    private ItemService itemService;
+    private LendableItemService lendableItemService;
 
     @Autowired
     private RequestService requestService;
 
+    @Autowired
+    private SellableItemService sellableItemService;
+
+
     @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("items", itemService.getAll());
+    public String index(Model model, Principal p) {
+        List<SellableItem> sellItems = sellableItemService.getAll();
+        model.addAttribute("lendableItems", lendableItemService.getAll());
+        model.addAttribute("sellableItems", sellItems);
+        User user = userService.get(p.getName());
+        if(userService.userHasNotReturnedItems(user)) {
+            model.addAttribute("errMessage", "Sie haben Items, die dringend zurück gegeben werden müssen!");
+        }
         return "index";
     }
 
     @GetMapping("/search")
     public String search(Model model, @RequestParam String query) {
-        model.addAttribute("items", itemService.searchFor(query));
+        model.addAttribute("lendableItems", lendableItemService.searchFor(query));
+        model.addAttribute("sellableItems", sellableItemService.searchFor(query));
         model.addAttribute("query", query);
         return "search";
     }
@@ -45,8 +54,8 @@ public class IndexController {
     public String account(Model model, Principal p) {
         User user = userService.get(p.getName());
         model.addAttribute("user", user);
-        model.addAttribute("lendItems", itemService.getAllIPosted(user));
-        model.addAttribute("address", user.getAddress());
+        model.addAttribute("lendableItemsIPosted", lendableItemService.getAllIPosted(user));
+        model.addAttribute("sellableItemsIPosted", sellableItemService.getAllIPosted(user));
         return "account";
     }
 
@@ -55,8 +64,8 @@ public class IndexController {
         User user = userService.get(p.getName());
         requestService.deleteOutdatedRequests();
         model.addAttribute("user", user);
-        model.addAttribute("allMyItems", itemService.getAllIPosted(user));
-        model.addAttribute("myRequestedItems", itemService.getAllIRequested(user));
+        model.addAttribute("allMyLendableItems", lendableItemService.getAllIPosted(user));
+        model.addAttribute("allLendableItems", lendableItemService.getAll());
         return "messages";
     }
 }
