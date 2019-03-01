@@ -16,8 +16,6 @@ services:
 
   propay:
     image: propra/propay
-    ports:
-      - "8888:8888"
     # Optional
     volumes:
       - ./data:/code/data
