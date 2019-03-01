@@ -244,4 +244,15 @@ public class LendableItemControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
+
+    @Test
+    @WithMockUser
+    public void redirectWhenLendableItemNotFoundException() throws Exception {
+        Mockito.when(lendableItemService.get(1L)).thenThrow(new NotFoundException("message"));
+
+        mvc.perform(MockMvcRequestBuilders.get("/lendableItemDetails").param("id", "1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attribute("errMessage", "message"));
+    }
 }

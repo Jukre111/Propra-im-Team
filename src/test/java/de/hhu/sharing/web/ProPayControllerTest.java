@@ -2,6 +2,7 @@ package de.hhu.sharing.web;
 
 import de.hhu.sharing.model.Address;
 import de.hhu.sharing.model.LendableItem;
+import de.hhu.sharing.model.NotFoundException;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.propay.Account;
 import de.hhu.sharing.services.*;
@@ -72,5 +73,20 @@ public class ProPayControllerTest {
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/propayAccount"))
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(MockMvcResultMatchers.flash().attributeExists("succMessage"));
+    }
+
+    @Test
+    @WithMockUser
+    public void redirectWhenProPayNotFoundException() throws Exception {
+        User user = new User("User", "password", "ROLE_USER",
+                "Nachname", "Vorname", "email@web.de", LocalDate.now(),
+                new Address("Strasse", "Stadt", 41460));
+        Mockito.when(userService.get("user")).thenReturn(user);
+        Mockito.when(proPayService.getAccount(user)).thenThrow(new NotFoundException("message"));
+
+        mvc.perform(MockMvcRequestBuilders.get("/propayAccount"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attribute("errMessage", "message"));
     }
 }
