@@ -1,0 +1,2 @@
+* https://stackoverflow.com/questions/669828/how-to-have-2-collections-of-the-same-type-in-jpa
+(User Zeile 46 - 54)
