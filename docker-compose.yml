@@ -12,10 +12,10 @@ services:
       - POSTGRES_DB=propra
       - POSTGRES_PASSWORD=secret
     volumes:
-      - ./data:/var/lib/postgres/data
+      - ./data/sharingDB:/var/lib/postgresql/data
 
   propay:
     image: propra/propay
     volumes:
-      - ./data:/code/data
+      - ./data/propay:/code/data
 

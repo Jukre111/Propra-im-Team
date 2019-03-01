@@ -45,12 +45,14 @@ public class DatabaseInitializer implements ServletContextInitializer {
     
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException{
-        final Faker faker = new Faker(Locale.GERMAN);
-        initUsers(faker);
-        initLendableItems(faker);
-        initRequests(faker);
-        initSellableItems(faker);
-        initAdmin(faker);
+        if(users.findAll().isEmpty()) {
+            final Faker faker = new Faker(Locale.GERMAN);
+            initUsers(faker);
+            initLendableItems(faker);
+            initRequests(faker);
+            initSellableItems(faker);
+            initAdmin(faker);
+        }
     }
     
     private void initUsers(Faker faker){
