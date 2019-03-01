@@ -30,7 +30,7 @@ schreiben (mit Namen)
 
 
 
-## Aufgabenstellung und Entscheidungen
+## Aufgaben und Entscheidungen
 
 * Funktionierende Travis-CI-Konfiguration [green big]#✔#
 * Anwendung startet mit docker-compose up [green big]#✔#
