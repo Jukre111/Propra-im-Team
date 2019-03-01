@@ -1,6 +1,7 @@
 package de.hhu.sharing.web;
 
 import de.hhu.sharing.model.Address;
+import de.hhu.sharing.model.NotFoundException;
 import de.hhu.sharing.model.User;
 import de.hhu.sharing.services.LendableItemService;
 import de.hhu.sharing.services.RequestService;
@@ -104,4 +105,14 @@ public class IndexControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @Test
+    @WithMockUser
+    public void redirectWhenUserNotFoundException() throws Exception {
+        Mockito.when(userService.get("user")).thenThrow(new NotFoundException("message"));
+
+        mvc.perform(MockMvcRequestBuilders.get("/"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attribute("errMessage", "message"));
+    }
 }

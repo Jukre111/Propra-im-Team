@@ -310,4 +310,17 @@ public class ConflictControllerTest {
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/conflicts"))
                 .andExpect(MockMvcResultMatchers.status().isFound());
     }
+
+    @Test
+    @WithMockUser
+    public void redirectWhenConflictNotFoundException() throws Exception {
+        User user = createUser("User", "ROLE_USER");
+        Mockito.when(userService.get("user")).thenReturn(user);
+        Mockito.when(conflictService.get(1L)).thenThrow(new NotFoundException("message"));
+
+        mvc.perform(MockMvcRequestBuilders.get("/conflictDetails").param("id", "1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attribute("errMessage", "message"));
+    }
 }

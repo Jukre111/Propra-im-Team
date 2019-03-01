@@ -342,4 +342,17 @@ public class RequestControllerTest{
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
+
+    @Test
+    @WithMockUser
+    public void redirectWhenRequestNotFoundException() throws Exception {
+        User user = createUser("User", "ROLE_USER");
+        Mockito.when(userService.get("user")).thenReturn(user);
+        Mockito.when(requestService.get(1L)).thenThrow(new NotFoundException("message"));
+
+        mvc.perform(MockMvcRequestBuilders.get("/acceptRequest").param("id", "1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attribute("errMessage", "message"));
+    }
 }
