@@ -1,6 +1,6 @@
 # Abschlussprojekt
 
-_Bei Start der Anwendung werden mit Hilfe des Databaseinitializer User erzeugt.
+_Bei Start der Anwendung werden mit Hilfe des Databaseinitializers User erzeugt.
 Die User heißen user1, user2 usw. mit den korrespondierenden Passwörtern password1,
 password2 usw.. Außerdem werden Items und Anfragen an verschiedene User
 bezüglich des Ausleihens von Gegenständen (die akzeptiert und abgelehnt werden
@@ -14,7 +14,7 @@ bezüglich des Ausleihens von Gegenständen (die akzeptiert und abgelehnt werden
 * Morgens Gruppenmeeting.
 * Retrospektiv-Meeting am Ende der Woche.
 * Kein TDD, aber Test möglichst zeitnah schreiben.
-* In jeden Commit schreiben, welche zwei Leute das gemacht haben(Vorname).
+* In jeden Commit schreiben, welche zwei Leute beteiligt waren (Vornamen).
 * Aufgaben die aktuell bearbeitet werden, bitte in der Datei aufgabenverteilung.adoc
 schreiben (mit Namen)
 
@@ -43,26 +43,26 @@ angemeldet sind. [green big]#✔#
 * Es gibt eine Übersichtsseite der eingestellten Artikel. [green big]#✔#
 ** Diese ist unterteilt in Artikel, die zum Verkauf stehen und Artikel, die zu
 Leihen sind, und ermöglicht auch die explizite Suche nach einzelnen Artikeln.
-* Aus der Übersicht gelangt man zu einer Detailansicht jedes einzelnen
+* Von der Übersichtsseite gelangt man zu einer Detailansicht jedes einzelnen
 Artikels, indem man auf dessen Namen oder Bild klickt. [green big]#✔#
 ** Die Detailansicht der ausleihbaren Artikel enthält:
-Namen und Beschreibung des Artikels, Angaben zu Tagessatz und Kaution,
+Name und Beschreibung des Artikels, Angaben zu Tagessatz und Kaution,
 Angaben zur Verfügbarkeit in Form
 eines Kalenders, in dem die Daten an denen der Artikel bereits verliehen ist,
-Angaben zur verleihenden Person(username), Angaben zum Standort des Artikel (die
+Angaben zur verleihenden Person (username), Angaben zum Standort des Artikel (die
   Adresse des Besitzers), Link um eine Anfrage zu senden.
   [green big]#✔#
 ** Die Detailansicht der käuflichen Artikel enthält:
  Name und Beschreibung des Artikels, Angaben zum Preis des Artikels, Angaben
-zur verleihenden Person(username), Angaben zum Standort des Artikel (die
+zur verleihenden Person (username), Angaben zum Standort des Artikel (die
   Adresse des Besitzers), Link um den Artikel zu kaufen.
   [green big]#✔#
-* Verleihbare Artikel können neu eingestellt werden mit (Button "Verleihen" auf
+* Verleihbare Artikel können neu eingestellt werden mit (Button "Verleihen" auf der
 Startseite):
 ** Name, Artikelbeschreibung, Foto des Artikels(muss nicht zwangsläufig
   vorhanden sein), Kautionswert, Tagessatz
 [green big]#✔#
-* Käufliche Artikel können neu eingestellt werden mit (Button "Verkaufen" auf
+* Käufliche Artikel können neu eingestellt werden mit (Button "Verkaufen" auf der
 Startseite"):
 ** Name, Artikelbeschreibung, Foto des Artikels (muss nicht zwangsläufig vorhanden
   sein), Preis
@@ -71,9 +71,9 @@ Startseite"):
  wird. Dies gilt nicht für Artikel, die ihnen gehören. -> Warnung wird angezeigt.
 ** Hierbei wird eine Anfrage für einen bestimmten Zeitraum gestellt. Ist dieser
 bereits vergeben, kann die Anfrage nicht gestellt werden.
-** Es können nur Daten gewählt werden, die in der Zukunft liegen und bei denen
-das Enddatum nicht vor dem Startdatum liegt (sonst -> Warnung und anfragen-Button
-  disabled)
+** Es können nur Daten ab dem aktuellen Tag gewählt werden und das Enddatum darf
+nicht vor dem Startdatum liegen (sonst -> Warnung und anfragen-Button
+  disabled).
 ** Auch in der Ansicht für Anfragen werden die Daten, an denen der Gegenstand
 bereits verliehen ist, rot markiert.
 [green big]#✔#
@@ -87,7 +87,7 @@ in der Liste der geliehenen Artikel im Account anzuzeigen, wobei hier der
 tatsächliche Ausleihzeitraum vermerkt ist. Die Liste der ausgeliehenen Artikel
 umfasst somit alle anstehenden und laufenden Ausleihen.
 [green big]#✔#
-* Werden Artikel in gutem Zustand zurück gegeben, so kann die verleihende Person
+* Werden Artikel in gutem Zustand zurückgegeben, so kann die verleihende Person
 dies bestätigen, sodass die Kaution wieder freigegeben wird und der
 Ausleihprozess beendet wird.
 ** Wir haben uns dagegen entschieden, dass die leihende Person dies im System
@@ -97,9 +97,9 @@ leihende Person, die Rückgabe bestätigen muss. Er reicht, wenn der Besitzer
 bestätigt, wenn er sein Eigentum zurückerhält.
 ** Gibt die leihende Person den Artikel zurück, ohne dass die ausleihende Person
 dies im System angibt, so kann die leihende Person einen Konflikt auslösen.
-Hiermit umgehen die Notwendigkeit, dass die leihende Person die Rückgabe
+Hiermit umgehen wir die Notwendigkeit, dass die leihende Person die Rückgabe
 bestätigt.
-** Wird der Artikel zu spät, gar nicht, oder defekt zurück gegeben, so kann die
+** Wird der Artikel zu spät, gar nicht oder defekt zurückgegeben, so kann die
 verleihende Person einen Konflikt auslösen. Dies kann sie nur tun, bevor sie die
 Rückgabe bestätigt. Wir haben uns entschieden, dass das Bestätigen der Rückgabe
 beinhaltet, dass der Artikel in zufriedenstellendem Zustand zurückgegeben wurde.
@@ -116,34 +116,34 @@ und der Tagessatz überwiesen.
 [green big]#✔#
 * Anfragen können nur akzeptiert werden, wenn das Guthaben der anfragenden Person
 ausreicht (sonst -> Pop-up Warnung). [green big]#✔#
-* Der Admin (username: admin, Passwort:admin) hat auf seiner account-Seite
+* Der Admin (username: admin, Passwort: admin) hat auf seiner account-Seite
 einen Button mit Konfliktlösung, der auf eine Seite führt, auf der alle Konflikte
 aufgelistet sind. Hier können die Details der Konflikte angesehen werden, in
 denen die Usernamen und Emailadressen der Beteiligten, das entsprechende Item
 und eine kurze Beschreibung des Konfliktes dargestellt werden.
-** sowohl verleihende, als auch ausleihende Person können eine Konfliktanfrage
-stellen, möchten beide einen Konflikt melden, so werden die einzelnen Nachrichten
-in einem Konflikt gespeichert. Es ist auch möglich, dass die beteiligten mehrere
+** Sowohl verleihende, als auch ausleihende Person können eine Konfliktanfrage
+stellen. Möchten beide einen Konflikt melden, so werden die einzelnen Nachrichten
+in einem Konflikt gespeichert. Es ist auch möglich, dass die Beteiligten mehrere
 Nachrichten in einen Konflikt schreiben.
-** in der Detailansicht des Konfliktes kann der Admin die Kaution an die
+** In der Detailansicht des Konfliktes kann der Admin die Kaution an die
 entsprechende Partei überweisen, die sie erhalten soll (der Konflikt wird inhaltlich
   per Email gelöst)
 [green big]#✔#
 * Das Profil der angemeldeten Person kann von ihr eingesehen werden. [green big]#✔#
 * Der Propay-Kontostand der angemeldeten Person, sowie alle eigenen Transaktionen
-können auf der Propay-account-seite eingesehen werden (über die account-Seite
+können auf der Propayaccount-Seite eingesehen werden (über die account-Seite
   erreichbar.) [green big]#✔#
-* kauft eine Person einen Gegenstand, so wird dieser aus der Datenbanḱ entfernt
-und die Abholinformationen auf der account-seite in der Liste der gekauften
+* Kauft eine Person einen Gegenstand, so wird dieser aus der Datenbanḱ entfernt
+und die Abholinformationen auf der account-Seite in der Liste der gekauften
 Gegenstände angezeigt. [green big]#✔#
 * Items können vom Besitzer bearbeitet und gelöscht werden, solange keine akzeptierten
-Anfragen existieren (über account-ansicht). [green big]#✔#
+Anfragen existieren (über account-Ansicht). [green big]#✔#
 * Es gibt eine Suche für leihbare und käufliche Gegenstände zusammen. [green big]#✔#
 * Fotos für den Account und die Items können hochgeladen werden (auch nachträglich)
 [green big]#✔#
 * Es werden Passwörter verwendet (die user heißen user1, user2 usw und haben
-  das korrespondierende Passwort password1, password2 usw.) [green big]#✔#
-** werden im Databaseinitializer encryptet.
+  das korrespondierende Passwort password1, password2 usw.). [green big]#✔#
+** werden im Databaseinitializer encryptet
 * Mithilfe von Fakern werden User, Passwörter, Items und Anfragen erzeugt.
 [green big]#✔#
 * Es gibt zwei verschiedene Rollen (user und admin). Admins haben mehr Berechtigungen
@@ -166,7 +166,7 @@ Button nicht dargestellt.
 * birthdate : LocalDate
 * address : Address
 * borrowedItems : List<BorrowingProcess>
-* lendItems . List <BorrowinProcess>
+* lendItems : List <BorrowinProcess>
 * Image image
 
 ** Jeder Benutzer der Website wird als User Objekt gespeichert.
@@ -175,7 +175,7 @@ Button nicht dargestellt.
 ** Die Items, die dem User gehoeren werden hier nicht gespeichert, stattdessen
  wird in jedem Item der Besitzer vermerkt.
 
-.Adress
+.Address
 * street : String
 * city : String
 * postcode : int
@@ -218,7 +218,7 @@ und haben somit auch separate Repositories, Controller und Services.
 ** ids werden von Datenbank generiert.
 * period : Period
 * requester : User
-** User der ausleihen möchte.
+** User, der ausleihen möchte.
 * Ein neuer Request wird erzeugt, wenn ein User ein Item ausleihen möchte und es
 zu diesem Zeitraum verfügbar ist
 
@@ -232,10 +232,10 @@ zu diesem Zeitraum verfügbar ist
 * id : Long
 ** Generated Value
 * lendableItem : LendableItem
-** LendableItem das ausgeliehen wird.
+** LendableItem, das ausgeliehen wird.
 * period : Period
 ** Zeitraum zu dem das Item ausgeliehen wird.
-** request der akzeptiert wurde, sodass das Item jetzt ausgeliehen ist.
+** Request der akzeptiert wurde, sodass das Item jetzt ausgeliehen ist.
 -> Der BorrowingProcess repräsentiert den Ausleihprozess. Jeder User hat eine
 Liste von laufenden BorrowingProcesses, die Items betreffen, die er verleiht
 und eine Liste laufender BorrowingProcesses, die Items betreffen, die er geliehen
@@ -250,8 +250,8 @@ hat.
 * process : BorrowingProcess
 * messages : List <messages>
 ** Conflicts können von der ausleihenden und der verleihenden Person gestellt
-werden. Da in jedem Conflict eine List von Messages gespeichert wird, können zum
-zum Einen beide Parteien ihre Version des Konfliktes darstellen und diese Nachrichten
+werden. Da in jedem Conflict eine Liste von Messages gespeichert wird, können
+zum einen beide Parteien ihre Version des Konfliktes darstellen und diese Nachrichten
 werden beide in demselben Konflikt gespeichert, zum anderen kann der Konflikt
  über das System selbst geklärt werden, indem Admin und
 beide User Messages austauschen. Falls das Problem doch außerhalb des
@@ -285,7 +285,7 @@ Listen aus.
 SellableItem angelegt werden kann.
 * Der Button "Verleihen" linkt auf die Seite newLendableItem.html, wo ein neues
 LendableItem erzeugt werden kann.
-* Der Button "account" linkt auf die Seite account.html, wo das eigene Profil
+* Der Button "Account" linkt auf die Seite account.html, wo das eigene Profil
 eingesehen werden kann.
 * Der Button "Nachrichten" linkt auf die Seite messages.html, wo alle, die angemeldete
 Person betreffenden, Requests dargestellt werden.
@@ -298,7 +298,7 @@ lendableItemdetails.html bzw. sellableItem.html führt, wobei die Id des
 entsprechenden Items mitgegeben wird.
 
 
-* Details.html
+* details.html
 ** Es wird eine Detailansicht des entsprechenden Items dargestellt.
 ** Darunter steht ein Ausleihbutton und ein Zurückbutton.
 ** Der Ausleihbutton linkt auf Request.html und gibt dieser die Id des entsprechenden Items
@@ -308,7 +308,7 @@ mit.
 * messages.html:
 ** Enthält zwei Tabellen:
 ** Die erste Tabelle enthält eine Liste aller Requests, die an den angemeldeten User gestellt
-wurden (Zu Items, die mir gehören.)
+wurden (zu Items, die mir gehören).
 ** Diese Requests kann die angemeldete Person akzeptieren oder ablehnen.
 
 * propayAccount.html:
@@ -332,7 +332,7 @@ für gekaufte und geliehene Gegenstände aufgeführt werden.
 wobei hier neue Accountbilder hochgeladen werden und der eigene PropayAccount
 eingesehen werden können.
 * Ist der Admin angemeldet, so wird ein großer Button auf dem "Konfliktlösestelle"
-steht dargestellt. Dieser linkt zur Seite conflictView.html.
+steht, dargestellt. Dieser linkt zur Seite conflictView.html.
 * Unter der Übersicht sind verschiedene Tabellen:
 ** ausgeliehene Objekte
 *** Hier werden alle BorrowingProcesses dargestellt, die Items betreffen, die
@@ -347,8 +347,8 @@ angemeldeten Person gehören.
 oder unversehrt zurück gegeben wurden. Der Button "Konflikt" linkt auf
 die Seite conflictNew.html.
 Des Weiteren kann an dieser Stelle über den Button "erhalten"
-bestätigt auch werden, dass der entsprechende Gegenstand rechtzeitig und unversehrt
-zurückgegeben wurde, sodass der BorrowingProcess gelöscht wird, und die Kaution
+bestätigt werden, dass der entsprechende Gegenstand rechtzeitig und unversehrt
+zurückgegeben wurde, sodass der BorrowingProcess gelöscht wird und die Kaution
 freigegeben wird.
 ** Objekte zum Verkauf
 *** Hier kann eingesehen werden, welche Gegenstände die angemeldete Person
@@ -371,13 +371,13 @@ verkauft hat.
 * An dieser Stelle wird ein neues Item zum Verleih erstellt.
 * Die entsprechenden Angaben, wie Name, Beschreibung, Preis/Tag und Kaution
 müssen gemacht werden, wobei das Hochladen eines Bildes optional ist.
-* Für das bearbeiten der Angaben wird das selbe Template verwendet.
+* Für das bearbeiten der Angaben wird dasselbe Template verwendet.
 
 .SellableItem.html
 * An dieser Stelle wird ein neues Item zum Verkauf erstellt.
 * Die entsprechenden Angeben wie Name, Beschreibung und Preis müssen gemacht werden,
 der Upload eines Bildes ist optional.
-* Für das bearbeiten der Angaben wird das selbe Template verwendet.
+* Für das bearbeiten der Angaben wird dasselbe Template verwendet.
 
 .ConflictNew.html
 * Hier wird ein neuer Konflikt erzeugt.
@@ -387,7 +387,7 @@ eingeben. Alle anderen relevanten Daten werden von dem System eingefügt.
 .ConflictView.html
 * Diese Seite ist nur für den angemeldeten Admin einsehbar.
 * Hier wird eine Liste aller gemeldeten Konflikte dargestellt.
-* Jeder Button hat einen Button "Details", der zu der Seite conflictDetails.html
+* Jeder Konflikt hat einen Button "Details", der zu der Seite conflictDetails.html
 linkt.
 
 .conflictDetails.html
@@ -440,11 +440,7 @@ für die komplette Miete und Kaution ausreicht.
 
 
 ## Architektur
-
-.architektur
-image::./Diagram/Architektur.png[architektur]
-
-
+GUI <-> Controller <-> Logik <-> Model <-> Datenbank <- DatabaseInitializer
 
 
 ## Notwendige Veränderungen bei Änderungen der Aufgabenstellung
@@ -564,7 +560,7 @@ image::./Diagram/newConflict.png[newConflict]
 ----
 ----
 
-### Auflösen eines Konfliktes zugunsten des Ausleihers
+### Auflösen eines Konfliktes
 
 ----
 ----
@@ -574,16 +570,3 @@ image::./Diagram/settleConflict.png[settleConflict]
 
 ----
 ----
-
-### Legende
-
-----
-----
-
-.legende
-image::./Diagram/Legende.png[legende]
-
-----
-----
-
-## Quellen
