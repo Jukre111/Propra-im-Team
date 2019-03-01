@@ -198,7 +198,7 @@ public class ProPayServiceTest {
         Account account1 = new Account(source1.getUsername(), 515, reservations);
         Assertions.assertThat(pps.getDepositSum(account1)).isEqualTo(330);
     }
-    // Fails with: java.lang.AssertionError: Expected exception: de.hhu.sharing.model.NotFoundException
+
     @Test(expected = NotFoundException.class)
     public void testCallURLIOException() {
         String URL = "URLFail";
@@ -207,13 +207,7 @@ public class ProPayServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void testCallURLRetriesSmallerZero() {
-        String URL = "http://localhost:8888/account/" + "user" + "/";
+        String URL = "http://localhost:1234";
         pps.callURL(URL, "POST", -1);
-    }
-
-    @Test(expected = NotFoundException.class)
-    public void testCallURLSocketTimeoutException() {
-		String URL = "http://localhost"; //or "http://localhost:5432";
-		pps.call(URL, "GET", 1);
     }
 }
