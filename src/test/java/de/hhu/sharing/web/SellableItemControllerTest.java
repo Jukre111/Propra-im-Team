@@ -211,4 +211,15 @@ public class SellableItemControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isFound())
                 .andExpect(MockMvcResultMatchers.flash().attributeExists("errMessage"));
     }
+
+    @Test
+    @WithMockUser
+    public void redirectWhenSellableItemNotFoundException() throws Exception {
+        Mockito.when(sellableItemService.get(1L)).thenThrow(new NotFoundException("message"));
+
+        mvc.perform(MockMvcRequestBuilders.get("/sellableItemDetails").param("id", "1"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
+                .andExpect(MockMvcResultMatchers.status().isFound())
+                .andExpect(MockMvcResultMatchers.flash().attribute("errMessage", "message"));
+    }
 }
