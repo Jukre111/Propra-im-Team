@@ -65,7 +65,7 @@ public class IndexController {
         requestService.deleteOutdatedRequests();
         model.addAttribute("user", user);
         model.addAttribute("allMyLendableItems", lendableItemService.getAllIPosted(user));
-        model.addAttribute("myRequestedLendableItems", lendableItemService.getAllIRequested(user));
+        model.addAttribute("allLendableItems", lendableItemService.getAll());
         return "messages";
     }
 }
