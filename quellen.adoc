@@ -1,2 +1,5 @@
-* https://stackoverflow.com/questions/669828/how-to-have-2-collections-of-the-same-type-in-jpa
-(User Zeile 46 - 54)
+* User Zeile 46 - 54: https://stackoverflow.com/questions/669828/how-to-have-2-collections-of-the-same-type-in-jpa
+
+* Itembilder und Profilbilder:
+https://github.com/callicoder/spring-boot-file-upload-download-rest-api-example/tree/mysql-database-storage
+https://spring.io/guides/gs/uploading-files/
